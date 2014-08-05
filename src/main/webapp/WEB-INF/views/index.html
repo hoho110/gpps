@@ -1,0 +1,32 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Insert title here</title>
+<script type="text/javascript"
+	src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+	src="/resources/jquery-1.11.1.js"></script>
+<script type="text/javascript"
+	src="/easyservice/com.easyservice.test.IUserService?json"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+				$("#btn").click(function() {
+			alert("click");
+			var service = EasyServiceClient
+					.getRemoteProxy("/easyservice/com.easyservice.test.IUserService");
+			var user = service.find("test");
+			var users = service.findAll();
+			var userForCreate={
+					"_t_": "com.easyservice.test.User",
+					name: "wangm3",
+					role: 0
+			}
+			service.create(userForCreate);
+		});
+	});
+</script>
+</head>
+<body>
+	<button id="btn">调取服务</button>
+</body>
+</html>

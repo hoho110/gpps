@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StaticRolesConfig enabled="true">
+	<!--匿名用户(未登陆)角色,privilege为-1-->
+	<Role privilege = "-1">
+		<permissionRules>
+			<PermissionRule  entityLimitType="com.cnebula.yidu.service.admin.IAdministratorService" operations="getCurrentAdmin"/>
+		</permissionRules>
+	</Role>
+	<Role privilege = "1">
+		<permissionRules>
+		</permissionRules>
+	</Role>
+</StaticRolesConfig>

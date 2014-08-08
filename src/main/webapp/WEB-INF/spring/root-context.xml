@@ -9,34 +9,37 @@
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd  
         http://www.springframework.org/schema/context    
         http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-        
+
 	<mvc:annotation-driven />
 	<!-- 注释资源扫描包路径 -->
 	<context:component-scan base-package="com.easyservice" />
-<!-- 	<mvc:default-servlet-handler /> -->
+	<!-- <mvc:default-servlet-handler /> -->
+	<bean id="authorityValidateService" class="com.easyservice.security.AuthorityValidateServiceImpl">
+		<property name="configLocation" value="classpath:StaticRolesConfig.xml"></property>
+	</bean>
 	<!-- 配置数据源 -->
-<!-- 	<bean id="dataSource" -->
-<!-- 		class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
-<!-- 		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> -->
-<!-- 		<property name="url" value="jdbc:mysql://localhost:3306/myapp" /> -->
-<!-- 		<property name="username" value="root" /> -->
-<!-- 		<property name="password" value="admin" /> -->
-<!-- 	</bean> -->
+	<!-- <bean id="dataSource" -->
+	<!-- class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+	<!-- <property name="driverClassName" value="com.mysql.jdbc.Driver" /> -->
+	<!-- <property name="url" value="jdbc:mysql://localhost:3306/myapp" /> -->
+	<!-- <property name="username" value="root" /> -->
+	<!-- <property name="password" value="admin" /> -->
+	<!-- </bean> -->
 
-<!-- 	<bean id="transactionManager" -->
-<!-- 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> -->
-<!-- 		<property name="dataSource" ref="dataSource" /> -->
-<!-- 	</bean> -->
-
-
-<!-- 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> -->
-<!-- 		<property name="configLocation" value="classpath:MyBatis-Configuration.xml"></property> -->
-<!-- 		<property name="dataSource" ref="dataSource" /> -->
-<!-- 	</bean> -->
+	<!-- <bean id="transactionManager" -->
+	<!-- class="org.springframework.jdbc.datasource.DataSourceTransactionManager"> -->
+	<!-- <property name="dataSource" ref="dataSource" /> -->
+	<!-- </bean> -->
 
 
-<!-- 	<bean id="userDao" class="org.mybatis.spring.mapper.MapperFactoryBean"> -->
-<!-- 		<property name="mapperInterface" value="com.cnebula.myapp.dao.UserDao"></property> -->
-<!-- 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property> -->
-<!-- 	</bean> -->
+	<!-- <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> -->
+	<!-- <property name="configLocation" value="classpath:MyBatis-Configuration.xml"></property> -->
+	<!-- <property name="dataSource" ref="dataSource" /> -->
+	<!-- </bean> -->
+
+
+	<!-- <bean id="userDao" class="org.mybatis.spring.mapper.MapperFactoryBean"> -->
+	<!-- <property name="mapperInterface" value="com.cnebula.myapp.dao.UserDao"></property> -->
+	<!-- <property name="sqlSessionFactory" ref="sqlSessionFactory"></property> -->
+	<!-- </bean> -->
 </beans>

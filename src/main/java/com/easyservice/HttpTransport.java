@@ -16,7 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.easyservice.exception.ProtocolParseException;
-import com.easyservice.service.IPermissionManager;
+import com.easyservice.security.IAuthorityValidateService;
 import com.easyservice.service.IProtocolBinding;
 import com.easyservice.service.IRemoteServiceRegister;
 import com.easyservice.support.HttpParse;
@@ -34,7 +34,7 @@ import com.easyservice.utils.ApplicationContextUtil;
 public class HttpTransport {
 	private static Logger logger = Logger.getLogger(HttpTransport.class);
 	@Autowired
-	IPermissionManager permissionManager;
+	IAuthorityValidateService permissionManager;
 	@Autowired
 	IRemoteServiceRegister register;
 	protected static final String HEADER_IFMODSINCE = "If-Modified-Since";

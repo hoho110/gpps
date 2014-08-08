@@ -39,45 +39,51 @@ import com.easyservice.support.MangleClassInfoPool;
 import com.easyservice.support.ServiceRequest;
 import com.easyservice.support.ServiceResponse;
 import com.easyservice.support.ServiceResponse.ExceptionType;
+
 @Component("JSONBinding")
-public class JSONBinding implements IProtocolBinding,BeanPostProcessor{
-	
-static MangleClassInfoPool mangleClassInfoPool = MangleClassInfoPool.getDefault();
-	
+public class JSONBinding implements IProtocolBinding, BeanPostProcessor {
+
+	static MangleClassInfoPool mangleClassInfoPool = MangleClassInfoPool
+			.getDefault();
+
 	static int buf_size = 1024;
 
 	static String PRETTY_FORMAT = ".p"; // true, false, default false;
-	
+
 	EJsonManager eJsonManager = EJsonManager.getDefaultManager();
-	
+
 	protected static final String HEADER_ENCODING = "Content-Encoding";
-	
+
 	static String TARGET_PARAM = ".t";
-	
+
 	static String TENANTID_PARAM = ".tenantId";
 	@Autowired
 	IRemoteServiceRegister register;
 	static Logger log = Logger.getLogger(JSONBinding.class);
+
 	@Override
 	public ServiceRequest getRequest(HttpParse httpParse)
 			throws ProtocolParseException {
 		HttpServletRequest request = httpParse.getRequest();
 		String clz = httpParse.getInterfaceName();
-		httpParse.setAttribute(PRETTY_FORMAT, request.getParameter(PRETTY_FORMAT));
+		httpParse.setAttribute(PRETTY_FORMAT,
+				request.getParameter(PRETTY_FORMAT));
 		MangleClassInfo mci = null;// clz2MethodMangleMap.get(clz);
 		try {
-				mci = mangleClassInfoPool.getMangleClassInfo(clz);
+			mci = mangleClassInfoPool.getMangleClassInfo(clz);
 		} catch (ClassNotFoundException e) {
-				throw new ProtocolParseException(e, ExceptionType.ET_SE_METHOD_NOT_FOUND);
+			throw new ProtocolParseException(e,
+					ExceptionType.ET_SE_METHOD_NOT_FOUND);
 		}
 		String charset = request.getCharacterEncoding();
 		if (charset == null) {
 			charset = "UTF-8";
 		}
 		String receiveString = request.getParameter("request");
-		if (receiveString == null){
+		if (receiveString == null) {
 			try {
-				BufferedReader in = new BufferedReader(new InputStreamReader(request.getInputStream(), charset));
+				BufferedReader in = new BufferedReader(new InputStreamReader(
+						request.getInputStream(), charset));
 				// Read the request
 				CharArrayWriter data = new CharArrayWriter();
 				char buf[] = new char[buf_size];
@@ -95,7 +101,7 @@ static MangleClassInfoPool mangleClassInfoPool = MangleClassInfoPool.getDefault(
 		// dump the received string
 		if (log.isDebugEnabled()) {
 			log.debug("recv: " + receiveString);
-//			log.debug("recv: " + prettyPrintJson(receiveString));
+			// log.debug("recv: " + prettyPrintJson(receiveString));
 		}
 		// Process the request
 		JSONRequest jsonReq = new JSONRequest();
@@ -104,70 +110,80 @@ static MangleClassInfoPool mangleClassInfoPool = MangleClassInfoPool.getDefault(
 		Type[] gparamTypes = null;
 		try {
 			EJsonReader tokener = new EJsonReader(receiveString);
-			tokener.match('{',true);
+			tokener.match('{', true);
 			String property = tokener.readNextString(':');
-			if(!property.equals(EJsonConsts.ID_STRING)&&!property.equals(EJsonConsts.REFID_STRING)){
-				throw new EJSONDeserializeException("expect: id, but meet :" + property);
+			if (!property.equals(EJsonConsts.ID_STRING)
+					&& !property.equals(EJsonConsts.REFID_STRING)) {
+				throw new EJSONDeserializeException("expect: id, but meet :"
+						+ property);
 			}
 			int jsid = tokener.readNextInt();
 			int cur = tokener.readNext();
 			if (cur != ',') {
-				throw new EJSONDeserializeException("expect: ,, but meet :" + (char)cur);
+				throw new EJSONDeserializeException("expect: ,, but meet :"
+						+ (char) cur);
 			}
-			while((property=tokener.readNextString(':'))!=null){
-				if (property.equals("id")){
-					jsonReq.setId( tokener.readNextQuoteString() );
-				}else if (property.equals("method")){
-					jsonReq.setMethod( tokener.readNextQuoteString()  );
-					method = mci.getMethod( jsonReq.getMethod());
-					if (method == null){
-						throw new ProtocolParseException(new NoSuchMethodException(jsonReq.getMethod()), ExceptionType.ET_SE_WRONG_PARAMTYPE);
+			while ((property = tokener.readNextString(':')) != null) {
+				if (property.equals("id")) {
+					jsonReq.setId(tokener.readNextQuoteString());
+				} else if (property.equals("method")) {
+					jsonReq.setMethod(tokener.readNextQuoteString());
+					method = mci.getMethod(jsonReq.getMethod());
+					if (method == null) {
+						throw new ProtocolParseException(
+								new NoSuchMethodException(jsonReq.getMethod()),
+								ExceptionType.ET_SE_WRONG_PARAMTYPE);
 					}
 					paramTypes = method.getParameterTypes();
 					gparamTypes = method.getGenericParameterTypes();
 					jsonReq.setParams(new Object[paramTypes.length]);
-				}else if (property.equals("params")){
-					try{
+				} else if (property.equals("params")) {
+					try {
 						int index = 0;
-						tokener.match('[',true);
+						tokener.match('[', true);
 						int next = tokener.LA(1, true);
-						if(next == ']'){ //empty array
-							tokener.match(']',true);
-						}else {
-							while(true){
+						if (next == ']') { // empty array
+							tokener.match(']', true);
+						} else {
+							while (true) {
 								Class ptype = paramTypes[index];
-								Class[] itemTypes = ClassInfo.getItemTypes(ptype, gparamTypes[index], null);
-								jsonReq.getParams()[index++] = tokener.read(ptype, itemTypes);
+								Class[] itemTypes = ClassInfo.getItemTypes(
+										ptype, gparamTypes[index], null);
+								jsonReq.getParams()[index++] = tokener.read(
+										ptype, itemTypes);
 								next = tokener.LA(1, true);
-								if(next==','){
-									tokener.match(',',true);
+								if (next == ',') {
+									tokener.match(',', true);
 									continue;
-								}else if(next== ']'){
-									tokener.match(']',true);
-									break ;
-								}else{
-									throw new EJSONDeserializeException("unexpected array element");
-								}	
+								} else if (next == ']') {
+									tokener.match(']', true);
+									break;
+								} else {
+									throw new EJSONDeserializeException(
+											"unexpected array element");
+								}
 							}
 						}
-					}catch (Exception e) {
-						if (e instanceof EJsonException){
-							throw (EJsonException)e;
+					} catch (Exception e) {
+						if (e instanceof EJsonException) {
+							throw (EJsonException) e;
 						}
 						throw new EJSONDeserializeException(e);
 					}
-				}else if (property.equals("callback")) {
-					jsonReq.setCallback( tokener.readNextQuoteString() );
-				}else {
-					throw new EJSONDeserializeException("unknow property: "+ property);
+				} else if (property.equals("callback")) {
+					jsonReq.setCallback(tokener.readNextQuoteString());
+				} else {
+					throw new EJSONDeserializeException("unknow property: "
+							+ property);
 				}
 				cur = tokener.readNext();
-				if(cur=='}'){
+				if (cur == '}') {
 					break;
-				}else if(cur==','){
-					continue ;
-				}else{
-					throw new EJSONDeserializeException("unexcepted "+ new Character((char)cur));
+				} else if (cur == ',') {
+					continue;
+				} else {
+					throw new EJSONDeserializeException("unexcepted "
+							+ new Character((char) cur));
 				}
 			}
 		} catch (EJsonException e) {
@@ -190,11 +206,10 @@ static MangleClassInfoPool mangleClassInfoPool = MangleClassInfoPool.getDefault(
 		req.getHttpParse().setAttribute("requestId", requestId);
 		req.getHttpParse().setAttribute("callback", callback);
 
-
 		if (log.isDebugEnabled()) {
-			log.debug("call " + encodedMethod + "(" + arguments + ") requestId=" + requestId);
+			log.debug("call " + encodedMethod + "(" + arguments
+					+ ") requestId=" + requestId);
 		}
-
 
 		String className = null;
 		String methodName = null;
@@ -260,6 +275,7 @@ static MangleClassInfoPool mangleClassInfoPool = MangleClassInfoPool.getDefault(
 		register.register(getProtocol(), this);
 		return bean;
 	}
+
 	@Override
 	public Class getInterfaceClass(String name) throws ClassNotFoundException {
 		MangleClassInfo mci = mangleClassInfoPool.getMangleClassInfo(name);

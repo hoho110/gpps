@@ -1,0 +1,791 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+<title>政X融X网</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    
+<link href="css/mine.css" rel="stylesheet">
+
+
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+
+<div class="container-fluid">
+<div class="row" style="padding-left:5px; padding-right:5px;">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+
+
+
+<div class="row" style="margin-top:5px;">
+<div class="col-xs-12 col-sm-2 col-md-2">
+<img src="img/logo.jpg"></img>
+</div>
+
+
+
+
+<div class="hidden-xs col-sm-10 col-md-10">
+<div class="btn-group btn-group-lg  btn-group-justified" style="background-color:#f0ad4e; width:100%;">
+
+<div class="btn-group">
+<a href="#" class="btn btn-warning btn-lg active">首&nbsp;&nbsp;&nbsp;&nbsp;页&nbsp;&nbsp;&nbsp;</a>
+</div>
+<div class="btn-group">
+<a href="projectlist.html" class="btn btn-warning btn-lg">我要理财</a>
+</div>
+<div class="btn-group">
+<a href="temp.html" class="btn btn-warning btn-lg">我的账户</a>
+</div>
+<div class="btn-group">
+<a href="#" class="btn btn-warning btn-lg">我要融资</a>
+</div>
+<div class="btn-group">
+<a href="#" class="btn btn-warning btn-lg">设&nbsp;&nbsp;&nbsp;&nbsp;置&nbsp;&nbsp;&nbsp;</a>
+</div>
+<div class="btn-group">
+<a id="lg_login_text" class="btn btn-warning btn-lg login_text"></a>
+</div>
+
+</div>
+</div>
+
+
+
+
+
+
+<div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+<div class="btn-group btn-group-lg  btn-group-justified" style="background-color:#f0ad4e; width:100%;">
+
+<div class="btn-group">
+<a href="#" class="btn btn-warning btn-lg active">首&nbsp;&nbsp;&nbsp;&nbsp;页&nbsp;&nbsp;&nbsp;</a>
+</div>
+<div class="btn-group">
+<a href="projectlist.html" class="btn btn-warning btn-lg">我要理财</a>
+</div>
+</div>
+</div>
+
+
+<div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+<div class="btn-group btn-group-lg  btn-group-justified" style="background-color:#f0ad4e; width:100%;">
+<div class="btn-group">
+<a href="temp.html" class="btn btn-warning btn-lg">我的账户</a>
+</div>
+<div class="btn-group">
+<a href="#" class="btn btn-warning btn-lg">我要融资</a>
+</div>
+</div>
+</div>
+
+
+<div class="col-xs-12 hidden-sm hidden-md hidden-lg">
+<div class="btn-group btn-group-lg  btn-group-justified" style="background-color:#f0ad4e; width:100%;">
+<div class="btn-group">
+<a href="#" class="btn btn-warning btn-lg">设&nbsp;&nbsp;&nbsp;&nbsp;置&nbsp;&nbsp;&nbsp;</a>
+</div>
+<div class="btn-group">
+<a id="sm_login_text" class="btn btn-warning btn-lg login_text"></a>
+</div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+</div>
+
+<div class="row" style="margin-top: 10px;">
+<div class="hidden-xs col-sm-12 col-md-9">
+
+
+
+<div class="row">
+
+
+
+
+
+
+<div class="col-sm-12 col-md-12">
+
+
+
+<div class = "row">
+<div class="col-sm-12 col-md-12">
+
+<a href="projectlist.html"><img src="img/001.jpg" style="width:100%" alt="XXXXXX"></img></a>
+
+</div>
+</div>
+
+
+
+<div class="row">
+<div class="col-sm-4 col-md-4">
+
+<div class="newProjectItem">
+  <div class="newProjectInfoBox">
+  
+  
+  <div class="row" style="padding-bottom:20px; padding-left:0px; padding-right:0px;">
+  
+	<div class="col-xs-12 col-sm-12 col-md-2">
+  <div class="stateBtn">
+                                    <p class='stateBtnProcess'>
+                                        <span class="stateText">
+                                           稳健型融资产品</span></p>
+                                </div>
+                                </div>
+
+  <div class="col-xs-12 col-sm-12 col-md-12">
+   <div class="newProjectTitleRightBtnList">
+                                        <p class="BtnNormal">
+                                            机构担保</p>
+                                        <div class="promptQX">
+                                            <div class="promptQXBox">
+                                                本产品引入专业担保公司进行本金担保，客户无需承担任何风险。</div>
+                                        </div>
+                                    </div>
+                                    <div class="newProjectTitleRightBtnList">
+                                        <p class="BtnNormal">
+                                            按日还款</p>
+                                        <div class="promptQX">
+                                            <div class="promptQXBox">
+                                              对于本产品，平台要求融资方按日还本付息，增强用户的流动性。</div>
+                                        </div>
+                                    </div>
+                                    <div class="clear">
+                                    </div>
+  
+  </div>
+  </div>
+  
+  <div class="row">
+  <div class="col-xs-3 col-sm-3 col-md-4">
+  								<div class="seemall">
+                                    <a href="projectdetail.html"></a>
+                                </div>
+  </div>
+  <div class="col-xs-9 col-sm-9 col-md-8">
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  								本类型产品具有低风险，高回款流动性的特点，并由专业担保机构进行本金担保，适合稳健型用户的参与。
+  </div>
+  </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <p class="itemTextStyle">
+                                            投标门槛：<span class="orangeStyle">5.00-10.00</span>万元</p>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="itemTextStyle">
+                                            融资期限：<span class="spanPro">3-6个月</span>
+                                            <div class="promptQX">
+                                                <div class="promptQXBox">
+                                                    该项目还款日期为：<div>
+                                                        2014-10-30</div>
+                                                </div>
+                                            </div>
+                                        </div>
+  </div>
+  </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  
+  <div class="itemTextStyle">
+                                            年化收益：<span class="orangeStyle">6％-10%</span>
+                                          
+                                        </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+   <p class="itemTextStyle">
+                                            还款方式：<span class="orangeStyle">每日还本息</span></p>
+  </div>
+  </div>
+  </div>
+  
+  
+  
+  </div>
+                        </div>
+                        </div>
+
+</div>
+<div class="col-sm-4 col-md-4">
+
+<div class="newProjectItem">
+  <div class="newProjectInfoBox">
+  
+  
+  <div class="row" style="padding-bottom:20px; padding-left:0px; padding-right:0px;">
+  
+<div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="stateBtn">
+                                    <p class='stateBtnProcess'>
+                                        <span class="stateText">
+                                           平衡型融资产品</span></p>
+                                </div>
+                                </div>
+
+  <div class="col-xs-12 col-sm-12 col-md-12">
+   <div class="newProjectTitleRightBtnList">
+                                        <p class="BtnNormal">
+                                            按月回款</p>
+                                        <div class="promptQX">
+                                            <div class="promptQXBox">
+                                                平台要求融资方按月还本付息，减少客户承担的风险</div>
+                                        </div>
+                                    </div>
+                                    <div class="newProjectTitleRightBtnList">
+                                        <p class="BtnNormal">
+                                            高收益</p>
+                                        <div class="promptQX">
+                                            <div class="promptQXBox">
+                                                本平台产品远高于同类型还本付息融资产品的平均收益率，在严格控制风险的情况下实现客户收益最大化</div>
+                                        </div>
+                                    </div>
+                                    <div class="clear">
+                                    </div>
+  
+  </div>
+  </div>
+  
+  <div class="row">
+  <div class="col-xs-3 col-sm-3 col-md-4">
+  								<div class="seemall">
+                                    <a href="projectdetail.html"></a>
+                                </div>
+  </div>
+  <div class="col-xs-9 col-sm-9 col-md-8">
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  								本类型产品具有中等偏上的收益，按月回款的特点，收益流动性和风险都适中，适合平衡型的的客户参与。
+  </div>
+  </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <p class="itemTextStyle">
+                                            投标门槛：<span class="orangeStyle">1.00-5.00</span>万元</p>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="itemTextStyle">
+                                            融资期限：<span class="spanPro">3-9个月</span>
+                                            <div class="promptQX">
+                                                <div class="promptQXBox">
+                                                    该项目还款日期为：<div>
+                                                        2014-10-30</div>
+                                                </div>
+                                            </div>
+                                        </div>
+  </div>
+  </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  
+  <div class="itemTextStyle">
+                                            年化收益：<span class="orangeStyle">8％-12%</span>
+                                          
+                                        </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+   <p class="itemTextStyle">
+                                            还款方式：<span class="orangeStyle">每月还本息</span></p>
+  </div>
+  </div>
+  </div>
+  
+  
+  </div>
+                        </div>
+                        </div>
+
+</div>
+<div class="col-sm-4 col-md-4">
+
+<div class="newProjectItem">
+  <div class="newProjectInfoBox">
+  
+  
+  <div class="row" style="padding-bottom:20px; padding-left:0px; padding-right:0px;">
+  
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="stateBtn">
+                                    <p class='stateBtnProcess'>
+                                        <span class="stateText">
+                                          进取型融资产品</span></p>
+                                </div>
+                                </div>
+  
+  <div class="col-xs-12 col-sm-12 col-md-12">
+   <div class="newProjectTitleRightBtnList">
+                                        <p class="BtnNormal">
+                                            超高收益</p>
+                                        <div class="promptQX">
+                                            <div class="promptQXBox">
+                                                针对订单的专款专用类型，远超同期信托的收益，并且门槛大大降低</div>
+                                        </div>
+                                    </div>
+                                    <div class="newProjectTitleRightBtnList">
+                                        <p class="BtnNormal">
+                                           到期还本付息</p>
+                                        <div class="promptQX">
+                                            <div class="promptQXBox">
+                                                “企业经营贷” 是以企业为服务对象的融资产品，主要用于企业正常生产经营周转的资金需求。</div>
+                                        </div>
+                                    </div>
+                                    <div class="clear">
+                                    </div>
+  
+  </div>
+  </div>
+  
+  <div class="row">
+  
+  
+  <div class="col-xs-3 col-sm-3 col-md-4">
+  								<div class="seemall">
+                                    <a href="projectdetail.html"></a>
+                                </div>
+  </div>
+  <div class="col-xs-9 col-sm-9 col-md-8">
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  								本类型产品具有高收益，较低流动性，到期还本付息的特点，适合追求高收益并能承担一定风险的客户参与。
+  </div>
+  </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <p class="itemTextStyle">
+                                            投标门槛：<span class="orangeStyle">1.00-5.00</span>万元</p>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="itemTextStyle">
+                                            融资期限：<span class="spanPro">6-12个月</span>
+                                            <div class="promptQX">
+                                                <div class="promptQXBox">
+                                                    该项目还款日期为：<div>
+                                                        2014-10-30</div>
+                                                </div>
+                                            </div>
+                                        </div>
+  </div>
+  </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-12">
+  
+  <div class="itemTextStyle">
+                                            年化收益：<span class="orangeStyle">12％-18%</span>
+                                          
+                                        </div>
+  </div>
+  <div class="col-xs-12 col-sm-12 col-md-12">
+   <p class="itemTextStyle">
+                                            还款方式：<span class="orangeStyle">到期还本付息</span></p>
+  </div>
+  </div>
+  </div>
+  
+  
+  
+  </div>
+                        </div>
+                        </div>
+
+</div>
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+<div class="col-xs-12 col-md-3">
+
+
+
+
+
+<DIV style="DISPLAY: none; padding: 10px 0 10px 5px; margin-bottom:5px;" id=login_pop>
+
+  <DIV style="LINE-HEIGHT: 180%; padding-left:5px; HEIGHT:45px; FONT-SIZE:13px;">
+  <DIV style="width:90%; MARGIN-LEFT: 10px"><SPAN style="MARGIN-RIGHT: 10px" 
+  id=login_name>您好：wd</SPAN><span style="float:right;"><A href="quit.html">退出登录</A></span> </DIV>
+  <div style="clear:both;"></div>
+  </div>
+  <div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
+  <DIV style="LINE-HEIGHT: 180%; padding-left:5px; FONT-SIZE:13px;">
+  <SPAN><IMG 
+  style="VERTICAL-ALIGN: text-bottom" 
+  src="img/m_tel_icon.png"> <A 
+  id=login_tel_status 
+  href="#">手机已绑定</A><IMG 
+  style="MARGIN-LEFT: 10px; VERTICAL-ALIGN: text-bottom" 
+  src="img/m_card_icon.png"> 
+  <A id=login_cred_status href="#">实名已认证</A><IMG 
+  style="MARGIN-LEFT: 10px; VERTICAL-ALIGN: text-bottom" 
+  src="img/m_lock_icon.png"> 
+  <A href="#">交易密码</A></SPAN>
+  </div>
+  <div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
+  
+  <DIV style="LINE-HEIGHT: 180%; padding-left:5px; FONT-SIZE:13px;">
+  <A 
+  href="#">资金管理/充值/提款</A> | <A 
+  href="#">回款</A> | <A 
+  href="#">已投标的</A><BR><A 
+  href="#">资金流向</A> | <A 
+  href="#">安全保障</A> | <A 
+  href="#">客服有问必答</A> | <A 
+  href="#">帮助</A>
+  </div>
+  
+  <div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
+<DIV style="LINE-HEIGHT: 180%; padding-left:5px; FONT-SIZE:13px;">
+<A 
+  href="#">资金流动性分析</A> | <A 
+  href="#">未来回款分析</A> | <A 
+  href="#">投资组合风险分析</A>
+</DIV>
+<div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
+<DIV style="LINE-HEIGHT: 180%; MARGIN: 0px 10px 10px; FONT-SIZE: 12px" id=gonggao>
+<a href="#">[公告]2014-9-2政府采购结构化产品正式投标</a><br>
+<a href="#">[公告]2014-9-13绿化工程融资产品正式投标</a>
+</DIV></DIV>
+
+
+
+
+
+
+
+
+
+
+
+<div class="panel panel-default">
+<div class="panel-heading">系统公告</div>
+<div class="panel-body">
+
+<p style="border-bottom: dotted 1px; font-size:12px; padding-bottom:5px;"><a href="#">关于本系统升级的公告<span class="badge">168</span></a></p>
+<p style="border-bottom: dotted 1px; font-size:12px; padding-bottom:5px;"><a href="#">系统二期即将上线运行通知<span class="badge">24</span></a></p>
+<p style="border-bottom: dotted 1px; font-size:12px; padding-bottom:5px;"><a href="#">新一期产品即将火爆抢购<span class="badge">16</span></a></p>
+<p style="border-bottom: dotted 1px; font-size:12px; padding-bottom:5px;"><a href="#">新一期产品即将火爆抢购<span class="badge">16</span></a></p>
+
+</div>
+
+
+ <div class="panel-footer">
+	<a style="float:right;" href="#">更多....</a>
+	<div style="clear:both;"></div>
+</div>
+</div>
+
+<div class="panel panel-default" style="margin-top:35px;">
+<div class="panel-heading">
+<h3 class="panel-title">企业资讯</h3>
+</div>
+<div class="panel-body">
+
+
+<p style="border-bottom: dotted 1px; font-size:12px; padding-bottom:5px;"><a href="#">关于本系统升级的公告<span class="badge">168</span></a></p>
+<p style="border-bottom: dotted 1px; font-size:12px; padding-bottom:5px;"><a href="#">系统二期即将上线运行通知<span class="badge">24</span></a></p>
+<p style="border-bottom: dotted 1px; font-size:12px; padding-bottom:5px;"><a href="#">新一期产品即将火爆抢购<span class="badge">16</span></a></p>
+<p style="border-bottom: dotted 1px; font-size:12px; padding-bottom:5px;"><a href="#">声明: 马航失事与本平台无关<span class="badge">70</span></a></p>
+<p style="border-bottom: dotted 1px; font-size:12px; padding-bottom:5px;"><a href="#">新一期产品即将火爆抢购<span class="badge">16</span></a></p>
+
+</div>
+ <div class="panel-footer">
+<a style="float:right;" href="#">更多....</a>
+	<div style="clear:both;"></div>
+</div>
+</div>
+
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="row">
+<div class="col-xs-12 col-md-6">
+
+<div class="col-sm-12 col-md-12">
+<h4>新闻中心</h4>
+</div>
+
+<div style="padding:5px 0 5px 0; border-bottom: dotted 1px;">
+    <div style="font-size:14px;margin:0 0 5px 0; font-weight:600;">
+	<a href="http://www.btc38.com/altcoin/xrp/3011.html" target="_blank">P2P监管方向初定：不设牌照限制　注册门槛1000万	</a>
+    </div>
+    <div style="color:#777777; font-size:12px;">
+	<img src="http://www.btc38.com/uploadfile/2014/0801/20140801102636422.jpg" width="75" height="50" style="float:left;margin-right:8px;"/>
+	昨日，南都从2014“新经济新金融”高峰论坛广州站现场获悉，除了近日引发市场关注的央行《关于促进互联网金融健康发展的指导意见》外，针对P2P行业 ..
+<div class="clear"></div>
+    </div>
+</div>
+
+
+
+<div style="padding:5px 0 5px 0; border-bottom: dotted 1px;">
+    <div style="font-size:14px;margin:0 0 5px 0;font-weight:600">
+	<a href="http://www.btc38.com/altcoin/xrp/3011.html" target="_blank">央行提出定向降准不宜长期实施
+	</a>
+    </div>
+    <div style="color:#777777; font-size:12px;">
+	<img src="http://www.btc38.com/uploadfile/2014/0801/20140801102636422.jpg" width="75" height="50" style="float:left;margin-right:8px;"/>
+	本报北京8月1日电（记者田俊荣）中国人民银行1日发布的二季度《中国货币政策执行报告》提出，定向降准主要发挥信号...
+	<div class="clear"></div>
+    </div>
+</div>
+
+
+
+<div style="padding:5px 0 5px 0; border-bottom: dotted 1px;">
+    <div style="font-size:14px;margin:0 0 5px 0;font-weight:600">
+	<a href="http://www.btc38.com/altcoin/xrp/3011.html" target="_blank">信托业增速放缓 寻找新利润增长点迫在眉睫	</a>
+    </div>
+    <div style="color:#777777; font-size:12px;">
+	在整个行业转型阵痛之中，近日，50家信托公司交出了各自的年中业绩快报。数据显示，今年上半年50家信托公司共实现净利润188.4亿..
+<div class="clear"></div>
+    </div>
+</div>
+
+
+
+<div style="padding:5px 0 5px 0; border-bottom: dotted 1px;">
+    <div style="font-size:14px;margin:0 0 5px 0;font-weight:600">
+	<a href="http://photocdn.sohu.com/20140801/Img402986504.jpg" target="_blank">“宝宝类”产品遭遇成长烦恼：收益下降风险增加	</a>
+    </div>
+    <div style="color:#777777; font-size:12px;">
+<img src="http://photocdn.sohu.com/20140801/Img402986504.jpg" width="75" height="50" style="float:left;margin-right:8px;"/>
+	近期英国杂志《经济学人》一篇《余额宝“危险了”》将余额宝再度成为市场关注的焦点。
+
+　　余额宝收益率下降已经是不争事实..
+<div class="clear"></div>
+    </div>
+</div>
+
+
+
+</div>
+<div class="col-xs-12 col-md-6">
+<div class="col-sm-12 col-md-12">
+<h4>平台交易金额</h4>
+</div>
+<div class="col-sm-12 col-md-12">
+
+
+
+
+<div id="morris-bar-chart"></div>
+
+
+
+
+
+
+</div>
+</div>
+</div>
+
+
+</div>
+</div>
+</div>
+
+
+
+
+
+<script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="js/plugins/morris/morris.js"></script>
+    <script src="js/mine.js"></script>
+<script src="js/cookies.js"></script>
+<script>
+         $(document).ready(function () {
+					var username = getCookie("username");
+					if(username==null || username==""){
+						$('.login_text').html('<SPAN style="cursor:pointer;">登陆</span>');
+						}else{
+							$('.login_text').html('<SPAN style="cursor:pointer;">个人中心▼</span>');
+							}
+
+             
+                   $(".newProjectTitleRightBtnList p.BtnNormal").hover(function () {
+                             $(this).next(".promptQX").css("display", "block");
+                       }, function () {
+                               $(this).next(".promptQX").css("display", "none");
+                          });
+                   $('.spanPro').hover(function () {
+                       $(this).next(".promptQX").css("display", "block");
+                   }, function () {
+                           $(this).next(".promptQX").css("display", "none");
+                      });
+
+                   $('#viewMore').click(function(e){
+                	   window.location.href="projectlist.html";
+                       });
+
+
+
+
+			$('.login_text').click(function(e){
+				
+				
+				
+				if($(this).text()=="登陆"){
+					window.location.href="login.html";
+					return;
+				}
+				
+				
+				
+				
+				if($('#login_pop').css('display')=='block')
+				{
+					$(this).removeClass('active');
+					$('#login_pop').css('display', 'none');
+				}else{
+					$('#login_pop').css('display', 'block');
+					$(this).addClass('active');
+				}
+			});
+
+
+
+			Morris.Bar({
+    element: 'morris-bar-chart',
+    data: [{
+        y: '2013-9',
+        a: 12,
+	b: 12
+    }, {
+        y: '2013-10',
+        a: 15,
+	b: 13
+    }, {
+        y: '2013-11',
+        a: 50,
+	b: 50
+    }, {
+        y: '2013-12',
+        a: 20,
+	b: 18
+    }, {
+        y: '2014-1',
+        a: 46,
+	b: 44
+    }, {
+        y: '2014-2',
+        a: 60,
+	b: 60
+    }, {
+        y: '2014-3',
+        a: 120,
+	b: 115
+    }, {
+        y: '2014-4',
+        a: 12,
+	b: 12
+    }, {
+        y: '2014-5',
+        a: 20,
+	b: 19.5
+    }, {
+        y: '2014-6',
+        a: 21,
+	b: 21
+    }, {
+        y: '2014-7',
+        a: 70,
+	b: 66
+    }, {
+        y: '2014-8',
+        a: 69,
+	b: 69
+    }
+    ],
+    xkey: 'y',
+    ykeys: ['a','b'],
+    labels: ['计划融资','实际投标'],
+    hideHover: 'auto',
+	yLabelFormat:function(y){
+		return y+"万元";
+	},
+    resize: true
+});
+
+                     })
+ </script>
+
+
+</body>
+</html>

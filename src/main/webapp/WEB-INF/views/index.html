@@ -4,8 +4,7 @@
 <title>Insert title here</title>
 <script type="text/javascript"
 	src="/resources/EasyServiceClientFullZ.js"></script>
-<script type="text/javascript"
-	src="/resources/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="/resources/jquery-1.11.1.js"></script>
 <script type="text/javascript"
 	src="/easyservice/com.easyservice.test.IUserService?json"></script>
 <script type="text/javascript">
@@ -16,17 +15,26 @@
 					.getRemoteProxy("/easyservice/com.easyservice.test.IUserService");
 			var user = service.find("test");
 			var users = service.findAll();
-			var userForCreate={
-					"_t_": "com.easyservice.test.User",
-					name: "wangm3",
-					role: 0
-			}
-			service.create(userForCreate);
+			var ctx = new EasyServiceClient.newContext();
+			ctx.user=user;
+			ejs.renderComplexNode("#tmpl", "#wrapper", ctx);
 		});
 	});
 </script>
+<style type="text/css">
+.hide {
+	display: none;
+}
+</style>
 </head>
 <body>
 	<button id="btn">调取服务</button>
+	<div id="wrapper"></div>
+	<textarea class="hide" id="tmpl">
+		<div>
+			<p>+-user.name-+</p>
+			<p>+-user.privilege-+</p>
+		</div>	
+	</textarea>
 </body>
 </html>

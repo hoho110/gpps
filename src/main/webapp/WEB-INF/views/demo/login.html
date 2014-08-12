@@ -144,12 +144,14 @@ $(document).ready(function() {
 
 			if(username==null||username==''){
 					$('#usernameLabel').css('color', 'red').html('*请输入用户名');
+					return;
 				}else{
 					$('#usernameLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
 					}
 
 			if(password==null||password==''){
 				$('#passwordLabel').css('color', 'red').html('*请输入密码');
+				return;
 			}else{
 				$('#passwordLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
 				}
@@ -157,6 +159,7 @@ $(document).ready(function() {
 
 			if(validate==null||validate==''||validate!='8668'){
 				$('#validateLabel').css('color', 'red').html('*验证码错误');
+				return; 
 			}else{
 				$('#validateLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
 				}

@@ -11,6 +11,9 @@
 	</appender>
 	
 	<!-- Application Loggers -->
+	<logger name="gpps">
+		<level value="debug" />
+	</logger>
 	<logger name="com.easyservice">
 		<level value="debug" />
 	</logger>

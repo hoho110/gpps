@@ -3,6 +3,6 @@
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<mappers>
-<!-- 		<mapper resource="com/cnebula/myapp/dao/UserDao.xml" /> -->
+		<mapper resource="gpps/dao/LenderDao.xml" />
 	</mappers>
 </configuration>

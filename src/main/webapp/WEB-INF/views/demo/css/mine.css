@@ -17,11 +17,19 @@
 .newProjectBox {
 	
 }
+
+.newProject0Item {
+	POSITION: relative; PADDING-BOTTOM: 20px; MARGIN-TOP: 15px; PADDING-LEFT: 15px; PADDING-RIGHT: 15px;  PADDING-TOP: 20px
+}
+.newProject0Item:hover {
+	BORDER-BOTTOM: #eee 1px solid; POSITION: relative; BORDER-LEFT: #eee 1px solid; PADDING-BOTTOM: 20px; MARGIN-TOP: 15px; PADDING-LEFT: 15px; PADDING-RIGHT: 15px;  BORDER-RIGHT: #eee 1px solid; PADDING-TOP: 20px
+}
+
 .newProjectItem {
-	BORDER-BOTTOM: #eee 1px solid; POSITION: relative; BORDER-LEFT: #eee 1px solid; PADDING-BOTTOM: 20px; MARGIN-TOP: 15px; PADDING-LEFT: 15px; PADDING-RIGHT: 15px; BORDER-TOP: #eee 1px solid; BORDER-RIGHT: #eee 1px solid; PADDING-TOP: 20px
+	BORDER-BOTTOM: #eee 1px solid; POSITION: relative; BORDER-LEFT: #eee 1px solid; BORDER-TOP: #eee 1px solid; PADDING-BOTTOM: 20px; MARGIN-TOP: 15px; PADDING-LEFT: 15px; PADDING-RIGHT: 15px;  BORDER-RIGHT: #eee 1px solid; PADDING-TOP: 20px
 }
 .newProjectItem:hover {
-	BORDER-BOTTOM: red 1px solid; POSITION: relative; BORDER-LEFT: red 1px solid; PADDING-BOTTOM: 20px; MARGIN-TOP: 15px; PADDING-LEFT: 15px; PADDING-RIGHT: 15px; BORDER-TOP: red 1px solid; BORDER-RIGHT: red 1px solid; PADDING-TOP: 20px
+	BORDER-BOTTOM: red 1px solid; POSITION: relative; BORDER-LEFT: red 1px solid; BORDER-TOP: red 1px solid; PADDING-BOTTOM: 20px; MARGIN-TOP: 15px; PADDING-LEFT: 15px; PADDING-RIGHT: 15px;  BORDER-RIGHT: red 1px solid; PADDING-TOP: 20px
 }
 .newProjectItemThr {
 	POSITION: relative; PADDING-BOTTOM: 20px; PADDING-LEFT: 15px; PADDING-RIGHT: 15px; PADDING-TOP: 20px

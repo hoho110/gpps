@@ -9,16 +9,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.easyservice.exception.PermissionException;
 import com.easyservice.exception.ProtocolParseException;
 import com.easyservice.security.IAuthorityValidateService;
 import com.easyservice.service.IProtocolBinding;
 import com.easyservice.service.IRemoteServiceRegister;
+import com.easyservice.support.EasyServiceConstant;
 import com.easyservice.support.HttpParse;
 import com.easyservice.support.MangleClassInfo;
 import com.easyservice.support.MangleClassInfoPool;
@@ -34,7 +37,7 @@ import com.easyservice.utils.ApplicationContextUtil;
 public class HttpTransport {
 	private static Logger logger = Logger.getLogger(HttpTransport.class);
 	@Autowired
-	IAuthorityValidateService permissionManager;
+	IAuthorityValidateService authorityValidateService;
 	@Autowired
 	IRemoteServiceRegister register;
 	protected static final String HEADER_IFMODSINCE = "If-Modified-Since";
@@ -61,25 +64,30 @@ public class HttpTransport {
 			IProtocolBinding protocolBinding = register.lookupBinding(parse.getBindingProtocol());
 			if (protocolBinding == null) {
 				if (protocolBinding == null) {
-					serviceResponse.setExceptionType(ExceptionType.ET_SE_PROTOCOL_NOT_SUPPORT);
-					serviceResponse.setException(new UnsupportedOperationException("can not find provider for protocol : " + parse.getBindingProtocol()));
+//					serviceResponse.setExceptionType(ExceptionType.ET_SE_PROTOCOL_NOT_SUPPORT);
+//					serviceResponse.setException(new UnsupportedOperationException("can not find provider for protocol : " + parse.getBindingProtocol()));
 					logger.warn(ExceptionType.ET_SE_BINDING_NOT_SUPPORT + "", new UnsupportedOperationException("can not find binding for protocol : " + parse.getBindingProtocol()));
 					return;
 				}
 			}
 			try {
-				// HttpSession session=req.getSession();
-				// Object
-				// user=session.getAttribute(EasyServiceConstant.SESSION_ATTRIBUTENAME_USER);
-				// int role=EasyServiceConstant.USER_ANONYMOUS;//默认匿名用户
-				//
-				// if(!(user instanceof Role))
-				// {
-				// throw new
-				// Exception("用户类需要继承com.easyservice.Role，已登录用户使用EasyServiceConstant.SESSION_ATTRIBUTENAME_USER作为KEY放入Session");
-				// }
-				// role=((Role)user).getRole();
+				 HttpSession session=req.getSession();
+				 Object	 user=session.getAttribute(EasyServiceConstant.SESSION_ATTRIBUTENAME_USER);
 				if (parse.isFetchSdl()) {
+					if(authorityValidateService==null)
+					{
+						logger.warn(parse.getInterfaceName()+"'sdl is requested.IAuthorityValidateService is null,authorityValidate is disabled.");
+					}
+					else
+					{
+						if(!authorityValidateService.checkPermission(user, true, parse.getInterfaceName(), null))
+						{
+							serviceResponse.setException(new PermissionException());
+							serviceResponse.setExceptionType(ExceptionType.ET_SE_NO_PERMISSION);
+							protocolBinding.replyResponse(parse, serviceResponse);
+							return;
+						}
+					}
 					long ifModifiedSince = req.getDateHeader(HEADER_IFMODSINCE);
 					Class clz;
 					try {
@@ -110,6 +118,20 @@ public class HttpTransport {
 					return;
 				}
 				serviceRequest = protocolBinding.getRequest(parse);
+				if(authorityValidateService==null)
+				{
+					logger.warn(parse.getInterfaceName()+"."+serviceRequest.getMethod().getName()+" is requested.IAuthorityValidateService is null,authorityValidate is disabled.");
+				}
+				else
+				{
+					if(!authorityValidateService.checkPermission(user, false, parse.getInterfaceName(), serviceRequest.getMethod().getName()))
+					{
+						serviceResponse.setException(new PermissionException());
+						serviceResponse.setExceptionType(ExceptionType.ET_SE_NO_PERMISSION);
+						protocolBinding.replyResponse(parse, serviceResponse);
+						return;
+					}
+				}
 				// req.setHttpRequest(RequestContext.getRequest());
 				// RequestContext.setRequest(req);
 				serviceResponse = innerInvoke(serviceRequest, serviceResponse);

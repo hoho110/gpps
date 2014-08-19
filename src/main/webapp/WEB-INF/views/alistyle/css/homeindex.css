@@ -5,7 +5,7 @@
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201206/2qz2UvlUVF.gif)
 }
 #J-slide {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/i/ecmng/jpg/201407/31kKIcRiQ3.jpg)
+	BACKGROUND-IMAGE: url(../img/002.jpg)
 }
 .topbar-wrap .mobile .icon-mobile {
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
@@ -32,22 +32,22 @@
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
 }
 #personal .nav-item-link {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 #personal .nav-item-link:hover {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 #personal .nav-item-link-active {
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
 }
 #payment .nav-item-link {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 #payment .nav-item-link:hover {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 #payment .nav-item-link-active {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 #security .nav-item-link {
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
@@ -59,16 +59,16 @@
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
 }
 #business .icon-nav-split {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 #business .nav-item-link {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 #business .nav-item-link:hover {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 #business .nav-item-link-active {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 .slide-number A {
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
@@ -77,13 +77,13 @@
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
 }
 #pay-quickly .title-link {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 #pay-life .title-link {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 #pay-anywhere .title-link {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 .product-item .link .icon-youhui {
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
@@ -635,7 +635,7 @@ BODY .fn-hide {
 	RIGHT: 20px
 }
 #payment .nav-item-link {
-	WIDTH: 110px; BACKGROUND-POSITION: -206px -135px; MARGIN-RIGHT: 20px
+	WIDTH: 108px; BACKGROUND-POSITION: -206px -135px; MARGIN-RIGHT: 20px
 }
 #payment .nav-item-link:hover {
 	BACKGROUND-POSITION: -96px -45px
@@ -710,7 +710,7 @@ BODY .fn-hide {
 	Z-INDEX: 100; BORDER-BOTTOM: #ffffff 1px solid; POSITION: relative; MIN-WIDTH: 990px; BACKGROUND-COLOR: #f9f9f9; MARGIN: 0px auto; WIDTH: 100%; HEIGHT: 400px; OVERFLOW: hidden
 }
 #J-slide {
-	POSITION: relative; BACKGROUND-COLOR: #f9f4ed; WIDTH: 100%; BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: center center; HEIGHT: 400px
+	POSITION: relative; BACKGROUND-COLOR: #00FF66; WIDTH: 100%; BACKGROUND-REPEAT: no-repeat; BACKGROUND-POSITION: center center; HEIGHT: 400px
 }
 #J-slide .slide {
 	POSITION: absolute; WIDTH: 100%; FLOAT: left; HEIGHT: 400px; TOP: 0px; LEFT: 0px
@@ -866,7 +866,7 @@ BODY .fn-hide {
 	DISPLAY: block; HEIGHT: 30px
 }
 #pay-quickly .title-link {
-	WIDTH: 200px; BACKGROUND-POSITION: -246px -260px
+	WIDTH: 200px; BACKGROUND-POSITION: -261px -260px
 }
 #pay-life .title-link {
 	WIDTH: 199px; BACKGROUND-POSITION: 0px -290px

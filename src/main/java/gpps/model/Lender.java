@@ -7,9 +7,12 @@ public class Lender {
 	private String email;//email
 	private String loginId;//登录名
 	private String password;//md5加密密码
-	private String idnumber;//身份证
-	// accountid int not null,
+	private String identityCard;//身份证
+	private Integer accountId;//账户ID
 	private long createtime=System.currentTimeMillis();//创建时间
+	public static final int PRIVILEGE_COMMON=0;//普通用户
+	public static final int PRIVILEGE_VIP1=1;//普通用户
+	private int privilege=PRIVILEGE_COMMON;//用户角色
 	public Integer getId() {
 		return id;
 	}
@@ -46,16 +49,28 @@ public class Lender {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getIdnumber() {
-		return idnumber;
-	}
-	public void setIdnumber(String idnumber) {
-		this.idnumber = idnumber;
-	}
 	public long getCreatetime() {
 		return createtime;
 	}
 	public void setCreatetime(long createtime) {
 		this.createtime = createtime;
+	}
+	public String getIdentityCard() {
+		return identityCard;
+	}
+	public void setIdentityCard(String identityCard) {
+		this.identityCard = identityCard;
+	}
+	public Integer getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(Integer accountId) {
+		this.accountId = accountId;
+	}
+	public int getPrivilege() {
+		return privilege;
+	}
+	public void setPrivilege(int privilege) {
+		this.privilege = privilege;
 	}
 }

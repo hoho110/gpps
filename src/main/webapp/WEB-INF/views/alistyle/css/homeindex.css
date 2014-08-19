@@ -5,7 +5,7 @@
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201206/2qz2UvlUVF.gif)
 }
 #J-slide {
-	BACKGROUND-IMAGE: url(../img/002.jpg)
+	BACKGROUND-IMAGE: url(../img/003.png)
 }
 .topbar-wrap .mobile .icon-mobile {
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
@@ -89,7 +89,7 @@
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
 }
 .about-item .icon-title-safety {
-	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
+	BACKGROUND-IMAGE: url(../img/all.png)
 }
 .about-item .icon-title-vip {
 	BACKGROUND-IMAGE: url(https://i.alipayobjects.com/e/201307/jebhAW6Vx.png)
@@ -487,11 +487,14 @@ BODY .fn-hide {
 .topbar-wrap .toplink A {
 	LINE-HEIGHT: 14px; DISPLAY: block; HEIGHT: 14px; FONT-SIZE: 12px; VERTICAL-ALIGN: middle
 }
-.topbar-wrap .mobile {
-	PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 15px; FLOAT: left; PADDING-TOP: 0px
+.topbar-wrap .home {
+	PADDING-BOTTOM: 0px; PADDING-LEFT: 0px; MARGIN-RIGHT: 5px; FLOAT: left; PADDING-TOP: 0px
 }
 .topbar-wrap .mobile .icon-mobile {
 	WIDTH: 14px; DISPLAY: block; BACKGROUND-POSITION: -426px -117px; FLOAT: left; HEIGHT: 14px; MARGIN-RIGHT: 4px
+}
+.topbar-wrap .home .icon-home {
+	WIDTH: 15px; DISPLAY: inline-block; BACKGROUND: url(../img/footAll.png) no-repeat -30px -45px; HEIGHT: 15px;
 }
 .topmenu {
 	Z-INDEX: 1000; POSITION: relative; PADDING-BOTTOM: 6px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: right; COLOR: #666666; PADDING-TOP: 6px
@@ -851,10 +854,10 @@ BODY .fn-hide {
 	BORDER-RIGHT: medium none
 }
 .main {
-	BACKGROUND-COLOR: #f9f9f9; WIDTH: 100%; HEIGHT: 260px
+	BACKGROUND-COLOR: #f9f9f9; WIDTH: 100%; HEIGHT: 180px
 }
 .product {
-	BORDER-BOTTOM: #e6e6e6 1px solid; BACKGROUND-COLOR: #f9f9f9; HEIGHT: 160px
+	BACKGROUND-COLOR: #f9f9f9; HEIGHT: 160px
 }
 .product-item {
 	MARGIN: 25px 20px 0px 0px; WIDTH: 340px; FLOAT: left; HEIGHT: auto

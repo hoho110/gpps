@@ -1,29 +1,30 @@
 package gpps.service;
 
-import gpps.model.Lender;
+import gpps.model.Borrower;
 import gpps.service.exception.ValidateCodeException;
 
-public interface ILenderService extends ILoginService{
+public interface IBorrowerService extends ILoginService{
 	/**
-	 * 注册用户(贷款方),privilege默认为0
+	 * 注册用户(借款方),privilege默认为10
 	 * 创建用户时默认为该用户创建一个初始化账户并与之关联
-	 * @param lender 贷款方
+	 * @param borrower 借款方
 	 * @param messageValidateCode 短信验证码
-	 * @return 贷款方，增加ID
+	 * @return 借款方，增加ID
 	 * @throws Exception
 	 */
-	public Lender register(Lender lender,String messageValidateCode) throws ValidateCodeException,IllegalArgumentException;
+	public Borrower register(Borrower borrower,String messageValidateCode) throws ValidateCodeException,IllegalArgumentException;
 	/**
 	 * 更新用户
 	 * 待讨论哪些字段能够更新
-	 * @param lender
+	 * @param borrower
 	 * @return
 	 * @throws Exception
 	 */
-	public Lender update(Lender lender);
+	public Borrower update(Borrower borrower);
 	/**
-	 * 修改用户角色级别,修改范围为Lender定义的privilege常量
+	 * 修改用户角色级别,修改范围为borrower定义的privilege常量
 	 * 该方法只有admin有调用权限
+	 * @param id
 	 * @param privilege
 	 * @throws Exception
 	 */
@@ -34,5 +35,5 @@ public interface ILenderService extends ILoginService{
 	 * @return
 	 * @throws Exception
 	 */
-	public Lender find(int id);
+	public Borrower find(int id);
 }

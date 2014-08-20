@@ -3,6 +3,8 @@ package gpps.service;
 import gpps.model.Borrower;
 import gpps.service.exception.ValidateCodeException;
 
+import java.util.List;
+
 public interface IBorrowerService extends ILoginService{
 	/**
 	 * 注册用户(借款方),privilege默认为10
@@ -36,4 +38,9 @@ public interface IBorrowerService extends ILoginService{
 	 * @throws Exception
 	 */
 	public Borrower find(int id);
+	/**
+	 * 查找可融资的借款方
+	 * @return
+	 */
+	public List<Borrower> findFinancingBorrower();
 }

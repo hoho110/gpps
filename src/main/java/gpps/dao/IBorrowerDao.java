@@ -1,5 +1,7 @@
 package gpps.dao;
 
+import java.util.List;
+
 import gpps.model.Borrower;
 
 public interface IBorrowerDao {
@@ -11,4 +13,5 @@ public interface IBorrowerDao {
 	public Borrower update(Borrower lender);
 	public void changePrivilege(int id,int privilege);
 	public void changePassword(int id,String password);
+	public List<Borrower> findByPrivilege(int privilege);
 }

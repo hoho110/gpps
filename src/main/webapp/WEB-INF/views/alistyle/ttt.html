@@ -1,0 +1,63 @@
+<tr>
+	<td class="product-name">
+		<a href="#" target="_blank" class="fyItem" data-sk="投资频道-投资列表区-项目名称">wd1</a></td>
+    <td>3个月</td>
+    <td>12%</td>
+	<td class="invest-amount">￥30000起</td>
+    <td class="invest-status">
+        <a href="#" target="_blank" class="btns " data-sk="投资频道-投资列表区-投资button">投资</a>
+    </td>
+</tr>
+
+
+
+
+{if model.products.length > 0}
+    {for product in model.products}
+    <tr>
+        <td class="product-name">
+            {if product.sourceType == "4"}
+            <a href="https://list.lufax.com/list/productDetail?productId=${product.productId}"
+                                    target="_blank" class="fyItem" data-sk="投资频道-投资列表区-项目名称">${product.productNameDisplay}</a>
+                {if product.isForNewUser == true}
+                <i class="iconV2 new-user-icon" title="本项目为新客专享项目"></i>
+                {/if}
+                <span class="hot-icon">HOT!</span>
+            {else}
+            <a href="https://list.lufax.com/list/productDetail?productId=${product.productId}"
+               target="_blank" data-sk="投资频道-投资列表区-项目名称">${product.productNameDisplay} ${product.code}</a>
+                {if product.isForNewUser == true}
+                <i class="iconV2 new-user-icon" title="本项目为新客专享项目"></i>
+                {/if}
+                {if product.productType=="TRANSFER_REQUEST"}
+                <i class="iconV2 transfer-icon" title="本项目为转让项目"></i>
+                {/if}
+            {/if}
+ 
+        </td>
+        <td>${product.investPeriodDisplay}</td>
+        <td>${product.interestRateDisplay}</td>
+        <td class="invest-amount">
+            ${product.currentPriceDisplay}
+            {if product.tradingMode == "07" && !product.flg}起{/if}
+        </td>
+        <td class="invest-status">
+            {if product.productStatus == "ONLINE"}
+            {if product.tradingMode == '06'}
+            <a href="https://list.lufax.com/list/productDetail?productId=${product.productId}" target="_blank"
+               class="btns btn-auction " data-sk="投资频道-投资列表区-投资button"><i class="icon-auction-btn"></i> <span>竞拍</span></a>
+            {else}
+            <a href="https://list.lufax.com/list/productDetail?productId=${product.productId}" target="_blank"
+               class="btns " data-sk="投资频道-投资列表区-投资button">投资</a>
+            {/if}
+            {elseif product.productStatus == "PREVIEW"}
+            <a href="https://list.lufax.com/list/productDetail?productId=${product.productId}" target="_blank"
+               class="preview">${product.publishAtTime}发布</a>
+            {elseif product.productStatus == "DONE"}
+            <a href="https://list.lufax.com/list/productDetail?productId=${product.productId}" target="_blank"
+               class="done">交易成功</a>
+            {/if}
+        </td>
+    </tr>
+    {/for}
+    {/if}

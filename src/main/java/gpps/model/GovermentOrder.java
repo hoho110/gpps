@@ -17,6 +17,8 @@ public class GovermentOrder {
 	public static final int STATE_REAPPLY=-2;
 	public static final int STATE_REFUSE=-100;
 	private int state=STATE_APPLY;
+	private long financingStarttime;
+	private long financingEndtime;
 //	private String auditor;//审计员
 	public Integer getId() {
 		return id;
@@ -41,5 +43,17 @@ public class GovermentOrder {
 	}
 	public void setState(int state) {
 		this.state = state;
+	}
+	public long getFinancingStarttime() {
+		return financingStarttime;
+	}
+	public void setFinancingStarttime(long financingStarttime) {
+		this.financingStarttime = financingStarttime;
+	}
+	public long getFinancingEndtime() {
+		return financingEndtime;
+	}
+	public void setFinancingEndtime(long financingEndtime) {
+		this.financingEndtime = financingEndtime;
 	}
 }

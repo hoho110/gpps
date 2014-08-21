@@ -41,4 +41,9 @@ public interface ILenderService extends ILoginService{
 	 * @return
 	 */
 	public int[] findAllPrivilege();
+	/**
+	 * 返回Session用户对象
+	 * @return
+	 */
+	public Lender getCurrentUser();
 }

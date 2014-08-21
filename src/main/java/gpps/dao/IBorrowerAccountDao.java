@@ -5,7 +5,7 @@ import gpps.model.BorrowerAccount;
 import java.math.BigDecimal;
 
 public interface IBorrowerAccountDao {
-	public BorrowerAccount create(BorrowerAccount borrowerAccount);
+	public void create(BorrowerAccount borrowerAccount);
 	public BorrowerAccount find(int accountId);
 	/**
 	 * 充值

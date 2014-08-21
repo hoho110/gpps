@@ -16,4 +16,8 @@ public class CashStream {
 	private BigDecimal interest = BigDecimal.ZERO;//利息
 	private String description;
 	private Integer paybackId;
+	/**
+	 * 0:预操作；1:操作完成;-1操作失败
+	 */
+	private int state=0;
 }

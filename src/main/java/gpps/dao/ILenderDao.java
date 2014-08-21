@@ -7,8 +7,8 @@ public interface ILenderDao {
 	public Lender find(int id);
 	public Lender findByLoginId(String loginId);
 	public Lender findByLoginIdAndPassword(String loginId,String password);
-	public Lender create(Lender lender);
-	public Lender update(Lender lender);
+	public void create(Lender lender);
+	public void update(Lender lender);
 	public void changePrivilege(int id,int privilege);
 	public void changePassword(int id,String password);
 }

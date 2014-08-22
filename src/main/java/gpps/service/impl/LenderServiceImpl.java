@@ -25,14 +25,10 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	@Override
 	public void login(String loginId, String password, String graphValidateCode)
 			throws LoginException, ValidateCodeException {
+		checkGraphValidateCode(graphValidateCode);
 		HttpSession session =getCurrentSession();
 		loginId=checkNullAndTrim("loginId", loginId);
 		password=getProcessedPassword(checkNullAndTrim("password", password)+PASSWORDSEED);
-		graphValidateCode=checkNullAndTrim("graphValidateCode", graphValidateCode);
-		String originalGraphValidateCode=String.valueOf(checkNullObject("originalGraphValidateCode", session.getAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE)));
-		session.removeAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE);//用过一次即删除
-		if(!originalGraphValidateCode.equals(graphValidateCode))
-			throw new ValidateCodeException("GraphValidateCodes do not match");
 		Lender lender=lenderDao.findByLoginIdAndPassword(loginId, password);
 		if(lender==null)
 			throw new LoginException("Login fail!!");
@@ -121,6 +117,7 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 
 	@Override
 	public boolean isPhoneNumberExist(String phoneNumber) {
-		return false;
+		Lender lender=lenderDao.findByTel(phoneNumber);
+		return lender==null?false:true;
 	}
 }

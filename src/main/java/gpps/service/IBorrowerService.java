@@ -1,6 +1,7 @@
 package gpps.service;
 
 import gpps.model.Borrower;
+import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
 
 import java.util.List;
@@ -12,9 +13,10 @@ public interface IBorrowerService extends ILoginService{
 	 * @param borrower 借款方
 	 * @param messageValidateCode 短信验证码
 	 * @return 借款方，增加ID
+	 * @throws LoginException 
 	 * @throws Exception
 	 */
-	public Borrower register(Borrower borrower,String messageValidateCode) throws ValidateCodeException,IllegalArgumentException;
+	public Borrower register(Borrower borrower,String messageValidateCode) throws ValidateCodeException,IllegalArgumentException, LoginException;
 	/**
 	 * 更新用户
 	 * 待讨论哪些字段能够更新
@@ -45,4 +47,6 @@ public interface IBorrowerService extends ILoginService{
 	public List<Borrower> findFinancingBorrower();
 	
 	public void addAccessory(Integer borrowerId,String path);
+	
+	public boolean isPhoneNumberExist(String phoneNumber) ;
 }

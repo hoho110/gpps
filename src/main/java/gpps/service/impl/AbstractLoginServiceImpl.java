@@ -51,6 +51,15 @@ public abstract class AbstractLoginServiceImpl implements ILoginService {
 		if(messageValidateCodeSendTime+MESSAGEVALIDATECODEEXPIRETIME<System.currentTimeMillis())
 			throw new ValidateCodeException("Overdue");
 	}
+	protected void checkGraphValidateCode(String graphValidateCode) throws ValidateCodeException
+	{
+		HttpSession session =getCurrentSession();
+		graphValidateCode=checkNullAndTrim("graphValidateCode", graphValidateCode);
+		String originalGraphValidateCode=String.valueOf(checkNullObject("originalGraphValidateCode", session.getAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE)));
+		session.removeAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE);//用过一次即删除
+		if(!originalGraphValidateCode.equals(graphValidateCode))
+			throw new ValidateCodeException("GraphValidateCodes do not match");
+	}
 	protected String getProcessedPassword(String password)
 	{
 		return DigestUtils.md5Hex(checkNullAndTrim("password", password)+PASSWORDSEED);

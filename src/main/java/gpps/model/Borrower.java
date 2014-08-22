@@ -11,6 +11,7 @@ public class Borrower {
 	private Integer accountId;//账户ID
 	private String material;
 	private String request;
+	private long createtime=System.currentTimeMillis();
 	public static final int PRIVILEGE_VIEW=10;//有查看权限的企业用户
 	public static final int PRIVILEGE_APPLY=11;//申请融资权限的企业用户
 	public static final int PRIVILEGE_FINANCING=12;//有融资权限的企业用户
@@ -80,5 +81,11 @@ public class Borrower {
 	}
 	public void setPrivilege(int privilege) {
 		this.privilege = privilege;
+	}
+	public long getCreatetime() {
+		return createtime;
+	}
+	public void setCreatetime(long createtime) {
+		this.createtime = createtime;
 	}
 }

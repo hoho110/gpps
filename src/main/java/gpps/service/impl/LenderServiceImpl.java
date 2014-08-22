@@ -15,6 +15,7 @@ import gpps.service.ILenderService;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
 import static gpps.tools.StringUtil.*;
+import static gpps.tools.ObjectUtil.*;
 @Service
 public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILenderService{
 	@Autowired
@@ -26,12 +27,12 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 			throws LoginException, ValidateCodeException {
 		HttpSession session =getCurrentSession();
 		loginId=checkNullAndTrim("loginId", loginId);
-		password=DigestUtils.md5Hex(checkNullAndTrim("password", password)+PASSWORDSEED);
+		password=getProcessedPassword(checkNullAndTrim("password", password)+PASSWORDSEED);
 		graphValidateCode=checkNullAndTrim("graphValidateCode", graphValidateCode);
-		String originalGraphValidateCode=String.valueOf(session.getAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE));
-		session.removeAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE);//用过一次即删除u
+		String originalGraphValidateCode=String.valueOf(checkNullObject("originalGraphValidateCode", session.getAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE)));
+		session.removeAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE);//用过一次即删除
 		if(!originalGraphValidateCode.equals(graphValidateCode))
-			throw new ValidateCodeException();
+			throw new ValidateCodeException("GraphValidateCodes do not match");
 		Lender lender=lenderDao.findByLoginIdAndPassword(loginId, password);
 		if(lender==null)
 			throw new LoginException("Login fail!!");
@@ -40,65 +41,74 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 
 	@Override
 	public void changePassword(String loginId, String password,
-			String messageValidateCode) throws ValidateCodeException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void loginOut() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void sendMessageValidateCode() {
-		// TODO Auto-generated method stub
-		
+			String messageValidateCode) throws LoginException,ValidateCodeException {
+		checkMessageValidateCode(messageValidateCode);
+		Lender lender=lenderDao.findByLoginId(loginId);
+		if(lender==null)
+			throw new LoginException("LoginId is not existed");
+		lenderDao.changePassword(lender.getId(), password);
 	}
 
 	@Override
 	public boolean isLoginIdExist(String loginId) {
-		// TODO Auto-generated method stub
-		return false;
+		Lender lender=lenderDao.findByLoginId(loginId);
+		return lender==null?false:true;
 	}
 
 	@Override
 	public String getProcessedTel(String loginId) {
-		// TODO Auto-generated method stub
-		return null;
+		Lender lender=lenderDao.findByLoginId(loginId);
+		if(lender==null)
+			return null;
+		String tel=lender.getTel();
+		char[] processedTel=tel.toCharArray();
+		for(int i=4;i<8;i++)
+		{
+			processedTel[i]='*';
+		}
+		return String.valueOf(processedTel);
 	}
 
 	@Override
 	public Lender register(Lender lender, String messageValidateCode)
-			throws ValidateCodeException, IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return null;
+			throws ValidateCodeException, IllegalArgumentException, LoginException {
+		checkMessageValidateCode(messageValidateCode);
+		lender.setLoginId(checkNullAndTrim("loginId", lender.getLoginId()));
+		lender.setEmail(checkNullAndTrim("email", lender.getEmail()));
+		lender.setIdentityCard(checkNullAndTrim("identityCard", lender.getIdentityCard()));
+		lender.setName(checkNullAndTrim("name", lender.getName()));
+		lender.setPassword(getProcessedPassword(checkNullAndTrim("password", lender.getPassword())+PASSWORDSEED));
+		lender.setCreatetime(System.currentTimeMillis());
+		lender.setPrivilege(Lender.PRIVILEGE_COMMON);
+		lender.setTel(checkNullAndTrim("tel", lender.getTel()));
+		if(lenderDao.findByLoginId(lender.getLoginId())!=null)
+			throw new LoginException("LoginId is existed");
+		lenderDao.create(lender);
+		lender.setPassword(null);
+		return lender;
 	}
-
+	
 	@Override
 	public Lender update(Lender lender) {
-		// TODO Auto-generated method stub
-		return null;
+		lenderDao.update(lender);
+		return lender;
 	}
 
 	@Override
 	public void changePrivilege(int id, int privilege)
 			throws IllegalArgumentException {
-		// TODO Auto-generated method stub
-		
+		lenderDao.changePrivilege(id, privilege);
 	}
 
 	@Override
 	public Lender find(int id) {
-		// TODO Auto-generated method stub
-		return null;
+		return lenderDao.find(id);
 	}
 
 	@Override
 	public int[] findAllPrivilege() {
-		// TODO Auto-generated method stub
-		return null;
+		int[] privileges={Lender.PRIVILEGE_COMMON,Lender.PRIVILEGE_VIP1};
+		return privileges;
 	}
 
 	@Override
@@ -113,5 +123,4 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	public boolean isPhoneNumberExist(String phoneNumber) {
 		return false;
 	}
-
 }

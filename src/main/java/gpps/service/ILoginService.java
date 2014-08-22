@@ -31,9 +31,10 @@ public interface ILoginService {
 	 * @param loginId 登录ID
 	 * @param password 修改密码
 	 * @param messageValidateCode 短信验证码
+	 * @throws LoginException 
 	 * @throws Exception
 	 */
-	public void changePassword(String loginId,String password,String messageValidateCode) throws ValidateCodeException;
+	public void changePassword(String loginId,String password,String messageValidateCode) throws ValidateCodeException, LoginException;
 	/**
 	 * 当前用户登出
 	 */

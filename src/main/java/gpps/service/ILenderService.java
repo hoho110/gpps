@@ -1,6 +1,7 @@
 package gpps.service;
 
 import gpps.model.Lender;
+import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
 
 public interface ILenderService extends ILoginService{
@@ -10,9 +11,10 @@ public interface ILenderService extends ILoginService{
 	 * @param lender 贷款方
 	 * @param messageValidateCode 短信验证码
 	 * @return 贷款方，增加ID
+	 * @throws LoginException 
 	 * @throws Exception
 	 */
-	public Lender register(Lender lender,String messageValidateCode) throws ValidateCodeException,IllegalArgumentException;
+	public Lender register(Lender lender,String messageValidateCode) throws ValidateCodeException,IllegalArgumentException, LoginException;
 	/**
 	 * 更新用户
 	 * 待讨论哪些字段能够更新

@@ -366,10 +366,38 @@
 </div>
 <div class="sidebar">
     
+    
+    <script src="../demo/js/cdn/jquery.min.js"></script>
+    <script>
+    $(document).ready(function () {
+    $('div.notice-function-head a').click(function(){
+    	
+    	if($(this).hasClass('selected')){
+    		window.open('index.html');
+    		return;
+    	}
+    	
+    	
+    	
+    	$(this).addClass('selected');
+    	
+    	$(this).siblings('a').removeClass('selected');
+    	
+    	
+    	
+    	$('ul.notice-function-list[data-sk="'+$(this).find('span.info').text()+'"]').removeClass('hidden');
+    	$('ul.notice-function-list[data-sk="'+$(this).find('span.info').text()+'"]').siblings('ul').addClass('hidden');
+    });
+    });
+    
+    </script>
+    
+    
+    
  
     <div class="notice-function sidebar-panels">
         <div class="notice-function-head clearfix">
-            <a href="#" target="_blank" class="selected">
+            <a href="javascript:void(0);" class="selected">
                 <span class="info">平台公告</span>
                 <span class="more">&gt;</span>
             </a>
@@ -379,7 +407,7 @@
             </a>
         </div>
         <div class="notice-function-body">
-            <ul class="notice-function-list " data-sk="首页-公告区">
+            <ul class="notice-function-list " data-sk="平台公告">
                     
                 <li class="clearfix">
                 <b></b><a class="list" href="#" title="公告" target="_blank">【2014-8-13】平台发售XXXX企业融资产品，收益率12%</a>
@@ -400,7 +428,7 @@
     </li>
     
             </ul>
-            <ul class="notice-function-list hidden " data-sk="首页-新功能区">
+            <ul class="notice-function-list hidden " data-sk="企业公告">
                              <li>
                 <b></b><a href="#" title="体验更好——“我的账户”首页改版公告" target="_blank">体验更好——“我的账户”首页改版公告</a>
             </li>

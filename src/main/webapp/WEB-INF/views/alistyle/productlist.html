@@ -80,7 +80,7 @@
     </div>
 <div class="nav-wrap">
         <ul class="main-nav clearfix">
-            <li class="selected"><a href="#"  data-sk="一级导航-首页">首页</a></li>
+            <li class="selected"><a href="index.html"  data-sk="一级导航-首页">首页</a></li>
             <li class="invest has-sub-nav">
                 <a href="javascript:void(0);"  data-sk="一级导航-投资频道" id="allP2pCounts">投资频道 <span></span> <i class="nav-arrow transition"></i></a>
                 <ul class="sub-nav-list">
@@ -106,11 +106,11 @@
     <ul class="breadcrumb">
         <li><a href="index.html">政采贷首页</a> <span class="divider">&gt;</span></li>
         <li><a href="javascript:void(0);" onclick="window.location.reload(true)">投资频道</a> <span class="divider">&gt;</span></li>
-        <li class="active">稳健型</li>
+        <li id="gpps_nav_path" class="active">稳健型</li>
     </ul>
     <ul class="list-nav-wrap clearfix">
     <li class="selected"><a href="#" data-sk="稳健型"><i class="product-icon fy-icon"></i><span class="min-price">1000元起</span><span class="counts" id="list-nav-fy"></span></a></li>
-    <li class=""><a href="#" data-sk="平衡型"><i class="product-icon ayi-icon"></i><span class="min-price">1万元起</span><span class="counts" id="list-nav-ayi"></span></a></li>
+    <li><a href="#" data-sk="平衡型"><i class="product-icon ayi-icon"></i><span class="min-price">1万元起</span><span class="counts" id="list-nav-ayi"></span></a></li>
     <li class=""><a href="#" data-sk="进取型"><i class="product-icon aye-icon"></i><span class="min-price">25万元起</span><span class="counts" id="list-nav-aye"></span></a></li>
     <li class=""><a href="#" data-sk="企业列表"><i class="product-icon zx-icon"></i><span class="min-price">10万元起</span><span class="counts" id="list-nav-zx"></span></a></li>
 </ul>
@@ -452,7 +452,16 @@
         </div>
     </div>
 </div>
-
+<script src="../demo/js/cdn/jquery.min.js"></script>
+<script>
+$(document).ready(function () {
+	$('ul.list-nav-wrap li a').click(function(e){
+		$('ul.list-nav-wrap li').removeClass('selected');
+		$(this).parent().addClass('selected');
+		$('#gpps_nav_path').html($(this).attr('data-sk'));
+	});
+});
+</script>
     </body>
 </html>
 

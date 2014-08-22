@@ -33,4 +33,6 @@ public interface IGovermentOrderService {
 	 * @return
 	 */
 	public List<GovermentOrder> findByBorrowerIdAndState(int borrowerId,int state);
+	
+	public void addAccessory(Integer orderId,String path);
 }

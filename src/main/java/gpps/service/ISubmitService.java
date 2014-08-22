@@ -29,7 +29,7 @@ public interface ISubmitService {
 	 * 返回用户购买的所有订单，按时间倒序排序
 	 * @return
 	 */
-	public Submit findAll();
+	public List<Submit> findAll();
 	/**
 	 * 找到该订单的资金流,倒序排列返回
 	 * @param submit

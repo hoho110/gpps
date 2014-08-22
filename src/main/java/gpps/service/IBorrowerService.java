@@ -43,4 +43,6 @@ public interface IBorrowerService extends ILoginService{
 	 * @return
 	 */
 	public List<Borrower> findFinancingBorrower();
+	
+	public void addAccessory(Integer borrowerId,String path);
 }

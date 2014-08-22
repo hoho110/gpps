@@ -2,7 +2,9 @@ package gpps.service;
 
 import java.util.List;
 
+import gpps.model.GovermentOrder;
 import gpps.model.Product;
+import gpps.model.ProductAction;
 import gpps.service.exception.IllegalStateConvertException;
 
 public interface IProductService {
@@ -22,4 +24,16 @@ public interface IProductService {
 	public Product find(Integer productId);
 	
 	public List<Product> findByGovermentOrder(Integer orderId);
+	
+	public List<Product> findByState(int state,int offset,int recnum);
+	
+	public List<Product> findByProductSeriesAndState(Integer productSeriesId,int state,int offset,int recnum);
+	
+	public void createProductAction(ProductAction productAction);
+	
+	public List<ProductAction> findByProductId(Integer productId);
+	
+	public void addAccessory(Integer productId,String path);
+	
+	public void changeBuyLevel(Integer productId,int buyLevel);
 }

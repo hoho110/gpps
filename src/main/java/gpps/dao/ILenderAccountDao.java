@@ -9,12 +9,16 @@ public interface ILenderAccountDao {
 	public LenderAccount find(int accountId);
 	/**
 	 * 充值
+	 * total=total+amount
+	 * usable=usable+amount
 	 * @param accountId
 	 * @param amount
 	 */
 	public void recharge(int accountId,BigDecimal amount);
 	/**
 	 * 冻结
+	 * usable=usable-amount
+	 * freeze=freeze+amount
 	 * @param accountId
 	 * @param amount
 	 */

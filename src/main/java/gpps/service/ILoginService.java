@@ -53,6 +53,8 @@ public interface ILoginService {
 	 * @return true:重复；false：不重复
 	 */
 	public boolean isLoginIdExist(String loginId);
+	
+	public boolean isPhoneNumberExist(String phoneNumber);
 	/**
 	 * 用户密码找回
 	 * @param loginId 登录ID

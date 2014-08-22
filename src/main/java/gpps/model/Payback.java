@@ -1,5 +1,7 @@
 package gpps.model;
 
+import java.math.BigDecimal;
+
 public class Payback {
 	private Integer id;
 	private Integer borrowerAccountId;
@@ -9,6 +11,9 @@ public class Payback {
 	 */
 	private int state;
 	private long datetime;
+	private BigDecimal chiefAmount;
+	private BigDecimal interest;
+	private long deadline;
 //	private Integer paybackId;
 //	/**
 //	 * 0：正常还款 1：新增（指向延期）

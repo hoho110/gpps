@@ -1,8 +1,10 @@
 package gpps.service;
 
+import gpps.model.CashStream;
 import gpps.service.exception.InsufficientBalanceException;
 
 import java.math.BigDecimal;
+import java.util.List;
 /**
  * 账户服务
  * 该服务对外不可见，前端不可直接调用
@@ -63,6 +65,14 @@ public interface IAccountService {
 	 * @throws IllegalStateException
 	 */
 	public void changeCashStreamState(Integer cashStreamId,int state) throws IllegalStateException;
-	
-	
+	/**
+	 * 调用第三方平台验证
+	 * @param cashStreamId
+	 */
+	public void checkThroughThirdPlatform(Integer cashStreamId);
+	/**
+	 * 找到未处理的现金流
+	 * @return
+	 */
+	public List<CashStream> findAllDirtyCashStream();
 }

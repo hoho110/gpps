@@ -109,4 +109,9 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		return (Lender)session.getAttribute(SESSION_ATTRIBUTENAME_USER);
 	}
 
+	@Override
+	public boolean isPhoneNumberExist(String phoneNumber) {
+		return false;
+	}
+
 }

@@ -38,4 +38,8 @@
 		password=#{password} 
 		where id=#{id}
 	</update>
+	<delete id="delete">
+		delete from Borrower
+		where id=#{id}
+	</delete>
 </mapper>

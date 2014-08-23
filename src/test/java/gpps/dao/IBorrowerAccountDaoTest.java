@@ -3,26 +3,21 @@
  */
 package gpps.dao;
 
-import static org.junit.Assert.*;
+import gpps.TestSupport;
+import gpps.model.BorrowerAccount;
 
 import java.math.BigDecimal;
-
-import gpps.model.BorrowerAccount;
 
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 /**
  * @author wangm
  *
  */
-public class IBorrowerAccountDaoTest {
-	static ApplicationContext context = null;
+public class IBorrowerAccountDaoTest extends TestSupport{
 	static IBorrowerAccountDao borrowerAccountDao = null;
 	static BorrowerAccount account=null;
 	/**
@@ -30,8 +25,6 @@ public class IBorrowerAccountDaoTest {
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		context = new FileSystemXmlApplicationContext(
-				"/src/main/webapp/WEB-INF/spring/root-context.xml");
 		borrowerAccountDao = (IBorrowerAccountDao) context.getBean(IBorrowerAccountDao.class);
 	}
 

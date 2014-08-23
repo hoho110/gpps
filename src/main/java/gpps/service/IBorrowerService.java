@@ -24,7 +24,7 @@ public interface IBorrowerService extends ILoginService{
 	 * @return
 	 * @throws Exception
 	 */
-	public Borrower update(Borrower borrower);
+//	public Borrower update(Borrower borrower);
 	/**
 	 * 修改用户角色级别,修改范围为borrower定义的privilege常量
 	 * 该方法只有admin有调用权限

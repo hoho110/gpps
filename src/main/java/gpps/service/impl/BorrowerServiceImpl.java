@@ -72,7 +72,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		borrower.setName(checkNullAndTrim("name", borrower.getName()));
 		borrower.setPassword(getProcessedPassword(checkNullAndTrim("password", borrower.getPassword())+PASSWORDSEED));
 		borrower.setCreatetime(System.currentTimeMillis());
-		borrower.setPrivilege(borrower.PRIVILEGE_APPLY);
+		borrower.setPrivilege(borrower.PRIVILEGE_VIEW);
 		borrower.setTel(checkNullAndTrim("tel", borrower.getTel()));
 		if(borrowerDao.findByLoginId(borrower.getLoginId())!=null)
 			throw new LoginException("LoginId is existed");
@@ -81,11 +81,11 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		return borrower;
 	}
 
-	@Override
-	public Borrower update(Borrower borrower) {
-		borrowerDao.update(borrower);
-		return borrower;
-	}
+//	@Override
+//	public Borrower update(Borrower borrower) {
+//		borrowerDao.update(borrower);
+//		return borrower;
+//	}
 
 	@Override
 	public void changePrivilege(int id, int privilege)

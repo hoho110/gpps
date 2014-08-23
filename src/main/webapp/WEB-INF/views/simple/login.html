@@ -1,111 +1,164 @@
-ï»¿<!DOCTYPE html>
-<html lang="zh-cn">
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
-<title>æ”¿XèXç½‘</title>
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="GBK" />
+        <title>µÇÂ¼ÖĞĞÄ £­ Õş²É´û</title>
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        
+ 
+                    <link charset="utf-8" rel="stylesheet" href="css/homeB.css" media="all" />
+        
+                    <style type="text/css"> 
+.sl-delect {
+    zoom: 1;
+}
+</style>
+                        
+<style> 
+.iconfont {
+    font-family:"rei";
+    font-style: normal;
+    font-weight: normal;
+    cursor: default;
+    -webkit-font-smoothing: antialiased;
+}
+</style>
+ 
 
-<!-- Bootstrap -->
-<link href="css/bootstrap.min.css" rel="stylesheet">
+ 
 
-<link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
-    <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
+  
+ 
+ </head>
+    <!--[if lt IE 7]>
+    <body class="ie6"><![endif]--><!--[if IE 7]>
+    <body class="ie7"><![endif]--><!--[if IE 8]>
+    <body class="ie8"><![endif]--><!--[if IE 9]>
+    <body class="ie9"><![endif]--><!--[if !IE]><!-->
+    <body><!--<![endif]-->
+ 
+ 
+ 
+<style type="text/css"> 
+.umidWrapper{display:block; height:1px;}
+#J-login{
+position:absolute; 
+top:50%; 
+left:50%; 
+margin:-150px 0 0 -150px;
+}
+</style>
+
+
+
+
+<div class="login login-modern" id="J-login">
+        <fieldset>
+           <h2 class='ui-form-title ' id="J-login-title">µÇÂ¼Õş²É´û</h2>
+ 
+                        
+ 
+<div class="sl-error" id="J-errorBox" errorType="">
+    <i class="iconfont" title="³ö´í"></i>
+    <span class="sl-error-text"></span>
+</div>
     
-<link href="css/mine.css" rel="stylesheet">
+        <div class="ui-form-item" id="J-username">
+    <label id="J-label-user" class="ui-label" seed="authcenter-switch-account">
+        <span class="ui-icon ui-icon-userDEF">ÕË»§Ãû£º</span>
+            </label>
+                            <input type="text" id="J-input-user" class="ui-input ui-input-normal" name="logonId" autocomplete="off" tabindex="1" value="" autocomplete="off" maxlength="100" placeholder="ÓÊÏäµØÖ·/ÊÖ»úºÅÂë" seed="authcenter-input-account">
+        </div>
+                        
+ 
+		<div class="ui-form-item ui-form-item-20pd" id="J-password">
+    <label id="J-label-editer" class="ui-label" data-desc="µÇÂ¼ÃÜÂë" seed="authcenter-switch-aliedit">
+        <span class="ui-icon ui-icon-securityON" id="safeSignCheck">µÇÂ¼ÃÜÂë</span>
+            </label>
+ 
+				
+ 
+ 
+ 
+    
+   
+ 
 
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-      <script src="js/cdn/html5shiv.min.js"></script>
-      <script src="js/cdn/respond.min.js"></script>
-    <![endif]-->
-</head>
-<body>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="js/cdn/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="js/bootstrap.min.js"></script>
+<span class="standardPwdContainer" style="display:block">
+  <input type="password" tabindex="2" id="password_input" name="password_input" class="ui-input" oncontextmenu="return false" onpaste="return false" oncopy="return false" oncut="return false" autocomplete="off" />
+</span>
+    <p style="float:right;">
+                <a class="textlink forgot" href="#" tabindex='5' seed="authcenter-pwd-forget" seed="authcenter-pwd-forget">Íü¼ÇµÇÂ¼ÃÜÂë£¿</a>
+    </p>
+</div>
+ 
+      
+    <div id="J-checkcode" class='ui-form-item'>
+        <label id="J-label-checkcode" class="ui-label" seed="authcenter-switch-checkcode">
+            <span class="ui-icon ui-icon-checkcodeT" id="J-switchCheckcode">Ğ£ÑéÂë</span>
+                        <div id="J-label-checkcode-pop" class="ui-poptip">
+                <div class="ui-poptip-container fn-hide">
+                    <div class="ui-poptip-arrow ui-poptip-arrow-7">
+                        <em>123123</em>
+                        <span>123123</span>
+                    </div>
+                </div>
+            </div>
+                    </label>
+        <input type="text" placeholder="ÑéÖ¤Âë" value="" class="ui-input ui-input-checkcode" id="J-input-checkcode" data-type="IMAGE" maxlength="4" name="checkCode" autocomplete="off" tabindex="3" data="" seed="authcenter-input-checkcode">
+        <span class="sl-checkcode" id="J-checkcodeIcon"></span>
+        <div class="ui-checkcode">
+                        <img class="ui-checkcode-img" id="J-checkcode-img" src="https://omeo.alipay.com/service/checkcode?sessionID=9932cb127a44cac042b217c602ab09a1&amp;t=0.3556774904206308" title="µã»÷Í¼Æ¬Ë¢ĞÂÑéÖ¤Âë" alt="µã»÷Í¼Æ¬Ë¢ĞÂÑéÖ¤Âë" seed="authcenter-img-checkcode">
+                        
+                    </div>
+                    </div>
+ 
+                        <div class="ui-form-item ui-form-item-30pd" id="J-submit">
+                <input type="submit" value="µÇ Â¼" class="ui-button" id="J-login-btn" tabindex="4" seed='authcenter-submit-homeB'>
+                <p class="ui-form-other">
+                    <a href="#" seed="authcenter-taobaoMember" class="textlink" title="ÆóÒµÓÃ»§µÇÂ¼" tabindex="6">ÆóÒµÓÃ»§µÇÂ¼</a>
+                                        <a class="register" href="register" seed="authcenter-register" title="Ãâ·Ñ×¢²á" tabindex="8">Ãâ·Ñ×¢²á</a>
+                </p>
+            </div><!-- //submit -->
+        </fieldset>
+		</div><!-- //login -->
 
-<div class="container-fluid">
-<div class="row" style="padding-left:5px; padding-right:5px;">
-<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
-<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-
-<div class="panel panel-default" style="padding-bottom:50px;">
-<div class="panel-heading"><a href="index.html"><span class="glyphicon glyphicon-arrow-left"></span>å–æ¶ˆ</a></div>
-
-<div class="row" style="margin-top:10px;">
-<div class="col-xs-12 col-md-12" style="text-align:right; padding-right:30px;">æ²¡æœ‰å¯†ç ï¼Ÿ<a href="register.html">å…è´¹æ³¨å†Œ</a></div>
-</div>
-<div class="row" style="margin-top:15px;">
-<div class="hidden-xs col-sm-4 col-md-4" style="padding-left:25px;">ç”¨æˆ·å</div>
-<div class="col-xs-12 col-sm-8 col-md-8" style="padding-right:25px;"><input id="username" type="text" class="form-control" placeholder="è¯·è¾“å…¥æ‚¨çš„ç”¨æˆ·å"></input></div>
-<div class="col-xs-12 col-sm-12 col-md-12"><span id="usernameLabel" style="font-size:small"></span></div>
-</div>
-<div class="row" style="margin-top:5px;">
-<div class="hidden-xs col-sm-4 col-md-4" style="padding-left:25px;">å¯†ç </div>
-<div class="col-xs-12 col-sm-8 col-md-8" style="padding-right:25px;"><input id="password" type="password" class="form-control" placeholder="è¯·è¾“å…¥æ‚¨çš„å¯†ç "></input></div>
-<div class="col-xs-12 col-sm-12 col-md-12"><span id="passwordLabel" style="font-size:small"></span></div>
-</div>
-<div class="row" style="margin-top:5px;">
-<div class="hidden-xs col-sm-4 col-md-4" style="padding-left:25px;">éªŒè¯ç </div>
-<div class="col-xs-7 col-sm-4 col-md-4"><input id="validate" type="text" class="form-control" placeholder="è¯·è¾“å…¥éªŒè¯ç "></input></div>
-<div class="col-xs-5 col-sm-4 col-md-4" style="padding-right:25px;"><img src="img/yanzhengma.jpg"></img></div>
-<div class="col-xs-12 col-sm-12 col-md-12"><span id="validateLabel" style="font-size:small"></span></div>
-</div>
-<div class="row" style="margin-top:5px;">
-<div class="col-xs-2 col-sm-4 col-md-4"></div>
-<div class="col-xs-8 col-sm-4 col-md-4"><button id="login" type="button" class="btn btn-success" style="width:150px;">ç™»é™†</button></div>
-<div class="col-xs-2 col-sm-4 col-md-4"></div>
-</div>
-
-</div>
-
-
-</div>
-<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4"></div>
-</div>
-</div>
-<script src="js/cookies.js"></script>
+		
+		
+		<script src="js/cookies.js"></script>
+		<script src="js/cdn/jquery.min.js"></script>
 <script>
 $(document).ready(function() {
 	
 	
-	$('.login_text').click(function(e){
-		
-			return;
-		});
-	
-	
-	
-	
-	$('#username').focus();
-       $('#login').click(function(e){
-			var username = $('input#username').val();
-			var password = $('input#password').val();
-			var validate = $('input#validate').val();
+	$('#J-input-user').focus();
+       $('#J-login-btn').click(function(e){
+			var username = $('input#J-input-user').val();
+			var password = $('input#password_input').val();
+			var validate = $('input#J-input-checkcode').val();
 
 			if(username==null||username==''){
-					$('#usernameLabel').css('color', 'red').html('*è¯·è¾“å…¥ç”¨æˆ·å');
+				$('#J-errorBox').removeClass('sl-error').addClass('sl-error-display').html('*ÇëÊäÈëÓÃ»§Ãû');
 					return;
 				}else{
-					$('#usernameLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+					$('#J-errorBox').addClass('sl-error').removeClass('sl-error-display').html('');
 					}
 
 			if(password==null||password==''){
-				$('#passwordLabel').css('color', 'red').html('*è¯·è¾“å…¥å¯†ç ');
+				$('#J-errorBox').removeClass('sl-error').addClass('sl-error-display').html('*ÇëÊäÈëÃÜÂë');
 				return;
 			}else{
-				$('#passwordLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+				$('#J-errorBox').addClass('sl-error').removeClass('sl-error-display').html('');
 				}
 
 
 			if(validate==null||validate==''||validate!='8668'){
-				$('#validateLabel').css('color', 'red').html('*éªŒè¯ç é”™è¯¯');
+				$('#J-errorBox').removeClass('sl-error').addClass('sl-error-display').html('*ÑéÖ¤Âë´íÎó£¡');
 				return; 
 			}else{
-				$('#validateLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+				$('#J-errorBox').addClass('sl-error').removeClass('sl-error-display').html('');
 				}
 
 
@@ -114,50 +167,25 @@ $(document).ready(function() {
 				addCookie("username","wd",1);
 				window.location.href="temp.html"; 
 				}else{
-				alert('ç”¨æˆ·åå¯†ç é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥ï¼');
-				$('input#password').val('');
-				$('input#validate').val('');
-				$('#usernameLabel').html('').removeClass('glyphicon glyphicon-ok');
-				$('#passwordLabel').html('').removeClass('glyphicon glyphicon-ok');
-				$('#validateLabel').html('').removeClass('glyphicon glyphicon-ok');
+				alert('ÓÃ»§ÃûÃÜÂë´íÎó£¬ÇëÖØĞÂÊäÈë£¡');
+				$('input#password_input').val('');
+				$('input#J-input-checkcode').val('');
 					}
 			
            });
 
-       $('input#username').blur(function(e){
-           var username = $(this).val();
-           if(username==null||username==''){
-				$('#usernameLabel').css('color', 'red').html('*è¯·è¾“å…¥ç”¨æˆ·å');
-			}else{
-				$('#usernameLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
-				}
-           });
-       $('input#password').blur(function(e){
-    	   var password = $(this).val();
-    	   if(password==null||password==''){
-				$('#passwordLabel').css('color', 'red').html('*è¯·è¾“å…¥å¯†ç ');
-			}else{
-				$('#passwordLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
-				}
-           });
+       
 
-       $('input#validate').blur(function(e){
-    	   var validate = $(this).val();
-    	   if(validate==null||validate==''||validate!='8668'){
-				$('#validateLabel').css('color', 'red').html('*éªŒè¯ç é”™è¯¯');
-			}else{
-				$('#validateLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
-				}
-           });
-
-       $('input#validate').on('keyup', function(e) {
+       $('input#J-input-checkcode').on('keyup', function(e) {
 
 			var key = e.keyCode;
-			if (key === 13) { // è¡¨ç¤ºæŒ‰çš„æ˜¯enteré”®
-				$('#login').click();
+			if (key === 13) { // ±íÊ¾°´µÄÊÇenter¼ü
+				$('#J-login-btn').click();
 			}
        });
 })
 </script>
-</body>
+		
+		
+    </body>
 </html>

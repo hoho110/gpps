@@ -1,0 +1,382 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+<title>政X融X网</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
+    
+<link href="css/mine.css" rel="stylesheet">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="js/cdn/html5shiv.min.js"></script>
+      <script src="js/cdn/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/cdn/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+
+<div class="container-fluid">
+<div class="row" style="padding-left:5px; padding-right:5px;">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+
+<div class="row">
+
+
+
+
+
+<div class="col-xs-12 col-sm-2 col-md-2">
+<img src="img/logo.jpg"></img>
+</div>
+
+
+
+
+<div class="hidden-xs col-sm-10 col-md-10">
+<div class="btn-group btn-group-lg  btn-group-justified" style="background-color:#f0ad4e; width:100%;">
+
+<div class="btn-group">
+<a href="index.html" class="btn btn-warning btn-lg">首&nbsp;&nbsp;&nbsp;&nbsp;页&nbsp;&nbsp;&nbsp;</a>
+</div>
+<div class="btn-group">
+<a href="projectlist.html" class="btn btn-warning btn-lg">我要理财</a>
+</div>
+<div class="btn-group">
+<a href="temp.html" class="btn btn-warning btn-lg active">我的账户</a>
+</div>
+<div class="btn-group">
+<a href="#" class="btn btn-warning btn-lg">我要融资</a>
+</div>
+<div class="btn-group">
+<a href="#" class="btn btn-warning btn-lg">设&nbsp;&nbsp;&nbsp;&nbsp;置&nbsp;&nbsp;&nbsp;</a>
+</div>
+<div class="btn-group">
+<a id="lg_login_text" class="btn btn-warning btn-lg login_text"><SPAN style="cursor:pointer;">个人中心▼</span></a>
+</div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+
+
+<div class="row">
+<div id="account_total" class="col-xs-12 col-md-12">
+<div class="panel panel-default" style="padding-bottom:5px;">
+<div class="panel-heading"><a href="index.html"><span class="glyphicon glyphicon-arrow-left"></span>返回首页</a></div>
+<div class="row" style="margin-left:5px; margin-right:5px; margin-top:10px;">
+<div class="col-xs-12 col-md-3">
+<div class="row" style="border: #eee solid 1px;">
+<div class="col-xs-12 col-md-12">账户总额</div>
+<div class="col-xs-12 col-md-12"><font size=5 color="orange">10023.00</font></div>
+</div>
+</div>
+<div class="col-xs-12 col-md-3">
+<div class="row" style="border: #eee solid 1px;">
+<div class="col-xs-6 col-md-6">可用余额</div>
+<div class="col-xs-6 col-md-6">已投入金额</div>
+<div class="col-xs-6 col-md-6"><font size=5 color="orange">5000.00</font></div>
+<div class="col-xs-6 col-md-6"><font size=5 color="orange">5023.00</font></div>
+</div>
+</div>
+<div class="col-xs-12 col-md-3">
+<div class="row" style="border: #eee solid 1px;">
+<div class="col-xs-6 col-md-6">累计收益</div>
+<div class="col-xs-6 col-md-6">预期收益</div>
+<div class="col-xs-6 col-md-6"><font size=5 color="orange">1023.00</font></div>
+<div class="col-xs-6 col-md-6"><font size=5 color="orange">108.00</font></div>
+</div>
+</div>
+<div class="col-xs-12 col-md-3">
+<button type="button" class="btn btn-warning">充值</button><button type="button" class="btn btn-default">提现</button>
+</div>
+
+</div>
+
+<div class="row" style="margin-top:20px;">
+<div class="col-xs-12 col-md-12">
+<div style="width: 300px; display:block; margin-left: auto; margin-right: auto;">
+<img src = "img/earn.jpg" style=" margin-right:2px; width:60px; height:60px;"></img><font size=6 color=orange>0.21</font>
+<img src = "img/lend.jpg" style=" margin-right:2px; width:60px; height:60px;"></img><font size=6 color=green>500</font>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+<div id="personal_message" class="col-xs-12 hidden-md">
+
+
+
+<DIV style="DISPLAY: none; padding: 10px 0 10px 5px; margin-bottom:5px;" id=login_pop>
+
+  <DIV style="LINE-HEIGHT: 180%; padding-left:5px; HEIGHT:45px; FONT-SIZE:13px;">
+  <DIV style="width:90%; MARGIN-LEFT: 10px"><SPAN style="MARGIN-RIGHT: 10px" 
+  id=login_name>您好：wd</SPAN><span style="float:right;"><A href="quit.html">退出登录</A></span> </DIV>
+  <div style="clear:both;"></div>
+  </div>
+  <div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
+  <DIV style="LINE-HEIGHT: 180%; padding-left:5px; FONT-SIZE:13px;">
+  <SPAN><IMG 
+  style="VERTICAL-ALIGN: text-bottom" 
+  src="img/m_tel_icon.png"> <A 
+  id=login_tel_status 
+  href="http://www.btc38.com/trade/binding_tel.html">手机已绑定</A><IMG 
+  style="MARGIN-LEFT: 10px; VERTICAL-ALIGN: text-bottom" 
+  src="img/m_card_icon.png"> 
+  <A id=login_cred_status href="http://www.btc38.com/trade/rnsys.html">实名已认证</A><IMG 
+  style="MARGIN-LEFT: 10px; VERTICAL-ALIGN: text-bottom" 
+  src="img/m_lock_icon.png"> 
+  <A href="http://www.btc38.com/trade/trade_pwd.html">交易密码</A></SPAN>
+  </div>
+  <div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
+  
+  <DIV style="LINE-HEIGHT: 180%; padding-left:5px; FONT-SIZE:13px;">
+  <A 
+  href="http://www.btc38.com/trade/trade_balance.html">资金管理/充值/提款</A> | <A 
+  href="http://www.btc38.com/trade/accrual.html">利息</A> | <A 
+  href="http://www.btc38.com/trade/tmc_bonus.html">时代币和分红</A><BR><A 
+  href="http://www.btc38.com/trade/trade_order.html">我的委单</A> | <A 
+  href="http://www.btc38.com/trade/trade_clinch.html">成交记录</A> | <A 
+  href="http://www.btc38.com/trade/cs_qaa.html">客服有问必答</A> | <A 
+  href="http://www.btc38.com/trade/reserves.html">准备金</A>
+  </div>
+  
+  <div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
+<DIV style="LINE-HEIGHT: 180%; padding-left:5px; FONT-SIZE:13px;">
+<A 
+  href="http://en.btc38.com/" target=_blank>English Version</A> | <A 
+  href="http://www.btc38.com/general/1694.html" target=_blank>手机交易WAP</A> | <A 
+  href="http://www.btc38.com/general/2227.html" target=_blank>手机行情APP</A>
+</DIV>
+<div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
+<DIV style="LINE-HEIGHT: 180%; MARGIN: 0px 10px 10px; FONT-SIZE: 12px" 
+id=gonggao>[公告]2014-9-2政府办公采购结构化产品正式投标</DIV></DIV>
+
+
+
+
+</div>
+</div>
+
+
+
+
+<div class="row" style="margin-top: 10px;">
+
+<div class="col-xs-12 col-md-4">
+<div class="panel panel-default">
+<div class="panel-heading">资金流动性分析(元)</div>
+<div id="morris-donut-analysis"></div>
+</div>
+</div>
+
+<div class="col-xs-12 col-md-4">
+<div class="panel panel-default">
+<div class="panel-heading">回款金额(元)</div>
+<div id="morris-bar-chart"></div>
+</div>
+</div>
+
+<div class="col-xs-12 col-md-4">
+<div class="panel panel-default">
+<div class="panel-heading">基本资料</div>
+	<table class="table">
+	<tr><td>实名认证</td><td>王冬(130435********005X)</td></tr>
+	<tr><td>手机号</td><td>138****9462</td></tr>
+	<tr><td>邮箱</td><td>wangd@calis.edu.cn</td></tr>
+	<tr><td>汇付账户</td><td>hbak_630537042931</td></tr>
+	</table>
+</div>
+
+</div>
+</div>
+
+<div class="row" style="margin-top: 10px;">
+<div class="col-xs-12 col-md-4">
+<div class="panel panel-default">
+<div class="panel-heading">投标概况(<a href="myproject.html">查看详情</a>)</div>
+<table class="table">
+	<tr><th>状态</th><th>笔数</th><th>金额</th></tr>
+	<tr><td>回款中</td><td>10</td><td>500</td></tr>
+	<tr><td>投标中</td><td>0</td><td>0</td></tr>
+	<tr><td>已完成</td><td>1</td><td>200</td></tr>
+	<tr><td>总计</td><td>11</td><td>700</td></tr>
+	</table>
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="panel panel-default">
+<div class="panel-heading">回款计划(<a href="mypayback.html">查看详情</a>)</div>
+<table class="table">
+	<tr><th>时间</th><th>笔数</th><th>金额</th></tr>
+	<tr><td>本月</td><td>2</td><td>12</td></tr>
+	<tr><td>下月</td><td>5</td><td>50</td></tr>
+	<tr><td>本年</td><td>21</td><td>120.39</td></tr>
+	<tr><td>总计</td><td>21</td><td>120.39</td></tr>
+	</table>
+</div>
+</div>
+<div class="col-xs-12 col-md-4">
+<div class="panel panel-default">
+<div class="panel-heading">资金流向(<a href="mymoneystream.html">查看详情</a>)</div>
+<table class="table">
+	<tr><th>时间</th><th>类型</th><th>手续费</th><th>金额</th><th>账户余额</th></tr>
+	<tr><td>2014-7-29</td><td>投资放款</td><td>0</td><td>-200</td><td>500.21</td></tr>
+	<tr><td>2014-7-19</td><td>投资放款</td><td>0</td><td>-100</td><td>600.21</td></tr>
+	<tr><td>2014-7-5</td><td>付息</td><td>0</td><td>+0.21</td><td>800.21</td></tr>
+	<tr><td>2014-7-1</td><td>投资放款</td><td>0</td><td>-200</td><td>800</td></tr>
+	<tr><td>2014-6-30</td><td>充值</td><td>0</td><td>+1000</td><td>1000</td></tr>
+	</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+</div>
+
+
+<script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="js/plugins/morris/morris.js"></script>
+    <script src="js/mine.js"></script>
+    <script src="js/cookies.js"></script>
+<script>
+$(document).ready(function() {
+
+	var username = getCookie("username");
+	if(username==null || username==""){
+		window.location.href="login.html"; 
+		return;
+		}
+	
+	
+	$('.login_text').click(function(e){
+		
+		if($('#login_pop').css('display')=='block')
+		{
+			$(this).removeClass('active');
+			$('#login_pop').css('display', 'none');
+			$('#personal_message').removeClass('col-md-3');
+			$('#personal_message').addClass('hidden-md');
+			
+			$('#account_total').removeClass('col-md-9');
+			$('#account_total').addClass('col-md-12');
+		}else{
+			$('#login_pop').css('display', 'block');
+			$(this).addClass('active');
+			
+			$('#personal_message').removeClass('hidden-md');
+			$('#personal_message').addClass('col-md-3');
+			
+			$('#account_total').removeClass('col-md-12');
+			$('#account_total').addClass('col-md-9');
+		}
+	});
+
+	
+Morris.Donut({
+    element: 'morris-donut-analysis',
+    data: [{
+        label: "可用",
+        value: 200
+    },
+        {
+        label: "1个月内",
+        value: 50
+    }, {
+        label: "1-2个月",
+        value: 30
+    }, {
+        label: "2-3个月",
+        value: 300
+    }, {
+        label: "3-6个月",
+        value: 200
+    }, {
+        label: "6-12个月",
+        value: 200
+    }, {
+        label: "12个月以上",
+        value: 20
+    }
+    ],
+    resize: true
+});
+
+
+
+
+Morris.Bar({
+    element: 'morris-bar-chart',
+    data: [{
+        y: '2014-7',
+        a: 26
+    }, {
+        y: '2014-8',
+        a: 62
+    }, {
+        y: '2014-9',
+        a: 80
+    }, {
+        y: '2014-10',
+        a: 132
+    }, {
+        y: '2014-11',
+        a: 502.7
+    }, {
+        y: '2014-12',
+        a: 12
+    }, {
+        y: '2015-1',
+        a: 23
+    }, {
+        y: '2015-2',
+        a: 0
+    }, {
+        y: '2015-3',
+        a: 309.21
+    }, {
+        y: '2015-4',
+        a: 0
+    }, {
+        y: '2015-5',
+        a: 0
+    }, {
+        y: '2015-6',
+        a: 0
+    }
+    ],
+    xkey: 'y',
+    ykeys: ['a'],
+    labels: ['回款金额'],
+    hideHover: 'auto',
+    resize: true
+});
+});
+
+</script>
+</body>
+</html>

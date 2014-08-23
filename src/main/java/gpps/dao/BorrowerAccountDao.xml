@@ -23,7 +23,7 @@
 	</update>
 	<update id="pay">
 		update BorrowerAccount set
-		total=total+#{amount},usable=usable-#{amount}
+		total=total+#{amount},usable=usable+#{amount}
 		where id=#{accountId}
 	</update>
 	<update id="repay">
@@ -36,4 +36,8 @@
 		total=total-#{amount},usable=usable-#{amount}
 		where id=#{accountId}
 	</update>
+	<delete id="delete">
+		delete from BorrowerAccount
+		where id=#{id}
+	</delete>
 </mapper>

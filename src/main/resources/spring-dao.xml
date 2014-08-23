@@ -27,13 +27,23 @@
 		<property name="configLocation" value="classpath:MyBatis-Configuration.xml"></property>
 		<property name="dataSource" ref="dataSource" />
 	</bean>
-	
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">  
+        <constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>  
+    </bean>
 	
 	<bean id="lenderDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="gpps.dao.ILenderDao"></property>
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>
-	<bean id="BorrowerAccountDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+	<bean id="borrowerDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="gpps.dao.IBorrowerDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	<bean id="lenderAccountDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="gpps.dao.ILenderAccountDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
+	<bean id="borrowerAccountDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="gpps.dao.IBorrowerAccountDao"></property>
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>

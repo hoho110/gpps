@@ -1,4 +1,4 @@
-package gpps.dao.test;
+package gpps.dao;
 
 
 import java.math.BigDecimal;
@@ -9,19 +9,22 @@ import gpps.model.BorrowerAccount;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class BorrowerDaoTest {
-	ApplicationContext context = null;
-	IBorrowerAccountDao borrowerAccountDao = null;
-
-	@Before
-	public void initContext() {
-		this.context = new FileSystemXmlApplicationContext(
+	static ApplicationContext context = null;
+	static IBorrowerAccountDao borrowerAccountDao = null;
+	static SqlSessionTemplate sqlSession;
+	@BeforeClass
+	public static void initContext() {
+		context = new FileSystemXmlApplicationContext(
 				"/src/main/webapp/WEB-INF/spring/root-context.xml");
-		this.borrowerAccountDao = (IBorrowerAccountDao) context.getBean(IBorrowerAccountDao.class);
+		borrowerAccountDao = (IBorrowerAccountDao) context.getBean(IBorrowerAccountDao.class);
+		sqlSession=(SqlSessionTemplate) context.getBean("sqlSession");
 	}
 
 	@Test

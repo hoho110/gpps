@@ -1,4 +1,4 @@
-package gpps.dao.test;
+package gpps.dao;
 
 
 import gpps.dao.ILenderDao;

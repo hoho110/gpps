@@ -49,4 +49,5 @@ public interface IBorrowerAccountDao {
 	 * @param amount
 	 */
 	public void cash(@Param("accountId") Integer accountId,@Param("amount") BigDecimal amount);
+	public void delete(Integer id);
 }

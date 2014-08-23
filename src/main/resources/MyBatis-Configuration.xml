@@ -4,5 +4,6 @@
 <configuration>
 	<mappers>
 		<mapper resource="gpps/dao/LenderDao.xml" />
+		<mapper resource="gpps/dao/BorrowerAccountDao.xml" />
 	</mappers>
 </configuration>

@@ -22,7 +22,7 @@ public interface ILenderService extends ILoginService{
 	 * @return
 	 * @throws Exception
 	 */
-	public Lender update(Lender lender);
+//	public Lender update(Lender lender);
 	/**
 	 * 修改用户角色级别,修改范围为Lender定义的privilege常量
 	 * 该方法只有admin有调用权限

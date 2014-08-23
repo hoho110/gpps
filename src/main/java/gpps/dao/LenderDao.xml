@@ -4,28 +4,38 @@
 	<select id="countAll" resultType="int">  <!-- 查询表中记录总数 -->
 		select count(*) c from lender;
 	</select>
-
-	<!-- <select id="selectAll" resultType="com.cnebula.myapp.User"> 查询表中的所有用户 -->
-	<!-- select * from tb_user order by username asc -->
-	<!-- </select> -->
-
-<!-- 	<insert id="insert" parameterType="gpps.dao.ILenderDao" useGeneratedKeys="true" keyProperty="id"> -->
-<!-- 	insert into tb_user(username,password,email,sex,age) -->
-<!-- 	values(#{username},#{password},#{email},#{sex},#{age}) -->
-<!-- 	</insert> -->
-
-	<!-- <update id="update" parameterType="com.cnebula.myapp.User"> 更新库中的用户 -->
-	<!-- update tb_user set -->
-	<!-- username=#{username},password=#{password},email=#{email},sex=#{sex},age=#{age} -->
-	<!-- where username=#{username} -->
-	<!-- </update> -->
-
-	<!-- <delete id="delete" parameterType="String"> 删除用户 -->
-	<!-- delete from tb_user where username=#{username} -->
-	<!-- </delete> -->
-
-	<!-- <select id="findByUserName" parameterType="String" -->
-	<!-- resultType="com.cnebula.myapp.User"> 根据用户名查找用户 -->
-	<!-- select * from tb_user where username=#{username} -->
-	<!-- </select> -->
+	<select id="find" parameterType="Integer" resultType="gpps.model.Lender">
+		select *
+		from Lender where id=#{id}
+	</select>
+	<select id="findByLoginId" parameterType="String" resultType="gpps.model.Lender">
+		select *
+		from Lender where loginId=#{loginId}
+	</select>
+	<select id="findByLoginIdAndPassword" resultType="gpps.model.Lender">
+		select *
+		from
+		Lender where loginId=#{loginId} and password=#{password}
+	</select>
+	<select id="findByTel" parameterType="String" resultType="gpps.model.Lender">
+		select
+		*
+		from Lender where tel=#{tel}
+	</select>
+	<insert id="create" parameterType="gpps.model.Lender"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		Lender(name,tel,email,loginId,password,identityCard,accountId,createtime,privilege)
+		values(#{name},#{tel},#{email},#{loginId},#{password},#{identityCard},#{accountId},#{createtime},#{privilege})
+	</insert>
+	<update id="changePrivilege">
+		update Lender set
+		privilege=#{privilege} 
+		where id=#{id}
+	</update>
+	<update id="changePassword">
+		update Lender set
+		password=#{password} 
+		where id=#{id}
+	</update>
 </mapper>

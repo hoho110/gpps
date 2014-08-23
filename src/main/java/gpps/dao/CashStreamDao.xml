@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gpps.dao.ICashStreamDao">
+	<select id="findSubmitCashStream" parameterType="Integer" resultType="gpps.model.CashStream">
+		select *
+		from CashStream where submitId=#{submitId}
+	</select>
+	<insert id="create" parameterType="gpps.model.CashStream"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		CashStream(action,createtime,lenderAccountId,borrowerAccountId,submitId,chiefamount,interest,description,paybackId)
+		values(#{action},#{createtime},#{lenderAccountId},#{borrowerAccountId},#{submitId},#{chiefamount},#{interest},#{description},#{paybackId})
+	</insert>
+	<update id="changeCashStreamState">
+		update CashStream set
+		state=#{state} 
+		where id=#{cashStreamId}
+	</update>
+</mapper>

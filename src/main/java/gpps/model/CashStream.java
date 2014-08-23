@@ -10,8 +10,8 @@ public class CashStream {
 	private int action;
 	private long createtime = System.currentTimeMillis();
 	private Integer lenderAccountId;
-	private Integer BorrowerAccountId;
-	private Integer submitid;
+	private Integer borrowerAccountId;
+	private Integer submitId;
 	private BigDecimal chiefamount = BigDecimal.ZERO;//本金
 	private BigDecimal interest = BigDecimal.ZERO;//利息
 	private String description;

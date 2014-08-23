@@ -84,11 +84,11 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		return lender;
 	}
 	
-	@Override
-	public Lender update(Lender lender) {
-		lenderDao.update(lender);
-		return lender;
-	}
+//	@Override
+//	public Lender update(Lender lender) {
+//		lenderDao.update(lender);
+//		return lender;
+//	}
 
 	@Override
 	public void changePrivilege(int id, int privilege)

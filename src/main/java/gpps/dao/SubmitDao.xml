@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gpps.dao.ISubmitDao">
+	<insert id="create" parameterType="gpps.model.Submit"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		Submit(state,createtime,lenderId,productId,lastmodifytime,amount)
+		values(#{state},#{createtime},#{lenderId},#{productId},#{lastmodifytime},#{amount})
+	</insert>
+	<select id="findAllByLender" parameterType="Integer" resultType="gpps.model.Submit">
+		select *
+		from Submit where lenderId=#{lenderId}
+	</select>
+	<select id="findAllByLenderAndStates" parameterType="Integer"
+		resultType="gpps.model.Submit">
+		select *
+		from Submit where lenderId=#{lenderId} and state in
+		<foreach item="item" index="index" collection="states" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+	<select id="findAllByProduct" parameterType="Integer"
+		resultType="gpps.model.Submit">
+		select *
+		from Submit where productId=#{productId}
+	</select>
+	<select id="find" parameterType="Integer" resultType="gpps.model.Submit">
+		select *
+		from Submit where id=#{id}
+	</select>
+	<update id="changeState">
+		update Submit set
+		state=#{state}
+		where
+		id=#{id}
+	</update>
+	<delete id="delete">
+		delete from Submit
+		where
+		id=#{id}
+	</delete>
+</mapper>

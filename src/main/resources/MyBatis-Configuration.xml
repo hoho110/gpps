@@ -9,5 +9,9 @@
 		<mapper resource="gpps/dao/BorrowerAccountDao.xml" />
 		<mapper resource="gpps/dao/CashStreamDao.xml" />
 		<mapper resource="gpps/dao/SubmitDao.xml" />
+		<mapper resource="gpps/dao/GovermentOrderDao.xml" />
+		<mapper resource="gpps/dao/ProductDao.xml" />
+		<mapper resource="gpps/dao/ProductSeriesDao.xml" />
+		<mapper resource="gpps/dao/PayBackDao.xml" />
 	</mappers>
 </configuration>

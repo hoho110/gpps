@@ -25,7 +25,7 @@ public interface IProductService {
 	
 	public List<Product> findByGovermentOrder(Integer orderId);
 	
-	public List<Product> findByState(int state,int offset,int recnum);
+	public List<Product> findByState(int states,int offset,int recnum);
 	
 	public List<Product> findByProductSeriesAndState(Integer productSeriesId,int state,int offset,int recnum);
 	

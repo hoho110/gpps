@@ -18,7 +18,74 @@ public class Product {
 	 * 0:按日 1：按周 2：按半月 3：按月 4：按指定日期 9：未指定
 	 */
 	private int paybackmodel;
-	private String schema;
+	private String accessory;
 	private Integer productseriesId;
 	private int levelToBuy;
+	private long createtime=System.currentTimeMillis();
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public int getState() {
+		return state;
+	}
+	public void setState(int state) {
+		this.state = state;
+	}
+	public Integer getGovermentorderId() {
+		return govermentorderId;
+	}
+	public void setGovermentorderId(Integer govermentorderId) {
+		this.govermentorderId = govermentorderId;
+	}
+	public BigDecimal getExpectAmount() {
+		return expectAmount;
+	}
+	public void setExpectAmount(BigDecimal expectAmount) {
+		this.expectAmount = expectAmount;
+	}
+	public BigDecimal getRealAmount() {
+		return realAmount;
+	}
+	public void setRealAmount(BigDecimal realAmount) {
+		this.realAmount = realAmount;
+	}
+	public BigDecimal getRate() {
+		return rate;
+	}
+	public void setRate(BigDecimal rate) {
+		this.rate = rate;
+	}
+	public int getPaybackmodel() {
+		return paybackmodel;
+	}
+	public void setPaybackmodel(int paybackmodel) {
+		this.paybackmodel = paybackmodel;
+	}
+	public String getAccessory() {
+		return accessory;
+	}
+	public void setAccessory(String accessory) {
+		this.accessory = accessory;
+	}
+	public Integer getProductseriesId() {
+		return productseriesId;
+	}
+	public void setProductseriesId(Integer productseriesId) {
+		this.productseriesId = productseriesId;
+	}
+	public int getLevelToBuy() {
+		return levelToBuy;
+	}
+	public void setLevelToBuy(int levelToBuy) {
+		this.levelToBuy = levelToBuy;
+	}
+	public long getCreatetime() {
+		return createtime;
+	}
+	public void setCreatetime(long createtime) {
+		this.createtime = createtime;
+	}
 }

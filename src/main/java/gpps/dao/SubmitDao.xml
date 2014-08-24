@@ -11,14 +11,16 @@
 		select *
 		from Submit where lenderId=#{lenderId}
 	</select>
-	<select id="findAllByLenderAndStates" parameterType="Integer"
-		resultType="gpps.model.Submit">
+	<select id="findAllByLenderAndStates" resultType="gpps.model.Submit">
 		select *
-		from Submit where lenderId=#{lenderId} and state in
-		<foreach item="item" index="index" collection="states" open="("
-			separator="," close=")">
-			#{item}
-		</foreach>
+		from Submit where lenderId=#{lenderId}
+		<if test="states != null">
+			and state in
+			<foreach item="item" index="index" collection="states" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
 	</select>
 	<select id="findAllByProduct" parameterType="Integer"
 		resultType="gpps.model.Submit">

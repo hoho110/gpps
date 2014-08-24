@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gpps.dao.IGovermentOrderDao">
+	<insert id="create" parameterType="gpps.model.GovermentOrder"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into
+		GovermentOrder(borrowerId,material,state,financingStarttime,financingEndtime,createtime)
+		values(#{borrowerId},#{material},#{state},#{financingStarttime},#{financingEndtime},#{createtime})
+	</insert>
+	<update id="changeState">
+		update GovermentOrder set
+		state=#{state}
+		where
+		id=#{orderId}
+	</update>
+	<select id="findByState" resultType="gpps.model.GovermentOrder">
+		select *
+		from GovermentOrder
+		<if test="states != null">
+			where state in
+			<foreach item="item" index="index" collection="states" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		LIMIT #{offset}, #{recnum}
+	</select>
+	<select id="countByState" resultType="int">
+		select count(*)
+		from GovermentOrder
+		<if test="states != null">
+			where state in
+			<foreach item="item" index="index" collection="states" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="findByBorrowerIdAndState" resultType="gpps.model.GovermentOrder">
+		select *
+		from GovermentOrder where borrowerId=#{borrowerId}
+		<if test="states != null">
+			and state
+			in
+			<foreach item="item" index="index" collection="states" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
+	<select id="find" parameterType="Integer" resultType="gpps.model.GovermentOrder">
+		select *
+		from GovermentOrder where id=#{id}
+	</select>
+	<delete id="delete">
+		delete from GovermentOrder
+		where
+		id=#{id}
+	</delete>
+</mapper>

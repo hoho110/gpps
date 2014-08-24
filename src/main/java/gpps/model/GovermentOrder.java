@@ -5,20 +5,21 @@ public class GovermentOrder {
 	private Integer borrowerId;
 	private String material;// 记录相关资料附件的路径
 	/**
-	 * 0：申请融资 -1：驳回重填 -2：重新申请 -100：拒绝 1：审核通过 2：产品已发布 3：融资中 4：还款中 5：已关闭
+	 * 1：申请融资 2：驳回重填 4：重新申请 8：拒绝 16：审核通过 32：产品已发布64：融资中 128：还款中 256：已关闭
 	 */
-	public static final int STATE_APPLY=0;
-	public static final int STATE_PASS=1;
-	public static final int STATE_PUBLISH=2;
-	public static final int STATE_FINANCING=3;
-	public static final int STATE_REPAYING=4;
-	public static final int STATE_CLOSE=5;
-	public static final int STATE_MODIFY=-1;
-	public static final int STATE_REAPPLY=-2;
-	public static final int STATE_REFUSE=-100;
+	public static final int STATE_APPLY=1;
+	public static final int STATE_PASS=1<<1;
+	public static final int STATE_PUBLISH=1<<2;
+	public static final int STATE_FINANCING=1<<3;
+	public static final int STATE_REPAYING=1<<4;
+	public static final int STATE_CLOSE=1<<5;
+	public static final int STATE_MODIFY=1<<6;
+	public static final int STATE_REAPPLY=1<<7;
+	public static final int STATE_REFUSE=1<<8;
 	private int state=STATE_APPLY;
 	private long financingStarttime;
 	private long financingEndtime;
+	private long createtime=System.currentTimeMillis();
 //	private String auditor;//审计员
 	public Integer getId() {
 		return id;
@@ -55,5 +56,11 @@ public class GovermentOrder {
 	}
 	public void setFinancingEndtime(long financingEndtime) {
 		this.financingEndtime = financingEndtime;
+	}
+	public long getCreatetime() {
+		return createtime;
+	}
+	public void setCreatetime(long createtime) {
+		this.createtime = createtime;
 	}
 }

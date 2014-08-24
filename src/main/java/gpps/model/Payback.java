@@ -7,13 +7,12 @@ public class Payback {
 	private Integer borrowerAccountId;
 	private Integer productId;
 	/**
-	 * 0：待还款 1：已还款 2：延期(待确定)
+	 * 0：待还款 1：正在还款 2:已还款 3：延期(待确定)
 	 */
 	private int state;
-	private long datetime;
 	private BigDecimal chiefAmount;
 	private BigDecimal interest;
-	private long deadline;
+	private long deadline;//还款时间
 //	private Integer paybackId;
 //	/**
 //	 * 0：正常还款 1：新增（指向延期）

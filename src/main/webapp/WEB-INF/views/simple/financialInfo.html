@@ -1,5 +1,130 @@
-<html><body>
-��������<br>
-������Ѷ<br>
-����ͳ��(���ֱ���ͳ��)
-</body></html>
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+<title>政采贷</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+    <link href="css/plugins/timeline/timeline.css" rel="stylesheet">
+    
+<link href="css/mine.css" rel="stylesheet">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="js/cdn/html5shiv.min.js"></script>
+      <script src="js/cdn/respond.min.js"></script>
+    <![endif]-->
+    
+    
+    
+    <style type="text/css">
+a.accordion-toggle{
+	text-decoration : none;
+	cursor : pointer;
+}
+.panel-heading a{
+	font-size : 18px;
+	font-weight : bold;
+	color: black;
+}
+#path{
+	font-size : 14px;
+	font-weight : bold;
+	color: red;
+}
+</style>
+    
+    
+</head>
+<body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/cdn/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+
+<div class="container-fluid">
+
+<div class="row"><center><h1>资讯中心</h1></center></div>
+
+<div class="row">
+<div class="col-xs-3 col-md-3">
+<div class="panel-group" id="accordion2">
+  <div class="panel panel-success">
+    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne"> <a class="accordion-toggle" >新闻中心</a> </div>
+    <div id="collapseOne" class="panel-collapse collapse" style="height: auto;">
+    <ul class="list-group" style="margin-bottom: 0px;">
+    	<a class="help list-group-item" data-sk="新闻中心" name="国内新闻" href="javascript:void(0)">国内新闻</a>
+    	<a class="help list-group-item" data-sk="新闻中心" name="国际新闻" href="javascript:void(0)">国际新闻</a>
+    </ul>
+    </div>
+  </div>
+  <div class="panel panel-success">
+    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo"> <a class="accordion-toggle">理财资讯</a> </div>
+    <div id="collapseTwo" class="panel-collapse collapse" style="height: auto;">
+      <ul class="list-group" style="margin-bottom: 0px;">
+    	<a class="help list-group-item" data-sk="理财资讯" name="新品推荐" href="#">新品推荐</a>
+    	<a class="help list-group-item" data-sk="理财资讯" name="行业资讯" href="javascript:void(0)">行业资讯</a>
+    	<a class="help list-group-item" data-sk="理财资讯" name="企业资讯" href="javascript:void(0)">企业资讯</a>
+    </ul>
+    </div>
+  </div>
+  <div class="panel panel-success">
+    <div class="panel-heading" data-toggle="collapse" data-parent="#accordion2" href="#collapseThree"> <a class="accordion-toggle">收益率统计</a> </div>
+    <div id="collapseThree" class="panel-collapse in" style="height: auto;">
+      <ul class="list-group" style="margin-bottom: 0px;">
+    	<a class="help list-group-item active" data-sk="收益率统计" name="银行理财产品" href="javascript:void(0)">银行理财产品</a>
+    	<a class="help list-group-item" data-sk="收益率统计" name="信托产品" href="javascript:void(0)">信托产品</a>
+    	<a class="help list-group-item" data-sk="收益率统计" name="P2P产品" href="javascript:void(0)">P2P产品</a>
+    </ul>
+    </div>
+  </div>
+</div>
+</div>
+<div class="col-xs-9 col-md-9">
+
+
+
+<div class="panel panel-success" style="min-height:400px;">
+<div class="panel-heading" id="path"></div>
+<div id="content">
+
+</div>
+	
+	
+	
+</div>
+
+</div>
+</div>
+
+</div>
+
+</body>
+<script>
+$(document).ready(function() {
+	$('a.help').click(function(e){
+		 $('a.help').removeClass('active');
+		 $(this).addClass('active');
+		 $('div#path').html($(this).attr('data-sk')+'-->'+$(this).attr('name'));
+		 if($(this).attr('name')=='银行理财产品'){
+			 $('#content').html('');
+			 $('<Iframe style="margin-top:100px; width:100%;" class="financial-graphic" frameborder="0" scrolling="no" src="chart_2.html"></Iframe>').appendTo('#content');
+		 }else if($(this).attr('name')=='信托产品'){
+			 $('#content').html('');
+			 $('<Iframe style="margin-top:100px; width:100%;" class="financial-graphic" frameborder="0" scrolling="no" src="chart_3.html"></Iframe>').appendTo('#content');
+		 }else if($(this).attr('name')=='P2P产品'){
+			 $('#content').html('');
+			 $('<Iframe style="margin-top:100px; width:100%;" class="financial-graphic" frameborder="0" scrolling="no" src="chart.html"></Iframe>').appendTo('#content');
+		 }
+	 });
+	 
+	 $('a.active').trigger('click');
+});
+</script>
+</html>

@@ -25,6 +25,14 @@ public interface IBorrowerAccountDao {
 	 * @param amount
 	 */
 	public void freeze(@Param("accountId") Integer accountId,@Param("amount") BigDecimal amount);
+//	/**
+//	 * 解冻
+//	 * freeze=freeze-amount
+//	 * usable=usable+amount
+//	 * @param accountId
+//	 * @param amount
+//	 */
+//	public void unfreeze(@Param("accountId") Integer accountId,@Param("amount") BigDecimal amount);
 	/**
 	 * 支付给借款人
 	 * total=total+amount

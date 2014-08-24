@@ -7,6 +7,12 @@ public class CashStream {
 	/**
 	 * 0:向账户充值 1:冻结(包括借款方竞标冻结/融资方还钱冻结) 2：解冻 3:借款方汇出给融资方 4:融资方:汇入借款方 5:从账户提现
 	 */
+	public static final int ACTION_RECHARGE=0;
+	public static final int ACTION_FREEZE=1;
+	public static final int ACTION_UNFREEZE=2;
+	public static final int ACTION_PAY=3;
+	public static final int ACTION_REPAY=4;
+	public static final int ACTION_CASH=5;
 	private int action;
 	private long createtime = System.currentTimeMillis();
 	private Integer lenderAccountId;
@@ -17,7 +23,7 @@ public class CashStream {
 	private String description;
 	private Integer paybackId;
 	/**
-	 * 0:预操作；1:操作完成;-1操作失败
+	 * 1:预操作；2:操作完成;4操作失败
 	 */
 	public static final int STATE_INIT=1;
 	public static final int STATE_SUCCESS=1<<1;

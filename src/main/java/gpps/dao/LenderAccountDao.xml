@@ -21,6 +21,11 @@
 		freeze=freeze+#{amount},usable=usable-#{amount}
 		where id=#{accountId}
 	</update>
+	<update id="unfreeze">
+		update LenderAccount set
+		freeze=freeze-#{amount},usable=usable+#{amount}
+		where id=#{accountId}
+	</update>
 	<update id="pay">
 		update LenderAccount set
 		freeze=freeze-#{principalAmount},used=used+#{principalAmount},expectedincome=expectedincome+#{expectedIncomeAmount}

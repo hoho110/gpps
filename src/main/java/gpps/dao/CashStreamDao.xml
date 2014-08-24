@@ -5,6 +5,10 @@
 		select *
 		from CashStream where submitId=#{submitId}
 	</select>
+	<select id="find" parameterType="Integer" resultType="gpps.model.CashStream">
+		select *
+		from CashStream where id=#{id}
+	</select>
 	<insert id="create" parameterType="gpps.model.CashStream"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
@@ -16,4 +20,8 @@
 		state=#{state} 
 		where id=#{cashStreamId}
 	</update>
+	<delete id="delete">
+		delete from CashStream
+		where id=#{id}
+	</delete>
 </mapper>

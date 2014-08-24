@@ -26,6 +26,14 @@ public interface ILenderAccountDao {
 	 */
 	public void freeze(@Param("accountId") Integer accountId,@Param("amount") BigDecimal amount);//冻结
 	/**
+	 * 解冻
+	 * freeze=freeze-amount
+	 * usable=usable+amount
+	 * @param accountId
+	 * @param amount
+	 */
+	public void unfreeze(@Param("accountId") Integer accountId,@Param("amount") BigDecimal amount);
+	/**
 	 * 支付给借款人
 	 * freeze=freeze-principalAmount
 	 * used=used+principalAmount

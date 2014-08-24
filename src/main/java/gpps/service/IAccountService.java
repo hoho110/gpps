@@ -1,6 +1,7 @@
 package gpps.service;
 
 import gpps.model.CashStream;
+import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
 
 import java.math.BigDecimal;
@@ -31,6 +32,15 @@ public interface IAccountService {
 	 */
 	public Integer freezeLenderAccount(Integer lenderAccountId,BigDecimal amount,Integer submitid,String description) throws InsufficientBalanceException;
 	/**
+	 * 贷款人账户解冻
+	 * @param lenderAccountId
+	 * @param amount
+	 * @param submitid
+	 * @param description
+	 * @return
+	 */
+	public Integer unfreezeLenderAccount(Integer lenderAccountId,BigDecimal amount,Integer submitid,String description);
+	/**
 	 * 借款人账户冻结
 	 * @param amount
 	 */
@@ -39,7 +49,7 @@ public interface IAccountService {
 	 * 贷款人将冻结资金支付给借款人
 	 * @param amount
 	 */
-	public Integer pay(Integer lenderAccountId,Integer borrowerAccountId,BigDecimal amount,Integer submitid,String description);
+	public Integer pay(Integer lenderAccountId,Integer borrowerAccountId, BigDecimal chiefamount, BigDecimal interest,Integer submitid,String description);
 	/**
 	 * 还款
 	 * @param amount
@@ -64,7 +74,7 @@ public interface IAccountService {
 	 * @param state
 	 * @throws IllegalStateException
 	 */
-	public void changeCashStreamState(Integer cashStreamId,int state) throws IllegalStateException;
+	public void changeCashStreamState(Integer cashStreamId,int state) throws IllegalConvertException;
 	/**
 	 * 调用第三方平台验证
 	 * @param cashStreamId

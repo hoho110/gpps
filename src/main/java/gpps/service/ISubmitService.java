@@ -2,7 +2,7 @@ package gpps.service;
 
 import gpps.model.CashStream;
 import gpps.model.Submit;
-import gpps.service.exception.IllegalStateConvertException;
+import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
 
 import java.math.BigDecimal;
@@ -20,9 +20,9 @@ public interface ISubmitService {
 	 * 系统任务调用
 	 * @param submitId 订单ID
 	 * @param state 订单状态
-	 * @throws IllegalStateConvertException
+	 * @throws IllegalConvertException
 	 */
-	public void changeState(Integer submitId,int state)throws IllegalStateConvertException;
+	public void changeState(Integer submitId,int state)throws IllegalConvertException;
 	
 	public Submit find(Integer id);
 	/**

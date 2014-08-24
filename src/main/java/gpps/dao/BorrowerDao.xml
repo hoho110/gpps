@@ -22,6 +22,12 @@
 		*
 		from Borrower where tel=#{tel}
 	</select>
+	<select id="findByState" resultType="gpps.model.Borrower">
+		select *
+		from
+		Borrower where
+		state=#{state}
+	</select>
 	<insert id="create" parameterType="gpps.model.Borrower"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
@@ -30,12 +36,13 @@
 	</insert>
 	<update id="changePrivilege">
 		update Borrower set
-		privilege=#{privilege} 
-		where id=#{id}
+		privilege=#{privilege}
+		where
+		id=#{id}
 	</update>
 	<update id="changePassword">
 		update Borrower set
-		password=#{password} 
+		password=#{password}
 		where id=#{id}
 	</update>
 	<delete id="delete">

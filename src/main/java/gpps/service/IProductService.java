@@ -5,7 +5,7 @@ import java.util.List;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.model.ProductAction;
-import gpps.service.exception.IllegalStateConvertException;
+import gpps.service.exception.IllegalConvertException;
 
 public interface IProductService {
 	/**
@@ -17,9 +17,9 @@ public interface IProductService {
 	 * 更新产品状态
 	 * @param productId
 	 * @param state
-	 * @throws IllegalStateConvertException
+	 * @throws IllegalConvertException
 	 */
-	public void changeState(Integer productId,int state) throws IllegalStateConvertException;
+	public void changeState(Integer productId,int state) throws IllegalConvertException;
 	
 	public Product find(Integer productId);
 	

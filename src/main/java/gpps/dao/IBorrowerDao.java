@@ -11,11 +11,12 @@ public interface IBorrowerDao {
 	public Borrower find(Integer id);
 	public Borrower findByLoginId(String loginId);
 	public Borrower findByLoginIdAndPassword(@Param("loginId") String loginId,@Param("password") String password);
+	public List<Borrower> findByPrivilege(int privilege);
+	public Borrower findByTel(String tel);
+	public List<Borrower> findByState(int state);
 	public void create(Borrower borrower);
 //	public void update(Borrower borrower);
 	public void changePrivilege(@Param("id") Integer id,@Param("privilege") int privilege);
 	public void changePassword(@Param("id") Integer id,@Param("password") String password);
-	public List<Borrower> findByPrivilege(int privilege);
-	public Borrower findByTel(String tel);
 	public void delete(Integer id);
 }

@@ -4,7 +4,7 @@
 package gpps.dao;
 
 import gpps.model.Product;
-import gpps.service.exception.IllegalStateConvertException;
+import gpps.service.exception.IllegalConvertException;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface IProductDao {
 	public void create(Product product);
-	public void changeState(@Param("id")Integer id,@Param("state")int state) throws IllegalStateConvertException;
+	public void changeState(@Param("id")Integer id,@Param("state")int state) throws IllegalConvertException;
 	public Product find(Integer id);
 	public List<Product> findByGovermentOrder(Integer orderId);
 	public List<Product> findByState(@Param("states")List<Integer> states,@Param("offset")int offset,@Param("recnum")int recnum);

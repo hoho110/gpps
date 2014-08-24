@@ -1,7 +1,7 @@
 package gpps.service;
 
 import gpps.model.GovermentOrder;
-import gpps.service.exception.IllegalStateConvertException;
+import gpps.service.exception.IllegalConvertException;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ public interface IGovermentOrderService {
 	 * 改变状态
 	 * @param orderId
 	 * @param states
-	 * @throws IllegalStateConvertException
+	 * @throws IllegalConvertException
 	 */
-	public void changeState(int orderId,int states) throws IllegalStateConvertException;
+	public void changeState(int orderId,int states) throws IllegalConvertException;
 	/**
 	 * 根据状态查找
 	 * @param states

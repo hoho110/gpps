@@ -12,4 +12,5 @@ public interface ICashStreamDao {
 	public List<CashStream> findSubmitCashStream(Integer submitId);
 	public CashStream find(Integer id);
 	public void delete(Integer id);
+	public List<CashStream> findByState(int state);
 }

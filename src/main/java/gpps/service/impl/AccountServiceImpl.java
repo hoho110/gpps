@@ -229,6 +229,7 @@ public class AccountServiceImpl implements IAccountService {
 				default:
 					throw new UnsupportedOperationException();
 				}
+				return;
 			}
 		}
 		throw new IllegalConvertException();
@@ -241,8 +242,7 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	public List<CashStream> findAllDirtyCashStream() {
-		//TODO 
-		return null;
+		return cashStreamDao.findByState(CashStream.STATE_INIT);
 	}
 
 }

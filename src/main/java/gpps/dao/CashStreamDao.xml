@@ -9,6 +9,10 @@
 		select *
 		from CashStream where id=#{id}
 	</select>
+	<select id="findByState" parameterType="Integer" resultType="gpps.model.CashStream">
+		select *
+		from CashStream where state=#{state}
+	</select>
 	<insert id="create" parameterType="gpps.model.CashStream"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into

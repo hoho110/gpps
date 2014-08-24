@@ -98,6 +98,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 			if(borrower.getPrivilege()==validStateConvert[0]&&privilege==validStateConvert[1])
 			{
 				borrowerDao.changePrivilege(id, privilege);
+				return;
 			}
 		}
 		throw new IllegalConvertException();

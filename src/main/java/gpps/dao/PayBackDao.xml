@@ -14,14 +14,14 @@
 	</select>
 	<select id="find" parameterType="Integer" resultType="gpps.model.PayBack">
 		select *
-		from ProductSeries where id=#{id}
+		from PayBack where id=#{id}
 	</select>
 	<update id="changeState">
 		update
-		ProductSeries set state=#{state} where id=#{id}
+		PayBack set state=#{state} where id=#{id}
 	</update>
 	<delete id="delete">
-		delete from ProductSeries
+		delete from PayBack
 		where
 		id=#{id}
 	</delete>

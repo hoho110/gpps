@@ -2,7 +2,7 @@ package gpps.model;
 
 import java.math.BigDecimal;
 
-public class Payback {
+public class PayBack {
 	private Integer id;
 	private Integer borrowerAccountId;
 	private Integer productId;

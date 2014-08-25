@@ -21,7 +21,7 @@
 	</bean>
 	<mvc:annotation-driven />
 	<!-- 注释资源扫描包路径 -->
-	<context:component-scan base-package="com.easyservice,gpps" />
+	<context:component-scan base-package="com.easyservice" />
 	<!-- <mvc:default-servlet-handler /> -->
 	<bean id="authorityValidateService" class="com.easyservice.security.AuthorityValidateServiceImpl">
 		<property name="configLocation" value="classpath:StaticRolesConfig.xml"></property>

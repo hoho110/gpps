@@ -30,43 +30,6 @@
 <div class="row" style="padding-left:5px; padding-right:5px;">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-<div class="row" style="margin-top:5px;">
-<div class="col-xs-12 col-sm-2 col-md-2">
-<img src="img/logo.jpg" style="width:100%;height:auto;"></img>
-</div>
-
-
-
-
-<div class="hidden-xs col-sm-10 col-md-10">
-<div class="btn-group btn-group-lg  btn-group-justified" style="background-color:#33cc00; width:100%;">
-
-<div class="btn-group">
-<a href="#" class="btn btn-nav btn-lg">首页</a>
-</div>
-<div class="btn-group">
-<a href="productlist.html" class="btn btn-nav btn-lg">我要理财</a>
-</div>
-<div class="btn-group">
-<a href="loan.html" class="btn btn-nav btn-lg">我要融资</a>
-</div>
-<div class="btn-group">
-<a href="temp.html" class="btn btn-nav btn-lg">我的账户</a>
-</div>
-<div class="btn-group">
-<a href="#" class="btn btn-nav btn-lg">活动中心</a>
-</div>
-<div class="btn-group">
-<a id="lg_login_text" class="btn btn-nav btn-lg login_text"></a>
-</div>
-
-</div>
-</div>
-
-
-
-
-</div>
 
 <div class="row" style="margin-top: 10px;">
 <div class="hidden-xs col-sm-12 col-md-9">
@@ -124,60 +87,6 @@
 
 
 <div class="col-xs-12 col-md-3">
-
-
-
-
-
-<DIV style="DISPLAY: none; padding: 10px 0 10px 5px; margin-bottom:5px;" id=login_pop>
-
-  <DIV style="LINE-HEIGHT: 180%; padding-left:5px; HEIGHT:45px; FONT-SIZE:13px;">
-  <DIV style="width:90%; MARGIN-LEFT: 10px"><SPAN style="MARGIN-RIGHT: 10px" 
-  id=login_name>您好：wd</SPAN><span style="float:right;"><A href="temp.html">我的账户</A> | <A href="quit.html">退出登录</A></span> </DIV>
-  <div style="clear:both;"></div>
-  </div>
-  <div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
-  <DIV style="LINE-HEIGHT: 180%; padding-left:5px; FONT-SIZE:13px;">
-  <SPAN><IMG 
-  style="VERTICAL-ALIGN: text-bottom" 
-  src="img/m_tel_icon.png"> <A 
-  id=login_tel_status 
-  href="#">手机已绑定</A><IMG 
-  style="MARGIN-LEFT: 10px; VERTICAL-ALIGN: text-bottom" 
-  src="img/m_card_icon.png"> 
-  <A id=login_cred_status href="#">实名未认证</A><IMG 
-  style="MARGIN-LEFT: 10px; VERTICAL-ALIGN: text-bottom" 
-  src="img/m_lock_icon.png"> 
-  <A href="#">交易密码</A></SPAN>
-  </div>
-  <div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
-  
-  <DIV style="LINE-HEIGHT: 180%; padding-left:5px; FONT-SIZE:13px;">
-  <A 
-  href="#">资金管理/充值/提款</A> | <A 
-  href="#">回款</A> | <A 
-  href="#">已投标的</A><BR><A 
-  href="#">资金流向</A> | <A 
-  href="#">安全保障</A> | <A 
-  href="#">帮助</A>
-  </div>
-  
-  <div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
-<DIV style="LINE-HEIGHT: 180%; padding-left:5px; FONT-SIZE:13px;">
-<A 
-  href="#">资金流动性分析</A> | <A 
-  href="#">未来回款分析</A> | <A 
-  href="#">投资组合风险分析</A>
-</DIV>
-<div style="BORDER-BOTTOM: #ccc 1px dashed; LINE-HEIGHT: 0; MARGIN: 5px 0px; FONT-SIZE: 0px"></div>
-<DIV style="LINE-HEIGHT: 180%; MARGIN: 0px 10px 10px; FONT-SIZE: 12px" id=gonggao>
-<a href="#">[公告]2014-9-2政府采购结构化产品正式投标</a><br>
-<a href="#">[公告]2014-9-13绿化工程融资产品正式投标</a>
-</DIV></DIV>
-
-
-
-
 
 
 <div class="panel panel-success" style="height:200px;">
@@ -399,19 +308,6 @@
 </div>
 
 
-<div class="row" style="margin-top:10px; border: #eee solid 1px;">
-<p class="bg-success" style="margin-left:-15px; padding-left:15px; padding-top:5px; margin-right:-15px; font-size:13px; font-weight:normal;">
-<span style="margin-left:450px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备案信息</span><br>
-<span style="margin-left:450px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;友情链接</span><br>
-<span style="margin-left:450px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;加入的认证或联盟
-</span>
-</p>
-</div>
-
-
 </div>
 </div>
 </div>
@@ -426,20 +322,8 @@
 <script src="js/cookies.js"></script>
 <script src="js/gpps/data.js"></script>
 <script>
-         $(document).ready(function () {
-					var username = getCookie("username");
-					if(username==null || username==""){
-						$('.login_text').html('<SPAN style="cursor:pointer;">登陆</span>');
-						}else{
-							$('.login_text').html('<SPAN style="cursor:pointer;">个人中心▼</span>');
-							}
-					
-					
-					
-					
-					
-					
-					
+
+$(document).ready(function () {
 					
 					var title1 = '稳健型';
 					var label11 = '机构担保';
@@ -508,32 +392,6 @@
                    $('#viewMore').click(function(e){
                 	   window.location.href="projectlist.html";
                        });
-
-
-
-
-			$('.login_text').click(function(e){
-				
-				
-				
-				if($(this).text()=="登陆"){
-					window.location.href="login.html";
-					return;
-				}
-				
-				
-				
-				
-				if($('#login_pop').css('display')=='block')
-				{
-					$(this).removeClass('active');
-					$('#login_pop').css('display', 'none');
-				}else{
-					$('#login_pop').css('display', 'block');
-					$(this).addClass('active');
-				}
-			});
-
 
 
 

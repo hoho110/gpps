@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="GBK" />
+        <title>登录中心 － 政采贷</title>
+        <meta name="description" content="" />
+        <meta name="keywords" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        
+ 
+                    <link charset="utf-8" rel="stylesheet" href="css/homeB.css" media="all" />
+        
+                    <style type="text/css"> 
+.sl-delect {
+    zoom: 1;
+}
+</style>
+                        
+<style> 
+.iconfont {
+    font-family:"rei";
+    font-style: normal;
+    font-weight: normal;
+    cursor: default;
+    -webkit-font-smoothing: antialiased;
+}
+</style>
+ 
+
+ 
+
+  
+ 
+ </head>
+    <!--[if lt IE 7]>
+    <body class="ie6"><![endif]--><!--[if IE 7]>
+    <body class="ie7"><![endif]--><!--[if IE 8]>
+    <body class="ie8"><![endif]--><!--[if IE 9]>
+    <body class="ie9"><![endif]--><!--[if !IE]><!-->
+    <body><!--<![endif]-->
+ 
+ 
+ 
+<style type="text/css"> 
+.umidWrapper{display:block; height:1px;}
+#J-login{
+position:absolute; 
+left:50%; 
+margin:20px 0 0 -150px;
+}
+</style>
+
+
+
+
+<div class="login login-modern" id="J-login">
+        <fieldset>
+           <h2 class='ui-form-title ' id="J-login-title">登录政采贷</h2>
+ 
+                        
+ 
+<div class="sl-error" id="J-errorBox" errorType="">
+    <i class="iconfont" title="出错"></i>
+    <span class="sl-error-text"></span>
+</div>
+    
+        <div class="ui-form-item" id="J-username">
+    <label id="J-label-user" class="ui-label" seed="authcenter-switch-account">
+        <span class="ui-icon ui-icon-userDEF">账户名：</span>
+            </label>
+                            <input type="text" id="J-input-user" class="ui-input ui-input-normal" name="logonId" autocomplete="off" tabindex="1" value="" autocomplete="off" maxlength="100" placeholder="邮箱地址/手机号码" seed="authcenter-input-account">
+        </div>
+                        
+ 
+		<div class="ui-form-item ui-form-item-20pd" id="J-password">
+    <label id="J-label-editer" class="ui-label" data-desc="登录密码" seed="authcenter-switch-aliedit">
+        <span class="ui-icon ui-icon-securityON" id="safeSignCheck">登录密码</span>
+            </label>
+ 
+				
+ 
+ 
+ 
+    
+   
+ 
+
+<span class="standardPwdContainer" style="display:block">
+  <input type="password" tabindex="2" id="password_input" name="password_input" class="ui-input" oncontextmenu="return false" onpaste="return false" oncopy="return false" oncut="return false" autocomplete="off" />
+</span>
+    <p style="float:right;">
+                <a class="textlink forgot" href="#" tabindex='5' seed="authcenter-pwd-forget" seed="authcenter-pwd-forget">忘记登录密码？</a>
+    </p>
+</div>
+ 
+      
+    <div id="J-checkcode" class='ui-form-item'>
+        <label id="J-label-checkcode" class="ui-label" seed="authcenter-switch-checkcode">
+            <span class="ui-icon ui-icon-checkcodeT" id="J-switchCheckcode">校验码</span>
+                        <div id="J-label-checkcode-pop" class="ui-poptip">
+                <div class="ui-poptip-container fn-hide">
+                    <div class="ui-poptip-arrow ui-poptip-arrow-7">
+                        <em>123123</em>
+                        <span>123123</span>
+                    </div>
+                </div>
+            </div>
+                    </label>
+        <input type="text" placeholder="验证码" value="" class="ui-input ui-input-checkcode" id="J-input-checkcode" data-type="IMAGE" maxlength="4" name="checkCode" autocomplete="off" tabindex="3" data="" seed="authcenter-input-checkcode">
+        <span class="sl-checkcode" id="J-checkcodeIcon"></span>
+        <div class="ui-checkcode">
+                        <img class="ui-checkcode-img" id="J-checkcode-img" src="https://omeo.alipay.com/service/checkcode?sessionID=9932cb127a44cac042b217c602ab09a1&amp;t=0.3556774904206308" title="点击图片刷新验证码" alt="点击图片刷新验证码" seed="authcenter-img-checkcode">
+                        
+                    </div>
+                    </div>
+ 
+                        <div class="ui-form-item ui-form-item-30pd" id="J-submit">
+                <input type="submit" value="登 录" class="ui-button" id="J-login-btn" tabindex="4" seed='authcenter-submit-homeB'>
+                <p class="ui-form-other">
+                    <a href="#" seed="authcenter-taobaoMember" class="textlink" title="企业用户登录" tabindex="6">企业用户登录</a>
+                                        <a class="register" href="register.html" seed="authcenter-register" title="免费注册" tabindex="8">免费注册</a>
+                </p>
+            </div><!-- //submit -->
+        </fieldset>
+		</div><!-- //login -->
+
+		
+		
+		<script src="js/cookies.js"></script>
+		<script src="js/cdn/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+	
+	
+	$('#J-input-user').focus();
+       $('#J-login-btn').click(function(e){
+			var username = $('input#J-input-user').val();
+			var password = $('input#password_input').val();
+			var validate = $('input#J-input-checkcode').val();
+
+			if(username==null||username==''){
+				$('#J-errorBox').removeClass('sl-error').addClass('sl-error-display').html('*请输入用户名');
+					return;
+				}else{
+					$('#J-errorBox').addClass('sl-error').removeClass('sl-error-display').html('');
+					}
+
+			if(password==null||password==''){
+				$('#J-errorBox').removeClass('sl-error').addClass('sl-error-display').html('*请输入密码');
+				return;
+			}else{
+				$('#J-errorBox').addClass('sl-error').removeClass('sl-error-display').html('');
+				}
+
+
+			if(validate==null||validate==''||validate!='8668'){
+				$('#J-errorBox').removeClass('sl-error').addClass('sl-error-display').html('*验证码错误！');
+				return; 
+			}else{
+				$('#J-errorBox').addClass('sl-error').removeClass('sl-error-display').html('');
+				}
+
+
+			
+			if(username=='wd' && password=='111111'){
+				addCookie("username","wd",1);
+				window.parent.toward("myaccount");
+				//window.location.href="temp.html"; 
+				}else{
+				alert('用户名密码错误，请重新输入！');
+				$('input#password_input').val('');
+				$('input#J-input-checkcode').val('');
+					}
+			
+           });
+
+       
+
+       $('input#J-input-checkcode').on('keyup', function(e) {
+
+			var key = e.keyCode;
+			if (key === 13) { // 表示按的是enter键
+				$('#J-login-btn').click();
+			}
+       });
+})
+</script>
+		
+		
+    </body>
+</html>

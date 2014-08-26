@@ -12,7 +12,9 @@ public class Payback {
 	private int state;
 	private BigDecimal chiefAmount;
 	private BigDecimal interest;
-	private long deadline;//还款时间
+	private long deadline;//预期还款时间
+	private long realtime;//实际还款时间
+	private int type;//还款方式 0:利息和本息;1:一次性本金
 //	private Integer paybackId;
 //	/**
 //	 * 0：正常还款 1：新增（指向延期）

@@ -16,6 +16,7 @@ public class Borrower {
 	public static final int PRIVILEGE_APPLY=11;//申请融资权限的企业用户
 	public static final int PRIVILEGE_FINANCING=12;//有融资权限的企业用户
 	private int privilege=PRIVILEGE_VIEW;//用户角色
+	private int creditValue=0;//信用值
 	public Integer getId() {
 		return id;
 	}
@@ -87,5 +88,11 @@ public class Borrower {
 	}
 	public void setCreatetime(long createtime) {
 		this.createtime = createtime;
+	}
+	public int getCreditValue() {
+		return creditValue;
+	}
+	public void setCreditValue(int creditValue) {
+		this.creditValue = creditValue;
 	}
 }

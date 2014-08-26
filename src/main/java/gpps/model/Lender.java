@@ -13,6 +13,7 @@ public class Lender {
 	public static final int PRIVILEGE_COMMON=0;//普通用户
 	public static final int PRIVILEGE_VIP1=1;//普通用户
 	private int privilege=PRIVILEGE_COMMON;//用户角色
+	private int grade=0;//评分
 	public Integer getId() {
 		return id;
 	}
@@ -73,4 +74,11 @@ public class Lender {
 	public void setPrivilege(int privilege) {
 		this.privilege = privilege;
 	}
+	public int getGrade() {
+		return grade;
+	}
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
+	
 }

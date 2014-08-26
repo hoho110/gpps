@@ -2,17 +2,15 @@ package com.easyservice.security;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.io.Resource;
 
 import com.easyservice.exception.PermissionException;
 import com.easyservice.xml.EasyObjectXMLTransformerImpl;
 import com.easyservice.xml.IEasyObjectXMLTransformer;
-public class AuthorityValidateServiceImpl implements IAuthorityValidateService,BeanFactoryPostProcessor{
+public class AuthorityValidateServiceImpl implements IAuthorityValidateService{
 	private IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl();
 	private Resource configLocation;//权限配置文件路径
 	private Logger logger=Logger.getLogger(AuthorityValidateServiceImpl.class);
@@ -80,9 +78,8 @@ public class AuthorityValidateServiceImpl implements IAuthorityValidateService,B
 	public void setConfigLocation(Resource configLocation) {
 		this.configLocation = configLocation;
 	}
-	@Override
-	public void postProcessBeanFactory(
-			ConfigurableListableBeanFactory beanFactory) throws BeansException {
+	@PostConstruct
+	public void init() {
 		//加载权限配置文件到内存中
 		try {
 			config=xmlTransformer.parse(configLocation.getInputStream(), StaticRolesConfig.class);

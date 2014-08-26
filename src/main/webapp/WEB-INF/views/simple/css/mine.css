@@ -144,7 +144,7 @@
 	POSITION: absolute; TEXT-ALIGN: left; BACKGROUND-COLOR: #ed9c28; WIDTH: 310px; COLOR: white; FONT-SIZE: 14px; TOP: 85px; RIGHT: 20px
 }
 #login_pop {
-	TEXT-ALIGN: left; BACKGROUND-COLOR: #ed9c28; COLOR: white; FONT-SIZE: 14px;
+	TEXT-ALIGN: left; BACKGROUND-COLOR: #00ff00; COLOR: white; FONT-SIZE: 14px;
 }
 #login_pop A {
 	COLOR: white
@@ -153,4 +153,46 @@
 a.productline {
 	cursor : pointer;
 	text-decoration:none;
+}
+
+.btn-nav {
+  font-size : 18px;
+  font-weight : bold;
+  color: #fff;
+  background-color: #33cc00;
+  border-color: #4cae4c;
+}
+
+.btn-nav:hover,
+.btn-nav:focus,
+.btn-nav:active,
+.btn-nav.active,
+.open .dropdown-toggle.btn-nav {
+	font-size : 19px;
+  color: #fff;
+  background-color: #00ff00;
+  border-color: #398439;
+}
+
+
+.panel-cl {
+  border-color: #d6e9c6;
+}
+.panel-cl > .panel-heading {
+	font-size : 14px;
+	font-weight : bold;
+  color: #fff;
+  background-color: #33cc00;
+  border-color: #d6e9c6;
+}
+.panel-cl > .panel-heading a{
+	font-size : 13px;
+	font-weight : normal;
+	color : #fff;
+}
+.panel-cl > .panel-heading + .panel-collapse .panel-body {
+  border-top-color: #d6e9c6;
+}
+.panel-cl > .panel-footer + .panel-collapse .panel-body {
+  border-bottom-color: #d6e9c6;
 }

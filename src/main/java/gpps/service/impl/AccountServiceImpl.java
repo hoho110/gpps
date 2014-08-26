@@ -19,7 +19,7 @@ import gpps.dao.ISubmitDao;
 import gpps.model.BorrowerAccount;
 import gpps.model.CashStream;
 import gpps.model.LenderAccount;
-import gpps.model.Payback;
+import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.Submit;
 import gpps.service.IAccountService;
@@ -133,7 +133,7 @@ public class AccountServiceImpl implements IAccountService {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
 		checkNullObject(BorrowerAccount.class, borrowerAccountDao.find(borrowerAccountId));
 		checkNullObject(Submit.class, submitDao.find(submitId));
-		checkNullObject(Payback.class, paybackId);
+		checkNullObject(PayBack.class, paybackId);
 		CashStream cashStream=new CashStream();
 		cashStream.setLenderAccountId(lenderAccountId);
 		cashStream.setBorrowerAccountId(borrowerAccountId);

@@ -7,16 +7,16 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import gpps.model.Payback;
+import gpps.model.PayBack;
 
 public interface IPayBackDao {
-	public void create(Payback payback);
+	public void create(PayBack payback);
 
-	public List<Payback> findAllByProduct(Integer productId);
+	public List<PayBack> findAllByProduct(Integer productId);
 
 	public void changeState(@Param("id") Integer id, @Param("state") int state);
 
-	public Payback find(Integer id);
+	public PayBack find(Integer id);
 
 	public void delete(Integer id);
 }

@@ -155,6 +155,25 @@ a.productline {
 	text-decoration:none;
 }
 
+.btn-center {
+  font-size : 18px;
+  font-weight : bold;
+  color: #fff;
+  background-color: #33cc00;
+  border-color: #4cae4c;
+}
+
+.btn-center:hover,
+.btn-center:focus,
+.btn-center:active,
+.btn-center.active,
+.open .dropdown-toggle.btn-center {
+	font-size : 18px;
+  color: #fff;
+  background-color: #33cc00;
+  border-color: #398439;
+}
+
 .btn-nav {
   font-size : 18px;
   font-weight : bold;

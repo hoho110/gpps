@@ -48,16 +48,16 @@
 <a class="btn btn-nav btn-lg" data-sk="productlist">我要理财</a>
 </div>
 <div class="btn-group">
-<a href="loan.html" class="btn btn-nav btn-lg">我要融资</a>
+<a class="btn btn-nav btn-lg" data-sk="loan">我要融资</a>
 </div>
 <div class="btn-group">
 <a class="btn btn-nav btn-lg" data-sk="myaccount">我的账户</a>
 </div>
 <div class="btn-group">
-<a href="#" class="btn btn-nav btn-lg">活动中心</a>
+<a class="btn btn-nav btn-lg" data-sk="activity">活动中心</a>
 </div>
-<div class="btn-group">
-<a class="btn btn-nav btn-lg" data-sk="login">登录</a>
+<div class="btn-group" id="login_button">
+
 </div>
 
 </div>
@@ -127,9 +127,24 @@ login['url'] = 'login.html';
 login['height'] = '400px';
 
 
+var register = {};
+register['url'] = "register.html";
+register['height'] = '800px;'
+
+
 var myaccount = {};
 myaccount['url'] = 'temp.html';
 myaccount['height'] = '700px';
+
+
+var activity = {};
+activity['url'] = 'activity.html';
+activity['height'] = '800px';
+
+
+var loan = {};
+loan['url'] = 'loan.html';
+loan['height'] = '460px';
 
 
 var logined = {};
@@ -137,16 +152,71 @@ logined['url'] = 'myaccount.html';
 logined['height'] = '700px';
 
 
+var quit = {};
+quit['url'] = 'quit.html';
+quit['height'] = '200px;'
+
+
 var nav = {};
 nav['index'] = index;
 nav['productlist'] = productlist;
 nav['login'] = login;
+nav['register'] = register;
 nav['myaccount'] = myaccount;
+nav['loan'] = loan;
 nav['logined'] = logined;
+nav['quit'] = quit;
+nav['activity'] = activity;
+
+
+
+function refreshNav(){
+	var username = getCookie("username");
+	if(username==null || username==""){
+		var a_login = $('<a class="btn btn-nav btn-lg" data-sk="login">登录</a>');
+		$('#login_button').html('');
+		$('#login_button').append(a_login);
+		a_login.bind('click', function(e){
+			toward($(this).attr('data-sk'));
+		});
+		
+		
+		
+		
+		}else{
+			$('#login_button').html('');
+			
+			
+			var a = $('<a></a>').addClass("btn btn-center  btn-lg dropdown-toggle").attr('data-toggle', 'dropdown').html(' 个人中心<span class="caret"></span>');
+			var u = $('<ul></ul>').addClass("dropdown-menu").attr('role', 'menu');
+			u.append($('<li><font size=4 weight=bold>下午好：wd</font></li>'));
+			u.append('<li class="divider"></li>');
+			u.append('<li><a href="#">我要充值</a></li>');
+			u.append('<li><a href="#">我要提现</a></li>');
+			
+			
+			
+			var a_quit = $('<a href="#">退出</a>');
+			a_quit.click(function(e){
+				toward('quit');
+			})
+			
+			u.append($('<li></li>').append(a_quit));
+		
+			$('#login_button').append(a);
+			$('#login_button').append(u);
+		}
+}
+
 
 
 
 		function toward(name){
+			
+			
+			refreshNav();
+			
+			
 			$('a.btn-nav').removeClass('active');
 			
 			
@@ -160,37 +230,23 @@ nav['logined'] = logined;
 			var height = nav[name]['height'];
 			$('#container_content').attr('src', url).css('height', height);
 		}
+		
+		
+		
+		
+		
+		
          $(document).ready(function () {
         	 
         	 
         	 
         	 
-					var username = getCookie("username");
-					if(username==null || username==""){
-						$('.login_text').html('<SPAN style="cursor:pointer;">登陆</span>');
-						}else{
-							$('.login_text').html('<SPAN style="cursor:pointer;">个人中心▼</span>');
-							}
-					
-					
-					
-					
-					
-					
-					
+        	 refreshNav();
 					
 					
 					
 					$('a.btn-nav').click(function(e){
-						
 						toward($(this).attr('data-sk'));
-						
-					//	$('a.btn-nav').removeClass('active');
-					//	$(this).addClass('active');
-					//	var title = $(this).attr('data-sk');
-					//	var url = nav[title]['url'];
-					//	var height = nav[title]['height'];
-					//	$('#container_content').attr('src', url).css('height', height);
 					})
 					
 					

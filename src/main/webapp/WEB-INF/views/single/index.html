@@ -35,7 +35,7 @@
 <div class="hidden-xs col-sm-12 col-md-9">
 
 <div class="row">
-<a href="#"><img src="img/move.jpg" style="width:100%; height:200px;"></img></a>
+<a href="../activity/index.html" target="_blank"><img src="img/move.jpg" style="width:100%; height:200px;"></img></a>
 </div>
 
 <div class="row">
@@ -95,7 +95,9 @@
 <span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>投资人次25,471次<br>
 <span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>获得收益6,000,000元<br>
 <span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已注册人数10548人<br>
-<button type="button" class="btn btn-warning" style="width:100%; margin-top:20px;">立即注册</button>
+<div id="user_content" style="width:100%; margin-top:20px;">
+
+</div>
 </div>
 
 </div>
@@ -324,6 +326,16 @@
 <script>
 
 $(document).ready(function () {
+	
+	
+	var username = getCookie("username");
+	if(username==null || username==""){
+		$('#user_content').html('<a href="register.html" class="btn btn-warning" style="width:100%;">立即注册</a>')
+	}else{
+		$('#user_content').html('下午好：'+username+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="temp.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
+	}
+	
+	
 					
 					var title1 = '稳健型';
 					var label11 = '机构担保';

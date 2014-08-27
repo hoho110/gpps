@@ -118,7 +118,7 @@ margin:20px 0 0 -150px;
                 <input type="submit" value="登 录" class="ui-button" id="J-login-btn" tabindex="4" seed='authcenter-submit-homeB'>
                 <p class="ui-form-other">
                     <a href="#" seed="authcenter-taobaoMember" class="textlink" title="企业用户登录" tabindex="6">企业用户登录</a>
-                                        <a class="register" href="register.html" seed="authcenter-register" title="免费注册" tabindex="8">免费注册</a>
+                                        <a class="register" href="#" seed="authcenter-register" title="免费注册" tabindex="8">免费注册</a>
                 </p>
             </div><!-- //submit -->
         </fieldset>
@@ -174,7 +174,10 @@ $(document).ready(function() {
 			
            });
 
-       
+       $('.register').click(function(){
+    	   window.parent.toward('register');
+       });
+
 
        $('input#J-input-checkcode').on('keyup', function(e) {
 

@@ -45,9 +45,8 @@
 .umidWrapper{display:block; height:1px;}
 #J-login{
 position:absolute; 
-top:50%; 
 left:50%; 
-margin:-150px 0 0 -150px;
+margin:20px 0 0 -150px;
 }
 </style>
 
@@ -165,7 +164,8 @@ $(document).ready(function() {
 			
 			if(username=='wd' && password=='111111'){
 				addCookie("username","wd",1);
-				window.location.href="temp.html"; 
+				window.parent.toward("myaccount");
+				//window.location.href="temp.html"; 
 				}else{
 				alert('用户名密码错误，请重新输入！');
 				$('input#password_input').val('');

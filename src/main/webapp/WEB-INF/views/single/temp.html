@@ -1,0 +1,18 @@
+<html>
+<body>
+<script src="js/cdn/jquery.min.js"></script>
+<script src="js/mine.js"></script>
+<script src="js/cookies.js"></script>
+<script>
+$(document).ready(function() {
+var username = null;
+var username = getCookie("username");
+if(username==null || username==""){
+	window.parent.toward("login");
+}else{
+	window.parent.toward("logined");
+}
+});
+</script>
+</body>
+</html>

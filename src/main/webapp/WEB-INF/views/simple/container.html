@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+<title>政采贷</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/mine.css" rel="stylesheet">
+
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="js/cdn/html5shiv.min.js"></script>
+      <script src="js/cdn/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/cdn/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+
+<div class="container-fluid">
+<div class="row" style="padding-left:5px; padding-right:5px;">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+<div class="row" style="margin-top:5px;">
+<div class="col-xs-12 col-sm-2 col-md-2">
+<img src="img/logo.jpg" style="width:100%;height:auto;"></img>
+</div>
+
+
+
+
+<div class="hidden-xs col-sm-10 col-md-10">
+<div class="btn-group btn-group-lg  btn-group-justified" style="background-color:#33cc00; width:100%;">
+
+<div class="btn-group">
+<a href="#" class="btn btn-nav btn-lg">首页</a>
+</div>
+<div class="btn-group">
+<a href="productlist.html" class="btn btn-nav btn-lg">我要理财</a>
+</div>
+<div class="btn-group">
+<a href="loan.html" class="btn btn-nav btn-lg">我要融资</a>
+</div>
+<div class="btn-group">
+<a href="temp.html" class="btn btn-nav btn-lg">我的账户</a>
+</div>
+<div class="btn-group">
+<a href="#" class="btn btn-nav btn-lg">活动中心</a>
+</div>
+<div class="btn-group">
+<a id="lg_login_text" class="btn btn-nav btn-lg login_text"></a>
+</div>
+
+</div>
+</div>
+
+
+
+
+</div>
+
+
+
+
+<div class="row" style="margin-top:5px;">
+
+	<iframe src="productlist.html" style="width:100%; height:850px;" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="row" style="margin-top:10px; border: #eee solid 1px;">
+<p class="bg-success" style="margin-left:-15px; padding-left:15px; padding-top:5px; margin-right:-15px; font-size:13px; font-weight:normal;">
+<span style="margin-left:450px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备案信息</span><br>
+<span style="margin-left:450px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;友情链接</span><br>
+<span style="margin-left:450px;">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;加入的认证或联盟
+</span>
+</p>
+</div>
+
+
+</div>
+</div>
+</div>
+
+
+
+
+
+<script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+    <script src="js/plugins/morris/morris.js"></script>
+    <script src="js/mine.js"></script>
+<script src="js/cookies.js"></script>
+<script src="js/gpps/data.js"></script>
+<script>
+         $(document).ready(function () {
+					var username = getCookie("username");
+					if(username==null || username==""){
+						$('.login_text').html('<SPAN style="cursor:pointer;">登陆</span>');
+						}else{
+							$('.login_text').html('<SPAN style="cursor:pointer;">个人中心▼</span>');
+							}
+					
+					
+					
+					
+					
+					
+					
+					
+
+
+			$('.login_text').click(function(e){
+				
+				
+				
+				if($(this).text()=="登陆"){
+					window.location.href="login.html";
+					return;
+				}
+				
+				
+				
+				
+				if($('#login_pop').css('display')=='block')
+				{
+					$(this).removeClass('active');
+					$('#login_pop').css('display', 'none');
+				}else{
+					$('#login_pop').css('display', 'block');
+					$(this).addClass('active');
+				}
+			});
+
+
+
+
+                     })
+ </script>
+
+
+</body>
+</html>

@@ -36,6 +36,10 @@ public class AuthorityValidateServiceImpl implements IAuthorityValidateService{
 			logger.debug("未找到该用户角色配置");
 			return false;
 		}
+		if(role.getLimitedType()==Role.LIMITEDTYPE_ALLLIMITED)
+			return false;
+		else if(role.getLimitedType()==Role.LIMITEDTYPE_NOTLIMITED)
+			return true;
 		return checkPermissionRules(role, applyService, applyMethod, fetchServiceSdl);
 	}
 	private Role getRoleByPrivilege(int privilege)

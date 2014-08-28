@@ -18,5 +18,6 @@ public interface IBorrowerDao {
 //	public void update(Borrower borrower);
 	public void changePrivilege(@Param("id") Integer id,@Param("privilege") int privilege);
 	public void changePassword(@Param("id") Integer id,@Param("password") String password);
+	public void changeCreditValue(@Param("id")Integer id,@Param("creditValue")int creditValue);
 	public void delete(Integer id);
 }

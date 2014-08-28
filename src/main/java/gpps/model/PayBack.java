@@ -62,4 +62,16 @@ public class PayBack {
 	public void setDeadline(long deadline) {
 		this.deadline = deadline;
 	}
+	public long getRealtime() {
+		return realtime;
+	}
+	public void setRealtime(long realtime) {
+		this.realtime = realtime;
+	}
+	public int getType() {
+		return type;
+	}
+	public void setType(int type) {
+		this.type = type;
+	}
 }

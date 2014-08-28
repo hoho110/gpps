@@ -77,6 +77,7 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		lender.setCreatetime(System.currentTimeMillis());
 		lender.setPrivilege(Lender.PRIVILEGE_COMMON);
 		lender.setTel(checkNullAndTrim("tel", lender.getTel()));
+		lender.setGrade(0);
 		if(lenderDao.findByLoginId(lender.getLoginId())!=null)
 			throw new LoginException("LoginId is existed");
 		lenderDao.create(lender);

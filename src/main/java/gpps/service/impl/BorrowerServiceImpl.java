@@ -72,6 +72,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		borrower.setCreatetime(System.currentTimeMillis());
 		borrower.setPrivilege(borrower.PRIVILEGE_VIEW);
 		borrower.setTel(checkNullAndTrim("tel", borrower.getTel()));
+		borrower.setCreditValue(0);
 		if (borrowerDao.findByLoginId(borrower.getLoginId()) != null)
 			throw new LoginException("LoginId is existed");
 		borrowerDao.create(borrower);

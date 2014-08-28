@@ -14,4 +14,6 @@ public interface ILenderDao {
 //	public void update(Lender lender);
 	public void changePrivilege(@Param("id") Integer id,@Param("privilege") int privilege);
 	public void changePassword(@Param("id") Integer id,@Param("password") String password);
+	public void changeGrade(@Param("id")Integer id,@Param("grade")int grade);
+	public void delete(Integer id);
 }

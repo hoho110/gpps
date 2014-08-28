@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 
 import com.easyservice.support.EasyServiceConstant;
 
+import gpps.service.exception.FrozenException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
 
@@ -42,9 +43,9 @@ public interface ILoginService {
 	/**
 	 * 发送短信验证码（注册以及修改密码时用到）
 	 * 获取后放入用户session中，并记录发送时间，待用户注册/修改密码时进行验证
-	 * @throws Exception
+	 * @throws FrozenException 冻结(未到发送间隔时间)
 	 */
-	public void sendMessageValidateCode();
+	public void sendMessageValidateCode() throws FrozenException;
 	
 	public void writeGraphValidateCode(OutputStream os) throws IOException;
 	/**

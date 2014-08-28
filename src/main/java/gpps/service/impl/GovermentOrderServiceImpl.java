@@ -47,7 +47,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		return govermentOrder;
 	}
 	@Override
-	public List<GovermentOrder> findByState(int states, int offset, int recnum) {
+	public List<GovermentOrder> findByStates(int states, int offset, int recnum) {
 		List<Integer> list=null;
 		if(states!=-1)
 		{
@@ -63,7 +63,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		return govermentOrderDao.findByState(list, offset, recnum);
 	}
 	@Override
-	public List<GovermentOrder> findByBorrowerIdAndState(int borrowerId, int states) {
+	public List<GovermentOrder> findByBorrowerIdAndStates(int borrowerId, int states) {
 		List<Integer> list=null;
 		if(states!=-1)
 		{

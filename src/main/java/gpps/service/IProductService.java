@@ -19,15 +19,28 @@ public interface IProductService {
 	 * @param state
 	 * @throws IllegalConvertException
 	 */
-	public void changeState(Integer productId,int state) throws IllegalConvertException;
+//	public void changeState(Integer productId,int state) throws IllegalConvertException;
 	
 	public Product find(Integer productId);
 	
 	public List<Product> findByGovermentOrder(Integer orderId);
-	
-	public List<Product> findByState(int states,int offset,int recnum);
-	
-	public List<Product> findByProductSeriesAndState(Integer productSeriesId,int state,int offset,int recnum);
+	/**
+	 * 根据状态查找
+	 * @param states 一个或几个状态并集，-1表示不限
+	 * @param offset
+	 * @param recnum
+	 * @return
+	 */
+	public List<Product> findByStates(int states,int offset,int recnum);
+	/**
+	 * 根据产品线及状态查找
+	 * @param productSeriesId
+	 * @param state 一个或几个状态并集，-1表示不限
+	 * @param offset
+	 * @param recnum
+	 * @return
+	 */
+	public List<Product> findByProductSeriesAndStates(Integer productSeriesId,int state,int offset,int recnum);
 	
 	public void createProductAction(ProductAction productAction);
 	
@@ -36,4 +49,11 @@ public interface IProductService {
 	public void addAccessory(Integer productId,String path);
 	
 	public void changeBuyLevel(Integer productId,int buyLevel);
+	
+	public void startRepaying(Integer productId)throws IllegalConvertException;//启动还款
+	public void quitFinancing(Integer productId)throws IllegalConvertException;//放弃融资（流标）
+	public void delayRepay(Integer productId)throws IllegalConvertException;//延期还款
+	public void finishRepay(Integer productId)throws IllegalConvertException;//还款完毕
+	public void applyToClose(Integer productId)throws IllegalConvertException;//申请关闭
+	public void closeProduct(Integer productId)throws IllegalConvertException;//关闭产品
 }

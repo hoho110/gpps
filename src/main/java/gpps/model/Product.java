@@ -5,17 +5,28 @@ import java.math.BigDecimal;
 public class Product {
 	private Integer id;
 	/**
-	 * 0：投标中 1：还款中 -1：申请关闭 -2：延期 2：已关闭 3：还款完成 4：流标
+	 * 1：融资中;
+	 * 2：还款中;
+	 * 4:流标
+	 * 8:还款完成
+	 * 16：延期 
+	 * 32：申请关闭
+	 * 64：已关闭
 	 */
-	private int state;
+	public static final int STATE_FINANCING=1;
+	public static final int STATE_REPAYING=1<<1;
+	public static final int STATE_QUITFINANCING=1<<2;
+	public static final int STATE_FINISHREPAY=1<<3;
+	public static final int STATE_POSTPONE=1<<4;
+	public static final int STATE_APPLYTOCLOSE=1<<5;
+	public static final int STATE_CLOSE=1<<6;
+	private int state=STATE_FINANCING;
 	private Integer govermentorderId;
 	private BigDecimal expectAmount = BigDecimal.ZERO;
 	private BigDecimal realAmount = BigDecimal.ZERO;
 	private BigDecimal rate = BigDecimal.ZERO;
 	/**
 	 * 0： 等额本息 1：先还利息，到期还本 2：到期还本付息
-	 * 
-	 * 0:按日 1：按周 2：按半月 3：按月 4：按指定日期 9：未指定
 	 */
 	private int paybackmodel;
 	private String accessory;

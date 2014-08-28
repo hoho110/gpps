@@ -4,8 +4,8 @@
 	<insert id="create" parameterType="gpps.model.PayBack"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
-		PayBack(borrowerAccountId,productId,state,chiefAmount,interest,deadline)
-		values(#{borrowerAccountId},#{productId},#{state},#{chiefAmount},#{interest},#{deadline})
+		PayBack(borrowerAccountId,productId,state,chiefAmount,interest,deadline,realtime,type)
+		values(#{borrowerAccountId},#{productId},#{state},#{chiefAmount},#{interest},#{deadline},#{realtime},#{type})
 	</insert>
 	<select id="findAllByProduct" resultType="gpps.model.PayBack">
 		select *

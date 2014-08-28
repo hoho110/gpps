@@ -21,19 +21,19 @@ public interface IGovermentOrderService {
 //	public void changeState(int orderId,int states) throws IllegalConvertException;
 	/**
 	 * 根据状态查找
-	 * @param states -1表示不限
+	 * @param states 一个或几个状态并集，-1表示不限
 	 * @param offset 偏移量（从0开始）
 	 * @param recnum 返回的记录条数
 	 * @return
 	 */
-	public List<GovermentOrder> findByState(int states,int offset,int recnum);
+	public List<GovermentOrder> findByStates(int states,int offset,int recnum);
 	/**
 	 * 根据借款人/状态查找
 	 * @param borrowerId
-	 * @param states -1表示不限
+	 * @param states 一个或几个状态并集，-1表示不限
 	 * @return
 	 */
-	public List<GovermentOrder> findByBorrowerIdAndState(int borrowerId,int states);
+	public List<GovermentOrder> findByBorrowerIdAndStates(int borrowerId,int states);
 	
 	public void addAccessory(Integer orderId,String path);
 	

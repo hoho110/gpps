@@ -33,7 +33,13 @@ var createProductLine = function(cont, title, label1, des1, label2, des2, descri
 	var row2 = $('<div></div>').addClass('row');
 	
 	var row2_col1 = $('<div></div>').addClass('col-xs-3 col-sm-3 col-md-4');
-	row2_col1.html('<div class="seemall"><a href="productlist.html" title="产品列表" target="_blank"></a></div>');
+	
+	
+	var a = $('<a href="#" title="产品列表"></a>');
+	row2_col1.append($('<div class="seemall"></div>').append(a));
+	a.click(function(e){
+		window.parent.toward("productlist");
+	});
 	
 	var row2_col2 = $('<div></div>').addClass('col-xs-9 col-sm-9 col-md-8');
 	row2_col2.html('<div class="row"><div class="col-xs-12 col-sm-12 col-md-12">'+description+'</div></div>');

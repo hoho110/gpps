@@ -1,5 +1,8 @@
 package gpps.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GovermentOrder {
 	private Integer id;
 	private Integer borrowerId;
@@ -21,6 +24,7 @@ public class GovermentOrder {
 	private long financingEndtime;
 	private long createtime=System.currentTimeMillis();
 //	private String auditor;//审计员
+	private List<Product> products=new ArrayList<Product>();//非持久化字段
 	public Integer getId() {
 		return id;
 	}
@@ -62,5 +66,13 @@ public class GovermentOrder {
 	}
 	public void setCreatetime(long createtime) {
 		this.createtime = createtime;
+	}
+	
+	
+	public List<Product> getProducts() {
+		return products;
+	}
+	public void setProducts(List<Product> products) {
+		this.products = products;
 	}
 }

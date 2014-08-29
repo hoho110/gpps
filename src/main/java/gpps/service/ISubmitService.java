@@ -22,18 +22,22 @@ public interface ISubmitService {
 	 * @param state 订单状态
 	 * @throws IllegalConvertException
 	 */
-	public void changeState(Integer submitId,int state)throws IllegalConvertException;
+//	public void changeState(Integer submitId,int state)throws IllegalConvertException;
 	
 	public Submit find(Integer id);
 	/**
 	 * 返回用户购买的所有订单，按时间倒序排序
 	 * @return
 	 */
-	public List<Submit> findAll();
+	public List<Submit> findMyAllSubmits();
 	/**
 	 * 找到该订单的资金流,倒序排列返回
 	 * @param submit
 	 * @return
 	 */
 	public List<CashStream> findSubmitCashStream(Integer submitId);
+	
+//	public void refuseApply(Integer submitId)throws IllegalConvertException;//拒绝申请
+//	public void passApply(Integer submitId)throws IllegalConvertException;//通过申请进行待支付
+	
 }

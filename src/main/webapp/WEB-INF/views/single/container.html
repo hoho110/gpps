@@ -182,9 +182,6 @@ function refreshNav(){
 			toward($(this).attr('data-sk'));
 		});
 		
-		
-		
-		
 		}else{
 			
 			$('#login_button').find('a').remove();
@@ -202,7 +199,7 @@ function refreshNav(){
 			
 			var a_quit = $('<a href="#">退出</a>');
 			a_quit.click(function(e){
-				toward('quit');
+				towardWithoutRefresh('quit');
 			})
 			
 			u.append($('<li></li>').append(a_quit));
@@ -212,7 +209,20 @@ function refreshNav(){
 		}
 }
 
-
+		function towardWithoutRefresh(name){
+			$('a.action').removeClass('active');
+			
+			
+			var title = name;
+			if(title=='logined'){
+				title='myaccount';
+			}
+			
+			$('a.action[data-sk='+title+']').addClass('active');
+			var url = nav[name]['url'];
+			var height = nav[name]['height'];
+			$('#container_content').attr('src', url).css('height', height);
+		}
 
 
 		function toward(name){
@@ -245,38 +255,13 @@ function refreshNav(){
         	 
         	 
         	 
-        	 toward('index');
+        	 		toward('index');
 					
 					
 					
 					$('a.action').click(function(e){
 						toward($(this).attr('data-sk'));
 					})
-					
-					
-
-
-			$('.login_text').click(function(e){
-				
-				
-				
-				if($(this).text()=="登陆"){
-					window.location.href="login.html";
-					return;
-				}
-				
-				
-				
-				
-				if($('#login_pop').css('display')=='block')
-				{
-					$(this).removeClass('active');
-					$('#login_pop').css('display', 'none');
-				}else{
-					$('#login_pop').css('display', 'block');
-					$(this).addClass('active');
-				}
-			});
 					
 					
 

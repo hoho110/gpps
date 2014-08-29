@@ -8,9 +8,9 @@ $(document).ready(function() {
 var username = null;
 var username = getCookie("username");
 if(username==null || username==""){
-	window.parent.toward("login");
+	window.parent.towardWithoutRefresh("login");
 }else{
-	window.parent.toward("logined");
+	window.parent.towardWithoutRefresh("logined");
 }
 });
 </script>

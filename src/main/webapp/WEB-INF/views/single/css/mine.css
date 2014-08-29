@@ -125,7 +125,7 @@
 	WIDTH: 118px; HEIGHT: 54px; OVERFLOW: hidden
 }
 .newProjectInfoBox .stateText {
-	TEXT-ALIGN: center; LINE-HEIGHT: 35px; WIDTH: 118px; DISPLAY: block; HEIGHT: 54px; COLOR: #fff; FONT-WEIGHT: bold
+	TEXT-ALIGN: center; LINE-HEIGHT: 35px; WIDTH: 118px; DISPLAY: block; HEIGHT: 54px; COLOR: #fff; FONT-WEIGHT: bold;
 }
 .newProjectInfoBox .stateBtnProcess {
 	BACKGROUND: url(../img/rzOrange.jpg) no-repeat
@@ -152,6 +152,9 @@
 
 a.productline {
 	cursor : pointer;
+	text-decoration:none;
+}
+a.productline:hover{
 	text-decoration:none;
 }
 

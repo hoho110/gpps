@@ -39,22 +39,22 @@
 
 
 <div class="hidden-xs col-sm-10 col-md-10">
-<div class="btn-group btn-group-lg  btn-group-justified" style="background-color:#33cc00; width:100%;">
+<div class="btn-group btn-group-lg  btn-group-justified" style="background-color:#fff; width:100%;">
 
 <div class="btn-group">
-<a class="btn btn-nav btn-lg" data-sk="index">首页</a>
+<a class="btn btn-default action btn-lg" data-sk="index">首页</a>
 </div>
 <div class="btn-group">
-<a class="btn btn-nav btn-lg" data-sk="productlist">我要理财</a>
+<a class="btn btn-default action btn-lg" data-sk="productlist">我要理财</a>
 </div>
 <div class="btn-group">
-<a class="btn btn-nav btn-lg" data-sk="loan">我要融资</a>
+<a class="btn btn-default action btn-lg" data-sk="loan">我要融资</a>
 </div>
 <div class="btn-group">
-<a class="btn btn-nav btn-lg" data-sk="myaccount">我的账户</a>
+<a class="btn btn-default action btn-lg" data-sk="myaccount">我的账户</a>
 </div>
 <div class="btn-group">
-<a class="btn btn-nav btn-lg" data-sk="activity">活动中心</a>
+<a class="btn btn-default action btn-lg" data-sk="activity">活动中心</a>
 </div>
 <div class="btn-group" id="login_button">
 
@@ -73,7 +73,7 @@
 
 <div class="row" style="margin-top:5px;">
 
-	<iframe id="container_content" src="index.html" style="width:100%; height:1500px;" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
+	<iframe id="container_content" src="index.html" style="width:100%; height:1380px;" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
 
 </div>
 
@@ -87,7 +87,7 @@
 
 
 <div class="row" style="margin-top:10px; border: #eee solid 1px;">
-<p class="bg-success" style="margin-left:-15px; padding-left:15px; padding-top:5px; margin-right:-15px; font-size:13px; font-weight:normal;">
+<p class="bg-default" style="margin-left:-15px; padding-left:15px; padding-top:5px; margin-right:-15px; font-size:13px; font-weight:normal;">
 <span style="margin-left:450px;">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备案信息</span><br>
 <span style="margin-left:450px;">
@@ -116,11 +116,11 @@
 
 var index = {};
 index['url'] = 'index.html';
-index['height'] = '1500px';
+index['height'] = '1380px';
 
 var productlist = {};
 productlist['url'] = 'productlist.html';
-productlist['height'] = '850px';
+productlist['height'] = '800px';
 
 var login = {};
 login['url'] = 'login.html';
@@ -173,7 +173,9 @@ nav['activity'] = activity;
 function refreshNav(){
 	var username = getCookie("username");
 	if(username==null || username==""){
-		var a_login = $('<a class="btn btn-nav btn-lg" data-sk="login">登录</a>');
+		var a_login = $('<a class="btn btn-default action btn-lg" data-sk="login">登录</a>');
+		$('#login_button').find('a').remove();
+		$('#login_button').find('ul').removeClass().remove();
 		$('#login_button').html('');
 		$('#login_button').append(a_login);
 		a_login.bind('click', function(e){
@@ -184,10 +186,12 @@ function refreshNav(){
 		
 		
 		}else{
+			
+			$('#login_button').find('a').remove();
+			$('#login_button').find('ul').removeClass().remove();
 			$('#login_button').html('');
 			
-			
-			var a = $('<a></a>').addClass("btn btn-center  btn-lg dropdown-toggle").attr('data-toggle', 'dropdown').html(' 个人中心<span class="caret"></span>');
+			var a = $('<a></a>').addClass("btn btn-default btn-lg").attr('data-toggle', 'dropdown').html(' 个人中心<span class="caret"></span>');
 			var u = $('<ul></ul>').addClass("dropdown-menu").attr('role', 'menu');
 			u.append($('<li><font size=4 weight=bold>下午好：wd</font></li>'));
 			u.append('<li class="divider"></li>');
@@ -217,7 +221,7 @@ function refreshNav(){
 			refreshNav();
 			
 			
-			$('a.btn-nav').removeClass('active');
+			$('a.action').removeClass('active');
 			
 			
 			var title = name;
@@ -225,7 +229,7 @@ function refreshNav(){
 				title='myaccount';
 			}
 			
-			$('a.btn-nav[data-sk='+title+']').addClass('active');
+			$('a.action[data-sk='+title+']').addClass('active');
 			var url = nav[name]['url'];
 			var height = nav[name]['height'];
 			$('#container_content').attr('src', url).css('height', height);
@@ -241,11 +245,11 @@ function refreshNav(){
         	 
         	 
         	 
-        	 refreshNav();
+        	 toward('index');
 					
 					
 					
-					$('a.btn-nav').click(function(e){
+					$('a.action').click(function(e){
 						toward($(this).attr('data-sk'));
 					})
 					

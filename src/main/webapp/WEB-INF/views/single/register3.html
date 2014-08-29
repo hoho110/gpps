@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+<title>政X融X网</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<link href="css/mine.css" rel="stylesheet">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="js/cdn/html5shiv.min.js"></script>
+      <script src="js/cdn/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/cdn/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+
+<div class="container-fluid">
+<div class="row" style="padding-left:5px; padding-right:5px;">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+<div class="panel panel-default" style="padding-bottom:50px;">
+
+<div class="row" style="margin-top:15px;">
+<div class="hidden-xs col-sm-3 col-md-4"></div>
+<div class="col-xs-4 col-sm-2 col-md-1"></div>
+<div class="col-xs-4 col-sm-2 col-md-3" style="color:#f60;">第三步:第三方平台认证</div>
+<div class="col-xs-4 col-sm-2 col-md-1"><a href="#" id="skip">跳过</a></div>
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-4"></div>
+<div class="hidden-xs col-sm-2 col-md-1">您的密码*</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="spsw" type="password" class="form-control" placeholder="请输入您的第三方密码"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"><span id="spswLabel" style="font-size:small"></span></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-4"></div>
+<div class="hidden-xs col-sm-2 col-md-1">身份证号*</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="validate" type="text" class="form-control" placeholder="请输入您的身份证号"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"><span id="validateLabel" style="font-size:small"></span></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-4"></div>
+<div class="hidden-xs col-sm-2 col-md-1">银行卡号*</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="validate" type="text" class="form-control" placeholder="请输入您的身份证号"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"><span id="validateLabel" style="font-size:small"></span></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-4"></div>
+<div class="hidden-xs col-sm-2 col-md-1">手机号*</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="validate" type="text" class="form-control" placeholder="请输入您的身份证号"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"><span id="validateLabel" style="font-size:small"></span></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-4"></div>
+<div class="hidden-xs col-sm-2 col-md-1">性别</div>
+<div class="col-xs-12 col-sm-4 col-md-4">
+<input type="radio" name="sex" id="1" value="1" checked="checked"/>男
+<input type="radio" name="sex" id="0" value="0" style="margin-left:20px;"/>女
+</div>
+<div class="col-xs-12 col-sm-3 col-md-3"></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-4"></div>
+<div class="hidden-xs col-sm-2 col-md-1">通信地址</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="validate" type="text" class="form-control" placeholder="请输入您的身份证号"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"><span id="validateLabel" style="font-size:small"></span></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="col-xs-2 col-sm-4 col-md-6"></div>
+<div class="col-xs-8 col-sm-4 col-md-4"><button id="confirm" type="button" class="btn btn-warning" style="width:150px;">确定</button></div>
+<div class="col-xs-2 col-sm-4 col-md-2"></div>
+</div>
+
+
+</div>
+
+
+
+</div>
+</div>
+</div>
+<script src="js/cookies.js"></script>
+<script>
+$(document).ready(function() {
+	
+	
+	$('#spsw').focus();
+		$('#skip').click(function(e){
+			window.parent.toward("myaccount");
+		});
+       $('#confirm').click(function(e){
+    	   var spsw = $('input#spsw').val();
+    	   if(spsw==null||spsw==''){
+				$('#spswLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入第三方密码');
+				return;
+				}else{
+				$('#spswLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+				}
+    	   addCookie("spsw","********",1);
+    	   window.parent.toward("myaccount");
+       });
+
+})
+</script>
+</body>
+</html>

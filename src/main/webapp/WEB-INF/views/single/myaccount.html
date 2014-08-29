@@ -54,8 +54,9 @@ a.accordion-toggle{
 
 
 <div class="row">
-<div id="account_total" class="col-xs-12 col-md-12">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 <div class="panel panel-default" style="padding-bottom:5px;">
+<div id="account_total" class="col-xs-6 col-md-6">
 <p style="padding-left:50px; margin-top:20px;">
 <img src="img/head.bmp" width="75" height="100" style="float:left;margin-right:8px;"/>
 <font color = "red" size="5" weight="border">晚上好：wd</font> <a style="margin-left:30px;" href="quit.html">退出</a>  <br>
@@ -69,6 +70,32 @@ a.accordion-toggle{
 <p style="padding-left:50px;">
 <button type="button" class="btn btn-warning">充值</button><button type="button" class="btn btn-default">提现</button>
 </p>
+<div style="clear:both;"></div>
+</div>
+<div class="col-xs-6 col-md-6">
+<div class="col-xs-4 col-md-4">
+<img src="img/phone.jpg" style="width:80px; height:100px;"></img>
+<div style="color:green; font-size:12px; font-weight:bold; margin-top:5px; z-index:1000">
+<span class="glyphicon glyphicon-ok"></span>
+手机已绑定
+</div>
+</div>
+<div class="col-xs-4 col-md-4">
+<a id="identity" title="点击绑定身份证" href="register2.html"><img id="identity" src="img/people.png" style="width:80px; height:100px;"></img></a>
+<div id="identity" style="color:red; font-size:12px; font-weight:bold; margin-top:5px;">
+<span class="glyphicon glyphicon-remove"></span>
+身份证未绑定
+</div>
+</div>
+<div class="col-xs-4 col-md-4">
+<a id="spsw" title="点击开通第三方账户" href="register3.html"><img id="spsw" src="img/sanfang_n.jpg" style="width:80px; height:100px;"></img></a>
+<div id="spsw" style="color:red; font-size:12px; font-weight:bold; margin-top:5px;">
+<span class="glyphicon glyphicon-remove"></span>
+第三方账户未开通
+</div>
+</div>
+</div>
+<div style="clear:both;"></div>
 </div>
 </div>
 </div>
@@ -246,6 +273,21 @@ $(document).ready(function() {
 	if(username==null || username==""){
 		window.location.href="login.html"; 
 		return;
+		}
+	
+	var identity = getCookie('identity');
+	if(identity!=null && identity!=""){
+		$('img#identity').attr('src', 'img/people.jpg');
+		$('a#identity').attr('href', '#');
+		$('div#identity').css('color', 'green').html('<span class="glyphicon glyphicon-ok"></span>身份证已绑定')
+		}
+	
+	
+	var spsw = getCookie('spsw');
+	if(spsw!=null && spsw!=""){
+		$('img#spsw').attr('src', 'img/sanfang.jpg');
+		$('a#spsw').attr('href', '#');
+		$('div#spsw').css('color', 'green').html('<span class="glyphicon glyphicon-ok"></span>第三方账户已开通')
 		}
 	
 	

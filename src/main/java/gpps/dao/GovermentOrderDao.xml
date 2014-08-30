@@ -13,7 +13,7 @@
 		where
 		id=#{orderId}
 	</update>
-	<select id="findByState" resultType="gpps.model.GovermentOrder">
+	<select id="findByStatesWithPaging" resultType="gpps.model.GovermentOrder">
 		select *
 		from GovermentOrder
 		<if test="states != null">
@@ -24,6 +24,17 @@
 			</foreach>
 		</if>
 		LIMIT #{offset}, #{recnum}
+	</select>
+	<select id="findByStates" resultType="gpps.model.GovermentOrder">
+		select *
+		from GovermentOrder
+		<if test="states != null">
+			where state in
+			<foreach item="item" index="index" collection="states" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
 	</select>
 	<select id="countByState" resultType="int">
 		select count(*)

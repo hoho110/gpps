@@ -2,6 +2,7 @@ package gpps.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
 public class GovermentOrder {
 	private Integer id;
@@ -25,6 +26,7 @@ public class GovermentOrder {
 	private long createtime=System.currentTimeMillis();
 //	private String auditor;//审计员
 	private List<Product> products=new ArrayList<Product>();//非持久化字段
+	public Lock lock=null;
 	public Integer getId() {
 		return id;
 	}

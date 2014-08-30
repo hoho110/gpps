@@ -1,6 +1,7 @@
 package gpps.service;
 
 import gpps.model.GovermentOrder;
+import gpps.model.Product;
 import gpps.service.exception.IllegalConvertException;
 
 import java.util.List;
@@ -45,4 +46,17 @@ public interface IGovermentOrderService {
 	public void startRepaying(Integer orderId)throws IllegalConvertException;//启动还款
 	public void quitFinancing(Integer orderId)throws IllegalConvertException;//放弃融资（流标）
 	public void closeFinancing(Integer orderId)throws IllegalConvertException;//关闭融资
+	
+	/**
+	 * 申请融资中产品，并对订单加锁,必须相应地在finally中调用releaseFinancingProduct方法
+	 * @param productId
+	 * @param orderId
+	 * @return 融资中产品，如果为null，则表示产品已下架，不需要释放
+	 */
+	public Product applyFinancingProduct(Integer productId,Integer orderId);
+	/**
+	 * 释放融资中产品
+	 * @param product
+	 */
+	public void releaseFinancingProduct(Product product);
 }

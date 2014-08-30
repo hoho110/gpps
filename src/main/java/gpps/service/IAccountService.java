@@ -1,6 +1,7 @@
 package gpps.service;
 
 import gpps.model.CashStream;
+import gpps.model.LenderAccount;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
 
@@ -75,6 +76,7 @@ public interface IAccountService {
 	 * @throws IllegalStateException
 	 */
 	public void changeCashStreamState(Integer cashStreamId,int state) throws IllegalConvertException;
+	
 	/**
 	 * 调用第三方平台验证
 	 * @param cashStreamId

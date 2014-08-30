@@ -6,6 +6,7 @@ package gpps.dao;
 import gpps.model.Product;
 import gpps.service.exception.IllegalConvertException;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -24,6 +25,6 @@ public interface IProductDao {
 	public List<Product> findByProductSeriesAndState(@Param("productSeriesId")Integer productSeriesId,@Param("states")List<Integer> states,@Param("offset")int offset,@Param("recnum")int recnum);
 	public int countByProductSeriesAndState(@Param("productSeriesId")Integer productSeriesId,@Param("states")List<Integer> state);
 	public void changeBuyLevel(@Param("id")Integer id,@Param("levelToBuy")int levelToBuy);
-	public void buy(@Param("id")Integer id,@Param("amount")int amount);
+	public void buy(@Param("id")Integer id,@Param("amount")BigDecimal amount);
 	public void delete(Integer id);
 }

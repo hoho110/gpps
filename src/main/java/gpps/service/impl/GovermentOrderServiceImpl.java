@@ -48,7 +48,8 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		GovermentOrder.STATE_REPAYING,
 		GovermentOrder.STATE_CLOSE
 	};
-	Map<String,GovermentOrder> financingOrders=new HashMap<String,GovermentOrder>();
+	//TODO Order状态变化，融资金额变化需要修改下面的缓存
+	Map<String,GovermentOrder> financingOrders=new HashMap<String,GovermentOrder>();  
 	@PostConstruct
 	public void init()
 	{

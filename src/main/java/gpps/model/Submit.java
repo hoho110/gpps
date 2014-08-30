@@ -8,6 +8,9 @@ public class Submit {
 	 * 1:申请竞标-> 2:待支付 （支付） 4:竞标中 (融资审核成功) 8:还款中 16：还款完毕
 	 * 
 	 * 32:流标(融资审核不成功) 64:退订（未支付） 128：异常（额度不足）申请不成功
+	 * 
+	 * 已购买;流标;
+	 * 其他状态从产品中获取
 	 */
 	public static final int STATE_APPLY=1;
 	public static final int STATE_WAITFORPAY=1<<1;//2

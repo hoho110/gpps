@@ -4,6 +4,9 @@ import gpps.model.CashStream;
 import gpps.model.Submit;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
+import gpps.service.exception.InsufficientProductException;
+import gpps.service.exception.ProductSoldOutException;
+import gpps.service.exception.UnreachBuyLevelException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,8 +17,11 @@ public interface ISubmitService {
 	 * @param productId 产品名称
 	 * @param amount 购买数量
 	 * @throws InsufficientBalanceException 余额不足
+	 * @throws ProductSoldOutException 产品已售完
+	 * @throws InsufficientProductException 产品余额不足
+	 * @throws UnreachBuyLevelException 未达购买级别
 	 */
-	public void buy(Integer productId,BigDecimal amount)throws InsufficientBalanceException;
+	public void buy(Integer productId,BigDecimal amount)throws InsufficientBalanceException,ProductSoldOutException,InsufficientProductException, UnreachBuyLevelException;
 	/**
 	 * 系统任务调用
 	 * @param submitId 订单ID

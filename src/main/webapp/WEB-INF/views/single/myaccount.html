@@ -68,7 +68,7 @@ a.accordion-toggle{
 待获利息：700元<br>
 </p>
 <p style="padding-left:50px;">
-<button type="button" class="btn btn-warning">充值</button><button type="button" class="btn btn-default">提现</button>
+<button type="button" id="recharge" class="btn btn-warning">充值</button><button type="button" class="btn btn-default">提现</button>
 </p>
 <div style="clear:both;"></div>
 </div>
@@ -295,6 +295,10 @@ $(document).ready(function() {
 		 var table = $('#'+name).html();
 		 $('#content').html(table);
 	 }
+	
+	$('#recharge').click(function(e){
+		window.location.href="recharge.html";
+	});
 	
 	$('a.help').click(function(e){
 		 $('a.help').removeClass('active');

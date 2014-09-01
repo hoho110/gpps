@@ -218,3 +218,35 @@ a.productline:hover{
 .panel-cl > .panel-footer + .panel-collapse .panel-body {
   border-bottom-color: #d6e9c6;
 }
+
+
+.rechargeList {
+	PADDING-BOTTOM: 15px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; ZOOM: 1; OVERFLOW: hidden; PADDING-TOP: 15px
+}
+.rechargeList LI {
+	WIDTH: 220px; ZOOM: 1; FLOAT: left; HEIGHT: 50px; OVERFLOW: hidden
+}
+.rechargeList LI .radioStyle {
+	MARGIN-TOP: 9px; DISPLAY: block; FLOAT: left; MARGIN-RIGHT: 15px
+}
+.rechargeList LI IMG {
+	BORDER-BOTTOM: #ddd 1px solid; BORDER-LEFT: #ddd 1px solid; DISPLAY: block; FLOAT: left; BORDER-TOP: #ddd 1px solid; BORDER-RIGHT: #ddd 1px solid
+}
+
+.rechargeBoxTitle {
+	FONT-SIZE: 16px; FONT-WEIGHT: bold
+}
+
+.rechargeNO {
+	PADDING-BOTTOM: 20px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 10px
+}
+.rechargeNO INPUT {
+	BORDER-BOTTOM: #ddd 1px solid; BORDER-LEFT: #ddd 1px solid; LINE-HEIGHT: 24px; FONT-FAMILY: "Î¢ÈíÑÅºÚ", "ËÎÌå"; HEIGHT: 24px; FONT-SIZE: 20px; BORDER-TOP: #ddd 1px solid; FONT-WEIGHT: bold; BORDER-RIGHT: #ddd 1px solid
+}
+
+.confirmAndCancel {
+	ZOOM: 1; OVERFLOW: hidden
+}
+.confirmAndCancelBtn {
+	BORDER-BOTTOM: #ddd 1px solid; BORDER-LEFT: #ddd 1px solid; PADDING-BOTTOM: 5px; PADDING-LEFT: 20px; PADDING-RIGHT: 20px; DISPLAY: block; BACKGROUND: #eee; FLOAT: left; FONT-SIZE: 14px; OVERFLOW: hidden; BORDER-TOP: #ddd 1px solid; FONT-WEIGHT: bold; MARGIN-RIGHT: 20px; BORDER-RIGHT: #ddd 1px solid; PADDING-TOP: 5px
+}

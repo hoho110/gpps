@@ -44,6 +44,45 @@
 .list-nav-wrap LI A EM {
 	FONT-STYLE: normal; COLOR: #154dcc
 }
+
+
+
+
+
+
+.list-detail-wrap {
+	
+}
+.list-detail-wrap LI {
+	BORDER-BOTTOM: #eee 1px solid; POSITION: relative; TEXT-ALIGN: center; BORDER-LEFT: #eaeaea 1px solid; BACKGROUND-COLOR: #fafafa; WIDTH: 90px; FLOAT: left; HEIGHT: 32px; MARGIN-LEFT: -1px; BORDER-TOP: #eaeaea 1px solid; BORDER-RIGHT: #eaeaea 1px solid
+}
+.list-detail-wrap LI.last-col {
+	WIDTH: 194px; MARGIN-RIGHT: 0px
+}
+.list-detail-wrap LI A {
+	LINE-HEIGHT: 38px; DISPLAY: block; HEIGHT: 31px
+}
+.list-detail-wrap LI A .min-price {
+	MARGIN: 0px 5px; COLOR: #666; VERTICAL-ALIGN: middle
+}
+.list-detail-wrap LI:hover {
+	BACKGROUND-COLOR: #fff
+}
+.list-detail-wrap LI.selected {
+	Z-INDEX: 10; font-weight: bold; BORDER-BOTTOM: #fff 1px solid; BORDER-LEFT: #eee 1px solid; HEIGHT: 32px; BORDER-RIGHT: #eee 1px solid
+}
+.list-detail-wrap LI A:hover {
+	TEXT-DECORATION: none
+}
+.list-detail-wrap LI A EM {
+	FONT-STYLE: normal; COLOR: #154dcc
+}
+
+
+
+
+
+
 .service-intro {
 	
 }
@@ -342,4 +381,40 @@
 }
 .ui_complex_pagination .pageNum .current {
 	DISPLAY: inline-block; COLOR: #e6551d
+}
+.noticeQuestion {
+	BORDER-BOTTOM: #d9d9d9 1px solid; BORDER-LEFT: #d9d9d9 1px solid; MARGIN: 0px 0px 10px; BORDER-TOP: #d9d9d9 1px solid; BORDER-RIGHT: #d9d9d9 1px solid
+}
+.noticeQuestion .head {
+	PADDING-BOTTOM: 0px; LINE-HEIGHT: 34px; BACKGROUND-COLOR: #f5f5f5; PADDING-LEFT: 12px; PADDING-RIGHT: 15px; HEIGHT: 34px; PADDING-TOP: 0px
+}
+.noticeQuestion .title {
+	DISPLAY: inline-block; FLOAT: left; FONT-SIZE: 14px; FONT-WEIGHT: bold
+}
+.noticeQuestion .more {
+	DISPLAY: inline-block; FLOAT: right
+}
+.noticeQuestion .more A {
+	DISPLAY: inline-block
+}
+.noticeQuestion .more SPAN {
+	COLOR: #e6551d; MARGIN-LEFT: 3px; FONT-WEIGHT: bold
+}
+.noticeQuestion .contentList {
+	PADDING-BOTTOM: 10px; MARGIN-TOP: 10px; PADDING-LEFT: 15px; PADDING-RIGHT: 0px; PADDING-TOP: 0px
+}
+.noticeQuestion .contentList LI {
+	PADDING-BOTTOM: 3px; PADDING-LEFT: 0px; WIDTH: 216px; PADDING-RIGHT: 0px; PADDING-TOP: 3px
+}
+.myaccount_usual_problem LI B {
+	BORDER-BOTTOM: #fff 3px solid; BORDER-LEFT: #4f9114 3px solid; LINE-HEIGHT: 0; MARGIN: 0px 2px 0px 0px; WIDTH: 0px; DISPLAY: inline-block; HEIGHT: 0px; FONT-SIZE: 0px; VERTICAL-ALIGN: middle; BORDER-TOP: #fff 3px solid; BORDER-RIGHT: #fff 3px solid
+}
+.noticeQuestion .contentList LI B {
+	BORDER-BOTTOM: #fff 3px solid; BORDER-LEFT: #4f9114 3px solid; LINE-HEIGHT: 0; MARGIN: 0px 2px 0px 0px; WIDTH: 0px; DISPLAY: inline-block; HEIGHT: 0px; FONT-SIZE: 0px; VERTICAL-ALIGN: middle; BORDER-TOP: #fff 3px solid; BORDER-RIGHT: #fff 3px solid
+}
+.notice.noticeQuestion .contentList LI B {
+	BORDER-BOTTOM-COLOR: #fff; BORDER-TOP-COLOR: #fff; BORDER-RIGHT-COLOR: #fff; BORDER-LEFT-COLOR: #e6551d
+}
+.noticeQuestion .contentList LI A {
+	WIDTH: 94%; TEXT-OVERFLOW: ellipsis; DISPLAY: inline-block; WHITE-SPACE: nowrap; COLOR: #333; VERTICAL-ALIGN: middle; OVERFLOW: hidden
 }

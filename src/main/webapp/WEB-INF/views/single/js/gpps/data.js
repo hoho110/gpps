@@ -317,61 +317,64 @@ var createJQIntro = function(){
 	return p;
 }
 
+
+
 var createNavLevel2 = function(nav){
-	var btn_group = $('<div class="btn-group" style="margin-left:-15px;"></div>');
+	var ul = $('<ul class="nav nav-tabs" style="float:right;" role="tablist"></ul>');
 	if(nav=='myaccount'){
-		var button1 = $('<button type="button" class="btn btn-default btn-lg">个人信息</button>');
-		var button2 = $('<button type="button" class="btn btn-default btn-lg">我的积分</button>');
-		var button3 = $('<button type="button" class="btn btn-default btn-lg">我的活动</button>');
+		var li2 = $('<li role="presentation" class="active"><a href="#" data-sk="my-score">积分等级</a></li>');
+		var li3 = $('<li role="presentation"><a href="#" data-sk="my-activity">我的活动</a></li>');
 		
-		var btn_group2 = $('<div class="btn-group"></div>');
-		btn_group2.append('<button type="button" class="btn btn-default dropdown-toggle btn-lg" data-toggle="dropdown">投资推荐<span class="caret"></span></button>');
-		var ul = $('<ul class="dropdown-menu" role="menu"></ul>');
-		ul.append('<li><a href="#">稳健型</a></li>');
-		ul.append('<li><a href="#">均衡型</a></li>');
-		ul.append('<li><a href="#">进取型</a></li>');
-		btn_group2.append(ul);
-		btn_group.append(button1);
-		btn_group.append(button2);
-		btn_group.append(button3);
-		btn_group.append(btn_group2);
+		
+		var li4 = $('<li role="presentation" class="dropdown"></li>');
+		li4.append('<a class="dropdown-toggle" data-toggle="dropdown" data-sk="recommend" href="#">投资推荐<span class="caret"></span></a>');
+		var ul2 = $('<ul class="dropdown-menu" role="menu"></ul>');
+		ul2.append('<li><a href="#" data-sk="recommend-wj">稳健型</a></li>');
+		ul2.append('<li><a href="#" data-sk="recommend-jh">均衡型</a></li>');
+		ul2.append('<li><a href="#" data-sk="recommend-jq">进取型</a></li>');
+		li4.append(ul2);
+		ul.append(li2);
+		ul.append(li3);
+		ul.append(li4);
 	}else if(nav=='submit'){
-		var button1 = $('<button type="button" class="btn btn-default btn-lg">全部</button>');
-		var button2 = $('<button type="button" class="btn btn-default btn-lg">待支付</button>');
-		var button3 = $('<button type="button" class="btn btn-default btn-lg">待审核</button>');
-		var button4 = $('<button type="button" class="btn btn-default btn-lg">还款中</button>');
-		var button5 = $('<button type="button" class="btn btn-default btn-lg">还款完毕</button>');
-		btn_group.append(button1);
-		btn_group.append(button2);
-		btn_group.append(button3);
-		btn_group.append(button4);
-		btn_group.append(button5);
+		var li1 = $('<li role="presentation" class="active"><a href="#" data-sk="submit-all">全部</a></li>');
+		var li2 = $('<li role="presentation"><a href="#" data-sk="submit-toafford">待支付</a></li>');
+		var li3 = $('<li role="presentation"><a href="#" data-sk="submit-toaudit">待审核</a></li>');
+		var li4 = $('<li role="presentation"><a href="#" data-sk="submit-payback">还款中</a></li>');
+		var li5 = $('<li role="presentation"><a href="#" data-sk="submit-done">还款完毕</a></li>');
+		ul.append(li1);
+		ul.append(li2);
+		ul.append(li3);
+		ul.append(li4);
+		ul.append(li5);
 	}else if(nav=='payback'){
-		var button1 = $('<button type="button" class="btn btn-default btn-lg">已回款</button>');
-		var button2 = $('<button type="button" class="btn btn-default btn-lg">待回款</button>');
-		btn_group.append(button1);
-		btn_group.append(button2);
+		var li1 = $('<li role="presentation" class="active"><a href="#" data-sk="payback-all">总览</a></li>');
+		var li2 = $('<li role="presentation"><a href="#" data-sk="payback-to">待回款</a></li>');
+		var li3 = $('<li role="presentation"><a href="#" data-sk="payback-have">已回款</a></li>');
+		ul.append(li1);
+		ul.append(li2);
+		ul.append(li3);
 	}else if(nav=='cash'){
-		var button1 = $('<button type="button" class="btn btn-default btn-lg">全部</button>');
-		var button2 = $('<button type="button" class="btn btn-default btn-lg">充值</button>');
-		var button3 = $('<button type="button" class="btn btn-default btn-lg">提现</button>');
-		var button4 = $('<button type="button" class="btn btn-default btn-lg">投标</button>');
-		var button5 = $('<button type="button" class="btn btn-default btn-lg">回款</button>');
-		btn_group.append(button1);
-		btn_group.append(button2);
-		btn_group.append(button3);
-		btn_group.append(button4);
-		btn_group.append(button5);
+		var li1 = $('<li role="presentation" class="active"><a href="#" data-sk="cash-all">全部</a></li>');
+		var li2 = $('<li role="presentation"><a href="#" data-sk="cash-recharge">充值</a></li>');
+		var li3 = $('<li role="presentation"><a href="#" data-sk="cash-withdraw">提现</a></li>');
+		var li4 = $('<li role="presentation"><a href="#" data-sk="cash-invest">投标</a></li>');
+		var li5 = $('<li role="presentation"><a href="#" data-sk="cash-receive">回款</a></li>');
+		ul.append(li1);
+		ul.append(li2);
+		ul.append(li3);
+		ul.append(li4);
+		ul.append(li5);
 	}else if(nav=='tools'){
-		var button1 = $('<button type="button" class="btn btn-default btn-lg">流动性分析</button>');
-		var button2 = $('<button type="button" class="btn btn-default btn-lg">回款统计</button>');
-		var button3 = $('<button type="button" class="btn btn-default btn-lg">风险分析</button>');
-		var button4 = $('<button type="button" class="btn btn-default btn-lg">收益率统计</button>');
-		btn_group.append(button1);
-		btn_group.append(button2);
-		btn_group.append(button3);
-		btn_group.append(button4);
+		var li1 = $('<li role="presentation" class="active"><a href="#" data-sk="tools-fluxility">流动性分析</a></li>');
+		var li2 = $('<li role="presentation"><a href="#" data-sk="tools-receive-statistics">回款统计</a></li>');
+		var li3 = $('<li role="presentation"><a href="#" data-sk="tools-analysis">风险分析</a></li>');
+		var li4 = $('<li role="presentation"><a href="#" data-sk="tools-rate">收益率统计</a></li>');
+		ul.append(li1);
+		ul.append(li2);
+		ul.append(li3);
+		ul.append(li4);
 	}
 	
-	return btn_group;
+	return ul;
 }

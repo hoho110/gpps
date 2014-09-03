@@ -14,15 +14,11 @@ public class Submit {
 //	 * 
 	 * 1:待付款;2:购买成功;4:退订;8:流标;
 	 */
-	public static final int STATE_APPLY=1;
-	public static final int STATE_WAITFORPAY=1<<1;//2
-	public static final int STATE_INBIDDING=1<<2;//4
-	public static final int STATE_REPAYING=1<<3;//8
-	public static final int STATE_COMPLETEPAY=1<<4;//16
-	public static final int STATE_FAILBIDDING=1<<5;//32
-	public static final int STATE_UNSUBSCRIBE=1<<6;//64
-	public static final int STATE_FAILAPPLY=1<<7;//128
-	private int state=STATE_APPLY;
+	public static final int STATE_WAITFORPAY=1;//1
+	public static final int STATE_COMPLETEPAY=1<<1;//2
+	public static final int STATE_UNSUBSCRIBE=1<<2;//4
+	public static final int STATE_FAILBIDDING=1<<3;//8
+	private int state=STATE_WAITFORPAY;
 	private long createtime = System.currentTimeMillis();
 	private Integer lenderId;
 	private Integer productId;

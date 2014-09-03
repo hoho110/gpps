@@ -49,15 +49,16 @@ public class SubmitServiceImpl implements ISubmitService {
 	@Transactional
 	public void buy(Integer productId, BigDecimal amount)
 			throws InsufficientBalanceException,ProductSoldOutException,InsufficientProductException,UnreachBuyLevelException {
-		//判断当前账户余额是否足够购买
 		checkNullObject("amount", amount);
 		//TODO 验证amount格式，例如：1w起之类的
 		Lender lender=lenderService.getCurrentUser();
 		LenderAccount account=lenderAccountDao.find(lender.getAccountId());
+		//判断当前账户余额是否足够购买
 		if(amount.compareTo(account.getUsable())>0)
 			throw new InsufficientBalanceException();
 		Product product=productService.find(productId);
 		checkNullObject(Product.class, product);
+		//判断用户购买级别
 		if(lender.getGrade()<product.getLevelToBuy())
 			throw new UnreachBuyLevelException();
 		try
@@ -72,19 +73,33 @@ public class SubmitServiceImpl implements ISubmitService {
 			submit.setAmount(amount);
 			submit.setLenderId(lenderService.getCurrentUser().getId());
 			submit.setProductId(productId);
-			submit.setState(Submit.STATE_APPLY);//TODO 确认状态
+			submit.setState(Submit.STATE_WAITFORPAY);//TODO 确认状态
 			submitDao.create(submit);
 			productDao.buy(productId, amount);
 			accountService.freezeLenderAccount(lender.getAccountId(), amount, submit.getId(), null);
+			productDao.buy(productId, amount);
 			product.setRealAmount(product.getRealAmount().add(amount));
 		}finally
 		{
 			orderService.releaseFinancingProduct(product);
 		}
 	}
-
+	static int[][] validConverts={
+		};
 	private void changeState(Integer submitId, int state)
 			throws IllegalConvertException {
+		Submit submit = submitDao.find(submitId);
+		if (submit == null)
+			throw new RuntimeException("submit is not existed");
+		for(int[] validStateConvert:validConverts)
+		{
+			if(submit.getState()==validStateConvert[0]&&state==validStateConvert[1])
+			{
+				submitDao.changeState(submitId, state);
+				return;
+			}
+		}
+		throw new IllegalConvertException();
 	}
 
 	@Override

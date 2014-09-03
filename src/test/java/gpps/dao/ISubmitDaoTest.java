@@ -27,7 +27,7 @@ public class ISubmitDaoTest extends TestSupport {
 	public void testCreate() {
 		Submit submit=new Submit();
 		submit.setLenderId(1);
-		submit.setState(Submit.STATE_APPLY);
+		submit.setState(Submit.STATE_WAITFORPAY);
 		submitDao.create(submit);
 		submit=new Submit();
 		submit.setLenderId(1);
@@ -42,7 +42,7 @@ public class ISubmitDaoTest extends TestSupport {
 	@Test
 	public void testFindAllByLenderAndStates() {
 		List<Integer> states=new ArrayList<Integer>();
-		states.add(Submit.STATE_APPLY);
+		states.add(Submit.STATE_WAITFORPAY);
 		states.add(Submit.STATE_COMPLETEPAY);
 		List<Submit> list=submitDao.findAllByLenderAndStates(1,states);
 		Assert.assertEquals(2, list.size());

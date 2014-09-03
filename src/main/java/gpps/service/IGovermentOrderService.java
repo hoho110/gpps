@@ -59,4 +59,16 @@ public interface IGovermentOrderService {
 	 * @param product
 	 */
 	public void releaseFinancingProduct(Product product);
+	/**
+	 * 申请融资中订单，并对订单加锁,必须相应地在finally中调用releaseFinancingOrder方法
+	 * @param orderId
+	 * @return
+	 */
+	public GovermentOrder applyFinancingOrder(Integer orderId);
+	/**
+	 * 释放融资中的order
+	 * @param orderId
+	 * @return
+	 */
+	public void releaseFinancingOrder(GovermentOrder order);
 }

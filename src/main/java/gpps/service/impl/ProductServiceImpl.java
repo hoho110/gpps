@@ -8,6 +8,7 @@ import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.model.ProductAction;
 import gpps.model.ProductSeries;
+import gpps.service.IGovermentOrderService;
 import gpps.service.IProductService;
 import gpps.service.exception.IllegalConvertException;
 
@@ -15,8 +16,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductServiceImpl implements IProductService {
 	@Autowired
@@ -24,7 +27,10 @@ public class ProductServiceImpl implements IProductService {
 	@Autowired
 	IProductSeriesDao productSeriesDao;
 	@Autowired
+	IGovermentOrderService orderService;
+	@Autowired
 	IProductDao productDao;
+	Logger logger=Logger.getLogger(this.getClass());
 	static int[] productStates={
 		Product.STATE_FINANCING,
 		Product.STATE_REPAYING,
@@ -137,18 +143,61 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	@Override
+	@Transactional
 	public void changeBuyLevel(Integer productId, int buyLevel) {
-		productDao.changeBuyLevel(productId,buyLevel);
+		checkNullObject("productId", productId);
+		Product product=productDao.find(productId);
+		checkNullObject(Product.class, product);
+		try
+		{
+			product=orderService.applyFinancingProduct(productId, product.getGovermentorderId());
+			productDao.changeBuyLevel(productId,buyLevel);
+			if(product!=null)
+				product.setLevelToBuy(buyLevel);
+		}finally{
+			orderService.releaseFinancingProduct(product);
+		}
 	}
 	
 	@Override
+	@Transactional
 	public void startRepaying(Integer productId) throws IllegalConvertException {
-		changeState(productId, Product.STATE_REPAYING);
+		//从竞标缓存中移除
+		checkNullObject("productId", productId);
+		Product product=productDao.find(productId);
+		checkNullObject(Product.class, product);
+		GovermentOrder order=null;
+		try {
+			changeState(productId, Product.STATE_REPAYING);
+			order=orderService.applyFinancingOrder(product.getGovermentorderId());
+			product=order.findProductById(productId);
+			order.getProducts().remove(product);
+			product.setState(Product.STATE_REPAYING);
+		}finally
+		{
+			orderService.releaseFinancingOrder(order);
+		}
 	}
 
 	@Override
+	@Transactional
 	public void quitFinancing(Integer productId) throws IllegalConvertException {
-		changeState(productId, Product.STATE_QUITFINANCING);		
+		//从竞标缓存中移除
+		checkNullObject("productId", productId);
+		Product product=productDao.find(productId);
+		checkNullObject(Product.class, product);
+		GovermentOrder order=null;
+		try {
+			changeState(productId, Product.STATE_QUITFINANCING);
+			//TODO 添加退款任务
+			order=orderService.applyFinancingOrder(product.getGovermentorderId());
+			product=order.findProductById(productId);
+			order.getProducts().remove(product);
+			product.setState(Product.STATE_QUITFINANCING);
+		}finally
+		{
+			orderService.releaseFinancingOrder(order);
+		}
 	}
 
 	@Override

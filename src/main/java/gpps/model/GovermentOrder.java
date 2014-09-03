@@ -77,4 +77,16 @@ public class GovermentOrder {
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
+	
+	public Product findProductById(Integer productId)
+	{
+		if(products==null||products.size()==0)
+			return null;
+		for(Product product:products)
+		{
+			if((int)(product.getId())==(int)productId)
+				return product;
+		}
+		return null;
+	}
 }

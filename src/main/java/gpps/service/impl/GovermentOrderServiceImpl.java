@@ -22,6 +22,7 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static gpps.tools.ObjectUtil.*;
 
@@ -61,7 +62,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			return;
 		for(GovermentOrder order:govermentOrders)
 		{
-			order.lock=new ReentrantLock();
+			order.lock=new ReentrantLock(true);
 			order.setMaterial(null);
 			financingOrders.put(order.toString(), order);
 			
@@ -170,8 +171,13 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		changeState(orderId, GovermentOrder.STATE_REAPPLY);
 	}
 	@Override
+	@Transactional
 	public void startFinancing(Integer orderId) throws IllegalConvertException {
+		checkNullObject("orderId", orderId);
+		GovermentOrder order=checkNullObject(GovermentOrder.class, govermentOrderDao.find(orderId));
 		changeState(orderId, GovermentOrder.STATE_FINANCING);
+		List<Product> products=productDao.findByGovermentOrder(orderId);
+		
 	}
 	@Override
 	public void startRepaying(Integer orderId) throws IllegalConvertException {
@@ -235,5 +241,18 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		a=new Integer(1000);
 		b=new Integer(1000);
 		System.out.println(a==(int)b);
+	}
+	@Override
+	public GovermentOrder applyFinancingOrder(Integer orderId) {
+		GovermentOrder order=financingOrders.get(orderId.toString());
+		if(order==null)
+			return null;
+		order.lock.lock();
+		return order;
+	}
+	@Override
+	public void releaseFinancingOrder(GovermentOrder order) {
+		if(order!=null)
+			order.lock.unlock();
 	}
 }

@@ -316,3 +316,62 @@ var createJQIntro = function(){
 	var p = '<p>预期年化利率 ：<span style="color:#ff0000;">16.0%~24.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;超高收益率 &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 6-12个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：按月还息，到期还本金 &nbsp; &nbsp; &nbsp;<a href="plIntroduction.html" target="_blank">了解详情</a></p>';
 	return p;
 }
+
+var createNavLevel2 = function(nav){
+	var btn_group = $('<div class="btn-group" style="margin-left:-15px;"></div>');
+	if(nav=='myaccount'){
+		var button1 = $('<button type="button" class="btn btn-default btn-lg">个人信息</button>');
+		var button2 = $('<button type="button" class="btn btn-default btn-lg">我的积分</button>');
+		var button3 = $('<button type="button" class="btn btn-default btn-lg">我的活动</button>');
+		
+		var btn_group2 = $('<div class="btn-group"></div>');
+		btn_group2.append('<button type="button" class="btn btn-default dropdown-toggle btn-lg" data-toggle="dropdown">投资推荐<span class="caret"></span></button>');
+		var ul = $('<ul class="dropdown-menu" role="menu"></ul>');
+		ul.append('<li><a href="#">稳健型</a></li>');
+		ul.append('<li><a href="#">均衡型</a></li>');
+		ul.append('<li><a href="#">进取型</a></li>');
+		btn_group2.append(ul);
+		btn_group.append(button1);
+		btn_group.append(button2);
+		btn_group.append(button3);
+		btn_group.append(btn_group2);
+	}else if(nav=='submit'){
+		var button1 = $('<button type="button" class="btn btn-default btn-lg">全部</button>');
+		var button2 = $('<button type="button" class="btn btn-default btn-lg">待支付</button>');
+		var button3 = $('<button type="button" class="btn btn-default btn-lg">待审核</button>');
+		var button4 = $('<button type="button" class="btn btn-default btn-lg">还款中</button>');
+		var button5 = $('<button type="button" class="btn btn-default btn-lg">还款完毕</button>');
+		btn_group.append(button1);
+		btn_group.append(button2);
+		btn_group.append(button3);
+		btn_group.append(button4);
+		btn_group.append(button5);
+	}else if(nav=='payback'){
+		var button1 = $('<button type="button" class="btn btn-default btn-lg">已回款</button>');
+		var button2 = $('<button type="button" class="btn btn-default btn-lg">待回款</button>');
+		btn_group.append(button1);
+		btn_group.append(button2);
+	}else if(nav=='cash'){
+		var button1 = $('<button type="button" class="btn btn-default btn-lg">全部</button>');
+		var button2 = $('<button type="button" class="btn btn-default btn-lg">充值</button>');
+		var button3 = $('<button type="button" class="btn btn-default btn-lg">提现</button>');
+		var button4 = $('<button type="button" class="btn btn-default btn-lg">投标</button>');
+		var button5 = $('<button type="button" class="btn btn-default btn-lg">回款</button>');
+		btn_group.append(button1);
+		btn_group.append(button2);
+		btn_group.append(button3);
+		btn_group.append(button4);
+		btn_group.append(button5);
+	}else if(nav=='tools'){
+		var button1 = $('<button type="button" class="btn btn-default btn-lg">流动性分析</button>');
+		var button2 = $('<button type="button" class="btn btn-default btn-lg">回款统计</button>');
+		var button3 = $('<button type="button" class="btn btn-default btn-lg">风险分析</button>');
+		var button4 = $('<button type="button" class="btn btn-default btn-lg">收益率统计</button>');
+		btn_group.append(button1);
+		btn_group.append(button2);
+		btn_group.append(button3);
+		btn_group.append(button4);
+	}
+	
+	return btn_group;
+}

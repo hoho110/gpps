@@ -197,6 +197,7 @@
  	}
  	
          $(document).ready(function () {
+        	 window.parent.justify(document.body.scrollHeight);
         	 refreshListTotal();
         	 $('ul.list-nav-wrap li a').click(function(e){
         		 $('ul.list-nav-wrap').find('li').removeClass('selected');

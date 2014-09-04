@@ -73,7 +73,7 @@
 
 <div class="row" style="margin-top:5px;">
 
-	<iframe id="container_content" src="index.html" style="width:100%; height:1380px;" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
+	<iframe id="container_content" src="#" style="width:100%;" frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes"></iframe>
 
 </div>
 
@@ -86,16 +86,25 @@
 
 
 
-<div class="row" style="margin-top:10px; border: #eee solid 1px;">
-<p class="bg-default" style="margin-left:-15px; padding-left:15px; padding-top:5px; margin-right:-15px; font-size:13px; font-weight:normal;">
-<span style="margin-left:450px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备案信息</span><br>
-<span style="margin-left:450px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;友情链接</span><br>
-<span style="margin-left:450px;">
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;加入的认证或联盟
-</span>
-</p>
+<div class="row foot" style="border: #eee solid 1px; background:#eee; height:120px; font-size:12px;">
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border-bottom : #999 dotted 1px; padding : 10px 10px 10px 10px;">
+<strong>友情链接:</strong><a href="#">网贷天眼</a><a href="#">网贷之家</a><a href="#">融投贷</a><a href="#">陆金所</a><a href="#">人人贷</a>
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding : 10px 10px 10px 10px;">
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="text-align:center; color:#999">
+政采贷  Copyright © 2013-2014. All rights reserved<br>
+地址：北京XXXXXXXXXXX国际大厦<br>
+京ICP备14001357号-3
+</div>
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+<img src="img/cx.jpg"></img>
+<img src="img/hftxlogo.jpg"></img>
+<img src="img/wxrz.jpg"></img>
+</div>
+</div>
+
 </div>
 
 
@@ -224,6 +233,9 @@ function refreshNav(){
 			$('#container_content').attr('src', url).css('height', height);
 		}
 
+		function justify(height){
+			$('iframe#container_content').css('height', height+'px');
+		}
 
 		function toward(name){
 			
@@ -242,7 +254,8 @@ function refreshNav(){
 			$('a.action[data-sk='+title+']').addClass('active');
 			var url = nav[name]['url'];
 			var height = nav[name]['height'];
-			$('#container_content').attr('src', url).css('height', height);
+			$('#container_content').attr('src', url);
+			//.css('height', height);
 		}
 		
 		

@@ -350,6 +350,7 @@
 
 $(document).ready(function () {
 	
+	window.parent.justify(document.body.scrollHeight);
 	
 	var username = getCookie("username");
 	if(username==null || username==""){

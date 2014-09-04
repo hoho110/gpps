@@ -246,6 +246,8 @@ a.accordion-toggle{
 <script>
 $(document).ready(function() {
 
+	window.parent.justify(document.body.scrollHeight);
+	
 	var username = getCookie("username");
 	if(username==null || username==""){
 		window.location.href="login.html"; 
@@ -294,6 +296,7 @@ $(document).ready(function() {
 				$('div#content').html('');
 				$('div#content').append(ff());
 			}
+			window.parent.justify(document.body.scrollHeight);
 		});
 		
 		$('ul.nav li a').first().trigger('click');

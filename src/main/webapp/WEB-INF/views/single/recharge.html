@@ -28,7 +28,8 @@
 <div class="row" style="padding-left:5px; padding-right:5px; margin-top:5px;">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
-提示：<br/>
+			<div style="border: #eee solid 1px; padding: 5px 10px 5px 10px; BACKGROUND-COLOR: #fef9f1;">
+				提示：<br/>
                 1.投资人充值过程全程免费，手续费由网站垫付；<br />
                 2.最低充值金额应大于等于 100 元；<br />
                 3.请投资人根据发标计划合理充值，因政采贷无法触及用户资金账户，无法收取用户任何费用；为防止套现，所充资金必须经投标回款后才能提现，否则需偿还网站垫付的充值手续费；<br />
@@ -37,7 +38,12 @@
                 6.充值需开通银行卡网上支付功能，如有疑问请咨询开户行客服；<br />
                 7.支付限额请参照 <a href="http://www.chinapnr.com/helpcenter_zfsm.html" target="_blank">支付说明</a>。
                 
-                <br/>
+               </div>
+               <div style="width:100%; padding-top:20px;">
+               
+               <div class="rechargeBoxTitle">
+               		 请选择银行</div>
+               
                 <ul class="rechargeList">
                 
                 <li>
@@ -78,16 +84,18 @@
                     <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('BOS')" /><img
                         src="img/sh.jpg" width="123" height="36" onclick="getbank('BOS')" /></li>
             </ul>
+            </div>
                 
-                
+                <div>
                  <div class="rechargeBoxTitle">
-                请输入金额</div>
+               		 请输入金额</div>
             <div class="rechargeNO">
                 <input name="txtAccount" type="text" id="txtAccount" /><span
                     id="msg" style="color: #b94a48; font-weight: bold;"></span></div>
             <div class="confirmAndCancel">
                 <input type="submit" name="btnSub" value="确 认" id="btnSub" class="confirmAndCancelBtn" />
                 <input type="reset" class="confirmAndCancelBtn" value="重 置" />
+            </div>
             </div>
                 
                 
@@ -101,6 +109,9 @@ function getbank(bank){
 	
 }
 $(document).ready(function() {
+	window.parent.justify(document.body.scrollHeight);
+	
+	
 	$('#txtAccount').keyup(function(e){
 		var myreg=/^[+]?(([1-9]\d*[.]?)|(0.))(\d{0,2})?$/;
 		if(!myreg.test(this.value))

@@ -306,6 +306,8 @@
  <script src="js/cdn/jquery.min.js"></script>
  <script>
   $(document).ready(function () {
+	  window.parent.justify(document.body.scrollHeight);
+	  
         	 $('ul.list-detail-wrap li a').click(function(e){
         		 $('ul.list-detail-wrap').find('li').removeClass('selected');
         		 $(this).parent().addClass('selected');

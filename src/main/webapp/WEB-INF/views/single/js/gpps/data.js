@@ -250,6 +250,7 @@ var createStructureProduct2 = function(title, stat, time, rates, due, totalamoun
 			$(this).html('收起');
 			append_text.css('display', 'block');
 			li.css('border', 'red solid 2px');
+			window.parent.justify(document.body.scrollHeight);
 		}else{
 			if(stat=='online')
 			{
@@ -261,6 +262,7 @@ var createStructureProduct2 = function(title, stat, time, rates, due, totalamoun
 			$(this).html('展开');
 			append_text.css('display', 'none');
 			li.css('border', '#d9d9d9 1px solid');
+			window.parent.justify(document.body.scrollHeight);
 		}
 	});
 	

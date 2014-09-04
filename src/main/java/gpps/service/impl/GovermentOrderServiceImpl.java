@@ -10,7 +10,9 @@ import gpps.model.Borrower;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.service.IGovermentOrderService;
+import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.IllegalOperationException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +40,8 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	IBorrowerDao borrowerDao;
 	@Autowired
 	IProductDao productDao;
+	@Autowired
+	ITaskService taskService;
 	static int[] orderStates={
 		GovermentOrder.STATE_APPLY,
 		GovermentOrder.STATE_MODIFY,
@@ -49,12 +53,12 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		GovermentOrder.STATE_REPAYING,
 		GovermentOrder.STATE_CLOSE
 	};
-	//TODO Order状态变化，融资金额变化需要修改下面的缓存
+	// Order状态变化，融资金额变化需要修改下面的缓存
 	Map<String,GovermentOrder> financingOrders=new HashMap<String,GovermentOrder>();  
 	@PostConstruct
 	public void init()
 	{
-		//TODO 启动时将所有正在竞标状态的订单加载到内存中，并分配锁
+		// 启动时将所有正在竞标状态的订单加载到内存中，并分配锁
 		List<Integer> states=new ArrayList<Integer>();
 		states.add(GovermentOrder.STATE_FINANCING);
 		List<GovermentOrder> govermentOrders=govermentOrderDao.findByStates(states);
@@ -62,21 +66,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			return;
 		for(GovermentOrder order:govermentOrders)
 		{
-			order.lock=new ReentrantLock(true);
-			order.setMaterial(null);
-			financingOrders.put(order.toString(), order);
-			
-			List<Product> products=productDao.findByGovermentOrder(order.getId());
-			if(products==null||products.size()==0)
-				continue;
-			for(Product product:products)
-			{
-				if(product.getState()==Product.STATE_FINANCING)
-				{
-					product.setAccessory(null);
-					order.getProducts().add(product);
-				}
-			}
+			insertGovermentOrderToFinancing(order);
 		}
 	}
 	@Override
@@ -176,16 +166,48 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		checkNullObject("orderId", orderId);
 		GovermentOrder order=checkNullObject(GovermentOrder.class, govermentOrderDao.find(orderId));
 		changeState(orderId, GovermentOrder.STATE_FINANCING);
-		List<Product> products=productDao.findByGovermentOrder(orderId);
-		
+		insertGovermentOrderToFinancing(order);
 	}
 	@Override
-	public void startRepaying(Integer orderId) throws IllegalConvertException {
-		changeState(orderId, GovermentOrder.STATE_REPAYING);
+	@Transactional
+	public void startRepaying(Integer orderId) throws IllegalConvertException,IllegalOperationException {
+		GovermentOrder order=null;
+		try
+		{
+			order=applyFinancingOrder(orderId);
+			if(order!=null)
+			{
+				List<Product> products=order.getProducts();
+				if(products!=null&&products.size()>0)
+					throw new IllegalOperationException("还有竞标中的产品，请先修改产品状态");
+			}
+			changeState(orderId, GovermentOrder.STATE_REPAYING);
+			order=financingOrders.remove(orderId.toString());
+			order.setState(GovermentOrder.STATE_REAPPLY);
+		}finally
+		{
+			releaseFinancingOrder(order);
+		}
 	}
 	@Override
-	public void quitFinancing(Integer orderId) throws IllegalConvertException {
-		changeState(orderId, GovermentOrder.STATE_QUITFINANCING);
+	public void quitFinancing(Integer orderId) throws IllegalConvertException, IllegalOperationException {
+		GovermentOrder order=null;
+		try
+		{
+			order=applyFinancingOrder(orderId);
+			if(order!=null)
+			{
+				List<Product> products=order.getProducts();
+				if(products!=null&&products.size()>0)
+					throw new IllegalOperationException("还有竞标中的产品，请先修改产品状态");
+			}
+			changeState(orderId, GovermentOrder.STATE_QUITFINANCING);
+			order=financingOrders.remove(orderId.toString());
+			order.setState(GovermentOrder.STATE_QUITFINANCING);
+		}finally
+		{
+			releaseFinancingOrder(order);
+		}
 	}
 	@Override
 	public void closeFinancing(Integer orderId) throws IllegalConvertException {
@@ -254,5 +276,23 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	public void releaseFinancingOrder(GovermentOrder order) {
 		if(order!=null)
 			order.lock.unlock();
+	}
+	private void insertGovermentOrderToFinancing(GovermentOrder order)
+	{
+		order.lock=new ReentrantLock(true);
+		order.setMaterial(null);
+		financingOrders.put(order.toString(), order);
+		
+		List<Product> products=productDao.findByGovermentOrder(order.getId());
+		if(products==null||products.size()==0)
+			return;
+		for(Product product:products)
+		{
+			if(product.getState()==Product.STATE_FINANCING)
+			{
+				product.setAccessory(null);
+				order.getProducts().add(product);
+			}
+		}
 	}
 }

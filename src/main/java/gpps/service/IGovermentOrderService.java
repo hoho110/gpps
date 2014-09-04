@@ -3,6 +3,7 @@ package gpps.service;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.IllegalOperationException;
 
 import java.util.List;
 
@@ -43,8 +44,14 @@ public interface IGovermentOrderService {
 	public void reviseApplying(Integer orderId)throws IllegalConvertException;//修订申请
 	public void reApply(Integer orderId)throws IllegalConvertException;//重新申请
 	public void startFinancing(Integer orderId)throws IllegalConvertException;//启动融资
-	public void startRepaying(Integer orderId)throws IllegalConvertException;//启动还款
-	public void quitFinancing(Integer orderId)throws IllegalConvertException;//放弃融资（流标）
+	/**
+	 * 启动还款
+	 * @param orderId
+	 * @throws IllegalConvertException 非法的状态转换
+	 * @throws IllegalOperationException 非法操作(操作流程不合法)
+	 */
+	public void startRepaying(Integer orderId)throws IllegalConvertException, IllegalOperationException;//启动还款
+	public void quitFinancing(Integer orderId)throws IllegalConvertException, IllegalOperationException;//放弃融资（流标）
 	public void closeFinancing(Integer orderId)throws IllegalConvertException;//关闭融资
 	
 	/**

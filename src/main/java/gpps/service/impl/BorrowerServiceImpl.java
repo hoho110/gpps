@@ -1,9 +1,12 @@
 package gpps.service.impl;
 
 import static gpps.tools.StringUtil.checkNullAndTrim;
+import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.IBorrowerDao;
 import gpps.model.Borrower;
+import gpps.model.BorrowerAccount;
 import gpps.model.Lender;
+import gpps.model.LenderAccount;
 import gpps.service.IBorrowerService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.LoginException;
@@ -20,7 +23,8 @@ import org.springframework.stereotype.Service;
 public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBorrowerService {
 	@Autowired
 	IBorrowerDao borrowerDao;
-
+	@Autowired
+	IBorrowerAccountDao borrowerAccountDao;
 	@Override
 	public void login(String loginId, String password, String graphValidateCode) throws LoginException, ValidateCodeException {
 		checkGraphValidateCode(graphValidateCode);
@@ -73,8 +77,13 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		borrower.setPrivilege(borrower.PRIVILEGE_VIEW);
 		borrower.setTel(checkNullAndTrim("tel", borrower.getTel()));
 		borrower.setCreditValue(0);
-		if (borrowerDao.findByLoginId(borrower.getLoginId()) != null)
+		if(isLoginIdExist(borrower.getLoginId()))
 			throw new LoginException("LoginId is existed");
+		if(isPhoneNumberExist(borrower.getTel()))
+			throw new LoginException("Tel is existed");
+		BorrowerAccount account=new BorrowerAccount();
+		borrowerAccountDao.create(account);
+		borrower.setAccountId(account.getId());
 		borrowerDao.create(borrower);
 		borrower.setPassword(null);
 		return borrower;

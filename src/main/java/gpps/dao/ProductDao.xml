@@ -5,7 +5,7 @@
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
 		Product(state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,accessory,productseriesId,levelToBuy,createtime)
-		values(#{state},#{govermentorderId},#{expectAmount},#{realAmount},#{rate},#{paybackmodel},#{productseriesId},#{levelToBuy},#{accessory},#{createtime})
+		values(#{state},#{govermentorderId},#{expectAmount},#{realAmount},#{rate},#{paybackmodel},#{accessory},#{productseriesId},#{levelToBuy},#{createtime})
 	</insert>
 	<update id="changeState">
 		update Product set

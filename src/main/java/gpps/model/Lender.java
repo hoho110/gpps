@@ -11,7 +11,7 @@ public class Lender {
 	private Integer accountId;//账户ID
 	private long createtime=System.currentTimeMillis();//创建时间
 	public static final int PRIVILEGE_COMMON=0;//普通用户
-	public static final int PRIVILEGE_VIP1=1;//普通用户
+	public static final int PRIVILEGE_VIP1=1;//VIP1
 	private int privilege=PRIVILEGE_COMMON;//用户角色
 	private int grade=0;//评分
 	public Integer getId() {

@@ -11,6 +11,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import gpps.dao.ILenderAccountDao;
 import gpps.dao.ILenderDao;
 import gpps.model.Lender;
+import gpps.model.LenderAccount;
 import gpps.service.ILenderService;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
@@ -78,8 +79,13 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		lender.setPrivilege(Lender.PRIVILEGE_COMMON);
 		lender.setTel(checkNullAndTrim("tel", lender.getTel()));
 		lender.setGrade(0);
-		if(lenderDao.findByLoginId(lender.getLoginId())!=null)
+		if(isLoginIdExist(lender.getLoginId()))
 			throw new LoginException("LoginId is existed");
+		if(isPhoneNumberExist(lender.getTel()))
+			throw new LoginException("Tel is existed");
+		LenderAccount account=new LenderAccount();
+		lenderAccountDao.create(account);
+		lender.setAccountId(account.getId());
 		lenderDao.create(lender);
 		lender.setPassword(null);
 		return lender;

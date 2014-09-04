@@ -166,6 +166,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		checkNullObject("orderId", orderId);
 		GovermentOrder order=checkNullObject(GovermentOrder.class, govermentOrderDao.find(orderId));
 		changeState(orderId, GovermentOrder.STATE_FINANCING);
+		order.setState(GovermentOrder.STATE_FINANCING);
 		insertGovermentOrderToFinancing(order);
 	}
 	@Override
@@ -281,7 +282,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	{
 		order.lock=new ReentrantLock(true);
 		order.setMaterial(null);
-		financingOrders.put(order.toString(), order);
+		financingOrders.put(order.getId().toString(), order);
 		
 		List<Product> products=productDao.findByGovermentOrder(order.getId());
 		if(products==null||products.size()==0)

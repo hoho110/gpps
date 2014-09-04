@@ -41,4 +41,7 @@
 		total=total-#{amount},usable=usable-#{amount}
 		where id=#{accountId}
 	</update>
+	<delete id="delete">
+	   delete from LenderAccount where id=#{accountId}
+	</delete>
 </mapper>

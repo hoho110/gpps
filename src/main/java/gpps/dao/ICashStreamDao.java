@@ -13,4 +13,6 @@ public interface ICashStreamDao {
 	public CashStream find(Integer id);
 	public void delete(Integer id);
 	public List<CashStream> findByState(int state);
+	public void deleteByLenderAccountId(Integer accountId);//测试使用
+	public void deleteByBorrowerAccountId(Integer accountId);//测试使用
 }

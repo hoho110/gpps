@@ -59,7 +59,7 @@ public class SubmitServiceImpl implements ISubmitService {
 		Product product=productService.find(productId);
 		checkNullObject(Product.class, product);
 		//判断用户购买级别
-		if(lender.getGrade()<product.getLevelToBuy())
+		if(lender.getPrivilege()<product.getLevelToBuy())
 			throw new UnreachBuyLevelException();
 		try
 		{

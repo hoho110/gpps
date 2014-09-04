@@ -16,8 +16,8 @@
 	<insert id="create" parameterType="gpps.model.CashStream"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
-		CashStream(action,createtime,lenderAccountId,borrowerAccountId,submitId,chiefamount,interest,description,paybackId)
-		values(#{action},#{createtime},#{lenderAccountId},#{borrowerAccountId},#{submitId},#{chiefamount},#{interest},#{description},#{paybackId})
+		CashStream(action,createtime,lenderAccountId,borrowerAccountId,submitId,chiefamount,interest,description,paybackId,state)
+		values(#{action},#{createtime},#{lenderAccountId},#{borrowerAccountId},#{submitId},#{chiefamount},#{interest},#{description},#{paybackId},#{state})
 	</insert>
 	<update id="changeCashStreamState">
 		update CashStream set
@@ -28,4 +28,12 @@
 		delete from CashStream
 		where id=#{id}
 	</delete>
+	<delete id="deleteByLenderAccountId">
+        delete from CashStream
+        where lenderAccountId=#{accountId}
+    </delete>
+    <delete id="deleteByBorrowerAccountId">
+        delete from CashStream
+        where borrowerAccountId=#{accountId}
+    </delete>
 </mapper>

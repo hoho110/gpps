@@ -63,4 +63,9 @@ public interface ILenderAccountDao {
 	 * @param amount
 	 */
 	public void cash(@Param("accountId") Integer accountId,@Param("amount") BigDecimal amount);
+	/**
+	 * 删除
+	 * @param accountId
+	 */
+	public void delete(Integer accountId);
 }

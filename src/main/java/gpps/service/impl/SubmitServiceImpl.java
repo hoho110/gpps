@@ -77,7 +77,6 @@ public class SubmitServiceImpl implements ISubmitService {
 			submitDao.create(submit);
 			productDao.buy(productId, amount);
 			accountService.freezeLenderAccount(lender.getAccountId(), amount, submit.getId(), null);
-			productDao.buy(productId, amount);
 			product.setRealAmount(product.getRealAmount().add(amount));
 		}finally
 		{

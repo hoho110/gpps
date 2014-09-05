@@ -1,6 +1,7 @@
 package gpps.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import gpps.TestSupport;
 import gpps.dao.IBorrowerAccountDao;
@@ -16,9 +17,12 @@ import gpps.model.Borrower;
 import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.Lender;
+import gpps.model.LenderAccount;
 import gpps.model.Product;
 import gpps.model.ProductSeries;
+import gpps.model.Submit;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.InsufficientProductException;
 import gpps.service.exception.ProductSoldOutException;
@@ -179,22 +183,67 @@ public class BuyProductProcessTest extends TestSupport{
 			Assert.fail(e.getMessage());
 		}
 		product=orderService.applyFinancingProduct(product.getId(), product.getGovermentorderId());
-		Assert.assertEquals(product.getRealAmount().doubleValue(), 14*10000);
+		Assert.assertEquals(14*10000,product.getRealAmount().doubleValue(),0);
+		orderService.releaseFinancingProduct(product);
+		product=productDao.find(product.getId());
+		Assert.assertEquals(14*10000,product.getRealAmount().doubleValue(),0);
+		
+		try {
+			orderService.startRepaying(order.getId());
+		} catch (Exception e) {
+			Assert.assertTrue(e instanceof IllegalOperationException);
+		}
+		try {
+			productService.startRepaying(product.getId());
+		} catch (IllegalConvertException e) {
+			Assert.fail(e.getMessage());
+		}
+		Assert.assertNull(orderService.applyFinancingProduct(product.getId(), product.getGovermentorderId()));
+		
+		try {
+			//售完购买
+			mockLogin(lender_b);
+			submitService.buy(product.getId(), new BigDecimal(10*10000));
+		} catch (Exception e) {
+			Assert.assertTrue(e instanceof ProductSoldOutException);
+		} 
+		
+		try {
+			orderService.startRepaying(order.getId());
+		} catch (Exception e) {
+			Assert.fail(e.getMessage());
+		}
+		Assert.assertNull(orderService.applyFinancingOrder(order.getId()));
+		//a原有100000.25,购买4w
+		LenderAccount lenderAccount_a=lenderAccountDao.find(lender_a.getAccountId());
+//		Assert.assertEquals(60000.25, lenderAccount_a.getUsable().doubleValue(),0);
+//		Assert.assertEquals(40000, lenderAccount_a.getUsed().doubleValue(),0);
+//		Assert.assertEquals(100000.25, lenderAccount_a.getTotal().doubleValue(),0);
+//		Assert.assertEquals(0, lenderAccount_a.getFreeze().doubleValue(),0);
+		
+		LenderAccount lenderAccount_b=lenderAccountDao.find(lender_b.getAccountId());
+		
 		
 		//清理数据
+		cashStreamDao.deleteByLenderAccountId(lender_a.getAccountId());
+		cashStreamDao.deleteByLenderAccountId(lender_b.getAccountId());
+		cashStreamDao.deleteByBorrowerAccountId(borrower.getAccountId());
+		
+		List<Submit> submits=submitDao.findAllByProduct(product.getId());
+		for(Submit submit:submits)
+		{
+			submitDao.delete(submit.getId());
+		}
 		productDao.delete(product.getId());
 		productSeriesDao.delete(productSeries.getId());
 		orderDao.delete(order.getId());
 		
 		lenderDao.delete(lender_a.getId());
-		cashStreamDao.deleteByLenderAccountId(lender_a.getAccountId());
 		lenderAccountDao.delete(lender_a.getAccountId());
 		lenderDao.delete(lender_b.getId());
-		cashStreamDao.deleteByLenderAccountId(lender_b.getAccountId());
 		lenderAccountDao.delete(lender_b.getAccountId());
 		
 		borrowerDao.delete(borrower.getId());
-		cashStreamDao.deleteByBorrowerAccountId(borrower.getAccountId());
 		borrowerAccountDao.delete(borrower.getAccountId());
 		
 	}

@@ -17,6 +17,7 @@ public interface ISubmitDao {
 	 */
 	public List<Submit> findAllByLenderAndStates(@Param("lenderId") Integer lenderId,@Param("states")List<Integer> states);
 	public List<Submit> findAllByProduct(Integer productId);
+	public List<Submit> findAllByProductAndState(@Param("productId")Integer productId,@Param("state")int state);
 	public Submit find(Integer id);
 	public void changeState(@Param("id")Integer id,@Param("state")int state);
 	public void delete(Integer id);

@@ -27,6 +27,11 @@
 		select *
 		from Submit where productId=#{productId}
 	</select>
+	<select id="findAllByProductAndState"
+        resultType="gpps.model.Submit">
+        select *
+        from Submit where productId=#{productId} and state=#{state}
+    </select>
 	<select id="find" parameterType="Integer" resultType="gpps.model.Submit">
 		select *
 		from Submit where id=#{id}

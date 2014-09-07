@@ -128,6 +128,11 @@ public class TaskServiceImpl implements ITaskService {
 		task.setState(Task.STATE_INIT);
 		task.setCreateTime(System.currentTimeMillis());
 		taskDao.create(task);
+		try {
+			queue.put(task);
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage(),e);
+		}
 	}
 	
 }

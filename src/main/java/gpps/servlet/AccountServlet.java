@@ -84,7 +84,7 @@ public class AccountServlet {
 			log.error(e.getMessage(),e);
 		}
 	}
-	@RequestMapping(value={"/account/recharge/request"})
+	@RequestMapping(value={"/account/cash/request"})
 	public void cash(HttpServletRequest req, HttpServletResponse resp)
 	{
 		String amount=req.getParameter(AMOUNT);

@@ -49,6 +49,11 @@ a.accordion-toggle{
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
 
+<script type="text/javascript"
+	src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+	src="/easyservice/gpps.service.ILenderService?json"></script>
+
 <div class="container-fluid">
 <div class="row">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -223,15 +228,23 @@ a.accordion-toggle{
 <script>
 $(document).ready(function() {
 
+	
+	
+	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	var cuser = service.getCurrentUser();
+	
+	alert(cuser);
+	
+	
 	window.parent.justify(document.body.scrollHeight);
 	
-	var username = getCookie("username");
-	if(username==null || username==""){
+	
+	if(cuser==null){
 		window.location.href="login.html"; 
 		return;
 		}
 	
-	var identity = getCookie('identity');
+	var identity = cuser.identityCard;
 	if(identity!=null && identity!=""){
 		$('img#identity').attr('src', 'img/people.jpg');
 		$('a#identity').attr('href', '#');
@@ -239,7 +252,7 @@ $(document).ready(function() {
 		}
 	
 	
-	var spsw = getCookie('spsw');
+	var spsw = cuser.name;
 	if(spsw!=null && spsw!=""){
 		$('img#spsw').attr('src', 'img/sanfang.jpg');
 		$('a#spsw').attr('href', '#');

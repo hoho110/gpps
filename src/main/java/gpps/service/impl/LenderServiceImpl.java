@@ -127,4 +127,11 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		Lender lender=lenderDao.findByTel(phoneNumber);
 		return lender==null?false:true;
 	}
+
+	@Override
+	public void registerSecondStep(Integer id,String name, String identityCard, int sex, String address) {
+		name=checkNullAndTrim("name", name);
+		identityCard=checkNullAndTrim("identityCard", identityCard);
+		lenderDao.registerSecondStep(id, name, identityCard, sex, address);
+	}
 }

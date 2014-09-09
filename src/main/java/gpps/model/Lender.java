@@ -14,6 +14,9 @@ public class Lender {
 	public static final int PRIVILEGE_VIP1=1;//VIP1
 	private int privilege=PRIVILEGE_COMMON;//用户角色
 	private int grade=0;//评分
+	private int sex=0;//男：1；女：0
+	private String address;//通信地址
+	private String annualIncome;//年收入
 	public Integer getId() {
 		return id;
 	}
@@ -80,5 +83,16 @@ public class Lender {
 	public void setGrade(int grade) {
 		this.grade = grade;
 	}
-	
+	public int getSex() {
+		return sex;
+	}
+	public void setSex(int sex) {
+		this.sex = sex;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
 }

@@ -43,6 +43,11 @@
 		grade=#{grade} 
 		where id=#{id}
 	</update>
+	<update id="registerSecondStep">
+		update Lender set
+		name=#{name},identityCard=#{identityCard},sex=#{sex},address=#{address}
+		where id=#{id}
+	</update>
 	<delete id="delete">
 		delete from Lender
 		where id=#{id}

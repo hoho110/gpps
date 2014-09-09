@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2014/9/9 10:41:57                            */
+/* Created on:     2014/9/9 21:49:02                            */
 /*==============================================================*/
 
 
@@ -23,6 +23,8 @@ drop table if exists ProductAction;
 drop table if exists StateLog;
 
 drop table if exists Submit;
+
+drop table if exists Task;
 
 drop table if exists admin;
 
@@ -190,7 +192,7 @@ create table Product
 create table ProductAction
 (
    ID                   integer not null auto_increment,
-   notedate             bigint not null default 0 comment '0：投标中
+   createtime           bigint not null default 0 comment '0：投标中
             1：还款中
             -1：申请关闭
             2：已关闭
@@ -198,7 +200,7 @@ create table ProductAction
             4：流标',
    title                varchar(255) not null,
    detail               varchar(2000) default '0',
-   state                int not null comment '-2：严重问题
+   type                 int not null default 0 comment '-2：严重问题
             -1：不顺利
             0：正常
             1：利好',
@@ -230,9 +232,9 @@ create table Submit
    Id                   integer not null auto_increment,
    state                int not null default 0 comment '0:申请竞标->
             1:待支付
-                （支付）
+            	（支付）
             2:竞标中
-                (融资审核成功)
+            	(融资审核成功)
             3:还款中
             4：还款完毕
             
@@ -245,6 +247,20 @@ create table Submit
    lastmodifytime       bigint not null,
    amount               decimal(12,2) not null default 0,
    primary key (Id)
+);
+
+/*==============================================================*/
+/* Table: Task                                                  */
+/*==============================================================*/
+create table Task
+(
+   id                   integer not null auto_increment,
+   type                 int not null,
+   createTime           bigint not null,
+   state                int not null default 0,
+   productId            integer not null,
+   payBackId            integer,
+   primary key (id)
 );
 
 /*==============================================================*/

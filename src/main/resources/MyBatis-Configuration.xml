@@ -13,5 +13,6 @@
 		<mapper resource="gpps/dao/ProductDao.xml" />
 		<mapper resource="gpps/dao/ProductSeriesDao.xml" />
 		<mapper resource="gpps/dao/PayBackDao.xml" />
+		<mapper resource="gpps/dao/ProductActionDao.xml" />
 	</mappers>
 </configuration>

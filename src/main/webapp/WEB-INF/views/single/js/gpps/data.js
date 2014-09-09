@@ -327,17 +327,20 @@ var createNavLevel2 = function(nav){
 		var li2 = $('<li role="presentation" class="active"><a href="#" data-sk="my-score">积分等级</a></li>');
 		var li3 = $('<li role="presentation"><a href="#" data-sk="my-activity">我的活动</a></li>');
 		
+		var li5 = $('<li role="presentation"><a href="#" data-sk="my-note">系统通知</a></li>');
 		
-		var li4 = $('<li role="presentation" class="dropdown"></li>');
-		li4.append('<a class="dropdown-toggle" data-toggle="dropdown" data-sk="recommend" href="#">投资推荐<span class="caret"></span></a>');
-		var ul2 = $('<ul class="dropdown-menu" role="menu"></ul>');
-		ul2.append('<li><a href="#" data-sk="recommend-wj">稳健型</a></li>');
-		ul2.append('<li><a href="#" data-sk="recommend-jh">均衡型</a></li>');
-		ul2.append('<li><a href="#" data-sk="recommend-jq">进取型</a></li>');
-		li4.append(ul2);
+		
+	//	var li4 = $('<li role="presentation" class="dropdown"></li>');
+	//	li4.append('<a class="dropdown-toggle" data-toggle="dropdown" data-sk="recommend" href="#">投资推荐<span class="caret"></span></a>');
+	//	var ul2 = $('<ul class="dropdown-menu" role="menu"></ul>');
+	//	ul2.append('<li><a href="#" data-sk="recommend-wj">稳健型</a></li>');
+	//	ul2.append('<li><a href="#" data-sk="recommend-jh">均衡型</a></li>');
+	//	ul2.append('<li><a href="#" data-sk="recommend-jq">进取型</a></li>');
+	//	li4.append(ul2);
 		ul.append(li2);
 		ul.append(li3);
-		ul.append(li4);
+	//	ul.append(li4);
+		ul.append(li5);
 	}else if(nav=='submit'){
 		var li1 = $('<li role="presentation" class="active"><a href="#" data-sk="submit-all">全部</a></li>');
 		var li2 = $('<li role="presentation"><a href="#" data-sk="submit-toafford">待支付</a></li>');

@@ -264,3 +264,27 @@ ul.news li{
 	height:50px;
 	margin-left:5px;
 }
+.orange{
+	COLOR: #ea5404;
+	FONT-SIZE: 14px;
+	FONT-WEIGHT: bold;
+}
+.freeze{
+	COLOR: #0000ff;
+	FONT-SIZE: 14px;
+	FONT-WEIGHT: bold;
+}
+.coffee{
+	COLOR: #996666;
+	FONT-SIZE: 14px;
+	FONT-WEIGHT: bold;
+}
+.green{
+	COLOR: #00ff66;
+	FONT-SIZE: 14px;
+	FONT-WEIGHT: bold;
+}
+.grey{
+	COLOR: #999;
+	FONT-SIZE: 13px;
+}

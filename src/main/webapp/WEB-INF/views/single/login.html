@@ -102,10 +102,10 @@ margin:20px 0 0 -150px;
                 </div>
             </div>
                     </label>
-        <input type="text" placeholder="验证码" value="" class="ui-input ui-input-checkcode" id="J-input-checkcode" data-type="IMAGE" maxlength="4" name="checkCode" autocomplete="off" tabindex="3" data="" seed="authcenter-input-checkcode">
+        <input type="text" placeholder="验证码" value="" class="ui-input ui-input-checkcode" id="J-input-checkcode" data-type="IMAGE" maxlength="5" name="checkCode" autocomplete="off" tabindex="3" data="" seed="authcenter-input-checkcode">
         <span class="sl-checkcode" id="J-checkcodeIcon"></span>
         <div class="ui-checkcode">
-                        <img class="ui-checkcode-img" id="J-checkcode-img" src="https://omeo.alipay.com/service/checkcode?sessionID=9932cb127a44cac042b217c602ab09a1&amp;t=0.3556774904206308" title="点击图片刷新验证码" alt="点击图片刷新验证码" seed="authcenter-img-checkcode">
+                        <img class="ui-checkcode-img" id="J-checkcode-img" src="#" title="点击图片刷新验证码" alt="点击图片刷新验证码" seed="authcenter-img-checkcode">
                         
                     </div>
                     </div>
@@ -136,6 +136,15 @@ $(document).ready(function() {
 	
 	
 	window.parent.justify(460);
+	
+	var src="../../login/graphValidateCode?t="+Math.random();
+	
+	$('img#J-checkcode-img').attr('src', src);
+	
+	$('img#J-checkcode-img').click(function(e){
+		var srcn="../../login/graphValidateCode?t="+Math.random();
+		$(this).attr('src', srcn);
+	})
 	
 	$('#J-input-user').focus();
        $('#J-login-btn').click(function(e){
@@ -174,17 +183,6 @@ $(document).ready(function() {
 				$('input#password_input').val('');
 				$('input#J-input-checkcode').val('');
 			}
-			
-			
-			if(username=='wd' && password=='111111'){
-				addCookie("username","wd",1);
-				window.parent.toward("myaccount");
-				//window.location.href="temp.html"; 
-				}else{
-				alert('用户名密码错误，请重新输入！');
-				$('input#password_input').val('');
-				$('input#J-input-checkcode').val('');
-					}
 			
            });
 

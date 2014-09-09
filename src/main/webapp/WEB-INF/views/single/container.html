@@ -121,9 +121,13 @@
     <script src="js/mine.js"></script>
 <script src="js/cookies.js"></script>
 <script src="js/gpps/data.js"></script>
+<script type="text/javascript"
+				src="/resources/EasyServiceClientFullZ.js"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.ILenderService?json"></script>
 <script>
-var previousPage = "index.html";
-var currentPage = "index.html";
+var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+
 
 
 var index = {};
@@ -187,8 +191,8 @@ nav['recharge'] = recharge;
 
 
 function refreshNav(){
-	var username = getCookie("username");
-	if(username==null || username==""){
+	var cuser = service.getCurrentUser();
+	if(cuser==null){
 		var a_login = $('<a class="btn btn-default action btn-lg" data-sk="login">登录</a>');
 		$('#login_button').find('a').remove();
 		$('#login_button').find('ul').removeClass().remove();
@@ -206,7 +210,7 @@ function refreshNav(){
 			
 			var a = $('<a></a>').addClass("btn btn-default btn-lg").attr('data-toggle', 'dropdown').html(' 个人中心<span class="caret"></span>');
 			var u = $('<ul></ul>').addClass("dropdown-menu").attr('role', 'menu');
-			u.append($('<li><font size=4 weight=bold>下午好：wd</font></li>'));
+			u.append($('<li><font size=4 weight=bold>下午好：'+cuser.loginId+'</font></li>'));
 			u.append('<li class="divider"></li>');
 			var recharge = $('<a href="#" data-sk="recharge">我要充值</a>');
 			u.append($('<li></li>').append(recharge));
@@ -229,7 +233,7 @@ function refreshNav(){
 			$('#login_button').append(a);
 			$('#login_button').append(u);
 		}
-}
+		}
 
 		function towardWithoutRefresh(name){
 			$('a.action').removeClass('active');

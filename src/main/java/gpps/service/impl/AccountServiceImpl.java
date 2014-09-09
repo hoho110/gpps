@@ -71,7 +71,8 @@ public class AccountServiceImpl implements IAccountService {
 	}
 
 	@Override
-	public Integer freezeLenderAccount(Integer lenderAccountId, BigDecimal amount, Integer submitId, String description) throws InsufficientBalanceException {
+	@Transactional
+	public Integer freezeLenderAccount(Integer lenderAccountId, BigDecimal amount, Integer submitId, String description) throws InsufficientBalanceException, IllegalConvertException {
 		LenderAccount lenderAccount=checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
 		checkNullObject(Submit.class, submitDao.find(submitId));
 		if(amount.compareTo(lenderAccount.getUsable())>0)
@@ -83,11 +84,13 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_FREEZE);
 		cashStreamDao.create(cashStream);
+		changeCashStreamState(cashStream.getId(), CashStream.ACTION_FREEZE);
+		//TODO 调用第三方接口冻结,如不成功则事务回滚
 		return cashStream.getId();
 	}
 
 	@Override
-	public Integer freezeBorrowerAccount(Integer borrowerAccountId, BigDecimal amount, Integer paybackId, String description) throws InsufficientBalanceException {
+	public Integer freezeBorrowerAccount(Integer borrowerAccountId, BigDecimal amount, Integer paybackId, String description) throws InsufficientBalanceException, IllegalConvertException {
 		BorrowerAccount borrowerAccount=checkNullObject(BorrowerAccount.class, borrowerAccountDao.find(borrowerAccountId));
 		if(amount.compareTo(borrowerAccount.getUsable())>0)
 			throw new InsufficientBalanceException();
@@ -97,10 +100,12 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_FREEZE);
 		cashStreamDao.create(cashStream);
+		changeCashStreamState(cashStream.getId(), CashStream.ACTION_FREEZE);
+		//TODO 调用第三方接口冻结,如不成功则事务回滚
 		return cashStream.getId();
 	}
 	@Override
-	public Integer unfreezeLenderAccount(Integer lenderAccountId, BigDecimal amount, Integer submitId, String description) {
+	public Integer unfreezeLenderAccount(Integer lenderAccountId, BigDecimal amount, Integer submitId, String description) throws IllegalConvertException {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
 		CashStream cashStream=new CashStream();
 		cashStream.setLenderAccountId(lenderAccountId);
@@ -109,10 +114,12 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_UNFREEZE);
 		cashStreamDao.create(cashStream);
+		changeCashStreamState(cashStream.getId(), CashStream.ACTION_UNFREEZE);
+		//TODO 调用第三方接口冻结,如不成功则事务回滚?看看是否为批量解冻
 		return cashStream.getId();
 	}
 	@Override
-	public Integer pay(Integer lenderAccountId, Integer borrowerAccountId, BigDecimal chiefamount, BigDecimal interest, Integer submitId, String description) {
+	public Integer pay(Integer lenderAccountId, Integer borrowerAccountId, BigDecimal chiefamount, BigDecimal interest, Integer submitId, String description) throws IllegalConvertException {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
 		checkNullObject(BorrowerAccount.class, borrowerAccountDao.find(borrowerAccountId));
 		checkNullObject(Submit.class, submitDao.find(submitId));
@@ -125,11 +132,13 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_PAY);
 		cashStreamDao.create(cashStream);
+		changeCashStreamState(cashStream.getId(), CashStream.ACTION_PAY);
+		//批量解冻，不需要第三方操作
 		return cashStream.getId();
 	}
 
 	@Override
-	public Integer repay(Integer lenderAccountId, Integer borrowerAccountId, BigDecimal chiefamount, BigDecimal interest, Integer submitId, Integer paybackId, String description) {
+	public Integer repay(Integer lenderAccountId, Integer borrowerAccountId, BigDecimal chiefamount, BigDecimal interest, Integer submitId, Integer paybackId, String description) throws IllegalConvertException {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
 		checkNullObject(BorrowerAccount.class, borrowerAccountDao.find(borrowerAccountId));
 		checkNullObject(Submit.class, submitDao.find(submitId));
@@ -144,6 +153,8 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_REPAY);
 		cashStreamDao.create(cashStream);
+		changeCashStreamState(cashStream.getId(), CashStream.ACTION_REPAY);
+		//批量还款，不需要第三方操作
 		return cashStream.getId();
 	}
 

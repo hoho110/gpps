@@ -15,6 +15,8 @@ public interface ILenderService extends ILoginService{
 	 * @throws Exception
 	 */
 	public Lender register(Lender lender,String messageValidateCode) throws ValidateCodeException,IllegalArgumentException, LoginException;
+	
+	public void registerSecondStep(Integer id,String name,String identityCard,int sex,String address);
 	/**
 	 * 更新用户
 	 * 待讨论哪些字段能够更新

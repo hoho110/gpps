@@ -27,6 +27,16 @@ public class AccountServlet {
 	Logger log=Logger.getLogger(AccountServlet.class);
 	public static final String RECHARGEAMOUNT="rechargeAmount";
 	public static final String CASHSTREAMID="cashStreamId";
+	@RequestMapping(value={"/account/thirdPartyRegist/request"})
+	public void thirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
+	{
+		//TODO 重定向到第三方注册
+	}
+	@RequestMapping(value={"/account/thirdPartyRegist/response"})
+	public void completeThirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
+	{
+		//TODO 第三方注册回调
+	}
 	@RequestMapping(value={"/account/recharge/request"})
 	public void recharge(HttpServletRequest req, HttpServletResponse resp)
 	{

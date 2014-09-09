@@ -30,8 +30,9 @@ public interface IAccountService {
 	 * 贷款人账户冻结
 	 * @param amount
 	 * @exception InsufficientBalanceException 余额不足
+	 * @throws IllegalConvertException 
 	 */
-	public Integer freezeLenderAccount(Integer lenderAccountId,BigDecimal amount,Integer submitid,String description) throws InsufficientBalanceException;
+	public Integer freezeLenderAccount(Integer lenderAccountId,BigDecimal amount,Integer submitid,String description) throws InsufficientBalanceException, IllegalConvertException;
 	/**
 	 * 贷款人账户解冻
 	 * @param lenderAccountId
@@ -39,23 +40,27 @@ public interface IAccountService {
 	 * @param submitid
 	 * @param description
 	 * @return
+	 * @throws IllegalConvertException 
 	 */
-	public Integer unfreezeLenderAccount(Integer lenderAccountId,BigDecimal amount,Integer submitid,String description);
+	public Integer unfreezeLenderAccount(Integer lenderAccountId,BigDecimal amount,Integer submitid,String description) throws IllegalConvertException;
 	/**
 	 * 借款人账户冻结
 	 * @param amount
+	 * @throws IllegalConvertException 
 	 */
-	public Integer freezeBorrowerAccount(Integer borrowerAccountId,BigDecimal amount,Integer paybackId,String description) throws InsufficientBalanceException;
+	public Integer freezeBorrowerAccount(Integer borrowerAccountId,BigDecimal amount,Integer paybackId,String description) throws InsufficientBalanceException, IllegalConvertException;
 	/**
 	 * 贷款人将冻结资金支付给借款人
 	 * @param amount
+	 * @throws IllegalConvertException 
 	 */
-	public Integer pay(Integer lenderAccountId,Integer borrowerAccountId, BigDecimal chiefamount, BigDecimal interest,Integer submitid,String description);
+	public Integer pay(Integer lenderAccountId,Integer borrowerAccountId, BigDecimal chiefamount, BigDecimal interest,Integer submitid,String description) throws IllegalConvertException;
 	/**
 	 * 还款
 	 * @param amount
+	 * @throws IllegalConvertException 
 	 */
-	public Integer repay(Integer lenderAccountId,Integer borrowerAccountId,BigDecimal chiefamount,BigDecimal interest,Integer submitid,Integer paybackId,String description);
+	public Integer repay(Integer lenderAccountId,Integer borrowerAccountId,BigDecimal chiefamount,BigDecimal interest,Integer submitid,Integer paybackId,String description) throws IllegalConvertException;
 	/**
 	 * 取现
 	 * @param amount

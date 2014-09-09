@@ -24,6 +24,7 @@ import gpps.service.exception.UnreachBuyLevelException;
 import java.math.BigDecimal;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,7 @@ public class SubmitServiceImpl implements ISubmitService {
 	IGovermentOrderService orderService;
 	@Autowired
 	IProductDao productDao;
+	Logger logger=Logger.getLogger(this.getClass());
 	@Override
 	@Transactional
 	public void buy(Integer productId, BigDecimal amount)
@@ -73,11 +75,13 @@ public class SubmitServiceImpl implements ISubmitService {
 			submit.setAmount(amount);
 			submit.setLenderId(lenderService.getCurrentUser().getId());
 			submit.setProductId(productId);
-			submit.setState(Submit.STATE_WAITFORPAY);//TODO 确认状态
+			submit.setState(Submit.STATE_WAITFORPAY);
 			submitDao.create(submit);
 			productDao.buy(productId, amount);
 			accountService.freezeLenderAccount(lender.getAccountId(), amount, submit.getId(), null);
 			product.setRealAmount(product.getRealAmount().add(amount));
+		} catch (IllegalConvertException e) {
+			logger.error(e.getMessage(),e);
 		}finally
 		{
 			orderService.releaseFinancingProduct(product);

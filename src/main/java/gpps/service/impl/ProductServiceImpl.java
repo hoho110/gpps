@@ -8,8 +8,10 @@ import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.model.ProductAction;
 import gpps.model.ProductSeries;
+import gpps.model.Task;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IProductService;
+import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
 
 import java.math.BigDecimal;
@@ -30,6 +32,8 @@ public class ProductServiceImpl implements IProductService {
 	IGovermentOrderService orderService;
 	@Autowired
 	IProductDao productDao;
+	@Autowired
+	ITaskService taskService;
 	Logger logger=Logger.getLogger(this.getClass());
 	static int[] productStates={
 		Product.STATE_FINANCING,
@@ -173,6 +177,10 @@ public class ProductServiceImpl implements IProductService {
 			product=order.findProductById(productId);
 			order.getProducts().remove(product);
 			product.setState(Product.STATE_REPAYING);
+			Task task=new Task();
+			task.setProductId(productId);
+			task.setType(Task.TYPE_PAY);
+			taskService.submit(task);
 		}finally
 		{
 			orderService.releaseFinancingOrder(order);
@@ -194,6 +202,10 @@ public class ProductServiceImpl implements IProductService {
 			product=order.findProductById(productId);
 			order.getProducts().remove(product);
 			product.setState(Product.STATE_QUITFINANCING);
+			Task task=new Task();
+			task.setProductId(productId);
+			task.setType(Task.TYPE_QUITFINANCING);
+			taskService.submit(task);
 		}finally
 		{
 			orderService.releaseFinancingOrder(order);

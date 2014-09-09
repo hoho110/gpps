@@ -20,17 +20,17 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TaskServiceImpl implements ITaskService {
-//	@Autowired
+	@Autowired
 	ITaskDao taskDao;
 	Logger logger = Logger.getLogger(this.getClass());
 	BlockingQueue<Task> queue = new LinkedBlockingQueue<Task>();
-//	@Autowired
+	@Autowired
 	IProductDao productDao;
-//	@Autowired
+	@Autowired
 	ISubmitDao submitDao;
-//	@Autowired
+	@Autowired
 	ICashStreamDao cashStreamDao;
-//	@PostConstruct
+	@PostConstruct
 	public void init() {
 		try {
 			List<Task> interruptedTasks = taskDao

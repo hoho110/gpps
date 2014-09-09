@@ -13,6 +13,7 @@ import gpps.model.Lender;
 import gpps.service.IAccountService;
 import gpps.service.ILoginService;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.InsufficientBalanceException;
 import gpps.tools.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -25,7 +26,7 @@ public class AccountServlet {
 	@Autowired
 	IAccountService accountService;
 	Logger log=Logger.getLogger(AccountServlet.class);
-	public static final String RECHARGEAMOUNT="rechargeAmount";
+	public static final String AMOUNT="amount";
 	public static final String CASHSTREAMID="cashStreamId";
 	@RequestMapping(value={"/account/thirdPartyRegist/request"})
 	public void thirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
@@ -40,7 +41,7 @@ public class AccountServlet {
 	@RequestMapping(value={"/account/recharge/request"})
 	public void recharge(HttpServletRequest req, HttpServletResponse resp)
 	{
-		String amount=req.getParameter(RECHARGEAMOUNT);
+		String amount=req.getParameter(AMOUNT);
 		HttpSession session=req.getSession();
 		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
 		if(user==null)
@@ -83,4 +84,50 @@ public class AccountServlet {
 			log.error(e.getMessage(),e);
 		}
 	}
+//	@RequestMapping(value={"/account/recharge/request"})
+//	public void cash(HttpServletRequest req, HttpServletResponse resp)
+//	{
+//		String amount=req.getParameter(AMOUNT);
+//		HttpSession session=req.getSession();
+//		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+//		if(user==null)
+//		{
+//			try {
+//				resp.sendError(403,"未找到用户信息，请重新登录");
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			return;
+//		}
+//		Integer cashStreamId=null;
+//		if(user instanceof Lender)
+//		{
+//			Lender lender=(Lender)user;
+//			cashStreamId=accountService.cashLenderAccount(lender.getAccountId(),BigDecimal.valueOf(Double.valueOf(amount)), "充值");
+//		}
+//		else if(user instanceof Borrower)
+//		{
+//			Borrower borrower=(Borrower)user;
+//			cashStreamId=accountService.rechargeLenderAccount(borrower.getAccountId(),BigDecimal.valueOf(Double.valueOf(amount)), "充值");
+//		}
+//		log.debug("充值：amount="+amount+",cashStreamId="+cashStreamId);
+//		log.debug("跳转到第三方进行充值");
+//		log.debug("第三方充值完毕，跳转回本地");
+//		try {
+//			resp.sendRedirect("/account/recharge/response?cashStreamId="+cashStreamId);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	@RequestMapping(value={"/account/recharge/response"})
+//	public void completeCash(HttpServletRequest req, HttpServletResponse resp)
+//	{
+//		Integer cashStreamId=Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", req.getParameter(CASHSTREAMID)));
+//		try {
+//			log.debug("充值成功");
+//			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+//		} catch (IllegalConvertException e) {
+//			log.error(e.getMessage(),e);
+//		}
+//	}
 }

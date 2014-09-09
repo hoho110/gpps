@@ -160,7 +160,9 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	public Integer cashLenderAccount(Integer lenderAccountId, BigDecimal amount, String description) throws InsufficientBalanceException {
-		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
+		LenderAccount account=checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
+		if(account.getUsable().compareTo(amount)<0)
+			throw new InsufficientBalanceException();
 		CashStream cashStream=new CashStream();
 		cashStream.setLenderAccountId(lenderAccountId);
 		cashStream.setChiefamount(amount);
@@ -172,7 +174,9 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	public Integer cashBorrowerAccount(Integer borrowerAccountId, BigDecimal amount, String description) throws InsufficientBalanceException {
-		checkNullObject(BorrowerAccount.class, borrowerAccountDao.find(borrowerAccountId));
+		BorrowerAccount account=checkNullObject(BorrowerAccount.class, borrowerAccountDao.find(borrowerAccountId));
+		if(account.getUsable().compareTo(amount)<0)
+			throw new InsufficientBalanceException();
 		CashStream cashStream=new CashStream();
 		cashStream.setBorrowerAccountId(borrowerAccountId);
 		cashStream.setChiefamount(amount);

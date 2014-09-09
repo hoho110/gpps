@@ -88,6 +88,7 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		lender.setAccountId(account.getId());
 		lenderDao.create(lender);
 		lender.setPassword(null);
+		getCurrentSession().setAttribute(SESSION_ATTRIBUTENAME_USER, lender);
 		return lender;
 	}
 	

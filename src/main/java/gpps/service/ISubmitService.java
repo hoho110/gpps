@@ -10,6 +10,7 @@ import gpps.service.exception.UnreachBuyLevelException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 public interface ISubmitService {
 	/**
 	 * 购买产品,贷款人调用，
@@ -35,7 +36,7 @@ public interface ISubmitService {
 	 * 返回用户购买的所有订单，按时间倒序排序
 	 * @return
 	 */
-	public List<Submit> findMyAllSubmits();
+	public Map<String,Object> findMyAllSubmits(int offset,int recnum);
 	
 	public List<Submit> findMyAllSubmitsByStates(int states);
 	/**

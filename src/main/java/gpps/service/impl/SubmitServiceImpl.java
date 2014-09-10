@@ -23,6 +23,7 @@ import gpps.service.exception.UnreachBuyLevelException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,8 +112,9 @@ public class SubmitServiceImpl implements ISubmitService {
 	}
 
 	@Override
-	public List<Submit> findMyAllSubmits() {
-		return submitDao.findAllByLender(lenderService.getCurrentUser().getId());
+	public Map<String,Object> findMyAllSubmits(int offset,int recnum) {
+//		return submitDao.findAllByLender(lenderService.getCurrentUser().getId());
+		return null;
 	}
 
 	@Override

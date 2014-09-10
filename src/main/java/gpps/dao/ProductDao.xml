@@ -4,8 +4,8 @@
 	<insert id="create" parameterType="gpps.model.Product"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
-		Product(state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,accessory,productseriesId,levelToBuy,createtime)
-		values(#{state},#{govermentorderId},#{expectAmount},#{realAmount},#{rate},#{paybackmodel},#{accessory},#{productseriesId},#{levelToBuy},#{createtime})
+		Product(state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime)
+		values(#{state},#{govermentorderId},#{expectAmount},#{realAmount},#{rate},#{paybackmodel},#{productseriesId},#{levelToBuy},#{createtime})
 	</insert>
 	<update id="changeState">
 		update Product set
@@ -14,16 +14,16 @@
 		id=#{id}
 	</update>
 	<select id="find" parameterType="Integer" resultType="gpps.model.Product">
-		select *
+		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime
 		from Product where id=#{id}
 	</select>
 	<select id="findByGovermentOrder" parameterType="Integer"
 		resultType="gpps.model.Product">
-		select *
+		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime
 		from Product where govermentorderId=#{orderId}
 	</select>
 	<select id="findByState" resultType="gpps.model.Product">
-		select *
+		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime
 		from Product
 		<if test="states != null">
 			where state in
@@ -46,7 +46,7 @@
 		</if>
 	</select>
 	<select id="findByProductSeriesAndState" resultType="gpps.model.Product">
-		select *
+		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime
 		from Product where productSeriesId=#{productSeriesId}
 		<if test="states != null">
 			and state

@@ -2,6 +2,7 @@ package gpps.service.impl;
 
 import static gpps.tools.ObjectUtil.checkNullObject;
 import gpps.dao.IGovermentOrderDao;
+import gpps.dao.IProductActionDao;
 import gpps.dao.IProductDao;
 import gpps.dao.IProductSeriesDao;
 import gpps.model.GovermentOrder;
@@ -34,6 +35,8 @@ public class ProductServiceImpl implements IProductService {
 	IProductDao productDao;
 	@Autowired
 	ITaskService taskService;
+	@Autowired
+	IProductActionDao productActionDao;
 	Logger logger=Logger.getLogger(this.getClass());
 	static int[] productStates={
 		Product.STATE_FINANCING,
@@ -131,13 +134,13 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	public void createProductAction(ProductAction productAction) {
-		// TODO Auto-generated method stub
+		productAction.setCreatetime(System.currentTimeMillis());
+		productActionDao.create(productAction);
 	}
 
 	@Override
 	public List<ProductAction> findByProductId(Integer productId) {
-		// TODO Auto-generated method stub
-		return null;
+		return productActionDao.findAllByProduct(productId);
 	}
 
 	@Override

@@ -31,7 +31,7 @@ public interface ILenderService extends ILoginService{
 	 * @param privilege
 	 * @throws Exception
 	 */
-	public void changePrivilege(int id,int privilege) throws IllegalArgumentException;
+	public void changeLevel(int id,int level) throws IllegalArgumentException;
 	/**
 	 * 根据ID查找
 	 * @param id
@@ -44,7 +44,7 @@ public interface ILenderService extends ILoginService{
 	 * 供产品购买级别那里选择
 	 * @return
 	 */
-	public int[] findAllPrivilege();
+	public int[] findAllLevel();
 	/**
 	 * 返回Session用户对象
 	 * @return

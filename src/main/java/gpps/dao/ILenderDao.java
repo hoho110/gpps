@@ -13,6 +13,7 @@ public interface ILenderDao {
 	public void create(Lender lender);
 //	public void update(Lender lender);
 	public void changePrivilege(@Param("id") Integer id,@Param("privilege") int privilege);
+	public void changeLevel(@Param("id") Integer id,@Param("level") int level);
 	public void changePassword(@Param("id") Integer id,@Param("password") String password);
 	public void changeGrade(@Param("id")Integer id,@Param("grade")int grade);
 	public void delete(Integer id);

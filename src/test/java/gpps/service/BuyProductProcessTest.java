@@ -122,7 +122,7 @@ public class BuyProductProcessTest extends TestSupport{
 		product.setExpectAmount(new BigDecimal(productExpectAmount));
 		product.setProductseriesId(productSeries.getId());
 		product.setGovermentorderId(order.getId());
-		product.setLevelToBuy(Lender.PRIVILEGE_VIP1);
+		product.setLevelToBuy(Lender.LEVEL_VIP1);
 		product.setPaybackmodel(0);
 		product.setRate(new BigDecimal(0.15));
 		productService.create(product);
@@ -146,8 +146,8 @@ public class BuyProductProcessTest extends TestSupport{
 					//b用户权限不够
 					submitService.buy(product.getId(), new BigDecimal(12*10000));
 				}else if(i==2){
-					lenderService.changePrivilege(lender_b.getId(), Lender.PRIVILEGE_VIP1);
-					lender_b.setPrivilege(Lender.PRIVILEGE_VIP1);
+					lenderService.changeLevel(lender_b.getId(), Lender.LEVEL_VIP1);
+					lender_b.setLevel(Lender.LEVEL_VIP1);
 					mockLogin(lender_b);
 					//产品余额不足
 					submitService.buy(product.getId(), new BigDecimal(20*10000));
@@ -175,7 +175,7 @@ public class BuyProductProcessTest extends TestSupport{
 			mockLogin(lender_b);
 			submitService.buy(product.getId(), new BigDecimal(10*10000));
 			
-			productService.changeBuyLevel(product.getId(), Lender.PRIVILEGE_COMMON);
+			productService.changeBuyLevel(product.getId(), Lender.LEVEL_COMMON);
 			
 			mockLogin(lender_a);
 			submitService.buy(product.getId(), new BigDecimal(4*10000));

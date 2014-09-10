@@ -76,7 +76,8 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		lender.setName(checkNullAndTrim("name", lender.getName()));
 		lender.setPassword(getProcessedPassword(checkNullAndTrim("password", lender.getPassword())+PASSWORDSEED));
 		lender.setCreatetime(System.currentTimeMillis());
-		lender.setPrivilege(Lender.PRIVILEGE_COMMON);
+		lender.setPrivilege(Lender.PRIVILEGE_UNOFFICIAL);
+		lender.setLevel(Lender.LEVEL_COMMON);
 		lender.setTel(checkNullAndTrim("tel", lender.getTel()));
 		lender.setGrade(0);
 		if(isLoginIdExist(lender.getLoginId()))
@@ -99,9 +100,9 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 //	}
 
 	@Override
-	public void changePrivilege(int id, int privilege)
+	public void changeLevel(int id, int level)
 			throws IllegalArgumentException {
-		lenderDao.changePrivilege(id, privilege);
+		lenderDao.changeLevel(id, level);
 	}
 
 	@Override
@@ -110,8 +111,8 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	}
 
 	@Override
-	public int[] findAllPrivilege() {
-		int[] privileges={Lender.PRIVILEGE_COMMON,Lender.PRIVILEGE_VIP1};
+	public int[] findAllLevel() {
+		int[] privileges={Lender.LEVEL_COMMON,Lender.LEVEL_VIP1};
 		return privileges;
 	}
 

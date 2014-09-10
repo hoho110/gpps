@@ -33,6 +33,11 @@
 		privilege=#{privilege} 
 		where id=#{id}
 	</update>
+	<update id="changeLevel">
+        update Lender set
+        level=#{level} 
+        where id=#{id}
+    </update>
 	<update id="changePassword">
 		update Lender set
 		password=#{password} 

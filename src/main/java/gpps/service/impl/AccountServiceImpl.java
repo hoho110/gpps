@@ -84,7 +84,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_FREEZE);
 		cashStreamDao.create(cashStream);
-		changeCashStreamState(cashStream.getId(), CashStream.ACTION_FREEZE);
+		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//TODO 调用第三方接口冻结,如不成功则事务回滚
 		return cashStream.getId();
 	}
@@ -100,7 +100,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_FREEZE);
 		cashStreamDao.create(cashStream);
-		changeCashStreamState(cashStream.getId(), CashStream.ACTION_FREEZE);
+		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//TODO 调用第三方接口冻结,如不成功则事务回滚
 		return cashStream.getId();
 	}
@@ -114,7 +114,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_UNFREEZE);
 		cashStreamDao.create(cashStream);
-		changeCashStreamState(cashStream.getId(), CashStream.ACTION_UNFREEZE);
+		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//TODO 调用第三方接口冻结,如不成功则事务回滚?看看是否为批量解冻
 		return cashStream.getId();
 	}
@@ -132,7 +132,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_PAY);
 		cashStreamDao.create(cashStream);
-		changeCashStreamState(cashStream.getId(), CashStream.ACTION_PAY);
+		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//批量解冻，不需要第三方操作
 		return cashStream.getId();
 	}
@@ -153,7 +153,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_REPAY);
 		cashStreamDao.create(cashStream);
-		changeCashStreamState(cashStream.getId(), CashStream.ACTION_REPAY);
+		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//批量还款，不需要第三方操作
 		return cashStream.getId();
 	}

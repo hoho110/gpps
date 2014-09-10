@@ -10,11 +10,14 @@ public class Lender {
 	private String identityCard;//身份证
 	private Integer accountId;//账户ID
 	private long createtime=System.currentTimeMillis();//创建时间
-	public static final int PRIVILEGE_COMMON=0;//普通用户
-	public static final int PRIVILEGE_VIP1=1;//VIP1
-	private int privilege=PRIVILEGE_COMMON;//用户角色
+	public static final int PRIVILEGE_UNOFFICIAL=0;//非正式用户
+	public static final int PRIVILEGE_OFFICIAL=1;//正式用户
+	private int privilege=PRIVILEGE_UNOFFICIAL;//用户角色
+	public static final int LEVEL_COMMON=0;//普通用户
+	public static final int LEVEL_VIP1=1;//VIP1
+	private int level=LEVEL_COMMON;
 	private int grade=0;//评分
-	private int sex=0;//男：1；女：0
+	private int sex=0;//男：0；女：1
 	private String address;//通信地址
 	private String annualIncome;//年收入
 	public Integer getId() {
@@ -94,5 +97,11 @@ public class Lender {
 	}
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }

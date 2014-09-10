@@ -3,12 +3,20 @@
 	<!--匿名用户(未登陆)角色,privilege为-1
 		limitedType:受限类型,1:不受限;0:部分许可;-1:全部受限
 	-->
+	<!-- 匿名用户 -->
 	<Role privilege = "-1" limitedType="0">
 		<permissionRules>
-			<PermissionRule  entityLimitType="我可调用的服务" operations="我可调用的方法1;我可调用的方法2"/>
+			<PermissionRule  entityLimitType="gpps.service.ILenderService" operations="register;registerSecondStep;getCurrentUser;login;sendMessageValidateCode"/>
 		</permissionRules>
 	</Role>
-	<Role privilege = "1" limitedType="1">
+	<!-- 未完成认证的贷款人 -->
+	<Role privilege = "0" limitedType="0">
+        <permissionRules>
+        
+        </permissionRules>
+    </Role>
+    <!-- 完成认证的贷款人 -->
+	<Role privilege = "1" limitedType="0">
 		<permissionRules>
 		</permissionRules>
 	</Role>

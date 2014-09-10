@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2014/9/9 21:49:02                            */
+/* Created on:     2014/9/10 10:04:54                           */
 /*==============================================================*/
 
 
@@ -115,6 +115,9 @@ create table Lender
    privilege            int not null comment '00：普通用户
             01：vip1',
    grade                int not null default 0,
+   level                int not null default 0,
+   sex                  int not null default 0,
+   address              varchar(255),
    primary key (id)
 );
 
@@ -232,9 +235,9 @@ create table Submit
    Id                   integer not null auto_increment,
    state                int not null default 0 comment '0:申请竞标->
             1:待支付
-            	（支付）
+                （支付）
             2:竞标中
-            	(融资审核成功)
+                (融资审核成功)
             3:还款中
             4：还款完毕
             
@@ -409,4 +412,3 @@ alter table payback add constraint FK_Ref_payback_borroweraccount foreign key (b
 
 alter table payback add constraint FK_Ref_payback_product foreign key (productId)
       references Product (ID) on delete restrict on update restrict;
-

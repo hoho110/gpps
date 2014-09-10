@@ -3,6 +3,7 @@
  */
 package gpps.service.impl;
 
+import gpps.constant.Pagination;
 import gpps.dao.IBorrowerDao;
 import gpps.dao.IGovermentOrderDao;
 import gpps.dao.IProductDao;
@@ -288,12 +289,24 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	@Override
 	public Map<String, Object> findGovermentOrderByProductSeries(
 			Integer productSeriesId, int offset, int recnum) {
+		
 		return null;
 	}
 	@Override
 	public Map<String, Object> findByStatesByPage(int states, int offset,
 			int recnum) {
-		Map<String, Object> m=new HashMap<String, Object>();
-		return null;
+		List<Integer> list=null;
+		if(states!=-1)
+		{
+			list=new ArrayList<Integer>();
+			for(int orderState:orderStates)
+			{
+				if((orderState&states)>0)
+					list.add(orderState);
+			}
+			if(list.isEmpty())
+				return Pagination.buildResult(null, 0, offset, recnum);
+		}
+		return Pagination.buildResult(govermentOrderDao.findByStatesWithPaging(list, offset, recnum), govermentOrderDao.countByState(list), offset, recnum);
 	}
 }

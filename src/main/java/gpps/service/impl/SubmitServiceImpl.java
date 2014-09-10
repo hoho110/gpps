@@ -119,4 +119,10 @@ public class SubmitServiceImpl implements ISubmitService {
 	public List<CashStream> findSubmitCashStream(Integer submitId) {
 		return cashStreamDao.findSubmitCashStream(submitId);
 	}
+
+	@Override
+	public List<Submit> findMyAllSubmitsByStates(int states) {
+		
+		return null;
+	}
 }

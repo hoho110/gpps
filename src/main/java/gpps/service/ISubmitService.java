@@ -36,6 +36,8 @@ public interface ISubmitService {
 	 * @return
 	 */
 	public List<Submit> findMyAllSubmits();
+	
+	public List<Submit> findMyAllSubmitsByStates(int states);
 	/**
 	 * 找到该订单的资金流,倒序排列返回
 	 * @param submit

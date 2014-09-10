@@ -23,6 +23,7 @@
 				#{item}
 			</foreach>
 		</if>
+		order by state asc,createtime desc 
 		LIMIT #{offset}, #{recnum}
 	</select>
 	<select id="findByStates" resultType="gpps.model.GovermentOrder">
@@ -35,6 +36,7 @@
 				#{item}
 			</foreach>
 		</if>
+		order by state asc,createtime desc 
 	</select>
 	<select id="countByState" resultType="int">
 		select count(*)
@@ -58,6 +60,7 @@
 				#{item}
 			</foreach>
 		</if>
+		order by state asc,createtime desc 
 	</select>
 	<select id="find" parameterType="Integer" resultType="gpps.model.GovermentOrder">
 		select *

@@ -129,15 +129,16 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	}
 
 	@Override
-	public void registerSecondStep(String name, String identityCard, int sex, String address) throws IllegalArgumentException {
+	public void registerSecondStep(String name, String identityCard, int sex, String address,String annualIncome) throws IllegalArgumentException {
 		name=checkNullAndTrim("name", name);
 		identityCard=checkNullAndTrim("identityCard", identityCard);
 		Lender lender=getCurrentUser();
-		lenderDao.registerSecondStep(lender.getId(), name, identityCard, sex, address);
+		lenderDao.registerSecondStep(lender.getId(), name, identityCard, sex, address,annualIncome);
 		lender.setName(name);
 		lender.setIdentityCard(identityCard);
 		lender.setSex(sex);
 		lender.setAddress(address);
+		lender.setAnnualIncome(annualIncome);
 	}
 
 	@Override

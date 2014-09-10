@@ -121,6 +121,7 @@ create table Lender
    sex                  int not null default 0,
    address              varchar(255),
    thirdPartyAccount    varchar(255),
+   annualIncome         varchar(255),
    primary key (id)
 );
 

@@ -1,6 +1,7 @@
 package gpps.service.impl;
 
 import static gpps.tools.ObjectUtil.checkNullObject;
+import gpps.constant.Pagination;
 import gpps.dao.ICashStreamDao;
 import gpps.dao.ILenderAccountDao;
 import gpps.dao.IProductDao;
@@ -113,8 +114,8 @@ public class SubmitServiceImpl implements ISubmitService {
 
 	@Override
 	public Map<String,Object> findMyAllSubmits(int offset,int recnum) {
-//		return submitDao.findAllByLender(lenderService.getCurrentUser().getId());
-		return null;
+		Lender lender=lenderService.getCurrentUser();
+		return Pagination.buildResult(submitDao.findAllByLender(lender.getId(), offset, recnum), submitDao.countByLender(lender.getId()), offset, recnum);
 	}
 
 	@Override
@@ -123,8 +124,12 @@ public class SubmitServiceImpl implements ISubmitService {
 	}
 
 	@Override
-	public List<Submit> findMyAllSubmitsByStates(int states) {
-		
+	public Map<String, Object> findMyAllWaitforPayingSubmits(int offset, int recnum) {
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> findMyAllSubmitsByProductState(int productState) {
 		return null;
 	}
 }

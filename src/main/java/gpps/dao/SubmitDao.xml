@@ -9,6 +9,11 @@
 	</insert>
 	<select id="findAllByLender" parameterType="Integer" resultType="gpps.model.Submit">
 		select *
+		from Submit where lenderId=#{lenderId} 
+		LIMIT #{offset}, #{recnum}
+	</select>
+	<select id="countByLender" resultType="int">
+		select count(*)
 		from Submit where lenderId=#{lenderId}
 	</select>
 	<select id="findAllByLenderAndStates" resultType="gpps.model.Submit">

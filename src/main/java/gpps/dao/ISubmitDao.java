@@ -8,8 +8,8 @@ import org.apache.ibatis.annotations.Param;
 
 public interface ISubmitDao {
 	public void create(Submit submit);
-	public List<Submit> findAllByLender(@Param("id")Integer id,@Param("offset")int offset,@Param("recnum")int recnum);
-	public int countByLender(@Param("id")Integer id,@Param("offset")int offset,@Param("recnum")int recnum);
+	public List<Submit> findAllByLender(@Param("lenderId")Integer lenderId,@Param("offset")int offset,@Param("recnum")int recnum);
+	public int countByLender(Integer lenderId);
 	/**
 	 * 
 	 * @param lenderId

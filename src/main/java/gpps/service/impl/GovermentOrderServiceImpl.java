@@ -288,13 +288,12 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	@Override
 	public Map<String, Object> findGovermentOrderByProductSeries(
 			Integer productSeriesId, int offset, int recnum) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override
 	public Map<String, Object> findByStatesByPage(int states, int offset,
 			int recnum) {
-		// TODO Auto-generated method stub
+		Map<String, Object> m=new HashMap<String, Object>();
 		return null;
 	}
 }

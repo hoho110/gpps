@@ -53,6 +53,11 @@
 		name=#{name},identityCard=#{identityCard},sex=#{sex},address=#{address}
 		where id=#{id}
 	</update>
+	<update id="registerThirdPartyAccount">
+		update Lender set
+		thirdPartyAccount=#{thirdPartyAccount}
+		where id=#{id}
+	</update>
 	<delete id="delete">
 		delete from Lender
 		where id=#{id}

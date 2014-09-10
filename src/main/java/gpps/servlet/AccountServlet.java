@@ -11,6 +11,7 @@ import gpps.model.Borrower;
 import gpps.model.CashStream;
 import gpps.model.Lender;
 import gpps.service.IAccountService;
+import gpps.service.ILenderService;
 import gpps.service.ILoginService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AccountServlet {
 	@Autowired
 	IAccountService accountService;
+	@Autowired
+	ILenderService lenderService;
 	Logger log=Logger.getLogger(AccountServlet.class);
 	public static final String AMOUNT="amount";
 	public static final String CASHSTREAMID="cashStreamId";
@@ -32,12 +35,20 @@ public class AccountServlet {
 	public void thirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
 	{
 		//TODO 重定向到第三方注册
+		log.debug("第三方注册完毕，跳转回本地");
+		try {
+			resp.sendRedirect("/account/thirdPartyRegist/response");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	@RequestMapping(value={"/account/thirdPartyRegist/response"})
 	public void completeThirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
 	{
 		//TODO 第三方注册回调
-		
+		String thirdPartyAccount="thirdPartyAccount";
+		lenderService.registerThirdPartyAccount(thirdPartyAccount);
+		//TODO 重定向到指定页面
 	}
 	@RequestMapping(value={"/account/recharge/request"})
 	public void recharge(HttpServletRequest req, HttpServletResponse resp)
@@ -84,6 +95,7 @@ public class AccountServlet {
 		} catch (IllegalConvertException e) {
 			log.error(e.getMessage(),e);
 		}
+		//TODO 重定向到指定页面
 	}
 	@RequestMapping(value={"/account/cash/request"})
 	public void cash(HttpServletRequest req, HttpServletResponse resp)
@@ -142,5 +154,6 @@ public class AccountServlet {
 		} catch (IllegalConvertException e) {
 			log.error(e.getMessage(),e);
 		}
+		//TODO 重定向到指定页面
 	}
 }

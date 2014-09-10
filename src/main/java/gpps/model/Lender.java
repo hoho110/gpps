@@ -19,7 +19,8 @@ public class Lender {
 	private int grade=0;//评分
 	private int sex=0;//男：0；女：1
 	private String address;//通信地址
-	private String annualIncome;//年收入
+//	private String annualIncome;//年收入
+	private String thirdPartyAccount;
 	public Integer getId() {
 		return id;
 	}
@@ -103,5 +104,11 @@ public class Lender {
 	}
 	public void setLevel(int level) {
 		this.level = level;
+	}
+	public String getThirdPartyAccount() {
+		return thirdPartyAccount;
+	}
+	public void setThirdPartyAccount(String thirdPartyAccount) {
+		this.thirdPartyAccount = thirdPartyAccount;
 	}
 }

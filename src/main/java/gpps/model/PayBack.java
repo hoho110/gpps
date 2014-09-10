@@ -9,6 +9,10 @@ public class PayBack {
 	/**
 	 * 0：待还款 1：正在还款 2:已还款 3：延期(待确定)
 	 */
+	public static int STATE_WAITFORREPAY=0;
+	public static int STATE_REPAYING=1;
+	public static int STATE_FINISHREPAY=2;
+	public static int STATE_DELAY=3;
 	private int state;
 	private BigDecimal chiefAmount;
 	private BigDecimal interest;

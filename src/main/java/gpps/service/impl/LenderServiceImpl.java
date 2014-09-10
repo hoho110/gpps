@@ -15,6 +15,7 @@ import gpps.model.LenderAccount;
 import gpps.service.ILenderService;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
+import gpps.tools.StringUtil;
 import static gpps.tools.StringUtil.*;
 import static gpps.tools.ObjectUtil.*;
 @Service
@@ -71,9 +72,6 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 			throws ValidateCodeException, IllegalArgumentException, LoginException {
 		checkMessageValidateCode(messageValidateCode);
 		lender.setLoginId(checkNullAndTrim("loginId", lender.getLoginId()));
-		lender.setEmail(checkNullAndTrim("email", lender.getEmail()));
-		lender.setIdentityCard(checkNullAndTrim("identityCard", lender.getIdentityCard()));
-		lender.setName(checkNullAndTrim("name", lender.getName()));
 		lender.setPassword(getProcessedPassword(checkNullAndTrim("password", lender.getPassword())+PASSWORDSEED));
 		lender.setCreatetime(System.currentTimeMillis());
 		lender.setPrivilege(Lender.PRIVILEGE_UNOFFICIAL);
@@ -135,5 +133,24 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		name=checkNullAndTrim("name", name);
 		identityCard=checkNullAndTrim("identityCard", identityCard);
 		lenderDao.registerSecondStep(id, name, identityCard, sex, address);
+	}
+
+	@Override
+	public void registerThirdPartyAccount(String thirdPartyAccount) {
+		Lender lender=getCurrentUser();
+		thirdPartyAccount=checkNullAndTrim("thirdPartyAccount", thirdPartyAccount);
+		lenderDao.registerThirdPartyAccount(lender.getId(), thirdPartyAccount);
+	}
+
+	@Override
+	public boolean isIdentityAuthentication() {
+		Lender lender=getCurrentUser();
+		return StringUtil.isEmpty(lender.getName())||StringUtil.isEmpty(lender.getIdentityCard())?false:true;
+	}
+
+	@Override
+	public boolean isThirdPartyAuthentication() {
+		Lender lender=getCurrentUser();
+		return StringUtil.isEmpty(lender.getThirdPartyAccount())?false:true;
 	}
 }

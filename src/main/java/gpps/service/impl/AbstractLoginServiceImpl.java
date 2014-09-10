@@ -43,7 +43,7 @@ public abstract class AbstractLoginServiceImpl implements ILoginService {
 
 	@Override
 	public void writeGraphValidateCode(OutputStream os)throws IOException {
-		GraphValidateCode validateCode=new GraphValidateCode(160, 40, 5, 150);
+		GraphValidateCode validateCode=new GraphValidateCode(160, 40, 5, 50);
 		getCurrentSession().setAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE, validateCode.getCode());
 		validateCode.write(os);
 	}

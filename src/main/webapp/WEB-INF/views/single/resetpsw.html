@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+<title>政X融X网</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<link href="css/mine.css" rel="stylesheet">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="js/cdn/html5shiv.min.js"></script>
+      <script src="js/cdn/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/cdn/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+
+
+<div class="container-fluid">
+<div class="row" style="padding-left:5px; padding-right:5px;">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+<div class="panel panel-default" style="padding-bottom:50px;">
+<div class="row" style="margin-top:20px;">
+<div class="hidden-xs col-sm-3 col-md-4"></div>
+<div class="hidden-xs col-sm-2 col-md-1" id="message"></div>
+<div class="col-xs-12 col-sm-4 col-md-4" id="content"></div>
+<div class="col-xs-12 col-sm-3 col-md-3"><span id="loginIdLabel" style="font-size:small"></span></div>
+</div>
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-4"></div>
+<div class="hidden-xs col-sm-2 col-md-1">新密码</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="password" type="password" class="form-control" placeholder="请输入您的密码"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"><span id="passwordLabel" style="font-size:small"></span></div>
+</div>
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-4"></div>
+<div class="hidden-xs col-sm-2 col-md-1">确认密码</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="password_r" type="password" class="form-control" placeholder="请再次输入您的密码"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"><span id="password_rLabel" style="font-size:small"></span></div>
+</div>
+<div class="row" style="margin-top:15px;">
+<div class="hidden-xs col-sm-3 col-md-4"></div>
+<div class="hidden-xs col-sm-2 col-md-1">手机验证码</div>
+<div class="col-xs-7 col-sm-3 col-md-2"><input id="validate" type="text" class="form-control" placeholder="请输入您的验证码"></input></div>
+<div class="col-xs-5 col-sm-2 col-md-2"><button id="sendValCode" type="button" class="btn btn-default" style="width:160px;">发送</button></div>
+<div class="col-xs-12 col-sm-2 col-md-3"><span id="validateLabel" style="font-size:small"></span></div>
+</div>
+
+
+
+
+<div class="row" style="margin-top:5px;">
+<div class="col-xs-2 col-sm-4 col-md-6"></div>
+<div class="col-xs-8 col-sm-4 col-md-4"><button id="confirm" type="button" class="btn btn-warning" style="width:150px;">确认修改</button></div>
+<div class="col-xs-2 col-sm-4 col-md-2"></div>
+</div>
+
+
+</div>
+
+
+
+</div>
+</div>
+</div>
+<script src="js/cookies.js"></script>
+<script type="text/javascript"
+	src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+	src="/easyservice/gpps.service.ILenderService?json"></script>
+<script>
+$(document).ready(function() {
+	window.parent.justify(document.body.scrollHeight);
+	
+	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	var cuser = service.getCurrentUser();
+	
+	$('#password').focus();
+	
+	if(cuser!=null){
+		$('#message').html('');
+		var username = cuser.name==null?cuser.loginId : cuser.name;
+		$('#content').html('您好：'+username);
+	}else{
+		$('#message').html('用户名');
+		$('#content').html('<input id="loginId" type="text" class="form-control" placeholder="请输入您的用户名"></input>');
+		$('#loginId').focus();
+	}
+	
+	
+       $('#confirm').click(function(e){
+    	   var loginId = cuser==null?$('#loginId').val():cuser.loginId;
+			var validate = $('input#validate').val();
+			var password = $('input#password').val();
+			var password_r = $('input#password_r').val();
+
+			if(password==null||password==''){
+				$('#passwordLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入密码');
+				return;
+				}else if(password_r!=password){
+				$('#password_rLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*输入密码不一致');
+				return;
+				}
+			else{
+				$('#passwordLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+				}
+
+
+			if(validate==null||validate==''){
+				$('#validateLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*验证码错误');
+				return;
+				}
+				else{
+				$('#validateLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+				}
+
+
+			try{
+				service.changePassword(loginId, password, validate);
+				window.parent.toward("myaccount");
+			}catch(e){
+				alert(e.message);
+				$('input#password').val('');
+				$('input#password_r').val('');
+				$('input#validate').val('');
+			}
+			
+			
+           });
+       
+       
+       $('button#sendValCode').click(function(e){
+     		  service.sendMessageValidateCode();
+        });
+
+})
+</script>
+</body>
+</html>

@@ -93,8 +93,8 @@
                 <input name="txtAccount" type="text" id="txtAccount" /><span
                     id="msg" style="color: #b94a48; font-weight: bold;"></span></div>
             <div class="confirmAndCancel">
-                <input type="submit" name="btnSub" value="确 认" id="btnSub" class="confirmAndCancelBtn" />
-                <input type="reset" class="confirmAndCancelBtn" value="重 置" />
+                <input type="button" name="btnSub" value="确 认" id="rechargeConfirm" class="confirmAndCancelBtn" />
+                <input type="button" class="confirmAndCancelBtn" value="重 置" />
             </div>
             </div>
                 
@@ -104,11 +104,39 @@
 </div>
 </div>
 <script src="js/cookies.js"></script>
+<script type="text/javascript"
+	src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+	src="/easyservice/gpps.service.ILenderService?json"></script>
 <script>
 function getbank(bank){
 	
 }
 $(document).ready(function() {
+	
+	
+	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	var cuser = service.getCurrentUser();
+	if(cuser==null){
+		window.location.href="login.html"; 
+		return;
+	}
+	
+	var thirdPartyAccount = cuser.thirdPartyAccount;
+	if(thirdPartyAccount==null || thirdPartyAccount==''){
+		if(confirm("您尚未在第三方支付平台注册，马上注册?")){
+			window.open("/account/thirdPartyRegist/request"); 
+ 	  		if(confirm("第三方认证是否成功?")){
+ 	  			window.parent.toward("myaccount");
+ 	  		}else{
+ 	  			window.parent.toward("myaccount");
+ 	  		}
+  		}else{
+  			window.parent.toward("myaccount");
+  		}
+	}
+	
+	
 	window.parent.justify(document.body.scrollHeight);
 	
 	
@@ -122,6 +150,24 @@ $(document).ready(function() {
 				document.getElementById('msg').innerHTML='';
 				};
 	});
+	
+	$('#rechargeConfirm').click(function(e){
+		var myreg=/^[+]?(([1-9]\d*[.]?)|(0.))(\d{0,2})?$/;
+		var value = $('#txtAccount').val();
+		if(!myreg.test(value))
+		{
+			document.getElementById('msg').innerHTML='金额必须大于0且为整数或小数，小数点后不超过两位';
+			$('#txtAccount').val('');
+			}else{
+				document.getElementById('msg').innerHTML='';
+				window.open("/account/recharge/request?amount="+value); 
+    	  		if(confirm("充值是否成功?")){
+    	  			window.parent.toward("myaccount");
+    	  		}else{
+    	  			window.parent.toward("myaccount");
+    	  		}
+				};
+	})
 })
 </script>
 </body>

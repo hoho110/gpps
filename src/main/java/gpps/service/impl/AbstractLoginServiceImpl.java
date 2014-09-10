@@ -71,7 +71,7 @@ public abstract class AbstractLoginServiceImpl implements ILoginService {
 		graphValidateCode=checkNullAndTrim("graphValidateCode", graphValidateCode);
 		String originalGraphValidateCode=String.valueOf(checkNullObject("originalGraphValidateCode", session.getAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE)));
 		session.removeAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE);//用过一次即删除
-		if(!originalGraphValidateCode.equals(graphValidateCode))
+		if(!originalGraphValidateCode.toLowerCase().equals(graphValidateCode.toLowerCase()))
 			throw new ValidateCodeException("GraphValidateCodes do not match");
 	}
 	protected String getProcessedPassword(String password)

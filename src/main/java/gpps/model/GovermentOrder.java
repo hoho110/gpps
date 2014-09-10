@@ -9,18 +9,18 @@ public class GovermentOrder {
 	private Integer borrowerId;
 	private String material;// 记录相关资料附件的路径
 	/**
-	 * 1：申请融资 ,2：驳回重填, 4：重新申请 ,8：拒绝 ,16：审核通过,32：融资中,64:流标, 128：还款中 ,256：已关闭
+	 * 1：申请融资 ,2：驳回重填, 4：重新申请 ,8：拒绝 ,16：预发布,32：融资中,64:流标, 128：还款中 ,256：已关闭
 	 */
-	public static final int STATE_APPLY=1;
-	public static final int STATE_MODIFY=1<<1;
-	public static final int STATE_REAPPLY=1<<2;
-	public static final int STATE_REFUSE=1<<3;
-	public static final int STATE_PASS=1<<4;
-	public static final int STATE_FINANCING=1<<5;
-	public static final int STATE_QUITFINANCING=1<<6;
-	public static final int STATE_REPAYING=1<<7;
-	public static final int STATE_CLOSE=1<<8;
-	private int state=STATE_APPLY;
+//	public static final int STATE_APPLY=1;
+//	public static final int STATE_MODIFY=1<<1;
+//	public static final int STATE_REAPPLY=1<<2;
+//	public static final int STATE_REFUSE=1<<3;
+	public static final int STATE_PREPUBLISH=1<<1;
+	public static final int STATE_FINANCING=1;
+	public static final int STATE_QUITFINANCING=1<<4;
+	public static final int STATE_REPAYING=1<<2;
+	public static final int STATE_CLOSE=1<<3;
+	private int state=STATE_PREPUBLISH;
 	private long financingStarttime;
 	private long financingEndtime;
 	private long createtime=System.currentTimeMillis();

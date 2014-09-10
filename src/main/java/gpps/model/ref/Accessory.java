@@ -12,7 +12,7 @@ public class Accessory {
 		this.cols = cols;
 	}
 	public class MimeCol{
-		private int category;//类别
+		private int category;//逻辑类别
 		private List<MimeItem> items=new ArrayList<Accessory.MimeItem>();
 		public int getCategory() {
 			return category;

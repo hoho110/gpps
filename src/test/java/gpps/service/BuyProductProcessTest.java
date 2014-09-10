@@ -108,11 +108,11 @@ public class BuyProductProcessTest extends TestSupport{
 		order.setFinancingEndtime(System.currentTimeMillis()+24*3600*1000);
 		order=orderService.create(order);
 		//订单审核通过
-		try {
-			orderService.passApplying(order.getId());
-		} catch (IllegalConvertException e) {
-			Assert.fail(e.getMessage());
-		}
+//		try {
+//			orderService.passApplying(order.getId());
+//		} catch (IllegalConvertException e) {
+//			Assert.fail(e.getMessage());
+//		}
 		//创建产品
 		ProductSeries productSeries=new ProductSeries();
 		productSeries.setTitle("高利息高风险");

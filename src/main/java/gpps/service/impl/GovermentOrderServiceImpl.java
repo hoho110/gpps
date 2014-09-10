@@ -43,11 +43,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	@Autowired
 	ITaskService taskService;
 	static int[] orderStates={
-		GovermentOrder.STATE_APPLY,
-		GovermentOrder.STATE_MODIFY,
-		GovermentOrder.STATE_REAPPLY,
-		GovermentOrder.STATE_REFUSE,
-		GovermentOrder.STATE_PASS,
+		GovermentOrder.STATE_PREPUBLISH,
 		GovermentOrder.STATE_FINANCING,
 		GovermentOrder.STATE_QUITFINANCING,
 		GovermentOrder.STATE_REPAYING,
@@ -116,14 +112,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	}
 
 	static int[][] validConverts={
-		{GovermentOrder.STATE_APPLY,GovermentOrder.STATE_MODIFY},
-		{GovermentOrder.STATE_APPLY,GovermentOrder.STATE_REFUSE},
-		{GovermentOrder.STATE_APPLY,GovermentOrder.STATE_PASS},
-		{GovermentOrder.STATE_MODIFY,GovermentOrder.STATE_REAPPLY},
-		{GovermentOrder.STATE_REAPPLY,GovermentOrder.STATE_MODIFY},
-		{GovermentOrder.STATE_REAPPLY,GovermentOrder.STATE_REFUSE},
-		{GovermentOrder.STATE_REAPPLY,GovermentOrder.STATE_PASS},
-		{GovermentOrder.STATE_PASS,GovermentOrder.STATE_FINANCING},
+		{GovermentOrder.STATE_PREPUBLISH,GovermentOrder.STATE_FINANCING},
 		{GovermentOrder.STATE_FINANCING,GovermentOrder.STATE_QUITFINANCING},
 		{GovermentOrder.STATE_FINANCING,GovermentOrder.STATE_REPAYING},
 		{GovermentOrder.STATE_REPAYING,GovermentOrder.STATE_CLOSE}};
@@ -141,25 +130,25 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		}
 		throw new IllegalConvertException();
 	}
-	@Override
-	public void passApplying(Integer orderId) throws IllegalConvertException {
-		changeState(orderId, GovermentOrder.STATE_PASS);
-	}
+//	@Override
+//	public void passApplying(Integer orderId) throws IllegalConvertException {
+//		changeState(orderId, GovermentOrder.STATE_PREPUBLISH);
+//	}
 
-	@Override
-	public void refuseApplying(Integer orderId) throws IllegalConvertException {
-		changeState(orderId, GovermentOrder.STATE_REFUSE);
-	}
-
-	@Override
-	public void reviseApplying(Integer orderId) throws IllegalConvertException {
-		changeState(orderId, GovermentOrder.STATE_MODIFY);	
-	}
-
-	@Override
-	public void reApply(Integer orderId) throws IllegalConvertException {
-		changeState(orderId, GovermentOrder.STATE_REAPPLY);
-	}
+//	@Override
+//	public void refuseApplying(Integer orderId) throws IllegalConvertException {
+//		changeState(orderId, GovermentOrder.STATE_REFUSE);
+//	}
+//
+//	@Override
+//	public void reviseApplying(Integer orderId) throws IllegalConvertException {
+//		changeState(orderId, GovermentOrder.STATE_MODIFY);	
+//	}
+//
+//	@Override
+//	public void reApply(Integer orderId) throws IllegalConvertException {
+//		changeState(orderId, GovermentOrder.STATE_REAPPLY);
+//	}
 	@Override
 	@Transactional
 	public void startFinancing(Integer orderId) throws IllegalConvertException {
@@ -184,7 +173,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			}
 			changeState(orderId, GovermentOrder.STATE_REPAYING);
 			order=financingOrders.remove(orderId.toString());
-			order.setState(GovermentOrder.STATE_REAPPLY);
+			order.setState(GovermentOrder.STATE_REPAYING);
 		}finally
 		{
 			releaseFinancingOrder(order);
@@ -295,5 +284,17 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 				order.getProducts().add(product);
 			}
 		}
+	}
+	@Override
+	public Map<String, Object> findGovermentOrderByProductSeries(
+			Integer productSeriesId, int offset, int recnum) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Map<String, Object> findByStatesByPage(int states, int offset,
+			int recnum) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -37,6 +37,7 @@ public class AccountServlet {
 	public void completeThirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
 	{
 		//TODO 第三方注册回调
+		
 	}
 	@RequestMapping(value={"/account/recharge/request"})
 	public void recharge(HttpServletRequest req, HttpServletResponse resp)

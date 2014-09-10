@@ -6,6 +6,7 @@ import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IGovermentOrderService {
 	/**
@@ -39,10 +40,10 @@ public interface IGovermentOrderService {
 	
 	public void addAccessory(Integer orderId,String path);
 	
-	public void passApplying(Integer orderId)throws IllegalConvertException;//通过申请
-	public void refuseApplying(Integer orderId)throws IllegalConvertException;//拒绝申请
-	public void reviseApplying(Integer orderId)throws IllegalConvertException;//修订申请
-	public void reApply(Integer orderId)throws IllegalConvertException;//重新申请
+//	public void passApplying(Integer orderId)throws IllegalConvertException;//通过申请
+//	public void refuseApplying(Integer orderId)throws IllegalConvertException;//拒绝申请
+//	public void reviseApplying(Integer orderId)throws IllegalConvertException;//修订申请
+//	public void reApply(Integer orderId)throws IllegalConvertException;//重新申请
 	public void startFinancing(Integer orderId)throws IllegalConvertException;//启动融资
 	/**
 	 * 启动还款
@@ -78,4 +79,15 @@ public interface IGovermentOrderService {
 	 * @return
 	 */
 	public void releaseFinancingOrder(GovermentOrder order);
+	/**
+	 * 
+	 * @param productSeriesId
+	 * @param offset
+	 * @param recnum
+	 * @return total:count (int),result:List<GovermentOrder>
+	 */
+	public Map<String, Object> findGovermentOrderByProductSeries(Integer productSeriesId,int offset,int recnum);
+	
+	public Map<String, Object> findByStatesByPage(int states,int offset,int recnum);
+	
 }

@@ -23,10 +23,7 @@
 <script src="js/cdn/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
-<script type="text/javascript"
-	src="/resources/EasyServiceClientFullZ.js"></script>
-<script type="text/javascript"
-	src="/easyservice/gpps.service.ILenderService?json"></script>
+
 
 <div class="container-fluid">
 <div class="row" style="padding-left:5px; padding-right:5px;">
@@ -65,7 +62,7 @@
 <div class="hidden-xs col-sm-3 col-md-4"></div>
 <div class="hidden-xs col-sm-2 col-md-1">手机</div>
 <div class="col-xs-7 col-sm-3 col-md-2"><input id="phone" type="text" class="form-control" placeholder="请输入您的手机号"></input></div>
-<div class="col-xs-5 col-sm-2 col-md-4"><button id="sendValCode" type="button" class="btn btn-default" style="width:160px;">发送验证码</button></div>
+<div class="col-xs-5 col-sm-2 col-md-2"><button id="sendValCode" type="button" class="btn btn-default" style="width:160px;">发送验证码</button></div>
 <div class="col-xs-12 col-sm-2 col-md-3"><span id="phoneLabel" style="font-size:small"></span></div>
 </div>
 
@@ -91,6 +88,10 @@
 </div>
 </div>
 <script src="js/cookies.js"></script>
+<script type="text/javascript"
+	src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+	src="/easyservice/gpps.service.ILenderService?json"></script>
 <script>
 $(document).ready(function() {
 	window.parent.justify(document.body.scrollHeight);
@@ -147,7 +148,7 @@ $(document).ready(function() {
 
 
 			try{
-				var lender = {"_t_":"gpps.model.Lender", "loginId":username, "password" : password, "tel" : phone, 'email' : 'wangd@calis.edu.cn', 'identityCard': '123123123123', 'name': 'wd'};
+				var lender = {"_t_":"gpps.model.Lender", "loginId":username, "password" : password, "tel" : phone};
 				service.register(lender, validate);
 				window.location.href="register2.html";
 			}catch(e){
@@ -208,15 +209,6 @@ $(document).ready(function() {
 				}
 			else{
 				$('#password_rLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
-				}
-           });
-
-       $('input#validate').blur(function(e){
-    	   var validate = $(this).val();
-    	   if(validate==null||validate==''||validate!='8668'){
-				$('#validateLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*验证码错误');
-			}else{
-				$('#validateLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
 				}
            });
 

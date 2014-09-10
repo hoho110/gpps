@@ -3,15 +3,23 @@
 <script src="js/cdn/jquery.min.js"></script>
 <script src="js/mine.js"></script>
 <script src="js/cookies.js"></script>
+<script type="text/javascript"
+	src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+	src="/easyservice/gpps.service.ILenderService?json"></script>
 <script>
 $(document).ready(function() {
-var username = null;
-var username = getCookie("username");
-if(username==null || username==""){
-	window.parent.towardWithoutRefresh("login");
-}else{
-	window.parent.towardWithoutRefresh("logined");
-}
+	
+	
+	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	var cuser = service.getCurrentUser();
+	
+	
+	if(cuser==null){
+		window.parent.towardWithoutRefresh("login");
+		}else{
+			window.parent.towardWithoutRefresh("logined");
+		}
 });
 </script>
 </body>

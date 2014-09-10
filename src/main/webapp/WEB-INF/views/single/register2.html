@@ -32,49 +32,51 @@
 <div class="panel panel-default" style="padding-bottom:50px;">
 
 <div class="row" style="margin-top:15px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="col-xs-4 col-sm-2 col-md-1"></div>
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="col-xs-4 col-sm-2 col-md-2"></div>
 <div class="col-xs-4 col-sm-2 col-md-3" style="color:#f60;">第二步:填写详细信息</div>
 <div class="col-xs-4 col-sm-2 col-md-1"><a href="#" id="skip">跳过</a></div>
 <div class="hidden-xs col-sm-3 col-md-3"></div>
 </div>
 
 <div class="row" style="margin-top:5px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="hidden-xs col-sm-2 col-md-1">您的姓名*</div>
-<div class="col-xs-12 col-sm-4 col-md-4"><input id="username" type="text" class="form-control" placeholder="请输入您的姓名"></input></div>
-<div class="col-xs-12 col-sm-3 col-md-3"><span id="usernameLabel" style="font-size:small"></span></div>
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="hidden-xs col-sm-2 col-md-2">您的姓名*</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="name" type="text" class="form-control" placeholder="请输入您的姓名"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"><span id="nameLabel" style="font-size:small"></span></div>
 </div>
 
 <div class="row" style="margin-top:5px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="hidden-xs col-sm-2 col-md-1">身份证号*</div>
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="hidden-xs col-sm-2 col-md-2">身份证号*</div>
 <div class="col-xs-12 col-sm-4 col-md-4"><input id="identity" type="text" class="form-control" placeholder="请输入您的身份证号"></input></div>
 <div class="col-xs-12 col-sm-3 col-md-3"><span id="identityLabel" style="font-size:small"></span></div>
 </div>
 
 <div class="row" style="margin-top:5px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="hidden-xs col-sm-2 col-md-1">性别</div>
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="hidden-xs col-sm-2 col-md-2">性别</div>
 <div class="col-xs-12 col-sm-4 col-md-4">
-<input type="radio" name="sex" id="1" value="1" checked="checked"/>男
-<input type="radio" name="sex" id="0" value="0" style="margin-left:20px;"/>女
+<input type="radio" name="sex" id="1" value=1 checked="checked"/>男
+<input type="radio" name="sex" id="0" value=0 style="margin-left:20px;"/>女
 </div>
 <div class="col-xs-12 col-sm-3 col-md-3"></div>
 </div>
 
 <div class="row" style="margin-top:5px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="hidden-xs col-sm-2 col-md-1">通信地址</div>
-<div class="col-xs-12 col-sm-4 col-md-4"><input id="validate" type="text" class="form-control" placeholder="请输入您的身份证号"></input></div>
-<div class="col-xs-12 col-sm-3 col-md-3"><span id="validateLabel" style="font-size:small"></span></div>
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="hidden-xs col-sm-2 col-md-2">通信地址</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="addr" type="text" class="form-control" placeholder="请输入您的通信地址"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"></div>
 </div>
 
 <div class="row" style="margin-top:5px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="hidden-xs col-sm-2 col-md-1">年收入</div>
-<div class="col-xs-12 col-sm-4 col-md-4"><input id="validate" type="text" class="form-control" placeholder="请输入您的身份证号"></input></div>
-<div class="col-xs-12 col-sm-3 col-md-3"><span id="validateLabel" style="font-size:small"></span></div>
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="hidden-xs col-sm-2 col-md-2">年收入</div>
+<input type="radio" name="salary" id="1" value="-50000" checked="checked"/>5万以内
+<input type="radio" name="salary" id="2" value="50000-100000" style="margin-left:10px;"/>5万-10万
+<input type="radio" name="salary" id="3" value="100000-300000" style="margin-left:10px;"/>10万-30万
+<input type="radio" name="salary" id="4" value="300000-" style="margin-left:10px;"/>30万以上
 </div>
 
 
@@ -93,23 +95,40 @@
 </div>
 </div>
 <script src="js/cookies.js"></script>
+<script type="text/javascript"
+	src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+	src="/easyservice/gpps.service.ILenderService?json"></script>
 <script>
 $(document).ready(function() {
+	
+	
+	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	var cuser = service.getCurrentUser();
+	if(cuser==null){
+		window.location.href="login.html"; 
+		return;
+	}
+	
+	var thirdPartyAccount = cuser.thirdPartyAccount;
+	
 	window.parent.justify(document.body.scrollHeight);
 	
-	$('#username').focus();
+	$('#name').focus();
 		$('#skip').click(function(e){
 			window.location.href="register3.html";
 		});
        $('#confirm').click(function(e){
-    	   var username = $('input#username').val();
+    	   var name = $('input#name').val();
     	   var identity = $('input#identity').val();
+    	   var addr = $('input#addr').val();
+    	   var sex = $("input[name='sex']:checked").val();
     	   
-    	   if(username==null||username==''){
-				$('#usernameLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入姓名');
+    	   if(name==null||name==''){
+				$('#nameLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入姓名');
 				return;
 				}else{
-				$('#usernameLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+				$('#nameLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
 				}
     	   if(identity==null||identity==''){
 				$('#identityLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入身份证号');
@@ -118,14 +137,24 @@ $(document).ready(function() {
 				$('#identityLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
 				}
     	   
+    	   if(addr==null){
+    		   addr = "";
+    	   }
     	   
-    	   addCookie("identity","130435********005X",1);
+    	   alert(sex);
+    	   alert(sex==1);
     	   
-    	   var spsw = getCookie('spsw');
-    	   if(spsw==null || spsw=="")
+    	   try{
+    	   service.registerSecondStep(name, identity, sex, addr);
+    	   }catch(e){
+    		   alert(e.message);
+    		   return;
+    	   }
+    	   
+    	   if(thirdPartyAccount==null || thirdPartyAccount=="")
     	   window.location.href="register3.html"; 
     	   else
-    		   window.parent.toward("myaccount");
+    		   window.parent.toward("myaccount2");
        });
 
 })

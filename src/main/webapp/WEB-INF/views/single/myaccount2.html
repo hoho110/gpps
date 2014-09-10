@@ -49,11 +49,6 @@ a.accordion-toggle{
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
 
-<script type="text/javascript"
-	src="/resources/EasyServiceClientFullZ.js"></script>
-<script type="text/javascript"
-	src="/easyservice/gpps.service.ILenderService?json"></script>
-
 <div class="container-fluid">
 <div class="row">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -225,6 +220,10 @@ a.accordion-toggle{
     <script src="js/cookies.js"></script>
     <script src="js/gpps/data.js"></script>
     <script src="js/gpps/myaccount.js"></script>
+    <script type="text/javascript"
+	src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+	src="/easyservice/gpps.service.ILenderService?json"></script>
 <script>
 $(document).ready(function() {
 
@@ -233,13 +232,14 @@ $(document).ready(function() {
 	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 	var cuser = service.getCurrentUser();
 	
-	window.parent.justify(document.body.scrollHeight);
-	
 	
 	if(cuser==null){
 		window.location.href="login.html"; 
 		return;
 		}
+	
+	
+	window.parent.justify(document.body.scrollHeight);
 	
 	var identity = cuser.identityCard;
 	if(identity!=null && identity!=""){

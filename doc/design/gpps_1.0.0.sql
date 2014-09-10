@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2014/9/10 10:04:54                           */
+/* Created on:     2014/9/10 22:32:58                           */
 /*==============================================================*/
 
 
@@ -11,6 +11,8 @@ drop table if exists BorrowerAccount;
 drop table if exists Govermentorder;
 
 drop table if exists Lender;
+
+drop table if exists Lender2;
 
 drop table if exists LenderAccount;
 
@@ -102,6 +104,30 @@ create table Govermentorder
 /* Table: Lender                                                */
 /*==============================================================*/
 create table Lender
+(
+   id                   integer not null auto_increment,
+   name                 varchar(50),
+   tel                  varchar(50),
+   email                varchar(50),
+   loginId              varchar(255),
+   password             varchar(255) not null,
+   identitycard         varchar(50),
+   accountid            integer not null,
+   createtime           BIGINT not null,
+   privilege            int not null comment '00：普通用户
+            01：vip1',
+   grade                int not null default 0,
+   level                int not null default 0,
+   sex                  int not null default 0,
+   address              varchar(255),
+   thirdPartyAccount    varchar(255),
+   primary key (id)
+);
+
+/*==============================================================*/
+/* Table: Lender2                                               */
+/*==============================================================*/
+create table Lender2
 (
    id                   integer not null auto_increment,
    name                 varchar(50),
@@ -235,9 +261,9 @@ create table Submit
    Id                   integer not null auto_increment,
    state                int not null default 0 comment '0:申请竞标->
             1:待支付
-                （支付）
+            	（支付）
             2:竞标中
-                (融资审核成功)
+            	(融资审核成功)
             3:还款中
             4：还款完毕
             
@@ -412,3 +438,4 @@ alter table payback add constraint FK_Ref_payback_borroweraccount foreign key (b
 
 alter table payback add constraint FK_Ref_payback_product foreign key (productId)
       references Product (ID) on delete restrict on update restrict;
+

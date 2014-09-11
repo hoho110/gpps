@@ -245,9 +245,9 @@ public class AccountServiceImpl implements IAccountService {
 					break;
 				case CashStream.ACTION_CASH:
 					if(cashStream.getLenderAccountId()!=null&&cashStream.getBorrowerAccountId()==null)
-						lenderAccountDao.cash(cashStream.getId(), cashStream.getChiefamount().negate());
+						lenderAccountDao.cash(cashStream.getLenderAccountId(), cashStream.getChiefamount().negate());
 					else if(cashStream.getBorrowerAccountId()!=null&&cashStream.getLenderAccountId()==null)
-						borrowerAccountDao.cash(cashStream.getId(), cashStream.getChiefamount().negate());
+						borrowerAccountDao.cash(cashStream.getBorrowerAccountId(), cashStream.getChiefamount().negate());
 					else
 						throw new RuntimeException();
 					break;

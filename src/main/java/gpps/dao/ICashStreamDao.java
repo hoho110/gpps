@@ -15,4 +15,12 @@ public interface ICashStreamDao {
 	public List<CashStream> findByState(int state);
 	public void deleteByLenderAccountId(Integer accountId);//测试使用
 	public void deleteByBorrowerAccountId(Integer accountId);//测试使用
+	/**
+	 * 
+	 * @param action -1为不限
+	 * @param state  -1为不限
+	 * @return
+	 */
+	public List<CashStream> findByActionAndState(@Param("lenderAccountId")Integer lenderAccountId,@Param("borrowerAccountId")Integer borrowerAccountId,@Param("action")int action,@Param("state")int state,@Param("offset")int offset,@Param("recnum")int recnum);
+	public int countByActionAndState(@Param("lenderAccountId")Integer lenderAccountId,@Param("borrowerAccountId")Integer borrowerAccountId,@Param("action")int action,@Param("state")int state);
 }

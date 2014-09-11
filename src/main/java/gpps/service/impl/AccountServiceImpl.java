@@ -5,24 +5,30 @@ package gpps.service.impl;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import gpps.constant.Pagination;
 import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.ICashStreamDao;
 import gpps.dao.ILenderAccountDao;
 import gpps.dao.IPayBackDao;
 import gpps.dao.IProductDao;
 import gpps.dao.ISubmitDao;
+import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
 import gpps.model.CashStream;
+import gpps.model.Lender;
 import gpps.model.LenderAccount;
 import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.Submit;
 import gpps.service.IAccountService;
+import gpps.service.IBorrowerService;
+import gpps.service.ILenderService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
 import static gpps.tools.StringUtil.*;
@@ -46,6 +52,11 @@ public class AccountServiceImpl implements IAccountService {
 	IPayBackDao payBackDao;
 	@Autowired
 	IProductDao productDao;
+	@Autowired
+	ILenderService lenderService;
+	@Autowired
+	IBorrowerService borrowerService;
+	
 	@Override
 	public Integer rechargeLenderAccount(Integer lenderAccountId, BigDecimal amount, String description) {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
@@ -258,6 +269,22 @@ public class AccountServiceImpl implements IAccountService {
 	@Override
 	public List<CashStream> findAllDirtyCashStream() {
 		return cashStreamDao.findByState(CashStream.STATE_INIT);
+	}
+
+	@Override
+	public Map<String, Object> findLenderCashStreamByActionAndState(int action,
+			int state, int offset, int recnum) {
+		Lender lender=lenderService.getCurrentUser();
+		int count=cashStreamDao.countByActionAndState(lender.getAccountId(), null, action, state);
+		return Pagination.buildResult(cashStreamDao.findByActionAndState(lender.getAccountId(), null, action, state, offset, recnum), count, offset, recnum);
+	}
+
+	@Override
+	public Map<String, Object> findBorrowerCashStreamByActionAndState(
+			int action, int state, int offset, int recnum) {
+		Borrower borrower =borrowerService.getCurrentUser();
+		int count=cashStreamDao.countByActionAndState(null, borrower.getAccountId(), action, state);
+		return Pagination.buildResult(cashStreamDao.findByActionAndState(null, borrower.getAccountId(), action, state, offset, recnum), count, offset, recnum);
 	}
 
 }

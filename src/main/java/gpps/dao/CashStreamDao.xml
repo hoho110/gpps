@@ -13,6 +13,40 @@
 		select *
 		from CashStream where state=#{state}
 	</select>
+	<select id="findByActionAndState" resultType="gpps.model.CashStream">
+        select *
+        from CashStream where 1=1
+        <if test="lenderAccountId != null">
+           and lenderAccountId=#{lenderAccountId}
+        </if>
+        <if test="borrowerAccountId != null">
+           and borrowerAccountId=#{borrowerAccountId}
+        </if>
+        <if test="action != -1">
+           and action=#{action}
+        </if>
+        <if test="state != -1">
+           and state=#{state}
+        </if> 
+        order by createtime desc 
+        LIMIT #{offset}, #{recnum}
+    </select>
+    <select id="countByActionAndState" resultType="int">
+        select count(*)
+        from CashStream where 1=1
+        <if test="lenderAccountId != null">
+           and lenderAccountId=#{lenderAccountId}
+        </if>
+        <if test="borrowerAccountId != null">
+           and borrowerAccountId=#{borrowerAccountId}
+        </if>
+        <if test="action != -1">
+           and action=#{action}
+        </if>
+        <if test="state != -1">
+           and state=#{state}
+        </if> 
+    </select>
 	<insert id="create" parameterType="gpps.model.CashStream"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into

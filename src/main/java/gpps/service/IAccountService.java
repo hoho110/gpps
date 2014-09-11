@@ -1,12 +1,13 @@
 package gpps.service;
 
+import gpps.constant.Pagination;
 import gpps.model.CashStream;
-import gpps.model.LenderAccount;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 /**
  * 账户服务
  * 该服务对外不可见，前端不可直接调用
@@ -92,4 +93,14 @@ public interface IAccountService {
 	 * @return
 	 */
 	public List<CashStream> findAllDirtyCashStream();
+	/**
+	 * 获取当前贷款人资金流
+	 * @param action 资金流行为{@link CashStream.cation},-1为不限
+	 * @param state 资金流状态,-1为不限
+	 * @param offset 翻页偏移量，从0开始
+	 * @param recnum 返回结果数
+	 * @return 分页结果，详细Key查看{@link Pagination}
+	 */
+	public Map<String, Object> findLenderCashStreamByActionAndState(int action,int state,int offset,int recnum);
+	public Map<String, Object> findBorrowerCashStreamByActionAndState(int action,int state,int offset,int recnum);
 }

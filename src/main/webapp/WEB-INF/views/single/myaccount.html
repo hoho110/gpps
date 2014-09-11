@@ -215,6 +215,7 @@ a.accordion-toggle{
 
 <script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
     <script src="js/plugins/morris/morris.js"></script>
+    <script src="js/jquery.dataTables.js"></script>
     <script src="js/mine.js"></script>
     <script src="js/cookies.js"></script>
     <script src="js/gpps/data.js"></script>
@@ -225,6 +226,8 @@ a.accordion-toggle{
 	src="/easyservice/gpps.service.ILenderService?json"></script>
 	<script type="text/javascript"
 	src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
+	<script type="text/javascript"
+	src="/easyservice/gpps.service.IAccountService?json"></script>
 <script>
 $(document).ready(function() {
 
@@ -243,6 +246,7 @@ $(document).ready(function() {
 			$('#welcome').html('晚上好：'+name);
 			
 		}
+	
 	
 	var account = accountDao.find(cuser.accountId);
 	var total = account.total;

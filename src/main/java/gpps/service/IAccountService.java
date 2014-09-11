@@ -55,7 +55,7 @@ public interface IAccountService {
 	 * @param amount
 	 * @throws IllegalConvertException 
 	 */
-	public Integer pay(Integer lenderAccountId,Integer borrowerAccountId, BigDecimal chiefamount, BigDecimal interest,Integer submitid,String description) throws IllegalConvertException;
+	public Integer pay(Integer lenderAccountId,Integer borrowerAccountId, BigDecimal chiefamount,Integer submitid,String description) throws IllegalConvertException;
 	/**
 	 * 还款
 	 * @param amount

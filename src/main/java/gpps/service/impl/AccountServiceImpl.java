@@ -90,7 +90,7 @@ public class AccountServiceImpl implements IAccountService {
 			throw new InsufficientBalanceException();
 		CashStream cashStream=new CashStream();
 		cashStream.setLenderAccountId(lenderAccountId);
-		cashStream.setChiefamount(amount);
+		cashStream.setChiefamount(amount.negate());
 		cashStream.setSubmitId(submitId);
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_FREEZE);
@@ -107,7 +107,7 @@ public class AccountServiceImpl implements IAccountService {
 			throw new InsufficientBalanceException();
 		CashStream cashStream=new CashStream();
 		cashStream.setBorrowerAccountId(borrowerAccountId);
-		cashStream.setChiefamount(amount);
+		cashStream.setChiefamount(amount.negate());
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_FREEZE);
 		cashStreamDao.create(cashStream);
@@ -130,15 +130,14 @@ public class AccountServiceImpl implements IAccountService {
 		return cashStream.getId();
 	}
 	@Override
-	public Integer pay(Integer lenderAccountId, Integer borrowerAccountId, BigDecimal chiefamount, BigDecimal interest, Integer submitId, String description) throws IllegalConvertException {
+	public Integer pay(Integer lenderAccountId, Integer borrowerAccountId, BigDecimal chiefamount, Integer submitId, String description) throws IllegalConvertException {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
 		checkNullObject(BorrowerAccount.class, borrowerAccountDao.find(borrowerAccountId));
 		checkNullObject(Submit.class, submitDao.find(submitId));
 		CashStream cashStream=new CashStream();
 		cashStream.setLenderAccountId(lenderAccountId);
 		cashStream.setBorrowerAccountId(borrowerAccountId);
-		cashStream.setChiefamount(chiefamount);
-		cashStream.setInterest(interest);
+		cashStream.setChiefamount(chiefamount.negate());
 		cashStream.setSubmitId(submitId);
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_PAY);
@@ -176,7 +175,7 @@ public class AccountServiceImpl implements IAccountService {
 			throw new InsufficientBalanceException();
 		CashStream cashStream=new CashStream();
 		cashStream.setLenderAccountId(lenderAccountId);
-		cashStream.setChiefamount(amount);
+		cashStream.setChiefamount(amount.negate());
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_CASH);
 		cashStreamDao.create(cashStream);
@@ -190,7 +189,7 @@ public class AccountServiceImpl implements IAccountService {
 			throw new InsufficientBalanceException();
 		CashStream cashStream=new CashStream();
 		cashStream.setBorrowerAccountId(borrowerAccountId);
-		cashStream.setChiefamount(amount);
+		cashStream.setChiefamount(amount.negate());
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_CASH);
 		cashStreamDao.create(cashStream);
@@ -223,9 +222,9 @@ public class AccountServiceImpl implements IAccountService {
 					break;
 				case CashStream.ACTION_FREEZE:
 					if(cashStream.getLenderAccountId()!=null&&cashStream.getBorrowerAccountId()==null)
-						lenderAccountDao.freeze(cashStream.getLenderAccountId(), cashStream.getChiefamount());
+						lenderAccountDao.freeze(cashStream.getLenderAccountId(), cashStream.getChiefamount().negate());
 					else if(cashStream.getBorrowerAccountId()!=null&&cashStream.getLenderAccountId()==null)
-						borrowerAccountDao.freeze(cashStream.getBorrowerAccountId(), cashStream.getChiefamount());
+						borrowerAccountDao.freeze(cashStream.getBorrowerAccountId(), cashStream.getChiefamount().negate());
 					else
 						throw new RuntimeException();
 					break;
@@ -236,19 +235,19 @@ public class AccountServiceImpl implements IAccountService {
 						throw new RuntimeException();
 					break;
 				case CashStream.ACTION_PAY:
-					lenderAccountDao.pay(cashStream.getLenderAccountId(), cashStream.getChiefamount(), cashStream.getInterest());//该利息为期望利息
-					borrowerAccountDao.pay(cashStream.getBorrowerAccountId(), cashStream.getChiefamount());
+					lenderAccountDao.pay(cashStream.getLenderAccountId(), cashStream.getChiefamount().negate());//该利息为期望利息
+					borrowerAccountDao.pay(cashStream.getBorrowerAccountId(), cashStream.getChiefamount().negate());
 					break;
 				case CashStream.ACTION_REPAY:
 					//TODO 待确认期待的利益是否一定与实际利息一致
-					lenderAccountDao.repay(cashStream.getLenderAccountId(), cashStream.getChiefamount(), cashStream.getInterest(), cashStream.getInterest());
+					lenderAccountDao.repay(cashStream.getLenderAccountId(), cashStream.getChiefamount(), cashStream.getInterest());
 					borrowerAccountDao.repay(cashStream.getBorrowerAccountId(), cashStream.getChiefamount().add(cashStream.getInterest()));
 					break;
 				case CashStream.ACTION_CASH:
 					if(cashStream.getLenderAccountId()!=null&&cashStream.getBorrowerAccountId()==null)
-						lenderAccountDao.cash(cashStream.getId(), cashStream.getChiefamount());
+						lenderAccountDao.cash(cashStream.getId(), cashStream.getChiefamount().negate());
 					else if(cashStream.getBorrowerAccountId()!=null&&cashStream.getLenderAccountId()==null)
-						borrowerAccountDao.cash(cashStream.getId(), cashStream.getChiefamount());
+						borrowerAccountDao.cash(cashStream.getId(), cashStream.getChiefamount().negate());
 					else
 						throw new RuntimeException();
 					break;

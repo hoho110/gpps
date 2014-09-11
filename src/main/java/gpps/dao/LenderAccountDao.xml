@@ -4,8 +4,8 @@
 	<insert id="create" parameterType="gpps.model.LenderAccount"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
-		LenderAccount(total,freeze,usable,used,totalincome,expectedincome)
-		values(#{total},#{freeze},#{usable},#{used},#{totalincome},#{expectedincome})
+		LenderAccount(total,freeze,usable,used,totalincome)
+		values(#{total},#{freeze},#{usable},#{used},#{totalincome})
 	</insert>
 	<select id="find" parameterType="Integer" resultType="gpps.model.LenderAccount">
 		select *
@@ -28,12 +28,12 @@
 	</update>
 	<update id="pay">
 		update LenderAccount set
-		freeze=freeze-#{principalAmount},used=used+#{principalAmount},expectedincome=expectedincome+#{expectedIncomeAmount}
+		freeze=freeze-#{principalAmount},used=used+#{principalAmount}
 		where id=#{accountId}
 	</update>
 	<update id="repay">
 		update LenderAccount set
-		total=total+#{incomeAmount},totalincome=totalincome+#{incomeAmount},expectedincome=expectedincome-#{expectedIncomeAmount},used=used-#{principalAmount},usable=usable+#{principalAmount}+#{incomeAmount}
+		total=total+#{incomeAmount},totalincome=totalincome+#{incomeAmount},used=used-#{principalAmount},usable=usable+#{principalAmount}+#{incomeAmount}
 		where id=#{accountId}
 	</update>
 	<update id="cash">

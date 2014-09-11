@@ -40,9 +40,9 @@ public interface ILenderAccountDao {
 	 * expectedincome=expectedincome+expectedIncomeAmount
 	 * @param accountId 账户ID
 	 * @param principalAmount 扣除本金金额
-	 * @param expectedIncomeAmount 预期收益金额
+//	 * @param expectedIncomeAmount 预期收益金额
 	 */
-	public void pay(@Param("accountId") Integer accountId,@Param("principalAmount") BigDecimal principalAmount,@Param("expectedIncomeAmount") BigDecimal expectedIncomeAmount);
+	public void pay(@Param("accountId") Integer accountId,@Param("principalAmount") BigDecimal principalAmount);
 	/**
 	 * 借款人还款
 	 * total=total+incomeAmount
@@ -54,7 +54,7 @@ public interface ILenderAccountDao {
 	 * @param principalAmount 还款本金金额
 	 * @param incomeAmount 还款收益金额
 	 */
-	public void repay(@Param("accountId") Integer accountId,@Param("principalAmount") BigDecimal principalAmount,@Param("expectedIncomeAmount") BigDecimal expectedIncomeAmount,@Param("incomeAmount") BigDecimal incomeAmount);
+	public void repay(@Param("accountId") Integer accountId,@Param("principalAmount") BigDecimal principalAmount,@Param("incomeAmount") BigDecimal incomeAmount);
 	/**
 	 * 取现
 	 * total=total-amount

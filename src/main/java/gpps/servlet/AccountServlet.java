@@ -117,12 +117,12 @@ public class AccountServlet {
 			if(user instanceof Lender)
 			{
 				Lender lender=(Lender)user;
-					cashStreamId=accountService.cashLenderAccount(lender.getAccountId(),BigDecimal.valueOf(Double.valueOf(amount)), "充值");
+					cashStreamId=accountService.cashLenderAccount(lender.getAccountId(),BigDecimal.valueOf(Double.valueOf(amount)), "提现");
 			}
 			else if(user instanceof Borrower)
 			{
 				Borrower borrower=(Borrower)user;
-				cashStreamId=accountService.cashBorrowerAccount(borrower.getAccountId(),BigDecimal.valueOf(Double.valueOf(amount)), "充值");
+				cashStreamId=accountService.cashBorrowerAccount(borrower.getAccountId(),BigDecimal.valueOf(Double.valueOf(amount)), "提现");
 			}
 		} catch (NumberFormatException e) {
 			e.printStackTrace();

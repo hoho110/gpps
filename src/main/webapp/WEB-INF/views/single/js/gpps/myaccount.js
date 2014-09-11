@@ -1,3 +1,92 @@
+
+_defaultDataTableOLanguage = {
+		"sProcessing" : "<img src ='images/waiting.gif' height = 18/>正在查询中，请稍后......",
+		"sLengthMenu" : "每页 _MENU_ 条记录",
+		"sZeroRecords" : "无数据",
+		"sInfo" : "当前第 _START_ 到  _END_ 条记录 共_TOTAL_条记录",
+		"sInfoEmpty" : " ",
+		"sSearch" : "查找： ",
+		"oPaginate" : {
+			"sFirst" : "首页",
+			"sLast" : "末页",
+			"sNext" : "下一页",
+			"sPrevious" : "上一页"
+		},
+		"sInfoFiltered" : "(在 _MAX_ 条记录中查找)"
+	};
+
+var defaultSettings = {
+				"bServerSide" : true,
+				"bAutoWidth" : true,
+				"bStateSave" : false, //保存状态到cookie ******很重要 ， 当搜索的时候页面一刷新会导致搜索的消失。使用这个属性设置为true就可避免了 
+				"bPaginate" : true, // 是否使用分页
+				"bProcessing" : false, //是否显示正在处理的提示 
+				"bLengthChange" : true, //是否启用设置每页显示记录数 
+				"iDisplayLength" : 10, //默认每页显示的记录数
+				"aLengthMenu" : [ 10, 15, 25, 50 ],
+				"bFilter" : false, //是否使用搜索 
+				"bJQueryUI" : false, //页面风格使用jQuery.
+				// "sScrollY": 200,//竖向滚动条 tbody区域的高度
+				"sScrollX" : "100%", //横向滚动条 
+				"sScrollXInner" : "100%",
+				"bScrollCollapse" : true,
+				"aoColumns" : [],
+				"aaData" : [],
+				//"sPaginationType": "full_numbers", //分页样式
+				"bAutoWidth" : true, //列的宽度会根据table的宽度自适应 
+				"bSort" : false, //是否使用排序 
+				"aoColumnDefs" : [ {
+					"bSortable" : false,
+					"aTargets" : [ 6 ]
+				} ],
+				"aaSorting" : [ [ 4, "desc" ] ],
+				"oLanguage" : _defaultDataTableOLanguage
+			};
+
+
+
+_$fd = function(longt) {
+		var date = null;
+		if (typeof longt == 'number') {
+			date = new Date(longt);
+		} else if (longt instanceof Date) {
+			date = longt;
+		} else {
+			return null;
+		}
+		var yyyy = date.getFullYear();
+		var MM = date.getMonth() + 1 >= 10 ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
+		var dd = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate();
+		var HH = date.getHours() >= 10 ? date.getHours() : '0' + date.getHours();
+		var mm = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes();
+		var ss = date.getSeconds() >= 10 ? date.getSeconds() : '0' + date.getSeconds();
+		return {
+			'yyyy' : yyyy,
+			'MM' : MM,
+			'dd' : dd,
+			'HH' : HH,
+			'mm' : mm,
+			'ss' : ss
+		}
+	};
+
+	formatDate = function(longt) {
+		//yyyy-MM-dd T HH:mm:ss
+		var r = _$fd(longt);
+		var ldStr = r.yyyy + '-' + r.MM + '-' + r.dd + ' T ' + r.HH + ':' + r.mm + ':' + r.ss;
+		return ldStr;
+	};
+	
+	var cashstate = {
+			0 : '充值',
+			1 : '冻结',
+			2 : '解冻',
+			3 : '投标',
+			4 : '还款',
+			5 : '提现'
+	}
+
+
 var myscore = function(){
 	var content = $('<div></div>');
 	content.append('<p>您好王冬，您的积分是<span class="orange">1000000</span>分，等级为<span class="orange">钻石会员</span></p>');
@@ -244,25 +333,74 @@ var paybackto = function(){
 }
 
 var cashall = function(){
+	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
+
+	
+	
+	var columns = [ {
+		"sTitle" : "时间",
+			"code" : "time"
+	}, {
+		"sTitle" : "总金额",
+		"code" : "total"
+	}, {
+		"sTitle" : "本金",
+		"code" : "bj"
+	}, {
+		"sTitle" : "利息",
+		"code" : "lx"
+	}, {
+		"sTitle" : "手续费",
+		"code" : "fee"
+	}, {
+		"sTitle" : "动作",
+		"code" : "action"
+	}, {
+		"sTitle" : "备注",
+		"code" : "description"
+	}];
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = account.findLenderCashStreamByActionAndState(-1, -1, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var cashs = res.get('result');
+		for(var i=0; i<cashs.size(); i++){
+			result.aaData.push([formatDate(cashs.get(i).createtime), cashs.get(i).chiefamount.value, cashs.get(i).chiefamount.value, cashs.get(i).interest.value, 0, cashstate[cashs.get(i).action], cashs.get(i).description]);
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+
+		return res;
+	}
+
+
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+
+	
+	
 	var content = $('<div></div>');
-	var str = "";
-	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-	str += '<thead>';	
-	str += '<tr><td style="min-width:100px;">时间</td><td style="min-width:50px;">金额</td><td>本金</td><td>利息</td><td>手续费</td><td>操作</td><td>备注</td></tr>';
-	str += '</thead>';
-	str += '<tbody>';
-	str += '<tr><td>2014-8-5</td><td>300</td><td>250</td><td>50</td><td>0</td><td>还款</td><td>项目名称1</td></tr>';
-	str += '<tr><td>2014-7-31</td><td>500</td><td>400</td><td>100</td><td>0</td><td>还款</td><td>项目名称2</td></tr>';
-	str += '<tr><td>2014-7-16</td><td>2000</td><td>2000</td><td>0</td><td>0</td><td>还款</td><td>项目名称3</td></tr>';
-	str += '<tr><td>2014-7-3</td><td>12000</td><td>12000</td><td>0</td><td>0</td><td>充值</td><td></td></tr>';
-	str += '<tr><td>2014-6-18</td><td>6000</td><td>6000</td><td>0</td><td>0</td><td>提现</td><td></td></tr>';
-	str += '<tr><td>2014-7-31</td><td>2000</td><td>2000</td><td>0</td><td>0</td><td>投标</td><td>项目名称3</td></tr>';
-	str += '<tr><td>2014-7-16</td><td>3000</td><td>3000</td><td>0</td><td>0</td><td>投标</td><td>项目名称1</td></tr>';
-	str += '<tr><td>2014-7-3</td><td>1000</td><td>1000</td><td>0</td><td>0</td><td>提现</td><td></td></tr>';
-	str += '<tr><td>2014-6-18</td><td>13000</td><td>13000</td><td>0</td><td>0</td><td>充值</td><td></td></tr>';
-	str += '</tbody>';
-	str += '</table>';
-	content.append(str);
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	table.dataTable(mySettings);
+	
 	return content;
 }
 
@@ -270,9 +408,7 @@ var cashrecharge = function(){
 	var content = $('<div></div>');
 	var str = "";
 	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-	str += '<thead>';	
 	str += '<tr><td style="min-width:100px;">时间</td><td style="min-width:50px;">金额</td><td>本金</td><td>利息</td><td>手续费</td><td>操作</td><td>备注</td></tr>';
-	str += '</thead>';
 	str += '<tbody>';
 	str += '<tr><td>2014-7-3</td><td>12000</td><td>12000</td><td>0</td><td>0</td><td>充值</td><td></td></tr>';
 	str += '<tr><td>2014-6-18</td><td>13000</td><td>13000</td><td>0</td><td>0</td><td>充值</td><td></td></tr>';

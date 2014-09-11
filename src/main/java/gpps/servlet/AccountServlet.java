@@ -1,11 +1,14 @@
 package gpps.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.math.BigDecimal;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.xml.ws.Response;
 
 import gpps.model.Borrower;
 import gpps.model.CashStream;
@@ -49,6 +52,7 @@ public class AccountServlet {
 		String thirdPartyAccount="thirdPartyAccount";
 		lenderService.registerThirdPartyAccount(thirdPartyAccount);
 		//TODO 重定向到指定页面
+		write(resp, "第三方注册成功，转向我的账户页面");
 	}
 	@RequestMapping(value={"/account/recharge/request"})
 	public void recharge(HttpServletRequest req, HttpServletResponse resp)
@@ -96,6 +100,7 @@ public class AccountServlet {
 			log.error(e.getMessage(),e);
 		}
 		//TODO 重定向到指定页面
+		write(resp, "充值成功，转向我的账户页面");
 	}
 	@RequestMapping(value={"/account/cash/request"})
 	public void cash(HttpServletRequest req, HttpServletResponse resp)
@@ -155,5 +160,26 @@ public class AccountServlet {
 			log.error(e.getMessage(),e);
 		}
 		//TODO 重定向到指定页面
+		write(resp, "取现成功，转向我的账户页面");
+	}
+	private void write(HttpServletResponse resp,String message)
+	{
+		resp.setContentType("text/plain");
+		resp.setCharacterEncoding("utf-8");
+		PrintWriter writer=null;
+		try {
+			writer=resp.getWriter();
+			writer.write(message);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally
+		{
+			if(writer!=null)
+			{
+				writer.flush();
+				writer.close();
+			}
+		}
+		
 	}
 }

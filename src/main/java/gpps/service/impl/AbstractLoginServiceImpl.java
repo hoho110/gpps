@@ -59,7 +59,7 @@ public abstract class AbstractLoginServiceImpl implements ILoginService {
 		String originalMessageValidateCode=String.valueOf(checkNullObject("originalMessageValidateCode", session.getAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODE)));
 		session.removeAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODE);
 		long messageValidateCodeSendTime=(Long)session.getAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODESENDTIME);
-//		session.removeAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODESENDTIME);
+		session.removeAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODESENDTIME);
 		if(!originalMessageValidateCode.equals(messageValidateCode))
 			throw new ValidateCodeException("GraphValidateCodes do not match");
 		if(messageValidateCodeSendTime+MESSAGEVALIDATECODEEXPIRETIME<System.currentTimeMillis())

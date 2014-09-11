@@ -44,7 +44,7 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		Lender lender=lenderDao.findByLoginId(loginId);
 		if(lender==null)
 			throw new LoginException("LoginId is not existed");
-		lenderDao.changePassword(lender.getId(), password);
+		lenderDao.changePassword(lender.getId(), getProcessedPassword(checkNullAndTrim("password", password)+PASSWORDSEED));
 	}
 
 	@Override

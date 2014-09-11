@@ -82,11 +82,12 @@ public interface IGovermentOrderService {
 	/**
 	 * 
 	 * @param productSeriesId
+	 * @param states
 	 * @param offset
 	 * @param recnum
 	 * @return total:count (int),result:List<GovermentOrder>
 	 */
-	public Map<String, Object> findGovermentOrderByProductSeries(Integer productSeriesId,int offset,int recnum);
+	public Map<String, Object> findGovermentOrderByProductSeries(Integer productSeriesId,int states,int offset,int recnum);
 	
 	public Map<String, Object> findByStatesByPage(int states,int offset,int recnum);
 	

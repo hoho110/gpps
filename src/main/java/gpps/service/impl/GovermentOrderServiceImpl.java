@@ -288,9 +288,31 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	}
 	@Override
 	public Map<String, Object> findGovermentOrderByProductSeries(
-			Integer productSeriesId, int offset, int recnum) {
-		
-		return null;
+			Integer productSeriesId,int states, int offset, int recnum) {
+		List<Integer> list=null;
+		if(states!=-1)
+		{
+			list=new ArrayList<Integer>();
+			for(int orderState:orderStates)
+			{
+				if((orderState&states)>0)
+					list.add(orderState);
+			}
+			if(list.isEmpty())
+				return Pagination.buildResult(null, 0, offset, recnum);
+		}
+		int count=productDao.countByProductSeriesAndState(productSeriesId, null);
+		if(count==0)
+			return Pagination.buildResult(null, 0, offset, recnum);
+		List<Product> products=productDao.findByProductSeriesAndState(productSeriesId, list, offset, recnum);
+		List<GovermentOrder> orders=new ArrayList<GovermentOrder>();
+		for(Product product:products)
+		{
+			GovermentOrder order=govermentOrderDao.find(product.getGovermentorderId());
+			order.getProducts().add(product);
+			orders.add(order);
+		}
+		return Pagination.buildResult(orders, count, offset, recnum);
 	}
 	@Override
 	public Map<String, Object> findByStatesByPage(int states, int offset,

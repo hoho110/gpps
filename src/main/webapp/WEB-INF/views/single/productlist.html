@@ -157,6 +157,10 @@
 </div>
 <script src="js/cdn/jquery.min.js"></script>
 <script src="js/gpps/data.js"></script>
+<script type="text/javascript"
+				src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
  	<script>
  	
  	function refreshListTotal(){
@@ -197,6 +201,11 @@
  	}
  	
          $(document).ready(function () {
+        	 
+        	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+        	var orders = orderService.findGovermentOrderByProductSeries(2,-1,0,10);
+        	alert(JSON.stringify(orders));
+        	 
         	 window.parent.justify(document.body.scrollHeight);
         	 refreshListTotal();
         	 $('ul.list-nav-wrap li a').click(function(e){

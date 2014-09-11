@@ -1,4 +1,4 @@
-var createProductLine = function(cont, title, label1, des1, label2, des2, description, menkan, qixian, rate, style){
+var createProductLine = function(cont, id, title, label1, des1, label2, des2, description, menkan, qixian, rate, style){
 	var container = $(cont).addClass('newProjectItem').addClass('newProjectInfoBox');
 	var row1 = $('<div></div>').addClass('row').css(
 			{
@@ -35,11 +35,8 @@ var createProductLine = function(cont, title, label1, des1, label2, des2, descri
 	var row2_col1 = $('<div></div>').addClass('col-xs-3 col-sm-3 col-md-4');
 	
 	
-	var a = $('<a href="#" title="产品列表"></a>');
+	var a = $('<a href="productlist.html?sid='+id+'" title="产品列表"></a>');
 	row2_col1.append($('<div class="seemall"></div>').append(a));
-	a.click(function(e){
-		window.parent.toward("productlist");
-	});
 	
 	var row2_col2 = $('<div></div>').addClass('col-xs-9 col-sm-9 col-md-8');
 	row2_col2.html('<div class="row"><div class="col-xs-12 col-sm-12 col-md-12">'+description+'</div></div>');

@@ -329,6 +329,15 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			if(list.isEmpty())
 				return Pagination.buildResult(null, 0, offset, recnum);
 		}
+		int count=govermentOrderDao.countByState(list);
+		List<GovermentOrder> orders=govermentOrderDao.findByStatesWithPaging(list, offset, recnum);
+		if(orders!=null&&orders.size()>0)
+		{
+			for(GovermentOrder order:orders)
+			{
+				order.setProducts(productDao.findByGovermentOrder(order.getId()));
+			}
+		}
 		return Pagination.buildResult(govermentOrderDao.findByStatesWithPaging(list, offset, recnum), govermentOrderDao.countByState(list), offset, recnum);
 	}
 }

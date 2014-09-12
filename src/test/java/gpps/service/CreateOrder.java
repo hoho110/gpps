@@ -10,14 +10,19 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class CreateOrder {
-	public static void create(ApplicationContext context){
+	public static Integer create(ApplicationContext context){
 		IGovermentOrderDao order = context.getBean(IGovermentOrderDao.class);
 		GovermentOrder or = new GovermentOrder();
-		or.setBorrowerId(2);
+		or.setId(2);
+		or.setBorrowerId(1);
 		or.setCreatetime((new Date()).getTime());
 		or.setFinancingStarttime((new Date()).getTime()+24*3600*1000);
 		or.setFinancingEndtime((new Date()).getTime()+5*24*3600*1000);
+		or.setTitle("数据库中政府采购订单融资项目二");
+		or.setIncomeStarttime((new Date()).getTime()+6*24*3600*1000);
+		or.setIncomeEndtime((new Date()).getTime()+96*24*3600*1000);
 		or.setState(1);
 		order.create(or);
+		return or.getId();
 	}
 }

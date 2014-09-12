@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class CreateBorrower {
-	public static void create(ApplicationContext context){
+	public static Integer create(ApplicationContext context){
 		IBorrowerService borrowerService = context.getBean(IBorrowerService.class);
 		IBorrowerDao borrowerDao = context.getBean(IBorrowerDao.class);
 		IBorrowerAccountDao accountDao = context.getBean(IBorrowerAccountDao.class);
@@ -20,6 +20,7 @@ public class CreateBorrower {
 		
 		
 		Borrower borrower=new Borrower();
+		borrower.setId(1);
 		borrower.setEmail("test@calis.edu.cn");
 		borrower.setIdentityCard("231550215402021533");
 		borrower.setLoginId("test");
@@ -30,5 +31,6 @@ public class CreateBorrower {
 		borrower.setPrivilege(12);
 		borrower.setAccountId(account.getId());
 		borrowerDao.create(borrower);
+		return borrower.getId();
 	}
 }

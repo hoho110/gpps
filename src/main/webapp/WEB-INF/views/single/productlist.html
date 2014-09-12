@@ -156,11 +156,14 @@
  
 </div>
 <script src="js/cdn/jquery.min.js"></script>
+<script src="js/gpps/tool.js"></script>
 <script src="js/gpps/data.js"></script>
 <script type="text/javascript"
 				src="/resources/EasyServiceClientFullZ.js"></script>
 <script type="text/javascript"
 				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.dao.IProductSeriesDao?json"></script>
  	<script>
  	
  	function refreshListTotal(){
@@ -201,13 +204,41 @@
  	}
  	
          $(document).ready(function () {
+        	 var seriesDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IProductSeriesDao");
+        	 var series = seriesDao.findAll();
+        	 var seriesname = {};
+        	 for(var i=0; i<series.size(); i++){
+        		 seriesname[series.get(i).id] = series.get(i).title;
+        	 }
+        	 
         	 
         	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
-        	var orders = orderService.findGovermentOrderByProductSeries(2,-1,0,10);
-        	alert(JSON.stringify(orders));
+        	var orders = orderService.findByStatesByPage(-1,0,10);
+        	var total = orders.get('total');
+        	var rst = orders.get('result');
+        	
+        	$('ul.list-table li').remove();
+        	for(var i=0; i<rst.size(); i++){
+        		var order = rst.get(i);
+        		var pros = order.products;
+        		alert('==='+pros.size());
+        		if(pros.size()==1){
+        			var pro = pros.get(0);
+        			var state = order.state==1?'online':'done';
+        			$('ul.list-table').append(createSingleProduct(order.title, state, formatDateToDay(order.financingEndtime), seriesname[pro.productseriesId], pro.rate.value, '3个月', pro.expectAmount.value, pro.realAmount.value, '10,000.00'));
+        		}else{
+        			var rates = {};
+        			for(var t=0; t<pros.size(); t++){
+        				rates[seriesname[pros.get(t).productseriesId]] = pros.get(t).rate.value;
+        			}
+        			$('ul.list-table').append(createStructureProduct2(order.title, 'online', formatDateToDay(order.financingEndtime), rates, '3个月', '210,000.00', '50,000.00', '10,000.00'));
+        		}
+        	}
+        	
+        	
         	 
         	 window.parent.justify(document.body.scrollHeight);
-        	 refreshListTotal();
+        	 //refreshListTotal();
         	 $('ul.list-nav-wrap li a').click(function(e){
         		 $('ul.list-nav-wrap').find('li').removeClass('selected');
         		 $(this).parent().addClass('selected');

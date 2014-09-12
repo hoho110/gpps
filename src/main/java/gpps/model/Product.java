@@ -33,6 +33,7 @@ public class Product {
 	private Integer productseriesId;
 	private int levelToBuy;
 	private long createtime=System.currentTimeMillis();
+	private int minimum=1;//最小额度,单位元
 	public Integer getId() {
 		return id;
 	}
@@ -98,5 +99,11 @@ public class Product {
 	}
 	public void setCreatetime(long createtime) {
 		this.createtime = createtime;
+	}
+	public int getMinimum() {
+		return minimum;
+	}
+	public void setMinimum(int minimum) {
+		this.minimum = minimum;
 	}
 }

@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2014/9/10 22:32:58                           */
+/* Created on:     2014/9/12 16:34:59                           */
 /*==============================================================*/
 
 
@@ -97,6 +97,9 @@ create table Govermentorder
    financingStarttime   bigint not null default 0,
    financingEndtime     bigint not null default 0,
    createtime           bigint not null default 0,
+   title                varchar(255),
+   incomeStarttime      bigint not null,
+   incomeEndtime        bigint not null,
    primary key (ID)
 );
 
@@ -213,6 +216,7 @@ create table Product
    productseriesId      integer not null,
    levelToBuy           int not null,
    createtime           bigint not null default 0,
+   minimum              int not null default 1,
    primary key (ID)
 );
 
@@ -262,9 +266,9 @@ create table Submit
    Id                   integer not null auto_increment,
    state                int not null default 0 comment '0:申请竞标->
             1:待支付
-            	（支付）
+                （支付）
             2:竞标中
-            	(融资审核成功)
+                (融资审核成功)
             3:还款中
             4：还款完毕
             

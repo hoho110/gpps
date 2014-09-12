@@ -6,6 +6,7 @@ import java.util.concurrent.locks.Lock;
 
 public class GovermentOrder {
 	private Integer id;
+	private String title;
 	private Integer borrowerId;
 	private String material;// 记录相关资料附件的路径
 	/**
@@ -27,11 +28,19 @@ public class GovermentOrder {
 //	private String auditor;//审计员
 	private List<Product> products=new ArrayList<Product>();//非持久化字段
 	public Lock lock=null;
+	private long incomeStarttime;
+	private long incomeEndtime;
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	public Integer getBorrowerId() {
 		return borrowerId;
@@ -70,7 +79,18 @@ public class GovermentOrder {
 		this.createtime = createtime;
 	}
 	
-	
+	public long getIncomeStarttime() {
+		return incomeStarttime;
+	}
+	public void setIncomeStarttime(long incomeStarttime) {
+		this.incomeStarttime = incomeStarttime;
+	}
+	public long getIncomeEndtime() {
+		return incomeEndtime;
+	}
+	public void setIncomeEndtime(long incomeEndtime) {
+		this.incomeEndtime = incomeEndtime;
+	}
 	public List<Product> getProducts() {
 		return products;
 	}

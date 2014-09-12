@@ -25,14 +25,14 @@ var defaultSettings = {
 				"iDisplayLength" : 10, //默认每页显示的记录数
 				"aLengthMenu" : [ 10, 15, 25, 50 ],
 				"bFilter" : false, //是否使用搜索 
-				"bJQueryUI" : false, //页面风格使用jQuery.
+				"bJQueryUI" : true, //页面风格使用jQuery.
 				// "sScrollY": 200,//竖向滚动条 tbody区域的高度
 				"sScrollX" : "100%", //横向滚动条 
 				"sScrollXInner" : "100%",
 				"bScrollCollapse" : true,
 				"aoColumns" : [],
 				"aaData" : [],
-				//"sPaginationType": "full_numbers", //分页样式
+				"sPaginationType": "full_numbers", //分页样式
 				"bAutoWidth" : true, //列的宽度会根据table的宽度自适应 
 				"bSort" : false, //是否使用排序 
 				"aoColumnDefs" : [ {
@@ -151,6 +151,7 @@ var myactivity = function(){
 }
 
 var submitall = function(){
+	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
 	var content = $('<div></div>');
 	var str = "";
 	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';

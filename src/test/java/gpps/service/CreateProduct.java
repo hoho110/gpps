@@ -10,9 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class CreateProduct {
-	static String SPRINGCONFIGPATH="/src/main/webapp/WEB-INF/spring/root-context.xml";
-	protected static ApplicationContext context =new FileSystemXmlApplicationContext(SPRINGCONFIGPATH);
-	public static void main(String args[]){
+	public static void create(ApplicationContext context){
 		IProductDao product = context.getBean(IProductDao.class);
 		Product pro = new Product();
 		pro.setCreatetime((new Date()).getTime());

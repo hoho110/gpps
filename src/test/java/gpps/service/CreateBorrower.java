@@ -9,9 +9,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class CreateBorrower {
-	static String SPRINGCONFIGPATH="/src/main/webapp/WEB-INF/spring/root-context.xml";
-	protected static ApplicationContext context =new FileSystemXmlApplicationContext(SPRINGCONFIGPATH);
-	public static void main(String args[]){
+	public static void create(ApplicationContext context){
 		IBorrowerService borrowerService = context.getBean(IBorrowerService.class);
 		IBorrowerDao borrowerDao = context.getBean(IBorrowerDao.class);
 		IBorrowerAccountDao accountDao = context.getBean(IBorrowerAccountDao.class);

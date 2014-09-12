@@ -5,9 +5,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 import gpps.dao.IProductSeriesDao;
 import gpps.model.ProductSeries;
 public class CreateProductSeries {
-	static String SPRINGCONFIGPATH="/src/main/webapp/WEB-INF/spring/root-context.xml";
-	protected static ApplicationContext context =new FileSystemXmlApplicationContext(SPRINGCONFIGPATH);
-	public static void main(String args[]){
+	public static void create(ApplicationContext context){
 	IProductSeriesDao productSeriesDao=context.getBean(IProductSeriesDao.class);
 	ProductSeries productSeries=new ProductSeries();
 	productSeries.setTitle("稳健型");

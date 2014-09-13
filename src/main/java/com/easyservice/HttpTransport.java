@@ -2,6 +2,7 @@ package com.easyservice;
 
 import gpps.service.ILenderService;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -52,6 +53,12 @@ public class HttpTransport {
 
 	@RequestMapping(value={"/easyservice/{interface}","/easyservice/{interface}/{method}"})
 	public void service(HttpServletRequest req, HttpServletResponse resp) {
+		try {
+			req.setCharacterEncoding("UTF-8");
+			resp.setCharacterEncoding("UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
 		// 处理阶段
 		// 1.请求解析生成请求描述，根据requestURI以及参数（包括header）解析出->a.请求协议;b.请求服务/请求Sdl;c.请求服务接口
 

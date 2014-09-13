@@ -63,7 +63,6 @@ public interface ISubmitService {
 	 * @return
 	 */
 	public List<CashStream> findSubmitCashStream(Integer submitId);
-
 	// public void refuseApply(Integer submitId)throws
 	// IllegalConvertException;//拒绝申请
 	// public void passApply(Integer submitId)throws

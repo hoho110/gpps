@@ -287,27 +287,25 @@ var paybackall = function(){
 
 
 var paybackhave = function(){
-	var content = $('<div></div>');
-	var str = "";
-	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-	str += '<thead>';	
-	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">还款额</td><td>本金</td><td>利息</td><td style="min-width:100px;">还款时间</td></tr>';
-	str += '</thead>';
-	str += '<tbody>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>300</td><td>250</td><td>50</td><td>2014-8-5</td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>500</td><td>400</td><td>100</td><td>2014-7-31</td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款3</a></td><td>2000</td><td>2000</td><td>0</td><td>2014-7-16</td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款4</a></td><td>12000</td><td>11900</td><td>100</td><td>2014-7-3</td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款5</a></td><td>20</td><td>0</td><td>20</td><td>2014-6-18</td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款7</a></td><td>17</td><td>0</td><td>17</td><td>2014-7-31</td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款8</a></td><td>700</td><td>700</td><td>0</td><td>2014-7-16</td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款9</a></td><td>90</td><td>0</td><td>90</td><td>2014-7-3</td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款10</a></td><td>12</td><td>0</td><td>12</td><td>2014-6-18</td></tr>';
-	str += '</tbody>';
-	str += '</table>';
-	content.append(str);
-
-
+//	var content = $('<div></div>');
+//	var str = "";
+//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
+//	str += '<thead>';	
+//	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">还款额</td><td>本金</td><td>利息</td><td style="min-width:100px;">还款时间</td></tr>';
+//	str += '</thead>';
+//	str += '<tbody>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>300</td><td>250</td><td>50</td><td>2014-8-5</td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>500</td><td>400</td><td>100</td><td>2014-7-31</td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款3</a></td><td>2000</td><td>2000</td><td>0</td><td>2014-7-16</td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款4</a></td><td>12000</td><td>11900</td><td>100</td><td>2014-7-3</td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款5</a></td><td>20</td><td>0</td><td>20</td><td>2014-6-18</td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款7</a></td><td>17</td><td>0</td><td>17</td><td>2014-7-31</td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款8</a></td><td>700</td><td>700</td><td>0</td><td>2014-7-16</td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款9</a></td><td>90</td><td>0</td><td>90</td><td>2014-7-3</td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款10</a></td><td>12</td><td>0</td><td>12</td><td>2014-6-18</td></tr>';
+//	str += '</tbody>';
+//	str += '</table>';
+//	content.append(str);
 	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
 	var columns = [ {
 		"sTitle" : "项目信息",
@@ -340,14 +338,19 @@ var paybackhave = function(){
 				iDisplayLength = data.value;
 		}
 		var res = null;
-		res = account.findLenderCashStreamByActionAndState(action,state, iDisplayStart, iDisplayLength);
+		res = account.findLenderRepayCashStream(iDisplayStart, iDisplayLength);
 		var result = {};
 		result.iTotalRecords = res.get('total');
 		result.iTotalDisplayRecords = res.get('total');
 		result.aaData = new Array();
-		var cashs = res.get('result');
-		for(var i=0; i<cashs.size(); i++){
-			result.aaData.push([formatDate(cashs.get(i).createtime), cashs.get(i).chiefamount.value, cashs.get(i).chiefamount.value, cashs.get(i).interest.value, 0, cashstate[cashs.get(i).action], cashs.get(i).description]);
+		var datas = res.get('result');
+		for(var i=0; i<datas.size(); i++){
+			var data=datas.get(i);
+			result.aaData.push(["<a href='productdetail.html?productId="+data.submit.product.id+"' target='_blank'>"+data.submit.product.govermentOrder.title+"</a>",
+			                    parseFloat(data.chiefamount.value)+parseFloat(data.interest.value),
+			                    data.chiefamount.value,
+			                    data.interest.value,
+			                    formatDate(data.createtime)]);
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
@@ -387,6 +390,42 @@ var paybackto = function(){
 	str += '</table>';
 	content.append(str);
 	return content;
+//	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
+//	var columns = [ {
+//		"sTitle" : "项目信息",
+//			"code" : "product"
+//	}, {
+//		"sTitle" : "还款额",
+//		"code" : "total"
+//	}, {
+//		"sTitle" : "本金",
+//		"code" : "bj"
+//	}, {
+//		"sTitle" : "利息",
+//		"code" : "lx"
+//	}, {
+//		"sTitle" : "预计还款时间",
+//		"code" : "time"
+//	}];
+//	var datas = null;
+//	datas = account.findLenderWaitforRepay();
+//	var aaData = new Array();
+//	for(var i=0; i<datas.size(); i++){
+//		var data=datas.get(i);
+//		aaData.push(["<a href='productdetail.html?productId="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"</a>",
+//		                    parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value),
+//		                    data.chiefAmount.value,
+//		                    data.interest.value,
+//		                    formatDate(data.deadline)]);
+//	}
+//	var mySettings = $.extend({}, defaultSettings, {
+//		"aoColumns" : columns,
+//		"aaData" : aaData
+//	});
+//	var content = $('<div></div>');
+//	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+//	table.dataTable(mySettings);
+//	return content;
 }
 var cashProcessor=function(action,state){
 	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");

@@ -41,6 +41,10 @@
 		select *
 		from Submit where id=#{id}
 	</select>
+	<select id="findAllPayedByLenderAndProductState" resultType="gpps.model.Submit">
+		select a.*
+		from Submit a,Product b where a.productId=b.id and a.state=2 and a.lenderId=#{lenderId} and b.state=#{productState}
+	</select>
 	<update id="changeState">
 		update Submit set
 		state=#{state}

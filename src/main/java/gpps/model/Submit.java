@@ -66,4 +66,13 @@ public class Submit {
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
+	
+	//辅助对象
+	private Product product;
+	public Product getProduct() {
+		return product;
+	}
+	public void setProduct(Product product) {
+		this.product = product;
+	}
 }

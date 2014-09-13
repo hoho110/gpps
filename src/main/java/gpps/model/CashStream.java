@@ -95,4 +95,12 @@ public class CashStream {
 	public void setState(int state) {
 		this.state = state;
 	}
+	//辅助对象
+	private Submit submit;
+	public Submit getSubmit() {
+		return submit;
+	}
+	public void setSubmit(Submit submit) {
+		this.submit = submit;
+	}
 }

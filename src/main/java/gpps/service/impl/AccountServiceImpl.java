@@ -3,17 +3,11 @@
  */
 package gpps.service.impl;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import static gpps.tools.ObjectUtil.checkNullObject;
 import gpps.constant.Pagination;
 import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.ICashStreamDao;
+import gpps.dao.IGovermentOrderDao;
 import gpps.dao.ILenderAccountDao;
 import gpps.dao.IPayBackDao;
 import gpps.dao.IProductDao;
@@ -21,6 +15,7 @@ import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
 import gpps.model.CashStream;
+import gpps.model.GovermentOrder;
 import gpps.model.Lender;
 import gpps.model.LenderAccount;
 import gpps.model.PayBack;
@@ -31,8 +26,15 @@ import gpps.service.IBorrowerService;
 import gpps.service.ILenderService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
-import static gpps.tools.StringUtil.*;
-import static gpps.tools.ObjectUtil.*;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author wangm
@@ -56,6 +58,8 @@ public class AccountServiceImpl implements IAccountService {
 	ILenderService lenderService;
 	@Autowired
 	IBorrowerService borrowerService;
+	@Autowired
+	IGovermentOrderDao orderDao;
 	
 	@Override
 	public Integer rechargeLenderAccount(Integer lenderAccountId, BigDecimal amount, String description) {
@@ -284,6 +288,59 @@ public class AccountServiceImpl implements IAccountService {
 		Borrower borrower =borrowerService.getCurrentUser();
 		int count=cashStreamDao.countByActionAndState(null, borrower.getAccountId(), action, state);
 		return Pagination.buildResult(cashStreamDao.findByActionAndState(null, borrower.getAccountId(), action, state, offset, recnum), count, offset, recnum);
+	}
+
+	@Override
+	public Map<String, Object> findLenderRepayCashStream(int offset, int recnum) {
+//		Lender lender=lenderService.getCurrentUser();
+//		int count=cashStreamDao.countByActionAndState(lender.getAccountId(), null, CashStream.ACTION_REPAY, CashStream.STATE_SUCCESS);
+//		if(count==0)
+//			return Pagination.buildResult(null, count, offset, recnum);
+//		List<CashStream> cashStreams=cashStreamDao.findByActionAndState(lender.getAccountId(), null, CashStream.ACTION_REPAY, CashStream.STATE_SUCCESS, offset, recnum);
+//		for(CashStream cashStream:cashStreams)
+//		{
+//			cashStream.setSubmit(submitDao.find(cashStream.getSubmitId()));
+//			cashStream.getSubmit().setProduct(productDao.find(cashStream.getSubmit().getProductId()));
+//			cashStream.getSubmit().getProduct().setGovermentOrder(orderDao.find(cashStream.getSubmit().getProduct().getGovermentorderId()));
+//		}
+		List<CashStream> cashStreams=new ArrayList<CashStream>();
+		int count=100;
+		for(int i=0;i<10;i++)
+		{
+			CashStream cashStream=new CashStream();
+			cashStream.setChiefamount(new BigDecimal(10000));
+			cashStream.setInterest(new BigDecimal(1000));
+			cashStreams.add(cashStream);
+			cashStream.setSubmit(new Submit());
+			cashStream.getSubmit().setProduct(new Product());
+			cashStream.getSubmit().getProduct().setId(123);
+			cashStream.getSubmit().getProduct().setGovermentOrder(new GovermentOrder());
+			cashStream.getSubmit().getProduct().getGovermentOrder().setTitle("淘宝借钱二期");
+		}
+		return Pagination.buildResult(cashStreams, count, offset, recnum);
+	}
+
+	@Override
+	public List<PayBack> findLenderWaitforRepay() {
+//		Lender lender=lenderService.getCurrentUser();
+//		List<Submit> submits=submitDao.findAllPayedByLenderAndProductState(lender.getId(), Product.STATE_REPAYING);
+//		if(submits==null||submits.size()==0)
+//			return new ArrayList<PayBack>(0);
+//		
+//		return null;
+		List<PayBack> payBacks=new ArrayList<PayBack>();
+		for(int i=0;i<10;i++)
+		{
+			PayBack payBack=new PayBack();
+			payBack.setChiefAmount(new BigDecimal(10000));
+			payBack.setInterest(new BigDecimal(1000));
+			payBack.setProduct(new Product());
+			payBack.getProduct().setId(123);
+			payBack.getProduct().setGovermentOrder(new GovermentOrder());
+			payBack.getProduct().getGovermentOrder().setTitle("淘宝借钱三期");
+			payBacks.add(payBack);
+		}
+		return payBacks;
 	}
 
 }

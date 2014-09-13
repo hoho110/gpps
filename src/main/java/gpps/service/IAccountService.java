@@ -2,6 +2,7 @@ package gpps.service;
 
 import gpps.constant.Pagination;
 import gpps.model.CashStream;
+import gpps.model.PayBack;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
 
@@ -103,4 +104,11 @@ public interface IAccountService {
 	 */
 	public Map<String, Object> findLenderCashStreamByActionAndState(int action,int state,int offset,int recnum);
 	public Map<String, Object> findBorrowerCashStreamByActionAndState(int action,int state,int offset,int recnum);
+	
+	public Map<String,Object> findLenderRepayCashStream(int offset,int recnum);
+	/**
+	 * 找到所有待还款的计划，即时计算所有Lender购买的还款中产品所有未还款的payback，同时将payback的金额替换为Lender的金额
+	 * @return
+	 */
+	public List<PayBack> findLenderWaitforRepay();
 }

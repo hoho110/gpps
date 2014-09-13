@@ -80,4 +80,12 @@ public class PayBack {
 	public void setType(int type) {
 		this.type = type;
 	}
+	//辅助
+	private Product product;
+	public Product getProduct() {
+		return product;
+	}
+	public void setProduct(Product product) {
+		this.product = product;
+	}
 }

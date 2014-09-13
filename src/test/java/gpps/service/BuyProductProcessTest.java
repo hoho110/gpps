@@ -83,7 +83,8 @@ public class BuyProductProcessTest extends TestSupport{
 		int productExpectAmount=15*10000;
 		//创建贷款人
 		long start=System.currentTimeMillis();
-		Lender lender_a=createLender("lender_a_"+start,"1"+start);
+//		Lender lender_a=createLender("lender_a_"+start,"1"+start);
+		Lender lender_a=createLender("calis123","1"+start);
 		Lender lender_b=createLender("lender_b_"+start,"2"+start);
 		//充值
 		try {
@@ -104,6 +105,7 @@ public class BuyProductProcessTest extends TestSupport{
 		//创建订单
 		GovermentOrder order=new GovermentOrder();
 		order.setBorrowerId(borrower.getId());
+		order.setTitle("淘宝借钱二期");
 		order.setFinancingStarttime(System.currentTimeMillis());
 		order.setFinancingEndtime(System.currentTimeMillis()+24*3600*1000);
 		order=orderService.create(order);
@@ -225,26 +227,26 @@ public class BuyProductProcessTest extends TestSupport{
 		
 		
 		//清理数据
-		cashStreamDao.deleteByLenderAccountId(lender_a.getAccountId());
-		cashStreamDao.deleteByLenderAccountId(lender_b.getAccountId());
-		cashStreamDao.deleteByBorrowerAccountId(borrower.getAccountId());
-		
-		List<Submit> submits=submitDao.findAllByProduct(product.getId());
-		for(Submit submit:submits)
-		{
-			submitDao.delete(submit.getId());
-		}
-		productDao.delete(product.getId());
-		productSeriesDao.delete(productSeries.getId());
-		orderDao.delete(order.getId());
-		
-		lenderDao.delete(lender_a.getId());
-		lenderAccountDao.delete(lender_a.getAccountId());
-		lenderDao.delete(lender_b.getId());
-		lenderAccountDao.delete(lender_b.getAccountId());
-		
-		borrowerDao.delete(borrower.getId());
-		borrowerAccountDao.delete(borrower.getAccountId());
+//		cashStreamDao.deleteByLenderAccountId(lender_a.getAccountId());
+//		cashStreamDao.deleteByLenderAccountId(lender_b.getAccountId());
+//		cashStreamDao.deleteByBorrowerAccountId(borrower.getAccountId());
+//		
+//		List<Submit> submits=submitDao.findAllByProduct(product.getId());
+//		for(Submit submit:submits)
+//		{
+//			submitDao.delete(submit.getId());
+//		}
+//		productDao.delete(product.getId());
+//		productSeriesDao.delete(productSeries.getId());
+//		orderDao.delete(order.getId());
+//		
+//		lenderDao.delete(lender_a.getId());
+//		lenderAccountDao.delete(lender_a.getAccountId());
+//		lenderDao.delete(lender_b.getId());
+//		lenderAccountDao.delete(lender_b.getAccountId());
+//		
+//		borrowerDao.delete(borrower.getId());
+//		borrowerAccountDao.delete(borrower.getAccountId());
 		
 	}
 	private Borrower createBorrower(String loginId,String tel)

@@ -56,8 +56,8 @@ public class HttpTransport {
 		try {
 			req.setCharacterEncoding("UTF-8");
 			resp.setCharacterEncoding("UTF-8");
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
 		}
 		// 处理阶段
 		// 1.请求解析生成请求描述，根据requestURI以及参数（包括header）解析出->a.请求协议;b.请求服务/请求Sdl;c.请求服务接口

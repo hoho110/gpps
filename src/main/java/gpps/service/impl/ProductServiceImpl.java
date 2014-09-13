@@ -1,11 +1,16 @@
 package gpps.service.impl;
 
 import static gpps.tools.ObjectUtil.checkNullObject;
+import gpps.dao.IBorrowerAccountDao;
+import gpps.dao.IBorrowerDao;
 import gpps.dao.IGovermentOrderDao;
+import gpps.dao.IPayBackDao;
 import gpps.dao.IProductActionDao;
 import gpps.dao.IProductDao;
 import gpps.dao.IProductSeriesDao;
+import gpps.model.Borrower;
 import gpps.model.GovermentOrder;
+import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.ProductAction;
 import gpps.model.ProductSeries;
@@ -37,6 +42,10 @@ public class ProductServiceImpl implements IProductService {
 	ITaskService taskService;
 	@Autowired
 	IProductActionDao productActionDao;
+	@Autowired
+	IBorrowerDao borrowerDao;
+	@Autowired
+	IPayBackDao payBackDao;
 	Logger logger=Logger.getLogger(this.getClass());
 	static int[] productStates={
 		Product.STATE_FINANCING,
@@ -48,9 +57,11 @@ public class ProductServiceImpl implements IProductService {
 		Product.STATE_CLOSE
 	};
 	@Override
+	@Transactional
 	public void create(Product product) {
 		checkNullObject("orderId", product.getGovermentorderId());
-		checkNullObject(GovermentOrder.class, govermentOrderDao.find(product.getGovermentorderId()));
+		GovermentOrder order=govermentOrderDao.find(product.getGovermentorderId());
+		checkNullObject(GovermentOrder.class, order);
 		product.setState(Product.STATE_FINANCING);
 		product.setCreatetime(System.currentTimeMillis());
 		checkNullObject("productseriesId", product.getProductseriesId());
@@ -59,6 +70,29 @@ public class ProductServiceImpl implements IProductService {
 		checkNullObject("rate", product.getRate());
 		product.setRealAmount(BigDecimal.ZERO);
 		productDao.create(product);
+		Borrower borrower=borrowerDao.find(order.getBorrowerId());
+		//TODO 创建还款计划
+		switch(product.getPaybackmodel())
+		{
+			case Product.PAYBACKMODEL_AVERAGECAPITALPLUSINTEREST://等额本息
+					
+				break;
+			case Product.PAYBACKMODEL_FINISHPAYINTERESTANDCAPITAL:
+				break;
+			case Product.PAYBACKMODEL_FIRSTINTERESTENDCAPITAL:
+				PayBack payBack=new PayBack();
+				payBack.setBorrowerAccountId(borrower.getAccountId());
+				payBack.setChiefAmount(product.getExpectAmount());
+				payBack.setDeadline(order.getIncomeEndtime());
+				payBack.setInterest(product.getExpectAmount().multiply(product.getRate()));
+				payBack.setProductId(product.getId());
+				payBack.setState(PayBack.STATE_WAITFORREPAY);
+				payBack.setType(PayBack.TYPE_LASTPAY);
+				payBackDao.create(payBack);
+				break;
+			default :
+				throw new RuntimeException("不支持的还款计划");
+		}
 	}
 
 	static int[][] validConverts={

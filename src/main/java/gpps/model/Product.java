@@ -28,6 +28,9 @@ public class Product {
 	/**
 	 * 0： 等额本息 1：先还利息，到期还本 2：到期还本付息
 	 */
+	public static final int PAYBACKMODEL_AVERAGECAPITALPLUSINTEREST=0;
+	public static final int PAYBACKMODEL_FIRSTINTERESTENDCAPITAL=1;
+	public static final int PAYBACKMODEL_FINISHPAYINTERESTANDCAPITAL=2;
 	private int paybackmodel;
 	private String accessory;
 	private Integer productseriesId;

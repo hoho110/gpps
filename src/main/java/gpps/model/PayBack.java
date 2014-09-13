@@ -18,6 +18,8 @@ public class PayBack {
 	private BigDecimal interest;
 	private long deadline;//还款时间
 	private long realtime;//实际还款时间
+	public static final int TYPE_INTERESTANDCHIEF=0;
+	public static final int TYPE_LASTPAY=1;
 	private int type;//还款方式 0:利息和本息;1:一次性本金
 //	private Integer paybackId;
 //	/**

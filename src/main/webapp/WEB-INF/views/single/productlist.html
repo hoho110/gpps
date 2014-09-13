@@ -18,13 +18,9 @@
         <li><a href="javascript:void(0);" onclick="window.location.reload(true)">投资频道</a> <span class="divider">&gt;</span></li>
         <li id="nav_name" class="active">稳健型</li>
     </ul>
-    <ul class="list-nav-wrap clearfix">
-    <li class="selected"><a href="#" data-sk="全部"><span class="min-price">全部</span></a></li>
-    <li class=""><a href="#" data-sk="稳健型"><span class="min-price">稳健型</span></a></li>
-    <li class=""><a href="#" data-sk="均衡型"><span class="min-price">均衡型</span></a></li>
-    <li class=""><a href="#" data-sk="进取型"><span class="min-price">进取型</span></a></li>
+    <ul id="plnav" class="plnav list-nav-wrap clearfix">
     
-</ul>
+	</ul>
 <div class="service-intro clearfix">
     <p class="service-intro-title">
         服务介绍
@@ -165,98 +161,72 @@
 <script type="text/javascript"
 				src="/easyservice/gpps.dao.IProductSeriesDao?json"></script>
  	<script>
- 	
- 	function refreshListTotal(){
- 		$('ul.list-table li').remove();
- 		//$('ul.list-table').append('<li class="clearfix"></li>');
- 		var rates = {'稳健型':'8%', '均衡型':'12%', '进取型':'18%'};
- 		$('ul.list-table').append(createStructureProduct2("融资产品九", 'online', '2014-9-15', rates, '3个月', '210,000.00', '50,000.00', '10,000.00'));
- 		$('ul.list-table').append(createSingleProduct("融资产品十一", 'online', '2014-9-13', '稳健型', '8%', '3个月', '210,000.00', '50,000.00', '10,000.00'));
- 		$('ul.list-table').append(createSingleProduct("融资产品十二", 'audit', '2014-9-13', '均衡型', '12%', '6个月', '170,000.00', '0.00', '170,000.00'));
- 		var rates2 = {'稳健型':'10%', '均衡型':'15%'};
- 		$('ul.list-table').append(createStructureProduct2("融资产品八", 'payback', '2014-8-15', rates2, '12个月', '250,000.00', '0.00', '250,000.00'));
- 		$('ul.list-table').append(createSingleProduct("融资产品七", 'done', '2014-8-13', '进取型', '20%', '6个月', '190,000.00', '0.00', '190,000.00'));
- 	}
- 	
- 	
- 	function refreshListWJ(){
- 		$('ul.list-table li').remove();
- 		//$('ul.list-table').append('<li class="clearfix"></li>');
- 		$('ul.list-table').append(createSingleProduct("融资产品九", 'online', '2014-9-15', '稳健型', '8%', '3个月', '210,000.00', '50,000.00', '10,000.00'));
- 		$('ul.list-table').append(createSingleProduct("融资产品十一", 'online', '2014-9-13', '稳健型', '8%', '3个月', '210,000.00', '50,000.00', '10,000.00'));
- 		$('ul.list-table').append(createSingleProduct("融资产品八", 'payback', '2014-8-15', '稳健型', '10%', '12个月', '250,000.00', '0.00', '250,000.00'));
- 	}
- 	
- 	function refreshListJH(){
- 		$('ul.list-table li').remove();
- 		//$('ul.list-table').append('<li class="clearfix"></li>');
- 		$('ul.list-table').append(createSingleProduct("融资产品九", 'online', '2014-9-15', '均衡型', '12%', '3个月', '210,000.00', '50,000.00', '10,000.00'));
- 		$('ul.list-table').append(createSingleProduct("融资产品十二", 'audit', '2014-9-13', '均衡型', '12%', '6个月', '170,000.00', '0.00', '170,000.00'));
- 		$('ul.list-table').append(createSingleProduct("融资产品八", 'payback', '2014-8-15', '均衡型', '15%', '12个月', '250,000.00', '0.00', '250,000.00'));
- 	}
- 	
- 	function refreshListJQ(){
- 		$('ul.list-table li').remove();
- 		//$('ul.list-table').append('<li class="clearfix"></li>');
- 		var rates = {'稳健型':'8%', '均衡型':'12%', '进取型':'18%'};
- 		$('ul.list-table').append(createSingleProduct("融资产品九", 'online', '2014-9-15', '进取型', '18%', '3个月', '210,000.00', '50,000.00', '10,000.00'));
- 		$('ul.list-table').append(createSingleProduct("融资产品七", 'done', '2014-8-13', '进取型', '20%', '6个月', '190,000.00', '0.00', '190,000.00'));
+ 	var seriesname = {};
+ 	var stateName = 
+ 	function refreshList(orders){
+ 		var total = orders.get('total');
+    	var rst = orders.get('result');
+    	
+    	$('ul.list-table li').remove();
+    	for(var i=0; i<rst.size(); i++){
+    		var order = rst.get(i);
+    		var state = order.state;
+    		var pros = order.products;
+    		if(pros.size()==1){
+    			var pro = pros.get(0);
+    			
+    			$('ul.list-table').append(createSingleProduct(order.title, state, formatDateToDay(order.financingEndtime), seriesname[pro.productseriesId], parseInt(parseFloat(pro.rate.value)*100)+"%", '3个月', pro.expectAmount.value, pro.realAmount.value));
+    		}else{
+    			var totalamount = 0;
+    			var doneamount = 0;
+    			var rates = {};
+    			for(var t=0; t<pros.size(); t++){
+    				totalamount += parseInt(pros.get(t).expectAmount.value);
+    				doneamount += parseInt(pros.get(t).realAmount.value);
+    				rates[seriesname[pros.get(t).productseriesId]] = [parseInt(parseFloat(pros.get(t).rate.value)*100)+"%", pros.get(t).levelToBuy];
+    			}
+    			$('ul.list-table').append(createStructureProduct(order.title, state, formatDateToDay(order.financingEndtime), rates, '3个月', totalamount, doneamount));
+    		}
+    	}
  	}
  	
          $(document).ready(function () {
         	 var seriesDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IProductSeriesDao");
+        	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
         	 var series = seriesDao.findAll();
-        	 var seriesname = {};
+        	 var li1 = $('<li class="selected"></li>');
+        	 var a1 = $('<a href="#" data-sk="all"><span class="min-price">全部</span></a>');
+        	 $('li#nav_name').html('全部');
+        	 li1.append(a1);
+        	 a1.click(function(e){
+        		 $(this).parent().parent().find('li').removeClass('selected');
+        		 $(this).parent().addClass('selected');
+        		 $('li#nav_name').html('全部');
+        		 var orders = orderService.findByStatesByPage(-1,0,10);
+        		 refreshList(orders);
+        	 });
+        	 $('ul.plnav').append(li1);
         	 for(var i=0; i<series.size(); i++){
-        		 seriesname[series.get(i).id] = series.get(i).title;
+        		 var id = series.get(i).id;
+        		 seriesname[id] = series.get(i).title;
+        		 var lis = $('<li></li>');
+        		 var ass = $('<a id="'+id+'" href="#" data-sk='+series.get(i).id+'><span class="min-price">'+series.get(i).title+'</span></a>');
+        		 lis.append(ass);
+        		 $('ul.plnav').append(lis);
+        		 ass.click(function(e){
+        			 $(this).parent().parent().find('li').removeClass('selected');
+            		 $(this).parent().addClass('selected');
+            		 $('li#nav_name').html($(this).text());
+        			 var orders = orderService.findGovermentOrderByProductSeries(parseInt($(this).attr('id')),-1,0,10);
+        			 refreshList(orders);
+        		 })
         	 }
         	 
+        	 a1.trigger('click');
         	 
-        	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
-        	var orders = orderService.findByStatesByPage(-1,0,10);
-        	var total = orders.get('total');
-        	var rst = orders.get('result');
-        	
-        	$('ul.list-table li').remove();
-        	for(var i=0; i<rst.size(); i++){
-        		var order = rst.get(i);
-        		var pros = order.products;
-        		alert('==='+pros.size());
-        		if(pros.size()==1){
-        			var pro = pros.get(0);
-        			var state = order.state==1?'online':'done';
-        			$('ul.list-table').append(createSingleProduct(order.title, state, formatDateToDay(order.financingEndtime), seriesname[pro.productseriesId], pro.rate.value, '3个月', pro.expectAmount.value, pro.realAmount.value, '10,000.00'));
-        		}else{
-        			var rates = {};
-        			for(var t=0; t<pros.size(); t++){
-        				rates[seriesname[pros.get(t).productseriesId]] = pros.get(t).rate.value;
-        			}
-        			$('ul.list-table').append(createStructureProduct2(order.title, 'online', formatDateToDay(order.financingEndtime), rates, '3个月', '210,000.00', '50,000.00', '10,000.00'));
-        		}
-        	}
-        	
-        	
         	 
         	 window.parent.justify(document.body.scrollHeight);
-        	 //refreshListTotal();
-        	 $('ul.list-nav-wrap li a').click(function(e){
-        		 $('ul.list-nav-wrap').find('li').removeClass('selected');
-        		 $(this).parent().addClass('selected');
-        		 $('#nav_name').html($(this).attr('data-sk'));
-        		 if($(this).attr('data-sk')=="全部"){
-        			 $('div.service-intro-con').html(createTotalIntro());
-        			 refreshListTotal();
-        		 }else if($(this).attr('data-sk')=="稳健型"){
-        			 $('div.service-intro-con').html(createWJIntro());
-        			 refreshListWJ();
-        		 }else if($(this).attr('data-sk')=="均衡型"){
-        			 $('div.service-intro-con').html(createJHIntro());
-        			 refreshListJH();
-        		 }else if($(this).attr('data-sk')=="进取型"){
-        			 $('div.service-intro-con').html(createJQIntro());
-        			 refreshListJQ();
-        		 }
-        	 })
+        	 
         	 
          });
          </script>

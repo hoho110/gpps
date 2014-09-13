@@ -176,9 +176,15 @@ $(document).ready(function() {
        
        $('button#sendValCode').click(function(e){
     	  var phone = $('input#phone').val();
-    	  if(phone==null||phone==''){
+    	  
+    	  var reg=/^1\d{10}$/;
+    	  
+    	  if(phone==null || phone==''){
     		  $('#phoneLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入手机号');
-    	  }else if(service.isPhoneNumberExist(phone)){
+    	  }else if(!reg.test(phone)){
+    		  $('#phoneLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*手机号格式不对');
+    	  }
+    	  else if(service.isPhoneNumberExist(phone)){
     		  $('#phoneLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*手机号已存在');
     	  }else{
     		  $('#phoneLabel').html('ok').addClass('glyphicon glyphicon-ok').css('color', 'green');

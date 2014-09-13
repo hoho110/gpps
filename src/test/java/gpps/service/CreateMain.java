@@ -9,7 +9,7 @@ public class CreateMain {
 	public static void main(String args[]){
 //		CreateBorrower.create(context);
 //		CreateProductSeries.create(context);
-//		CreateOrder.create(context);
+		CreateOrder.create(context);
 		CreateProduct.create(context);
 		System.exit(0);
 	}

@@ -66,73 +66,25 @@ var createProductLine = function(cont, id, title, label1, des1, label2, des2, de
 }
 
 var cssStatus = {
-		online : 'online-status', 
-		audit  : 'done-status',
-		payback: 'done-status',
-		done   : 'done-status'
+		1 : 'online-status', 
+		4  : 'done-status',
+		2: 'done-status',
+		8   : 'done-status'
 	}
 var buttonStatus = {
-		online : ['btns', '投资'], 
-		audit  : ['done-success','审核中'],
-		payback: ['done-success','还款中'],
-		done   : ['done-success','还款成功']
+		1 : ['btns', '投资'], 
+		4  : ['done-success','审核中'],
+		2: ['done-success','还款中'],
+		8   : ['done-success','还款成功']
 }
 var dateStr = {
-		online : '截止', 
-		audit  : '截止',
-		payback: '计息',
-		done   : '关闭'
+		1 : '截止', 
+		4  : '截止',
+		2: '计息',
+		8   : '关闭'
 }
 
-
-var createStructureProduct = function(title, stat, time, rates, due, totalamount, remainamount, investamount){
-	var li = $('<li></li>').addClass('clearfix');
-	var productStatus = $('<div></div>').addClass('product-status');
-	productStatus.append('<p class="product-name"><a href="productdetail.html"  target="_blank">'+title+'[结构化]</a></p>');
-
-	var productInfoWrap = $('<div></div>').addClass("product-info-wrap clearfix");
-	
-	var p = $('<p></p>').addClass("product-info-l");
-	var index=0;
-	for(var i in rates)
-	{
-	if(index>0)
-		{
-		p.append('<br>');
-		}
-	p.append('<span class="interest-rate">'+i+'年化利率：'+rates[i]+'</span>');
-	index++;
-	}
-	productInfoWrap.append(p);
-	productInfoWrap.append('<p class="product-info-l"><span class="invest-price">投资期限：'+due+'</span></p>');
-	productInfoWrap.append('<p class="product-info-r"><span class="invest-price">项目本金：'+totalamount+'元</span><span class="remain-price">剩余可投金额：'+remainamount+'元</span></p>');
-	productStatus.append(productInfoWrap);
-	li.append(productStatus);
-	
-	var operateStatus = $('<div></div>').addClass("operate-status");
-	
-	var status = $('<div></div>').addClass(cssStatus[stat]+" clearfix");
-	var currentAmount = $('<div></div>').addClass("current-amount");
-	
-	var str = "";
-	if(stat=='online')
-		{
-		str="起";
-		}
-	currentAmount.append('<strong>投资金额</strong><span class="cur">'+investamount+'</span> 元'+str);
-	status.append(currentAmount);
-	status.append('<a href="productdetail.html" target="_blank" class="'+buttonStatus[stat][0]+'">'+buttonStatus[stat][1]+'</a>');
-	operateStatus.append(status);
-	
-	operateStatus.append('<div class="publish-time">'+time+dateStr[stat]+'</div>');
-	 
-	
-	li.append(operateStatus);
-	
-	return li;
-}
-
-var createStructureProduct2 = function(title, stat, time, rates, due, totalamount, doneamount, investamount){
+var createStructureProduct = function(title, stat, time, rates, due, totalamount, doneamount){
 	var li = $('<li></li>').addClass('clearfix');
 	var productStatus = $('<div></div>').addClass('product-status');
 	productStatus.append('<p class="product-name"><a style="text-decoration:none;">'+title+'[结构化]</a></p>');
@@ -162,7 +114,7 @@ var createStructureProduct2 = function(title, stat, time, rates, due, totalamoun
 	var currentAmount = $('<div></div>').addClass("current-amount");
 	
 	
-	currentAmount.append('<strong>可投金额</strong><span class="cur">'+investamount+'</span>');
+	currentAmount.append('<strong>可投金额</strong><span class="cur">'+(totalamount-doneamount)+'</span>');
 	status.append(currentAmount);
 	
 	var str = stat=='online'?buttonStatus[stat][1]+'中':buttonStatus[stat][1];
@@ -183,49 +135,32 @@ var createStructureProduct2 = function(title, stat, time, rates, due, totalamoun
 	table.append(tr);
 	var append_text = $($('<div class="append_text" style="margin-top:10px; width:100%; display:none;"></div>').append(table));
 	
-	
-	var pro1 = $('<div></div>').addClass("operate-status");
-	var td1 = $('<td></td>');
-	tr.append(td1);
-	var pro1_status = $('<div></div>').addClass(cssStatus[stat]+" clearfix");
-	var pro1_currentAmount = $('<div></div>').addClass("current-amount");
-	
-	
-	pro1_currentAmount.append('<strong>进取型<span class="cur">VIP</span></strong>年化利率<span class="cur">24%</span><br>期限未定<br>到期还本付息');
-	pro1_status.append(pro1_currentAmount);
-	pro1_status.append('<a href="productdetail3.html" class="'+buttonStatus[stat][0]+'">'+buttonStatus[stat][1]+'</a>');
-	pro1.append(pro1_status);
-	td1.append(pro1);
-	
-	
-	var pro2 = $('<div></div>').addClass("operate-status");
-	var td2 = $('<td></td>');
-	tr.append(td2);
-	var pro2_status = $('<div></div>').addClass(cssStatus[stat]+" clearfix");
-	var pro2_currentAmount = $('<div></div>').addClass("current-amount");
-	
-	
-	pro2_currentAmount.append('<strong>均衡型</strong>年华利率<span class="cur">15%</span><br>固定期限<br>按月摊还本息');
-	pro2_status.append(pro2_currentAmount);
-	pro2_status.append('<a href="productdetail3.html" class="'+buttonStatus[stat][0]+'">'+buttonStatus[stat][1]+'</a>');
-	pro2.append(pro2_status);
-	td2.append(pro2);
+	var num=0
+	for(var name in rates){
+		var pro1 = $('<div></div>').addClass("operate-status");
+		var td1 = $('<td></td>');
+		tr.append(td1);
+		var pro1_status = $('<div></div>').addClass(cssStatus[stat]+" clearfix");
+		var pro1_currentAmount = $('<div></div>').addClass("current-amount");
+		
+		var isVIP = (rates[name][1]>=3)?'<span class="cur">VIP</span>':'';
+		pro1_currentAmount.append('<strong>'+name+isVIP+'</strong>年化利率<span class="cur">'+rates[name][0]+'</span><br>期限未定<br>到期还本付息');
+		pro1_status.append(pro1_currentAmount);
+		pro1_status.append('<a href="productdetail3.html" class="'+buttonStatus[stat][0]+'">'+buttonStatus[stat][1]+'</a>');
+		pro1.append(pro1_status);
+		td1.append(pro1);
+		num++;
+	}
+	if(num==2){
+		var pro = $('<div></div>').addClass("operate-status");
+		var td = $('<td></td>');
+		tr.append(td);
+		var pro_status = $('<div style="height:50px;"></div>').addClass(cssStatus[stat]+" clearfix");
+		td.append(pro);
+		pro.append(pro_status);
+	}
 	
 	
-	
-	
-	var pro3 = $('<div></div>').addClass("operate-status");
-	var td3 = $('<td></td>');
-	tr.append(td3);
-	var pro3_status = $('<div></div>').addClass(cssStatus[stat]+" clearfix");
-	var pro3_currentAmount = $('<div></div>').addClass("current-amount");
-	
-	
-	pro3_currentAmount.append('<strong>稳健型</strong>年华利率<span class="cur">10%</span><br>有担保<br>按月还息，到期还本');
-	pro3_status.append(pro3_currentAmount);
-	pro3_status.append('<a href="productdetail3.html" class="'+buttonStatus[stat][0]+'">'+buttonStatus[stat][1]+'</a>');
-	pro3.append(pro3_status);
-	td3.append(pro3);
 	
 	
 	
@@ -267,7 +202,7 @@ var createStructureProduct2 = function(title, stat, time, rates, due, totalamoun
 }
 
 
-var createSingleProduct = function(title, stat, time, pl, rate, due, totalamount, remainamount, investamount){
+var createSingleProduct = function(title, stat, time, pl, rate, due, totalamount, remainamount){
 	var li = $('<li></li>').addClass('clearfix');
 	var productStatus = $('<div></div>').addClass('product-status');
 	productStatus.append('<p class="product-name"><a href="productdetail3.html">'+title+'['+pl+']</a></p>');
@@ -286,7 +221,7 @@ var createSingleProduct = function(title, stat, time, pl, rate, due, totalamount
 	var currentAmount = $('<div></div>').addClass("current-amount");
 	
 	
-	currentAmount.append('<strong>剩余可投金额</strong><span class="cur">'+remainamount+'</span> 元');
+	currentAmount.append('<strong>剩余可投金额</strong><span class="cur">'+(parseInt(totalamount)-parseInt(remainamount))+'</span> 元');
 	status.append(currentAmount);
 	status.append('<a href="productdetail3.html" class="'+buttonStatus[stat][0]+'">'+buttonStatus[stat][1]+'</a>');
 	operateStatus.append(status);

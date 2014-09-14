@@ -201,6 +201,216 @@ var createStructureProduct = function(title, stat, time, rates, due, totalamount
 	return li;
 }
 
+var createProduct2 = function(order){
+	var pros = order.products;
+	if(pros.size()==1){
+		return createSingleProduct2(order);
+	}else if(pros.size()>1){
+		return createStructureProduct2(order);
+	}else
+		{
+		return null;
+		}
+}
+
+var createStructureProduct2 = function(order){
+	var pros = order.products;
+	var pro = pros.get(0);
+	var state = order.state;
+	var days = parseInt((order.incomeEndtime-order.incomeStarttime+23*3600*1000)/(24*3600*1000)+'');
+	var str = '<li class="clearfix">';
+	str    += '<div class="product-status">';
+	str    += '<p class="product-name">';
+	str    += '<a class="product-title constructure" href="#" id="'+order.id+'">'+order.title+'[结构化]'+'</a>';
+	str    += '</p>';
+	str    += '<div class="product-info-wrap clearfix">';
+	str    += '<p class="product-info-l">';
+	str    += '<span style="margin-right:26px;">投资期限：'+days+'天</span>';
+	str    += '<span>项目本金：'+pro.expectAmount.value+'元</span>';
+	str    += '</p>';
+	str    += '<p>';
+	str    += '<span class="invest-price">已投金额：'+pro.realAmount.value+'元</span>';
+	str    += '</p>';
+	str    += '</div>';
+	str    += '</div>';
+	
+	
+	var status = '';
+	var stateCls = '';
+	var stateName = '';
+	
+	if(state==1){
+		status = 'online-status';
+		stateName = '投资中';
+		stateCls = 'state';
+		str    += '<div class="operate-status '+status+' clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>可投金额</strong>';
+		str    += '<span class="cur">'+(parseInt(pro.expectAmount.value)- parseInt(pro.realAmount.value))+'</span> 元            </div>';
+		str    += '<div class="'+stateCls+'">'+stateName+'</div>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'截止</div>';
+	}else if(state==2){
+		status = 'done-status';
+	stateName = '预发布';
+	stateCls = 'stategreen';
+		str    += '<div class="operate-status '+status+' clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>可投金额</strong>';
+		str    += '<span class="cur">'+(parseInt(pro.expectAmount.value)- parseInt(pro.realAmount.value))+'</span> 元            </div>';
+		str    += '<div class="'+stateCls+'">'+stateName+'</div>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingStarttime)+'开始</div>';	
+	}else if(state==4){
+		status = 'done-status';
+		stateName = '还款中';
+		stateCls = 'stategrey';
+		str    += '<div class="operate-status '+status+' clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>可投金额</strong>';
+		str    += '<span class="cur">'+(parseInt(pro.expectAmount.value)- parseInt(pro.realAmount.value))+'</span> 元           </div>';
+		str    += '<div class="'+stateCls+'">'+stateName+'</div>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.incomeStarttime)+'开始还款</div>';	
+	}else if(state==8){
+		status = 'done-status';
+		stateName = '还款完毕';
+		stateCls = 'stategrey';
+		str    += '<div class="operate-status '+status+' clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>可投金额</strong>';
+		str    += '<span class="cur">'+(parseInt(pro.expectAmount.value)- parseInt(pro.realAmount.value))+'</span> 元           </div>';
+		str    += '<div class="'+stateCls+'">'+stateName+'</div>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'关闭</div>';	
+	}else if(state==16){
+		status = 'done-status';
+		str    += '<div class="operate-status '+status+' clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>流标</strong>';
+		str    += '</div>';
+		str    += '';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'流标</div>';	
+	}
+	str    += '</div>';
+	str    += '<div style="clear:both;"></div>';
+	str    += '<div class="productinfo" style="width:100%; display:none;">';
+	
+	for(var i=0; i<pros.size(); i++){
+		str    += '<div class="operate-status '+status+' clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>稳健型</strong>';
+		str    += '年华利率<span class="cur">8%</span> </div>';
+		str    += '<div class="'+stateCls+'">'+stateName+'</div>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '</div>';
+	}
+	
+	str    += '</div>';
+	str    += '</li>';
+	
+	return str;
+}
+
+
+var createSingleProduct2 = function(order){
+	var pro = order.products.get(0);
+	var state = order.state;
+	var days = parseInt((order.incomeEndtime-order.incomeStarttime+23*3600*1000)/(24*3600*1000)+'');
+	
+	
+	var str = '<li class="clearfix">';
+	str    += '<div class="product-status">';
+	str    += '<p class="product-name">';
+	str    += '<a class="product-title" href="productdetail.html?pid='+pro.id+'"  target="_blank">'+order.title+'['+seriesname[pro.productseriesId]+']'+'</a>';
+	str    += '</p>';
+	str    += '<div class="product-info-wrap clearfix">';
+	str    += '<p class="product-info-l">';
+	str    += '<span style="margin-right:26px;">预期年化利率：'+parseInt(parseFloat(pro.rate.value)*100)+"%"+'</span>';
+	str    += '<span>投资期限：'+days+'天</span>';
+	str    += '</p>';
+	str    += '<p>';
+	str    += '<span class="invest-price">项目本金：'+pro.expectAmount.value+'元</span>';
+	if(state==1 || state==2)
+		{
+	str    += '<span>剩余可投金额：'+(parseInt(pro.expectAmount.value)- parseInt(pro.realAmount.value))+'元</span>';
+		}else{
+	str    += '<span>剩余可投金额：0元</span>';
+		}
+	str    += '</p>';
+	str    += '</div>';
+	str    += '</div>';
+	
+	if(state==1){
+		str    += '<div class="operate-status online-status clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>投资金额</strong>';
+		str    += '<span class="cur">'+pro.minimum+'</span> 元起            </div>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" target="_blank" class="btns">投资</a>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'截止</div>';
+	}else if(state==2){
+		str    += '<div class="operate-status done-status clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>投资金额</strong>';
+		str    += '<span class="cur">'+pro.minimum+'</span> 元起            </div>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" target="_blank" class="done-success">预发布</a>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingStarttime)+'开始</div>';	
+	}else if(state==4){
+		str    += '<div class="operate-status done-status clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>已融金额</strong>';
+		str    += '<span class="cur">'+pro.realAmount.value+'</span> 元           </div>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" target="_blank" class="done-success">还款中</a>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.incomeStarttime)+'开始还款</div>';	
+	}else if(state==8){
+		str    += '<div class="operate-status done-status clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>已融金额</strong>';
+		str    += '<span class="cur">'+pro.realAmount.value+'</span> 元           </div>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" target="_blank" class="done-success">还款完毕</a>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'关闭</div>';	
+	}else if(state==16){
+		str    += '<div class="operate-status done-status clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>流标</strong>';
+		str    += '</div>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" target="_blank" class="done-success">查看</a>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'流标</div>';	
+	}
+	str    += '</div>';
+	str    += '<div style="clear:both;"></div>';
+	str    += '</li>';
+	return str;
+}
+
 
 var createSingleProduct = function(title, stat, time, pl, rate, due, totalamount, remainamount){
 	var li = $('<li></li>').addClass('clearfix');
@@ -233,6 +443,8 @@ var createSingleProduct = function(title, stat, time, pl, rate, due, totalamount
 	
 	return li;
 }
+
+
 
 var createTotalIntro = function(){
 	var p = '<p>预期年化利率 ：<span style="color:#ff0000;">6.0%~24.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;同一个订单：不同的融资产品  &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 3-12个月 &nbsp; &nbsp; &nbsp; &nbsp;灵活的收益方式 &nbsp; &nbsp; &nbsp;<a href="plIntroduction.html" target="_blank">了解详情</a></p>';

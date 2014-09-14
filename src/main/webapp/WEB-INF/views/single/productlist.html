@@ -162,7 +162,6 @@
 				src="/easyservice/gpps.dao.IProductSeriesDao?json"></script>
  	<script>
  	var seriesname = {};
- 	var stateName = 
  	function refreshList(orders){
  		var total = orders.get('total');
     	var rst = orders.get('result');
@@ -172,6 +171,9 @@
     		var order = rst.get(i);
     		var state = order.state;
     		var pros = order.products;
+    		if(pros.size()==0){
+    			continue;
+    		}
     		if(pros.size()==1){
     			var pro = pros.get(0);
     			
@@ -191,6 +193,9 @@
  	}
  	
          $(document).ready(function () {
+        	 
+        	 var sid = getQueryString('sid');
+        	 
         	 var seriesDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IProductSeriesDao");
         	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
         	 var series = seriesDao.findAll();
@@ -222,7 +227,12 @@
         		 })
         	 }
         	 
-        	 a1.trigger('click');
+        	 //a1.trigger('click');
+        	 if(sid==null){
+        		 a1.trigger('click');
+        	 }else{
+        	 $('a#'+sid).trigger('click');
+        	 }
         	 
         	 
         	 window.parent.justify(document.body.scrollHeight);

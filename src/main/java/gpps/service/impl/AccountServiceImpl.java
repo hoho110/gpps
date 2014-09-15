@@ -29,6 +29,7 @@ import gpps.service.exception.InsufficientBalanceException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -326,10 +327,14 @@ public class AccountServiceImpl implements IAccountService {
 //		List<Submit> submits=submitDao.findAllPayedByLenderAndProductState(lender.getId(), Product.STATE_REPAYING);
 //		if(submits==null||submits.size()==0)
 //			return new ArrayList<PayBack>(0);
-//		
+//		Map<String, Integer> productIds=new HashMap<String, Integer>();
+//		for(Submit submit:submits)
+//		{
+//			productIds.put(submit.getProductId().toString(), submit.getProductId());
+//		}
 //		return null;
 		List<PayBack> payBacks=new ArrayList<PayBack>();
-		for(int i=0;i<10;i++)
+		for(int i=0;i<100;i++)
 		{
 			PayBack payBack=new PayBack();
 			payBack.setChiefAmount(new BigDecimal(10000));

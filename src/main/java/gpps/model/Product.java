@@ -26,7 +26,7 @@ public class Product {
 	private BigDecimal realAmount = BigDecimal.ZERO;
 	private BigDecimal rate = BigDecimal.ZERO;
 	/**
-	 * 0： 等额本息 1：先还利息，到期还本 2：到期还本付息
+	 * 0： 等额本息 1：按月还息，到期还本 2：按月还息,本金以订单回款为准
 	 */
 	public static final int PAYBACKMODEL_AVERAGECAPITALPLUSINTEREST=0;
 	public static final int PAYBACKMODEL_FIRSTINTERESTENDCAPITAL=1;

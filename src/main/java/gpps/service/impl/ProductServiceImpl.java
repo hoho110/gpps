@@ -74,43 +74,43 @@ public class ProductServiceImpl implements IProductService {
 		productDao.create(product);
 		Borrower borrower=borrowerDao.find(order.getBorrowerId());
 		//TODO 创建还款计划
-//		PayBack payBack=null;
-//		Calendar starttime=Calendar.getInstance();
-//		starttime.setTimeInMillis(order.getIncomeStarttime());
-//		Calendar endtime=Calendar.getInstance();
-//		endtime.setTimeInMillis(order.getIncomeEndtime());
-//		switch(product.getPaybackmodel())
-//		{
-//			case Product.PAYBACKMODEL_AVERAGECAPITALPLUSINTEREST://等额本息
-//				int mouths=(endtime.get(Calendar.YEAR)-starttime.get(Calendar.YEAR))*12+(endtime.get(Calendar.MONTH)-starttime.get(Calendar.MONTH));
-//				
-//				break;
-//			case Product.PAYBACKMODEL_FIRSTINTERESTENDCAPITAL:
-//				
-//				payBack=new PayBack();
-//				payBack.setBorrowerAccountId(borrower.getAccountId());
-//				payBack.setChiefAmount(product.getExpectAmount());
-//				payBack.setDeadline(order.getIncomeEndtime());
-////				payBack.setInterest(product.getExpectAmount().multiply(product.getRate()));
-//				payBack.setProductId(product.getId());
-//				payBack.setState(PayBack.STATE_WAITFORREPAY);
-//				payBack.setType(PayBack.TYPE_LASTPAY);
-//				payBackDao.create(payBack);
-//				break;
-//			case Product.PAYBACKMODEL_FINISHPAYINTERESTANDCAPITAL:
-//				payBack=new PayBack();
-//				payBack.setBorrowerAccountId(borrower.getAccountId());
-//				payBack.setChiefAmount(product.getExpectAmount());
-//				payBack.setDeadline(order.getIncomeEndtime());
+		PayBack payBack=null;
+		Calendar starttime=Calendar.getInstance();
+		starttime.setTimeInMillis(order.getIncomeStarttime());
+		Calendar endtime=Calendar.getInstance();
+		endtime.setTimeInMillis(order.getIncomeEndtime());
+		switch(product.getPaybackmodel())
+		{
+			case Product.PAYBACKMODEL_AVERAGECAPITALPLUSINTEREST://等额本息
+				int mouths=(endtime.get(Calendar.YEAR)-starttime.get(Calendar.YEAR))*12+(endtime.get(Calendar.MONTH)-starttime.get(Calendar.MONTH));
+				
+				break;
+			case Product.PAYBACKMODEL_FIRSTINTERESTENDCAPITAL:
+				
+				payBack=new PayBack();
+				payBack.setBorrowerAccountId(borrower.getAccountId());
+				payBack.setChiefAmount(product.getExpectAmount());
+				payBack.setDeadline(order.getIncomeEndtime());
 //				payBack.setInterest(product.getExpectAmount().multiply(product.getRate()));
-//				payBack.setProductId(product.getId());
-//				payBack.setState(PayBack.STATE_WAITFORREPAY);
-//				payBack.setType(PayBack.TYPE_LASTPAY);
-//				payBackDao.create(payBack);
-//				break;
-//			default :
-//				throw new RuntimeException("不支持的还款计划");
-//		}
+				payBack.setProductId(product.getId());
+				payBack.setState(PayBack.STATE_WAITFORREPAY);
+				payBack.setType(PayBack.TYPE_LASTPAY);
+				payBackDao.create(payBack);
+				break;
+			case Product.PAYBACKMODEL_FINISHPAYINTERESTANDCAPITAL:
+				payBack=new PayBack();
+				payBack.setBorrowerAccountId(borrower.getAccountId());
+				payBack.setChiefAmount(product.getExpectAmount());
+				payBack.setDeadline(order.getIncomeEndtime());
+				payBack.setInterest(product.getExpectAmount().multiply(product.getRate()));
+				payBack.setProductId(product.getId());
+				payBack.setState(PayBack.STATE_WAITFORREPAY);
+				payBack.setType(PayBack.TYPE_LASTPAY);
+				payBackDao.create(payBack);
+				break;
+			default :
+				throw new RuntimeException("不支持的还款计划");
+		}
 	}
 	private boolean isFullMonth(Calendar starttime,Calendar endtime)
 	{

@@ -25,4 +25,15 @@
 		where
 		id=#{id}
 	</delete>
+	<select id="findByProductsAndState" resultType="gpps.model.Product">
+		select * from PayBack
+		where state=#{state}
+		<if test="productIds != null">
+			and productId in
+			<foreach item="item" index="index" collection="productIds" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
 </mapper>

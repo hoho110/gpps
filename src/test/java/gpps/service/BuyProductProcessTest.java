@@ -107,7 +107,9 @@ public class BuyProductProcessTest extends TestSupport{
 		order.setBorrowerId(borrower.getId());
 		order.setTitle("淘宝借钱二期");
 		order.setFinancingStarttime(System.currentTimeMillis());
-		order.setFinancingEndtime(System.currentTimeMillis()+24*3600*1000);
+		order.setFinancingEndtime(System.currentTimeMillis()+7L*24*3600*1000);
+		order.setIncomeStarttime(System.currentTimeMillis()+7L*24*3600*1000);
+		order.setIncomeEndtime(System.currentTimeMillis()+107L*24*3600*1000);
 		order=orderService.create(order);
 		//订单审核通过
 //		try {

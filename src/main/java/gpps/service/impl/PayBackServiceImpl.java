@@ -30,17 +30,4 @@ public class PayBackServiceImpl implements IPayBackService {
 	public void changeState(Integer paybackId, int state) {
 		payBackDao.changeState(paybackId, state);
 	}
-
-	@Override
-	public List<PayBackDetail> getMyPaybackDetail(int paybackState) {
-		if(paybackState==PayBack.STATE_FINISHREPAY)
-		{
-			
-		}else
-		{
-			
-		}
-		return null;
-	}
-
 }

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,46 +76,80 @@ public class ProductServiceImpl implements IProductService {
 		Borrower borrower=borrowerDao.find(order.getBorrowerId());
 		//TODO 创建还款计划
 		PayBack payBack=null;
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
 		Calendar starttime=Calendar.getInstance();
 		starttime.setTimeInMillis(order.getIncomeStarttime());
 		Calendar endtime=Calendar.getInstance();
 		endtime.setTimeInMillis(order.getIncomeEndtime());
-		switch(product.getPaybackmodel())
+		int monthNum=(endtime.get(Calendar.YEAR)-starttime.get(Calendar.YEAR))*12+(endtime.get(Calendar.MONTH)-starttime.get(Calendar.MONTH));
+		if(endtime.get(Calendar.DAY_OF_MONTH)>starttime.get(Calendar.DAY_OF_MONTH))
+			monthNum++;
+		if(product.getPaybackmodel()==Product.PAYBACKMODEL_AVERAGECAPITALPLUSINTEREST)
 		{
-			case Product.PAYBACKMODEL_AVERAGECAPITALPLUSINTEREST://等额本息
-				int mouths=(endtime.get(Calendar.YEAR)-starttime.get(Calendar.YEAR))*12+(endtime.get(Calendar.MONTH)-starttime.get(Calendar.MONTH));
-				
-				break;
-			case Product.PAYBACKMODEL_FIRSTINTERESTENDCAPITAL:
-				
+			//等额本息，息按天算;本金按月算
+			for(int i=0;i<monthNum;i++)
+			{
+				Calendar currentMonthStart=(Calendar)(starttime.clone());
+				currentMonthStart.add(Calendar.MONTH, i);
+				Calendar currentMonthEnd=null;
+				if(i+1==monthNum)
+					currentMonthEnd=(Calendar)(endtime.clone());
+				else
+				{
+					currentMonthEnd=(Calendar)(starttime.clone());
+					currentMonthEnd.add(Calendar.MONTH, 1);
+				}
+				int days=getDays(currentMonthStart, currentMonthEnd);
 				payBack=new PayBack();
 				payBack.setBorrowerAccountId(borrower.getAccountId());
-				payBack.setChiefAmount(product.getExpectAmount());
-				payBack.setDeadline(order.getIncomeEndtime());
-//				payBack.setInterest(product.getExpectAmount().multiply(product.getRate()));
+				payBack.setChiefAmount(product.getExpectAmount().divide(new BigDecimal(monthNum),2,BigDecimal.ROUND_UP));
+				payBack.setInterest(product.getExpectAmount().multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
 				payBack.setProductId(product.getId());
 				payBack.setState(PayBack.STATE_WAITFORREPAY);
-				payBack.setType(PayBack.TYPE_LASTPAY);
+				if(i+1==monthNum)
+					payBack.setType(PayBack.TYPE_LASTPAY);
+				else
+					payBack.setType(PayBack.TYPE_INTERESTANDCHIEF);
+				currentMonthEnd.add(Calendar.DAY_OF_YEAR, 1);
+				payBack.setDeadline(currentMonthEnd.getTimeInMillis());
 				payBackDao.create(payBack);
-				break;
-			case Product.PAYBACKMODEL_FINISHPAYINTERESTANDCAPITAL:
+			}
+		}else if(product.getPaybackmodel()==Product.PAYBACKMODEL_FINISHPAYINTERESTANDCAPITAL||product.getPaybackmodel()==Product.PAYBACKMODEL_FIRSTINTERESTENDCAPITAL)
+		{
+			for(int i=0;i<monthNum;i++)
+			{
+				Calendar currentMonthStart=(Calendar)(starttime.clone());
+				currentMonthStart.add(Calendar.MONTH, i);
+				Calendar currentMonthEnd=null;
+				if(i+1==monthNum)
+					currentMonthEnd=(Calendar)(endtime.clone());
+				else
+				{
+					currentMonthEnd=(Calendar)(starttime.clone());
+					currentMonthEnd.add(Calendar.MONTH, 1);
+				}
+				int days=getDays(currentMonthStart, currentMonthEnd);
 				payBack=new PayBack();
 				payBack.setBorrowerAccountId(borrower.getAccountId());
-				payBack.setChiefAmount(product.getExpectAmount());
-				payBack.setDeadline(order.getIncomeEndtime());
-				payBack.setInterest(product.getExpectAmount().multiply(product.getRate()));
+				payBack.setInterest(product.getExpectAmount().multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
 				payBack.setProductId(product.getId());
 				payBack.setState(PayBack.STATE_WAITFORREPAY);
-				payBack.setType(PayBack.TYPE_LASTPAY);
+				if(i+1==monthNum)
+				{
+					payBack.setChiefAmount(product.getExpectAmount());
+					payBack.setType(PayBack.TYPE_INTERESTANDCHIEF);
+				}
+				else
+					payBack.setType(PayBack.TYPE_LASTPAY);
+				currentMonthEnd.add(Calendar.DAY_OF_YEAR, 1);
+				payBack.setDeadline(currentMonthEnd.getTimeInMillis());
 				payBackDao.create(payBack);
-				break;
-			default :
-				throw new RuntimeException("不支持的还款计划");
+			}
 		}
 	}
-	private boolean isFullMonth(Calendar starttime,Calendar endtime)
+	private int getDays(Calendar starttime,Calendar endtime)
 	{
-		return false;
+		return endtime.get(Calendar.DAY_OF_YEAR)-starttime.get(Calendar.DAY_OF_YEAR);
 	}
 	static int[][] validConverts={
 		{Product.STATE_FINANCING,Product.STATE_REPAYING},
@@ -289,5 +324,12 @@ public class ProductServiceImpl implements IProductService {
 	public void closeProduct(Integer productId) throws IllegalConvertException {
 		changeState(productId, Product.STATE_CLOSE);		
 	}
-
+	public static void main(String[] args)
+	{
+		Calendar cal=Calendar.getInstance();
+		cal.setTimeInMillis(System.currentTimeMillis());
+//		cal.add(Calendar.MONTH, 1);
+		System.out.println(cal);
+		
+	}
 }

@@ -8,5 +8,5 @@ public interface IPayBackService {
 	public void create(PayBack payback);
 	public List<PayBack> findAll(Integer productId);
 	public void changeState(Integer paybackId,int state);
-	public List<PayBackDetail> getMyPaybackDetail(int paybackState);
+//	public List<PayBackDetail> getMyPaybackDetail(int paybackState);
 }

@@ -102,8 +102,8 @@ public class ProductServiceImpl implements IProductService {
 				int days=getDays(currentMonthStart, currentMonthEnd);
 				payBack=new PayBack();
 				payBack.setBorrowerAccountId(borrower.getAccountId());
-				payBack.setChiefAmount(product.getExpectAmount().divide(new BigDecimal(monthNum),2,BigDecimal.ROUND_UP));
-				payBack.setInterest(product.getExpectAmount().multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
+				payBack.setChiefAmount(PayBack.BASELINE.divide(new BigDecimal(monthNum),2,BigDecimal.ROUND_UP));
+				payBack.setInterest(PayBack.BASELINE.multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
 				payBack.setProductId(product.getId());
 				payBack.setState(PayBack.STATE_WAITFORREPAY);
 				if(i+1==monthNum)
@@ -131,12 +131,12 @@ public class ProductServiceImpl implements IProductService {
 				int days=getDays(currentMonthStart, currentMonthEnd);
 				payBack=new PayBack();
 				payBack.setBorrowerAccountId(borrower.getAccountId());
-				payBack.setInterest(product.getExpectAmount().multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
+				payBack.setInterest(PayBack.BASELINE.multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
 				payBack.setProductId(product.getId());
 				payBack.setState(PayBack.STATE_WAITFORREPAY);
 				if(i+1==monthNum)
 				{
-					payBack.setChiefAmount(product.getExpectAmount());
+					payBack.setChiefAmount(PayBack.BASELINE);
 					payBack.setType(PayBack.TYPE_INTERESTANDCHIEF);
 				}
 				else

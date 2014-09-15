@@ -323,30 +323,67 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	public List<PayBack> findLenderWaitforRepay() {
-//		Lender lender=lenderService.getCurrentUser();
-//		List<Submit> submits=submitDao.findAllPayedByLenderAndProductState(lender.getId(), Product.STATE_REPAYING);
-//		if(submits==null||submits.size()==0)
-//			return new ArrayList<PayBack>(0);
-//		Map<String, Integer> productIds=new HashMap<String, Integer>();
-//		for(Submit submit:submits)
-//		{
-//			productIds.put(submit.getProductId().toString(), submit.getProductId());
-//		}
-//		return null;
-		List<PayBack> payBacks=new ArrayList<PayBack>();
-		for(int i=0;i<100;i++)
+		Lender lender=lenderService.getCurrentUser();
+		List<Submit> submits=submitDao.findAllPayedByLenderAndProductState(lender.getId(), Product.STATE_REPAYING);
+		if(submits==null||submits.size()==0)
+			return new ArrayList<PayBack>(0);
+		Map<String, Integer> productIds=new HashMap<String, Integer>();
+		for(Submit submit:submits)
 		{
-			PayBack payBack=new PayBack();
-			payBack.setChiefAmount(new BigDecimal(10000));
-			payBack.setInterest(new BigDecimal(1000));
-			payBack.setDeadline(System.currentTimeMillis());
-			payBack.setProduct(new Product());
-			payBack.getProduct().setId(123);
-			payBack.getProduct().setGovermentOrder(new GovermentOrder());
-			payBack.getProduct().getGovermentOrder().setTitle("淘宝借钱三期");
-			payBacks.add(payBack);
+			productIds.put(submit.getProductId().toString(), submit.getProductId());
 		}
-		return payBacks;
+		List<PayBack> payBacks=payBackDao.findByProductsAndState(new ArrayList<Integer>(productIds.values()), PayBack.STATE_WAITFORREPAY);
+		List<PayBack> lenderPayBacks=new ArrayList<PayBack>();
+		if(payBacks==null||payBacks.size()==0)
+			return new ArrayList<PayBack>(0);
+		for(PayBack payBack:payBacks)
+		{
+			Product product=productDao.find(payBack.getProductId());
+			List<Submit> list=findSubmits(submits, payBack.getProductId());
+			if(list==null||list.size()==0)
+				continue;
+			for(Submit submit:list)
+			{
+				PayBack lenderPayBack=new PayBack();
+				lenderPayBack.setBorrowerAccountId(payBack.getBorrowerAccountId());
+				lenderPayBack.setChiefAmount(payBack.getChiefAmount().multiply(submit.getAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_DOWN));
+				lenderPayBack.setDeadline(payBack.getDeadline());
+				lenderPayBack.setId(payBack.getId());
+				lenderPayBack.setInterest(payBack.getInterest().multiply(submit.getAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_DOWN));
+				lenderPayBack.setProduct(product);
+				lenderPayBack.setProductId(payBack.getProductId());
+				lenderPayBack.setState(payBack.getState());
+				lenderPayBack.setType(payBack.getType());
+				lenderPayBacks.add(lenderPayBack);
+			}
+		}
+		return lenderPayBacks;
+//		List<PayBack> payBacks=new ArrayList<PayBack>();
+//		for(int i=0;i<100;i++)
+//		{
+//			PayBack payBack=new PayBack();
+//			payBack.setChiefAmount(new BigDecimal(10000));
+//			payBack.setInterest(new BigDecimal(1000));
+//			payBack.setDeadline(System.currentTimeMillis());
+//			payBack.setProduct(new Product());
+//			payBack.getProduct().setId(123);
+//			payBack.getProduct().setGovermentOrder(new GovermentOrder());
+//			payBack.getProduct().getGovermentOrder().setTitle("淘宝借钱三期");
+//			payBacks.add(payBack);
+//		}
+//		return payBacks;
+	}
+	private List<Submit> findSubmits(List<Submit> submits,Integer productId)
+	{
+		if(submits==null||submits.size()==0)
+			return null;
+		List<Submit> list=new ArrayList<Submit>();
+		for(Submit submit:submits)
+		{
+			if((int)productId==submit.getProductId())
+				list.add(submit);
+		}
+		return list;
 	}
 
 }

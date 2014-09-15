@@ -8,7 +8,7 @@ import gpps.model.GovermentOrder;
 
 public interface IGovermentOrderDao {
 	public void create(GovermentOrder govermentOrder);
-	public void changeState(@Param("orderId")Integer orderId,@Param("state")int state);
+	public void changeState(@Param("orderId")Integer orderId,@Param("state")int state,@Param("lastModifytime")long lastModifytime);
 	public List<GovermentOrder> findByStatesWithPaging(@Param("states")List<Integer> states,@Param("offset")int offset,@Param("recnum")int recnum);
 	public List<GovermentOrder> findByStates(@Param("states")List<Integer> states);
 	public int countByState(@Param("states")List<Integer> states);

@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2014/9/12 16:34:59                           */
+/* Created on:     2014/9/15 10:00:25                           */
 /*==============================================================*/
 
 
@@ -11,8 +11,6 @@ drop table if exists BorrowerAccount;
 drop table if exists Govermentorder;
 
 drop table if exists Lender;
-
-drop table if exists Lender2;
 
 drop table if exists LenderAccount;
 
@@ -100,6 +98,7 @@ create table Govermentorder
    title                varchar(255),
    incomeStarttime      bigint not null,
    incomeEndtime        bigint not null,
+   lastModifytime       bigint not null,
    primary key (ID)
 );
 
@@ -125,29 +124,6 @@ create table Lender
    address              varchar(255),
    thirdPartyAccount    varchar(255),
    annualIncome         varchar(255),
-   primary key (id)
-);
-
-/*==============================================================*/
-/* Table: Lender2                                               */
-/*==============================================================*/
-create table Lender2
-(
-   id                   integer not null auto_increment,
-   name                 varchar(50),
-   tel                  varchar(50),
-   email                varchar(50),
-   loginId              varchar(255),
-   password             varchar(255) not null,
-   identitycard         varchar(50),
-   accountid            integer not null,
-   createtime           BIGINT not null,
-   privilege            int not null comment '00：普通用户
-            01：vip1',
-   grade                int not null default 0,
-   level                int not null default 0,
-   sex                  int not null default 0,
-   address              varchar(255),
    primary key (id)
 );
 
@@ -443,4 +419,3 @@ alter table payback add constraint FK_Ref_payback_borroweraccount foreign key (b
 
 alter table payback add constraint FK_Ref_payback_product foreign key (productId)
       references Product (ID) on delete restrict on update restrict;
-

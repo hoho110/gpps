@@ -125,7 +125,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		{
 			if(order.getState()==validStateConvert[0]&&state==validStateConvert[1])
 			{
-				govermentOrderDao.changeState(orderId, state);
+				govermentOrderDao.changeState(orderId, state,System.currentTimeMillis());
 				return;
 			}
 		}

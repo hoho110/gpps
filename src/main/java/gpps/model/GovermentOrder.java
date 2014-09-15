@@ -30,6 +30,7 @@ public class GovermentOrder {
 	public Lock lock=null;
 	private long incomeStarttime;
 	private long incomeEndtime;
+	private long lastModifytime;
 	public Integer getId() {
 		return id;
 	}
@@ -91,12 +92,23 @@ public class GovermentOrder {
 	public void setIncomeEndtime(long incomeEndtime) {
 		this.incomeEndtime = incomeEndtime;
 	}
+	public long getLastModifytime() {
+		return lastModifytime;
+	}
+	public void setLastModifytime(long lastModifytime) {
+		this.lastModifytime = lastModifytime;
+	}
+	//辅助
 	public List<Product> getProducts() {
 		return products;
 	}
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
+	
+	
+	
+	
 	
 	public Product findProductById(Integer productId)
 	{

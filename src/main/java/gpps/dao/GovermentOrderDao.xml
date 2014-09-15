@@ -4,12 +4,12 @@
 	<insert id="create" parameterType="gpps.model.GovermentOrder"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
-		GovermentOrder(title,borrowerId,material,state,financingStarttime,financingEndtime,createtime,incomeStarttime,incomeEndtime)
-		values(#{title},#{borrowerId},#{material},#{state},#{financingStarttime},#{financingEndtime},#{createtime},#{incomeStarttime},#{incomeEndtime})
+		GovermentOrder(title,borrowerId,material,state,financingStarttime,financingEndtime,createtime,incomeStarttime,incomeEndtime,lastModifytime)
+		values(#{title},#{borrowerId},#{material},#{state},#{financingStarttime},#{financingEndtime},#{createtime},#{incomeStarttime},#{incomeEndtime},#{lastModifytime})
 	</insert>
 	<update id="changeState">
 		update GovermentOrder set
-		state=#{state}
+		state=#{state},lastModifytime=#{lastModifytime}
 		where
 		id=#{orderId}
 	</update>

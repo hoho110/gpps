@@ -8,6 +8,7 @@
  
     <link rel="stylesheet" type="text/css" href="css/new-lufax-main.css">
                 <link rel="stylesheet" type="text/css" href="css/new-lufax.css">
+                <link rel="stylesheet" type="text/css" href="css/gpps/productlist.css">
 </head>
  
 <body>
@@ -168,27 +169,30 @@
     	
     	$('ul.list-table li').remove();
     	for(var i=0; i<rst.size(); i++){
-    		var order = rst.get(i);
-    		var state = order.state;
-    		var pros = order.products;
-    		if(pros.size()==0){
-    			continue;
-    		}
-    		if(pros.size()==1){
-    			var pro = pros.get(0);
-    			
-    			$('ul.list-table').append(createSingleProduct(order.title, state, formatDateToDay(order.financingEndtime), seriesname[pro.productseriesId], parseInt(parseFloat(pro.rate.value)*100)+"%", '3个月', pro.expectAmount.value, pro.realAmount.value));
-    		}else{
-    			var totalamount = 0;
-    			var doneamount = 0;
-    			var rates = {};
-    			for(var t=0; t<pros.size(); t++){
-    				totalamount += parseInt(pros.get(t).expectAmount.value);
-    				doneamount += parseInt(pros.get(t).realAmount.value);
-    				rates[seriesname[pros.get(t).productseriesId]] = [parseInt(parseFloat(pros.get(t).rate.value)*100)+"%", pros.get(t).levelToBuy];
-    			}
-    			$('ul.list-table').append(createStructureProduct(order.title, state, formatDateToDay(order.financingEndtime), rates, '3个月', totalamount, doneamount));
-    		}
+    	//	var order = rst.get(i);
+    	//	var state = order.state;
+    	//	var pros = order.products;
+    	//	if(pros.size()==0){
+    	//		continue;
+    	//	}
+    	//	if(pros.size()==1){
+    	//		var pro = pros.get(0);
+    	//		
+    	//		$('ul.list-table').append(createSingleProduct(order.title, state, formatDateToDay(order.financingEndtime), seriesname[pro.productseriesId], parseInt(parseFloat(pro.rate.value)*100)+"%", '3个月', pro.expectAmount.value, pro.realAmount.value));
+    	//	}else{
+    	///		var totalamount = 0;
+    	//		var doneamount = 0;
+    	//		var rates = {};
+    	//		for(var t=0; t<pros.size(); t++){
+    	//			totalamount += parseInt(pros.get(t).expectAmount.value);
+    	//			doneamount += parseInt(pros.get(t).realAmount.value);
+    	//			rates[seriesname[pros.get(t).productseriesId]] = [parseInt(parseFloat(pros.get(t).rate.value)*100)+"%", pros.get(t).levelToBuy];
+    	//		}
+    	//		$('ul.list-table').append(createStructureProduct(order.title, state, formatDateToDay(order.financingEndtime), rates, '3个月', totalamount, doneamount));
+    	//	}
+    	
+    	$('ul.list-table').append(createProduct2(rst.get(i)));
+    	
     	}
  	}
  	
@@ -236,6 +240,26 @@
         	 
         	 
         	 window.parent.justify(document.body.scrollHeight);
+        	 
+        	 
+        	 $('a.constructure').click(function(e){
+          	   var info = $(this).parents('li').find('div.productinfo');
+          	  	if(info.css('display')=='block'){
+          	  		info.css('display', 'none');
+          	  		var stat = $(this).parents('li').find('div.stat');
+          	  		if(stat.text()=='投资中'){
+          	  			stat.removeClass('stategrey').addClass('state');
+          	  		}else if(stat.text()=='预发布'){
+          	  			stat.removeClass('stategrey').addClass('stategreen');
+          	  		}
+          	  	}else{
+          	  		//$('ul#productlist li').find('div.productinfo').css('display', 'none');
+          	  		info.css('display', 'block');
+          	  		var stat = $(this).parents('li').find('div.stat');
+          	  		stat.removeClass('state').removeClass('stategreen').addClass('stategrey');
+          	  	}
+          	  	window.parent.justify(document.body.scrollHeight);
+             });
         	 
         	 
          });

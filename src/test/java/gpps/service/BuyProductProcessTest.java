@@ -83,8 +83,8 @@ public class BuyProductProcessTest extends TestSupport{
 		int productExpectAmount=15*10000;
 		//创建贷款人
 		long start=System.currentTimeMillis();
-//		Lender lender_a=createLender("lender_a_"+start,"1"+start);
-		Lender lender_a=createLender("calis123","1"+start);
+		Lender lender_a=createLender("lender_a_"+start,"1"+start);
+//		Lender lender_a=createLender("calis123","1"+start);
 		Lender lender_b=createLender("lender_b_"+start,"2"+start);
 		//充值
 		try {

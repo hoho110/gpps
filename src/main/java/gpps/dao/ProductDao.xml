@@ -14,16 +14,16 @@
 		id=#{id}
 	</update>
 	<select id="find" parameterType="Integer" resultType="gpps.model.Product">
-		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime
+		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime,minimum
 		from Product where id=#{id}
 	</select>
 	<select id="findByGovermentOrder" parameterType="Integer"
 		resultType="gpps.model.Product">
-		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime
+		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime,minimum
 		from Product where govermentorderId=#{orderId}
 	</select>
 	<select id="findByState" resultType="gpps.model.Product">
-		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime
+		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime,minimum
 		from Product
 		<if test="states != null">
 			where state in
@@ -46,7 +46,7 @@
 		</if>
 	</select>
 	<select id="findByProductSeriesAndState" resultType="gpps.model.Product">
-		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime
+		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime,minimum
 		from Product where productSeriesId=#{productSeriesId}
 		<if test="states != null">
 			and state

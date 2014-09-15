@@ -24,6 +24,7 @@ import gpps.model.Submit;
 import gpps.service.IAccountService;
 import gpps.service.IBorrowerService;
 import gpps.service.ILenderService;
+import gpps.service.PayBackDetail;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
 
@@ -384,6 +385,18 @@ public class AccountServiceImpl implements IAccountService {
 				list.add(submit);
 		}
 		return list;
+	}
+
+	@Override
+	public Map<String, PayBackDetail> getLenderRepayedDetail() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Map<String, PayBackDetail> getLenderWillBeRepayedDetail() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

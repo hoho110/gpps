@@ -111,4 +111,7 @@ public interface IAccountService {
 	 * @return
 	 */
 	public List<PayBack> findLenderWaitforRepay();
+	
+	public Map<String,PayBackDetail> getLenderRepayedDetail();
+	public Map<String,PayBackDetail> getLenderWillBeRepayedDetail();
 }

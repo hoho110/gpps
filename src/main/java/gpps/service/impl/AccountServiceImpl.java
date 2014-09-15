@@ -334,6 +334,7 @@ public class AccountServiceImpl implements IAccountService {
 			PayBack payBack=new PayBack();
 			payBack.setChiefAmount(new BigDecimal(10000));
 			payBack.setInterest(new BigDecimal(1000));
+			payBack.setDeadline(System.currentTimeMillis());
 			payBack.setProduct(new Product());
 			payBack.getProduct().setId(123);
 			payBack.getProduct().setGovermentOrder(new GovermentOrder());

@@ -397,15 +397,20 @@ public class AccountServiceImpl implements IAccountService {
 		Calendar cal=Calendar.getInstance();
 		long endtime=cal.getTimeInMillis();
 		cal.add(Calendar.YEAR, -1);
-		map.put(PayBackDetail.ONEYEAR, cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime));
+		PayBackDetail detail=cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime);
+		map.put(PayBackDetail.ONEYEAR, detail==null?new PayBackDetail():detail);
 		cal.add(Calendar.MONTH, 6);
-		map.put(PayBackDetail.HALFYEAR, cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime));
+		detail=cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime);
+		map.put(PayBackDetail.HALFYEAR, detail==null?new PayBackDetail():detail);
 		cal.add(Calendar.MONTH, 3);
-		map.put(PayBackDetail.THREEMONTH, cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime));
+		detail=cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime);
+		map.put(PayBackDetail.THREEMONTH, detail==null?new PayBackDetail():detail);
 		cal.add(Calendar.MONTH, 1);
-		map.put(PayBackDetail.TWOMONTH, cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime));
+		detail=cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime);
+		map.put(PayBackDetail.TWOMONTH, detail==null?new PayBackDetail():detail);
 		cal.add(Calendar.MONTH, 1);
-		map.put(PayBackDetail.ONEMONTH, cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime));
+		detail=cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime);
+		map.put(PayBackDetail.ONEMONTH, detail==null?new PayBackDetail():detail);
 		return map;
 	}
 

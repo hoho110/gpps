@@ -178,27 +178,88 @@ var myactivity = function(){
 }
 
 var submitall = function(){
+//	var content = $('<div></div>');
+//	var str = "";
+//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
+//	str += '<thead>';	
+//	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">状态</td><td style="min-width:100px;">投标完成时间</td><td style="min-width:50px;">金额</td><td style="min-width:50px;">已回款</td><td style="min-width:50px;">待回款</td><td style="min-width:50px;">合同</td></tr>';
+//	str += '</thead>';
+//	str += '<tbody>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>回款中</td><td>2014-8-5</td><td>500</td><td>0</td><td>23</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>回款中</td><td>2014-7-31</td><td>200</td><td>0</td><td>9.87</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款3</a></td><td>回款中</td><td>2014-7-16</td><td>300</td><td>0.57</td><td>13</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款4</a></td><td>回款中</td><td>2014-7-3</td><td>1500</td><td>15</td><td>150</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款5</a></td><td>回款中</td><td>2014-6-18</td><td>1000</td><td>20</td><td>123</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款6</a></td><td>投标中</td><td>2014-8-5</td><td>500</td><td>0</td><td>23</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款7</a></td><td>回款中</td><td>2014-7-31</td><td>200</td><td>0</td><td>9.87</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款8</a></td><td>回款中</td><td>2014-7-16</td><td>300</td><td>0.57</td><td>13</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款9</a></td><td>回款中</td><td>2014-7-3</td><td>1500</td><td>15</td><td>150</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款10</a></td><td>回款中</td><td>2014-6-18</td><td>1000</td><td>20</td><td>123</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
+//	str += '</tbody>';
+//	str += '</table>';
+//	content.append(str);
+//	return content;
 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
+	var columns = [ {
+		"sTitle" : "项目信息",
+			"code" : "info"
+	}, {
+		"sTitle" : "状态",
+		"code" : "state"
+	}, {
+		"sTitle" : "投标完成时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "金额",
+		"code" : "amount"
+	}, {
+		"sTitle" : "已回款",
+		"code" : "repayed"
+	}, {
+		"sTitle" : "待回款",
+		"code" : "willBeRepayed"
+	}, {
+		"sTitle" : "合同",
+		"code" : "contract"
+	}];
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = submitService.findMyAllSubmits(iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		for(var i=0; i<items.size(); i++){
+			var item=items.get(i);
+			result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' target='_blank'>"+item.product.govermentOrder.title+"</a>",
+			                    cashs.get(i).chiefamount.value, cashs.get(i).interest.value, 0, cashstate[cashs.get(i).action], cashs.get(i).description]);
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
 	var content = $('<div></div>');
-	var str = "";
-	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-	str += '<thead>';	
-	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">状态</td><td style="min-width:100px;">投标完成时间</td><td style="min-width:50px;">金额</td><td style="min-width:50px;">已回款</td><td style="min-width:50px;">待回款</td><td style="min-width:50px;">合同</td></tr>';
-	str += '</thead>';
-	str += '<tbody>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>回款中</td><td>2014-8-5</td><td>500</td><td>0</td><td>23</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>回款中</td><td>2014-7-31</td><td>200</td><td>0</td><td>9.87</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款3</a></td><td>回款中</td><td>2014-7-16</td><td>300</td><td>0.57</td><td>13</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款4</a></td><td>回款中</td><td>2014-7-3</td><td>1500</td><td>15</td><td>150</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款5</a></td><td>回款中</td><td>2014-6-18</td><td>1000</td><td>20</td><td>123</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款6</a></td><td>投标中</td><td>2014-8-5</td><td>500</td><td>0</td><td>23</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款7</a></td><td>回款中</td><td>2014-7-31</td><td>200</td><td>0</td><td>9.87</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款8</a></td><td>回款中</td><td>2014-7-16</td><td>300</td><td>0.57</td><td>13</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款9</a></td><td>回款中</td><td>2014-7-3</td><td>1500</td><td>15</td><td>150</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款10</a></td><td>回款中</td><td>2014-6-18</td><td>1000</td><td>20</td><td>123</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-	str += '</tbody>';
-	str += '</table>';
-	content.append(str);
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	table.dataTable(mySettings);
 	return content;
 }
 
@@ -280,6 +341,39 @@ var submitdone = function(){
 }
 
 var paybackall = function(){
+//	var content = $('<div></div>');
+//	var str = "";
+//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
+//	str += '<thead>';	
+//	str += '<tr><td style="min-width:100px;">已回款统计</td><th style="min-width:50px;">最近一年</th><th style="min-width:100px;">最近半年</th><th style="min-width:50px;">最近三个月</th><th style="min-width:50px;">最近两个月</th><th style="min-width:50px;">最近一个月</th></tr>';
+//	str += '</thead>';
+//	str += '<tbody>';
+//	str += '<tr><td>本金</td><td>30000</td><td>20000</td><td>15000</td><td>10000</td><td>5000</td></tr>';
+//	str += '<tr><td>利息</td><td>6000</td><td>4000</td><td>3000</td><td>2000</td><td>1000</td></tr>';
+//	str += '<tr><td>总计</td><td>36000</td><td>24000</td><td>18000</td><td>12000</td><td>6000</td></tr>';
+//	str += '</tbody>';
+//	str += '</table>';
+//	
+//	str += '<br>';
+//	str += '<br>';
+//	
+//	
+//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
+//	str += '<thead>';	
+//	str += '<tr><td style="min-width:100px;">待回款统计</td><th style="min-width:50px;">未来一年</th><th style="min-width:100px;">未来半年</th><th style="min-width:50px;">未来三个月</th><th style="min-width:50px;">未来两个月</th><th style="min-width:50px;">未来一个月</th></tr>';
+//	str += '</thead>';
+//	str += '<tbody>';
+//	str += '<tr><td>本金</td><td>30000</td><td>20000</td><td>15000</td><td>10000</td><td>5000</td></tr>';
+//	str += '<tr><td>利息</td><td>6000</td><td>4000</td><td>3000</td><td>2000</td><td>1000</td></tr>';
+//	str += '<tr><td>总计</td><td>36000</td><td>24000</td><td>18000</td><td>12000</td><td>6000</td></tr>';
+//	str += '</tbody>';
+//	str += '</table>';
+//	
+//	content.append(str);
+//	return content;
+	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
+	var repayedDetail=account.getLenderRepayedDetail();
+	var willBeRepayedDetail=account.getLenderWillBeRepayedDetail();
 	var content = $('<div></div>');
 	var str = "";
 	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
@@ -287,9 +381,21 @@ var paybackall = function(){
 	str += '<tr><td style="min-width:100px;">已回款统计</td><th style="min-width:50px;">最近一年</th><th style="min-width:100px;">最近半年</th><th style="min-width:50px;">最近三个月</th><th style="min-width:50px;">最近两个月</th><th style="min-width:50px;">最近一个月</th></tr>';
 	str += '</thead>';
 	str += '<tbody>';
-	str += '<tr><td>本金</td><td>30000</td><td>20000</td><td>15000</td><td>10000</td><td>5000</td></tr>';
-	str += '<tr><td>利息</td><td>6000</td><td>4000</td><td>3000</td><td>2000</td><td>1000</td></tr>';
-	str += '<tr><td>总计</td><td>36000</td><td>24000</td><td>18000</td><td>12000</td><td>6000</td></tr>';
+	str += '<tr><td>本金</td><td>'+repayedDetail.get("oneyear").chiefAmount.value+'</td><td>'
+								 +repayedDetail.get("halfyear").chiefAmount.value+'</td><td>'
+								 +repayedDetail.get("threemonth").chiefAmount.value+'</td><td>'
+								 +repayedDetail.get("twomonth").chiefAmount.value+'</td><td>'
+								 +repayedDetail.get("onemonth").chiefAmount.value+'</td></tr>';
+	str += '<tr><td>利息</td><td>'+repayedDetail.get("oneyear").interest.value+'</td><td>'
+	 							 +repayedDetail.get("halfyear").interest.value+'</td><td>'
+ 							 	 +repayedDetail.get("threemonth").interest.value+'</td><td>'
+ 							 	 +repayedDetail.get("twomonth").interest.value+'</td><td>'
+ 							 	 +repayedDetail.get("onemonth").interest.value+'</td></tr>';
+	str += '<tr><td>总计</td><td>'+(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("oneyear").interest.value))+'</td><td>'
+	 							 +(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("halfyear").interest.value))+'</td><td>'
+	 							 +(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("threemonth").interest.value))+'</td><td>'
+	 							 +(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("twomonth").interest.value))+'</td><td>'
+	 							 +(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("onemonth").interest.value))+'</td></tr>';
 	str += '</tbody>';
 	str += '</table>';
 	
@@ -302,9 +408,21 @@ var paybackall = function(){
 	str += '<tr><td style="min-width:100px;">待回款统计</td><th style="min-width:50px;">未来一年</th><th style="min-width:100px;">未来半年</th><th style="min-width:50px;">未来三个月</th><th style="min-width:50px;">未来两个月</th><th style="min-width:50px;">未来一个月</th></tr>';
 	str += '</thead>';
 	str += '<tbody>';
-	str += '<tr><td>本金</td><td>30000</td><td>20000</td><td>15000</td><td>10000</td><td>5000</td></tr>';
-	str += '<tr><td>利息</td><td>6000</td><td>4000</td><td>3000</td><td>2000</td><td>1000</td></tr>';
-	str += '<tr><td>总计</td><td>36000</td><td>24000</td><td>18000</td><td>12000</td><td>6000</td></tr>';
+	str += '<tr><td>本金</td><td>'+willBeRepayedDetail.get("oneyear").chiefAmount.value+'</td><td>'
+								 +willBeRepayedDetail.get("halfyear").chiefAmount.value+'</td><td>'
+								 +willBeRepayedDetail.get("threemonth").chiefAmount.value+'</td><td>'
+								 +willBeRepayedDetail.get("twomonth").chiefAmount.value+'</td><td>'
+								 +willBeRepayedDetail.get("onemonth").chiefAmount.value+'</td></tr>';
+	str += '<tr><td>利息</td><td>'+willBeRepayedDetail.get("oneyear").interest.value+'</td><td>'
+								 +willBeRepayedDetail.get("halfyear").interest.value+'</td><td>'
+							 	 +willBeRepayedDetail.get("threemonth").interest.value+'</td><td>'
+							 	 +willBeRepayedDetail.get("twomonth").interest.value+'</td><td>'
+							 	 +willBeRepayedDetail.get("onemonth").interest.value+'</td></tr>';
+	str += '<tr><td>总计</td><td>'+(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("oneyear").interest.value))+'</td><td>'
+								 +(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("halfyear").interest.value))+'</td><td>'
+								 +(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("threemonth").interest.value))+'</td><td>'
+								 +(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("twomonth").interest.value))+'</td><td>'
+								 +(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("onemonth").interest.value))+'</td></tr>';
 	str += '</tbody>';
 	str += '</table>';
 	

@@ -42,6 +42,33 @@ var defaultSettings = {
 				"aaSorting" : [ [ 4, "desc" ] ],
 				"oLanguage" : _defaultDataTableOLanguage
 			};
+var defaultSettings_noCallBack = {
+		"bServerSide" : false,
+		"bAutoWidth" : true,
+		"bStateSave" : false, //保存状态到cookie ******很重要 ， 当搜索的时候页面一刷新会导致搜索的消失。使用这个属性设置为true就可避免了 
+		"bPaginate" : true, // 是否使用分页
+		"bProcessing" : false, //是否显示正在处理的提示 
+		"bLengthChange" : true, //是否启用设置每页显示记录数 
+		"iDisplayLength" : 10, //默认每页显示的记录数
+		"aLengthMenu" : [ 10, 15, 25, 50 ],
+		"bFilter" : false, //是否使用搜索 
+		"bJQueryUI" : true, //页面风格使用jQuery.
+		// "sScrollY": 200,//竖向滚动条 tbody区域的高度
+		"sScrollX" : "100%", //横向滚动条 
+		"sScrollXInner" : "100%",
+		"bScrollCollapse" : true,
+		"aoColumns" : [],
+		"aaData" : [],
+		"sPaginationType": "full_numbers", //分页样式
+		"bAutoWidth" : true, //列的宽度会根据table的宽度自适应 
+		"bSort" : false, //是否使用排序 
+		"aoColumnDefs" : [ {
+			"bSortable" : false,
+			"aTargets" :["_all"]
+		} ],
+		"aaSorting" : [ [ 4, "desc" ] ],
+		"oLanguage" : _defaultDataTableOLanguage
+	};
 
 
 
@@ -346,7 +373,7 @@ var paybackhave = function(){
 		var datas = res.get('result');
 		for(var i=0; i<datas.size(); i++){
 			var data=datas.get(i);
-			result.aaData.push(["<a href='productdetail.html?productId="+data.submit.product.id+"' target='_blank'>"+data.submit.product.govermentOrder.title+"</a>",
+			result.aaData.push(["<a href='productdetail.html?pid="+data.submit.product.id+"' target='_blank'>"+data.submit.product.govermentOrder.title+"</a>",
 			                    parseFloat(data.chiefamount.value)+parseFloat(data.interest.value),
 			                    data.chiefamount.value,
 			                    data.interest.value,
@@ -412,13 +439,13 @@ var paybackto = function(){
 	var aaData = new Array();
 	for(var i=0; i<datas.size(); i++){
 		var data=datas.get(i);
-		aaData.push(["<a href='productdetail.html?productId="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"</a>",
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"</a>",
 		                    parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value),
 		                    data.chiefAmount.value,
 		                    data.interest.value,
 		                    formatDate(data.deadline)]);
 	}
-	var mySettings = $.extend({}, defaultSettings, {
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
 		"aoColumns" : columns,
 		"aaData" : aaData
 	});

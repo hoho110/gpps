@@ -373,8 +373,8 @@ create table productseries
 (
    ID                   integer not null auto_increment,
    title                varchar(100) not null,
-   message              mediumtext,
-   decstription         varchar(2000),
+   tag              mediumtext,
+   desctription         varchar(2000),
    primary key (ID)
 );
 

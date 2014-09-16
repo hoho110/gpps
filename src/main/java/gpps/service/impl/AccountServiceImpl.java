@@ -30,9 +30,11 @@ import gpps.service.exception.InsufficientBalanceException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -389,13 +391,81 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	public Map<String, PayBackDetail> getLenderRepayedDetail() {
-		return null;
+		Lender lender=lenderService.getCurrentUser();
+		Map<String, PayBackDetail> map=new HashMap<String, PayBackDetail>();
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
+		Calendar cal=Calendar.getInstance();
+		long endtime=cal.getTimeInMillis();
+		cal.add(Calendar.YEAR, -1);
+		map.put(PayBackDetail.ONEYEAR, cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime));
+		cal.add(Calendar.MONTH, 6);
+		map.put(PayBackDetail.HALFYEAR, cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime));
+		cal.add(Calendar.MONTH, 3);
+		map.put(PayBackDetail.THREEMONTH, cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime));
+		cal.add(Calendar.MONTH, 1);
+		map.put(PayBackDetail.TWOMONTH, cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime));
+		cal.add(Calendar.MONTH, 1);
+		map.put(PayBackDetail.ONEMONTH, cashStreamDao.sumLenderRepayed(lender.getAccountId(), cal.getTimeInMillis(), endtime));
+		return map;
 	}
 
 	@Override
 	public Map<String, PayBackDetail> getLenderWillBeRepayedDetail() {
-		// TODO Auto-generated method stub
-		return null;
+		List<PayBack> payBacks=findLenderWaitforRepay();
+		Map<String, PayBackDetail> map=new HashMap<String, PayBackDetail>();
+		map.put(PayBackDetail.ONEYEAR, new PayBackDetail());
+		map.put(PayBackDetail.HALFYEAR, new PayBackDetail());
+		map.put(PayBackDetail.THREEMONTH, new PayBackDetail());
+		map.put(PayBackDetail.TWOMONTH, new PayBackDetail());
+		map.put(PayBackDetail.ONEMONTH, new PayBackDetail());
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
+		Calendar cal=Calendar.getInstance();
+		cal.add(Calendar.YEAR, 1);
+		long afterOneYear=cal.getTimeInMillis();
+		cal.add(Calendar.MONTH, -6);
+		long afterHalfYear=cal.getTimeInMillis();
+		cal.add(Calendar.MONTH, -3);
+		long afterThreeMonth=cal.getTimeInMillis();
+		cal.add(Calendar.MONTH, -1);
+		long afterTwoMonth=cal.getTimeInMillis();
+		cal.add(Calendar.MONTH, -1);
+		long afterOneMonth=cal.getTimeInMillis();
+		if(payBacks==null||payBacks.size()==0)
+			return map;
+		for(PayBack payBack:payBacks)
+		{
+			if(payBack.getDeadline()<=afterOneYear)
+			{
+				PayBackDetail detail=map.get(PayBackDetail.ONEYEAR);
+				detail.setChiefAmount(detail.getChiefAmount().add(payBack.getChiefAmount()));
+				detail.setInterest(detail.getInterest().add(payBack.getInterest()));
+			}
+			if(payBack.getDeadline()<=afterHalfYear)
+			{
+				PayBackDetail detail=map.get(PayBackDetail.HALFYEAR);
+				detail.setChiefAmount(detail.getChiefAmount().add(payBack.getChiefAmount()));
+				detail.setInterest(detail.getInterest().add(payBack.getInterest()));
+			}
+			if(payBack.getDeadline()<=afterThreeMonth)
+			{
+				PayBackDetail detail=map.get(PayBackDetail.THREEMONTH);
+				detail.setChiefAmount(detail.getChiefAmount().add(payBack.getChiefAmount()));
+				detail.setInterest(detail.getInterest().add(payBack.getInterest()));
+			}
+			if(payBack.getDeadline()<=afterTwoMonth)
+			{
+				PayBackDetail detail=map.get(PayBackDetail.TWOMONTH);
+				detail.setChiefAmount(detail.getChiefAmount().add(payBack.getChiefAmount()));
+				detail.setInterest(detail.getInterest().add(payBack.getInterest()));
+			}
+			if(payBack.getDeadline()<=afterOneMonth)
+			{
+				PayBackDetail detail=map.get(PayBackDetail.ONEMONTH);
+				detail.setChiefAmount(detail.getChiefAmount().add(payBack.getChiefAmount()));
+				detail.setInterest(detail.getInterest().add(payBack.getInterest()));
+			}
+		}
+		return map;
 	}
 
 }

@@ -8,8 +8,8 @@ public class PayBackDetail {
 	public static final String THREEMONTH="threemonth";
 	public static final String TWOMONTH="twomonth";
 	public static final String ONEMONTH="onemonth";
-	private BigDecimal chiefAmount;
-	private BigDecimal interest;
+	private BigDecimal chiefAmount=BigDecimal.ZERO;
+	private BigDecimal interest=BigDecimal.ZERO;
 	public BigDecimal getChiefAmount() {
 		return chiefAmount;
 	}

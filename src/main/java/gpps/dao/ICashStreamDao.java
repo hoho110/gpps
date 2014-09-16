@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import gpps.model.CashStream;
+import gpps.service.PayBackDetail;
 
 public interface ICashStreamDao {
 	public void create(CashStream cashStream);
@@ -23,4 +24,5 @@ public interface ICashStreamDao {
 	 */
 	public List<CashStream> findByActionAndState(@Param("lenderAccountId")Integer lenderAccountId,@Param("borrowerAccountId")Integer borrowerAccountId,@Param("action")int action,@Param("state")int state,@Param("offset")int offset,@Param("recnum")int recnum);
 	public int countByActionAndState(@Param("lenderAccountId")Integer lenderAccountId,@Param("borrowerAccountId")Integer borrowerAccountId,@Param("action")int action,@Param("state")int state);
+	public PayBackDetail sumLenderRepayed(@Param("lenderAccountId")Integer lenderAccountId,@Param("starttime")long starttime,@Param("endtime")long endtime);
 }

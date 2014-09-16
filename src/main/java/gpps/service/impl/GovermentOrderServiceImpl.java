@@ -340,4 +340,11 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		}
 		return Pagination.buildResult(orders, count, offset, recnum);
 	}
+	@Override
+	public GovermentOrder findGovermentOrderByProduct(Integer productId) {
+		Product product=productDao.find(productId);
+		GovermentOrder order=govermentOrderDao.find(product.getGovermentorderId());
+		order.setProducts(productDao.findByGovermentOrder(order.getId()));
+		return order;
+	}
 }

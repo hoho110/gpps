@@ -90,5 +90,10 @@ public interface IGovermentOrderService {
 	public Map<String, Object> findGovermentOrderByProductSeries(Integer productSeriesId,int states,int offset,int recnum);
 	
 	public Map<String, Object> findByStatesByPage(int states,int offset,int recnum);
-	
+	/**
+	 * 返回产品所属订单以及订单的所有产品
+	 * @param productId
+	 * @return
+	 */
+	public GovermentOrder findGovermentOrderByProduct(Integer productId);
 }

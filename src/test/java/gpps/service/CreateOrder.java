@@ -11,6 +11,28 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class CreateOrder {
+	
+	
+	public static Integer createSingleOrder(ApplicationContext context, String title, Integer bid){
+		IGovermentOrderService orderService = context.getBean(IGovermentOrderService.class);
+		GovermentOrder or = new GovermentOrder();
+		or.setBorrowerId(bid);
+		or.setCreatetime((new Date()).getTime());
+		or.setFinancingStarttime((new Date()).getTime()+24*3600*1000);
+		or.setFinancingEndtime((new Date()).getTime()+5*24*3600*1000);
+		
+		or.setTitle(title);
+		or.setIncomeStarttime((new Date()).getTime()+6*24*3600*1000);
+		or.setIncomeEndtime((new Date()).getTime()+96*24*3600*1000);
+		or.setLastModifytime((new Date()).getTime());
+		
+		or.setState(1);
+		or = orderService.create(or);
+		return or.getId();
+	}
+	
+	
+	
 	public static Integer create(ApplicationContext context){
 		IGovermentOrderDao order = context.getBean(IGovermentOrderDao.class);
 		GovermentOrder or = new GovermentOrder();

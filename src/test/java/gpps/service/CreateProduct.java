@@ -10,6 +10,22 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class CreateProduct {
+	
+	public static void createSingle(ApplicationContext context, Integer oid, Integer sid, int leveltobuy, int amount, double rate, int min){
+		IProductService productService = context.getBean(IProductService.class);
+		Product pro = new Product();
+		pro.setCreatetime((new Date()).getTime());
+		pro.setExpectAmount(new BigDecimal(amount));
+		pro.setGovermentorderId(oid);
+		pro.setLevelToBuy(leveltobuy);
+		pro.setProductseriesId(sid);
+		pro.setRate(new BigDecimal(rate));
+		pro.setRealAmount(new BigDecimal(0));
+		pro.setMinimum(min);
+		pro.setState(1);
+		productService.create(pro);
+	}	
+	
 	public static void create(ApplicationContext context){
 		IProductDao product = context.getBean(IProductDao.class);
 		Product pro = new Product();

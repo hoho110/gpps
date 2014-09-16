@@ -17,10 +17,7 @@ public class CreateBorrower {
 		BorrowerAccount account = new BorrowerAccount();
 		accountDao.create(account);
 		
-		
-		
 		Borrower borrower=new Borrower();
-		borrower.setId(1);
 		borrower.setEmail("test@calis.edu.cn");
 		borrower.setIdentityCard("231550215402021533");
 		borrower.setLoginId("test");

@@ -22,7 +22,7 @@
 <div class="content-head clearfix">
     <ul class="breadcrumb">
         <li><a href="index.html">政采贷首页</a> <span class="divider">&gt;</span></li>
-        <li><a href="productlist.html">稳健型</a> <span class="divider">&gt;</span></li>
+        <li id="productseries"></li>
         <li class="active">项目详情</li>
     </ul>
 </div>
@@ -30,11 +30,11 @@
 <div class="product-detail">
     <div class="product-detail-head">
         <div class="product-name-info">
-            <span style="font-size:16px; font-weight:bold; color:orange;">XXXXXX项目</span>
-            <span class="product-code">编号:  14082902819</span>
+            <span id="product-title" style="font-size:16px; font-weight:bold; color:orange;"></span>
+            <span id="product-code" class="product-code"></span>
                                                 <span class="detail-promotion"></span>
         </div>
-        <p class="product-published-date">
+        <p id="product-published-date" class="product-published-date">
             			发布时间：2014-09-01 14:17:00
         </p>
     </div>
@@ -304,8 +304,40 @@
 </div>
  
  <script src="js/cdn/jquery.min.js"></script>
+ <script src="js/gpps/tool.js"></script>
+ <script type="text/javascript"
+				src="/resources/EasyServiceClientFullZ.js"></script>
+ <script type="text/javascript"
+				src="/easyservice/gpps.dao.IGovermentOrderDao?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.dao.IProductSeriesDao?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IProductService?json"></script>
+				
  <script>
   $(document).ready(function () {
+	  
+	  var seriesDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IProductSeriesDao");
+ 	 var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
+ 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
+	
+ 	var pid = getQueryString('pid');
+ 	
+ 	try{
+ 	var product = productService.find(parseInt(pid));
+ 	var series = seriesDao.find(product.productseriesId);
+ 	var order = orderDao.find(product.govermentorderId);
+	  
+ 	$('li#productseries').html('<a href="productlist.html?sid='+series.id+'">'+series.title+'</a> <span class="divider">&gt;</span>');
+ 	$('span#product-title').html(order.title);
+ 	$('span#product-code').html('编号:  '+order.id);
+ 	$('span#product-published-date').html('发布时间： '+formatDateToDay(order.createtime));
+ 	}catch(e){
+ 		alert(e);
+ 		$('body').html('获取产品信息出错！');
+ 		return;
+ 	}
+ 	
 	  window.parent.justify(document.body.scrollHeight);
 	  
         	 $('ul.list-detail-wrap li a').click(function(e){

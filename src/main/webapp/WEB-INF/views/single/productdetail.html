@@ -111,7 +111,7 @@
                         <div class="inputs-gather clearfix">
                             <a class="reduce-btn disabled" disabled="disabled"></a>
                             <input type="text" class="raise-input" id="raiseAmount"
-                                   value="10,000.00">
+                                   value="1000">
                             <a class="plus-btn"></a>
                         </div>
  
@@ -123,7 +123,7 @@
 
 
             <div class="balanceAmount">
-            <p class="balanceAmountCon clearfix">
+            <p id="loginstatus" class="balanceAmountCon clearfix">
             <a href="recharge.html" style="margin-right:20px;">充值</a>
                 		账户可用余额：<span class="amountFormat">19000</span> 元
             </p>
@@ -140,9 +140,9 @@
  
                     <div class="markUpInfo">
                         <p class="mark-up-info">
-                            <span>起投金额：1,000.00
+                            <span id="initAmount">起投金额：1,000.00
                                 元</span>
-                            <span>递增金额：100.00
+                            <span>递增金额：100
                                 元</span>
                         </p>
                     </div>
@@ -308,29 +308,47 @@
  <script type="text/javascript"
 				src="/resources/EasyServiceClientFullZ.js"></script>
  <script type="text/javascript"
-				src="/easyservice/gpps.dao.IGovermentOrderDao?json"></script>
+				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
 <script type="text/javascript"
 				src="/easyservice/gpps.dao.IProductSeriesDao?json"></script>
 <script type="text/javascript"
 				src="/easyservice/gpps.service.IProductService?json"></script>
-				
+<script type="text/javascript"
+				src="/easyservice/gpps.service.ILenderService?json"></script>
+<script type="text/javascript"
+		src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
+<script type="text/javascript"
+		src="/easyservice/gpps.service.ISubmitService?json"></script>				
  <script>
   $(document).ready(function () {
 	  
 	  var seriesDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IProductSeriesDao");
- 	 var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
+ 	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
  	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
-	
+ 	var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+ 	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
+ 	var submit = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
  	var pid = getQueryString('pid');
  	
+ 	var order = null;
+ 	var series = null;
+ 	var product = null;
+ 	
  	try{
- 	var product = productService.find(parseInt(pid));
- 	var series = seriesDao.find(product.productseriesId);
- 	var order = orderDao.find(product.govermentorderId);
+ 	
+ 	order = orderService.findGovermentOrderByProduct(parseInt(pid));
+ 	for(var i=0; i<order.products.size(); i++){
+ 		if(order.products.get(i).id==parseInt(pid)){
+ 			product = order.products.get(i);
+ 			break;
+ 		}
+ 	}
+ 	series = seriesDao.find(product.productseriesId);
 	  
+ 	
  	$('li#productseries').html('<a href="productlist.html?sid='+series.id+'">'+series.title+'</a> <span class="divider">&gt;</span>');
  	$('span#product-title').html(order.title);
- 	$('span#product-code').html('编号:  '+order.id);
+ 	$('span#product-code').html('编号:  '+order.id+"_"+pid);
  	$('span#product-published-date').html('发布时间： '+formatDateToDay(order.createtime));
  	}catch(e){
  		alert(e);
@@ -338,13 +356,36 @@
  		return;
  	}
  	
+ 	$('#raiseAmount').val(product.minimum);
+ 	$('#initAmount').html('起投金额：'+product.minimum+'元');
+ 	
+ 	
+ 	$('a#invest').click(function(e){
+ 		var am = {'_t_':'java.math.BigDecimal','_i_':'4', 'value':'2000'};
+ 		try{
+ 		submit.buy(parseInt(pid), am);
+ 		}catch(e){
+ 			alert('error:'+e.message);
+ 		}
+ 	});
+ 	
 	  window.parent.justify(document.body.scrollHeight);
 	  
         	 $('ul.list-detail-wrap li a').click(function(e){
         		 $('ul.list-detail-wrap').find('li').removeClass('selected');
         		 $(this).parent().addClass('selected');
         		
-        	 })
+        	 });
+        	 
+        	 
+     var cuser = lenderService.getCurrentUser();  
+     if(cuser==null){
+    	 $('p#loginstatus').html('<a href="login.html" style="margin-right:20px;">登录</a>您尚未登录');
+     }else{
+    	 var account = accountDao.find(cuser.accountId);
+    	 $('p#loginstatus').html('<a href="recharge.html" style="margin-right:20px;">充值</a>账户可用余额：<span class="amountFormat">'+account.usable.value+'</span> 元');
+     }
+        	 
         	 
          });
  </script>

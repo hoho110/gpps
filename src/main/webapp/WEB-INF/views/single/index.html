@@ -349,7 +349,7 @@
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.ILenderService?json"></script>
 		<script type="text/javascript"
-				src="/easyservice/gpps.dao.IProductSeriesDao?json"></script>
+				src="/easyservice/gpps.service.IProductSeriesService?json"></script>
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
 <script>
@@ -360,7 +360,7 @@ $(document).ready(function () {
 	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 	var cuser = service.getCurrentUser();
 	
-	var seriesDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IProductSeriesDao");
+	var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
 	
 	if(cuser==null){
 		$('#user_content').html('<a href="register.html" class="btn btn-warning" style="width:100%;">立即注册</a>')
@@ -369,14 +369,17 @@ $(document).ready(function () {
 	}
 	
 	
-		var series = seriesDao.findAll();
+		var series = seriesService.findAll();
 					var id1 = series.get(0).id;
 					var title1 = series.get(0).title;
-					var label11 = series.get(0).message;
-					var des11 = '本产品引入专业担保公司进行本金担保，客户无需承担任何风险。';
-					var label12 = '按日还款';
-					var des12 = '对于本产品，平台要求融资方按日还本付息，增强用户的流动性。';
-					var description1 = series.get(0).decstription;
+					
+					
+					var tagCol1 = series.get(0).tagCol;
+					var label11 = tagCol1.items.get(0).title;
+					var des11 = tagCol1.items.get(0).description;
+					var label12 = tagCol1.items.get(1).title;
+					var des12 = tagCol1.items.get(1).description;
+					var description1 = series.get(0).description;
 					var menkan1 = '5.00-10.00';
 					var qixian1 = '3-6个月';
 					var rate1 = '6％-10%';
@@ -388,11 +391,13 @@ $(document).ready(function () {
 					
 					var id2 = series.get(1).id;
 					var title2 =  series.get(1).title;
-					var label21 = series.get(1).message;
-					var des21 = '平台要求融资方按月还本付息，减少客户承担的风险';
-					var label22 = '高收益';
-					var des22 = '本平台产品远高于同类型还本付息融资产品的平均收益率，在严格控制风险的情况下实现客户收益最大化';
-					var description2 = series.get(1).decstription;
+					
+					var tagCol2 = series.get(1).tagCol;
+					var label21 = tagCol2.items.get(0).title;
+					var des21 = tagCol2.items.get(0).description;
+					var label22 = tagCol2.items.get(1).title;
+					var des22 = tagCol2.items.get(1).description;
+					var description2 = series.get(1).description;
 					var menkan2 = '1.00-5.00';
 					var qixian2 = '3-9个月';
 					var rate2 = '8％-12%';
@@ -403,11 +408,13 @@ $(document).ready(function () {
 					
 					var id3 = series.get(2).id;
 					var title3 = series.get(2).title;
-					var label31 = series.get(2).message;
-					var des31 = '针对订单的专款专用类型，远超同期信托的收益，并且门槛大大降低';
-					var label32 = '到期还本付息';
-					var des32 = '以企业为服务对象的融资产品，主要用于企业正常生产经营周转的资金需求';
-					var description3 = series.get(2).decstription;
+					
+					var tagCol3 = series.get(2).tagCol;
+					var label31 = tagCol3.items.get(0).title;
+					var des31 = tagCol3.items.get(0).description;
+					var label32 = tagCol3.items.get(1).title;
+					var des32 = tagCol3.items.get(1).description;
+					var description3 = series.get(2).description;
 					var menkan3 = '1.00-5.00';
 					var qixian3 = '6-12个月';
 					var rate3 = '12％-18%';

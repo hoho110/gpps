@@ -51,12 +51,12 @@ public class SubmitServiceImpl implements ISubmitService {
 	Logger logger=Logger.getLogger(this.getClass());
 	@Override
 	@Transactional
-	public void buy(Integer productId, BigDecimal amount)
+	public Integer buy(Integer productId, double num)
 			throws InsufficientBalanceException,ProductSoldOutException,InsufficientProductException,UnreachBuyLevelException {
-		checkNullObject("amount", amount);
 		//TODO 验证amount格式，例如：1w起之类的
 		Lender lender=lenderService.getCurrentUser();
 		LenderAccount account=lenderAccountDao.find(lender.getAccountId());
+		BigDecimal amount=new BigDecimal(num);
 		//判断当前账户余额是否足够购买
 		if(amount.compareTo(account.getUsable())>0)
 			throw new InsufficientBalanceException();
@@ -80,10 +80,9 @@ public class SubmitServiceImpl implements ISubmitService {
 			submit.setState(Submit.STATE_WAITFORPAY);
 			submitDao.create(submit);
 			productDao.buy(productId, amount);
-			accountService.freezeLenderAccount(lender.getAccountId(), amount, submit.getId(), null);
+//			Integer cashStreamId=accountService.freezeLenderAccount(lender.getAccountId(), amount, submit.getId(), null);
 			product.setRealAmount(product.getRealAmount().add(amount));
-		} catch (IllegalConvertException e) {
-			logger.error(e.getMessage(),e);
+			return submit.getId();
 		}finally
 		{
 			orderService.releaseFinancingProduct(product);

@@ -28,8 +28,10 @@ public interface ISubmitService {
 	 *             产品余额不足
 	 * @throws UnreachBuyLevelException
 	 *             未达购买级别
+	 *             
+	 * @return 返回订单号
 	 */
-	public void buy(Integer productId, BigDecimal amount) throws InsufficientBalanceException, ProductSoldOutException, InsufficientProductException, UnreachBuyLevelException;
+	public Integer buy(Integer productId, double amount) throws InsufficientBalanceException, ProductSoldOutException, InsufficientProductException, UnreachBuyLevelException;
 
 	/**
 	 * 系统任务调用

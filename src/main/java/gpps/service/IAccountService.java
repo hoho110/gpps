@@ -32,9 +32,8 @@ public interface IAccountService {
 	 * 贷款人账户冻结
 	 * @param amount
 	 * @exception InsufficientBalanceException 余额不足
-	 * @throws IllegalConvertException 
 	 */
-	public Integer freezeLenderAccount(Integer lenderAccountId,BigDecimal amount,Integer submitid,String description) throws InsufficientBalanceException, IllegalConvertException;
+	public Integer freezeLenderAccount(Integer lenderAccountId,BigDecimal amount,Integer submitid,String description) throws InsufficientBalanceException;
 	/**
 	 * 贷款人账户解冻
 	 * @param lenderAccountId

@@ -91,7 +91,7 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	@Transactional
-	public Integer freezeLenderAccount(Integer lenderAccountId, BigDecimal amount, Integer submitId, String description) throws InsufficientBalanceException, IllegalConvertException {
+	public Integer freezeLenderAccount(Integer lenderAccountId, BigDecimal amount, Integer submitId, String description) throws InsufficientBalanceException {
 		LenderAccount lenderAccount=checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
 		checkNullObject(Submit.class, submitDao.find(submitId));
 		if(amount.compareTo(lenderAccount.getUsable())>0)
@@ -103,7 +103,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_FREEZE);
 		cashStreamDao.create(cashStream);
-		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
+//		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//TODO 调用第三方接口冻结,如不成功则事务回滚
 		return cashStream.getId();
 	}

@@ -10,14 +10,18 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.ws.Response;
 
+import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
 import gpps.model.CashStream;
 import gpps.model.Lender;
+import gpps.model.Submit;
 import gpps.service.IAccountService;
 import gpps.service.ILenderService;
 import gpps.service.ILoginService;
+import gpps.service.ISubmitService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
+import gpps.tools.ObjectUtil;
 import gpps.tools.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -31,9 +35,12 @@ public class AccountServlet {
 	IAccountService accountService;
 	@Autowired
 	ILenderService lenderService;
+	@Autowired
+	ISubmitService submitService;
 	Logger log=Logger.getLogger(AccountServlet.class);
 	public static final String AMOUNT="amount";
 	public static final String CASHSTREAMID="cashStreamId";
+	public static final String SUBMITID="submitId";
 	@RequestMapping(value={"/account/thirdPartyRegist/request"})
 	public void thirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
 	{
@@ -161,6 +168,56 @@ public class AccountServlet {
 		}
 		//TODO 重定向到指定页面
 		write(resp, "取现成功，转向我的账户页面");
+	}
+	@RequestMapping(value={"/account/buy/request"})
+	public void bug(HttpServletRequest req, HttpServletResponse resp)
+	{
+		HttpSession session=req.getSession();
+		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+		if(user==null)
+		{
+			try {
+				resp.sendError(403,"未找到用户信息，请重新登录");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+		Integer submitId=Integer.parseInt(StringUtil.checkNullAndTrim("submitId", req.getParameter(SUBMITID)));
+		Submit submit=ObjectUtil.checkNullObject(Submit.class,submitService.find(submitId));
+		Integer cashStreamId=null;
+		try {
+			cashStreamId = accountService.freezeLenderAccount(((Lender)user).getAccountId(), submit.getAmount(), submitId, "购买");
+		} catch (InsufficientBalanceException e) {
+			try {
+				resp.sendError(400,"余额不足");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			log.debug(e.getMessage(),e);
+			return;
+		}
+		log.debug("购买：amount="+submit.getAmount()+",cashStreamId="+cashStreamId);
+		log.debug("跳转到第三方进行购买");
+		log.debug("第三方购买完毕，跳转回本地");
+		try {
+			resp.sendRedirect("/account/buy/response?cashStreamId="+cashStreamId);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@RequestMapping(value={"/account/buy/response"})
+	public void completeBug(HttpServletRequest req, HttpServletResponse resp)
+	{
+		Integer cashStreamId=Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", req.getParameter(CASHSTREAMID)));
+		try {
+			log.debug("购买成功");
+			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+		} catch (IllegalConvertException e) {
+			log.error(e.getMessage(),e);
+		}
+		//TODO 重定向到指定页面
+		write(resp, "购买成功，转向我的订单页面");
 	}
 	private void write(HttpServletResponse resp,String message)
 	{

@@ -24,6 +24,7 @@ import gpps.service.exception.ProductSoldOutException;
 import gpps.service.exception.UnreachBuyLevelException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -125,6 +126,19 @@ public class SubmitServiceImpl implements ISubmitService {
 		{
 			submit.setProduct(productDao.find(submit.getProductId()));
 			submit.getProduct().setGovermentOrder(govermentOrderDao.find(submit.getProduct().getGovermentorderId()));
+			//计算已还款
+			if(submit.getState()!=Submit.STATE_COMPLETEPAY)
+				continue;
+			List<CashStream> cashStreams=findSubmitCashStream(submit.getId());
+			if(cashStreams==null||cashStreams.size()==0)
+				continue;
+			for(CashStream cashStream:cashStreams)
+			{
+				if(cashStream.getAction()==CashStream.ACTION_REPAY&&cashStream.getState()==CashStream.STATE_SUCCESS)
+				{
+					submit.getRepayedAmount().add(cashStream.getChiefamount());
+				}
+			}
 		}
 		return Pagination.buildResult(submits,count,offset, recnum);
 	}

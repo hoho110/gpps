@@ -243,10 +243,18 @@ var submitall = function(){
 		result.iTotalDisplayRecords = res.get('total');
 		result.aaData = new Array();
 		var items = res.get('result');
-		for(var i=0; i<items.size(); i++){
-			var item=items.get(i);
-			result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' target='_blank'>"+item.product.govermentOrder.title+"</a>",
-			                    cashs.get(i).chiefamount.value, cashs.get(i).interest.value, 0, cashstate[cashs.get(i).action], cashs.get(i).description]);
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var item=items.get(i);
+				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' target='_blank'>"+item.product.govermentOrder.title+"</a>",
+				                    item.state,
+				                    formatDate(item.product.govermentOrder.financingEndtime),
+				                    item.amount.value,
+				                    item.repayedAmount.value,
+				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)),
+				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
+			}
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);

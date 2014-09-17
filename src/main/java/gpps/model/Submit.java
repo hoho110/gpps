@@ -69,10 +69,17 @@ public class Submit {
 	
 	//辅助对象
 	private Product product;
+	private BigDecimal repayedAmount=BigDecimal.ZERO;
 	public Product getProduct() {
 		return product;
 	}
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+	public BigDecimal getRepayedAmount() {
+		return repayedAmount;
+	}
+	public void setRepayedAmount(BigDecimal repayedAmount) {
+		this.repayedAmount = repayedAmount;
 	}
 }

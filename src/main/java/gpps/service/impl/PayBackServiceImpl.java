@@ -52,4 +52,20 @@ public class PayBackServiceImpl implements IPayBackService {
 	public void changeState(Integer paybackId, int state) {
 		payBackDao.changeState(paybackId, state);
 	}
+
+	@Override
+	public PayBack find(Integer id) {
+		PayBack payBack=payBackDao.find(id);
+		Product product=productDao.find(payBack.getProductId());
+		if(product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
+		{
+			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+			payBack.setInterest(payBack.getInterest().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+		}else
+		{
+			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+			payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+		}
+		return payBack;
+	}
 }

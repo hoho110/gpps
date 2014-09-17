@@ -11,15 +11,20 @@ import javax.servlet.http.HttpSession;
 import javax.xml.ws.Response;
 
 import gpps.dao.ICashStreamDao;
+import gpps.dao.IPayBackDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
 import gpps.model.CashStream;
 import gpps.model.Lender;
+import gpps.model.PayBack;
 import gpps.model.Submit;
+import gpps.model.Task;
 import gpps.service.IAccountService;
 import gpps.service.ILenderService;
 import gpps.service.ILoginService;
+import gpps.service.IPayBackService;
 import gpps.service.ISubmitService;
+import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.tools.ObjectUtil;
@@ -40,10 +45,15 @@ public class AccountServlet {
 	ISubmitService submitService;
 	@Autowired
 	ICashStreamDao cashStreamDao;
+	@Autowired
+	IPayBackService payBackService;
+	@Autowired
+	ITaskService taskService;
 	Logger log=Logger.getLogger(AccountServlet.class);
 	public static final String AMOUNT="amount";
 	public static final String CASHSTREAMID="cashStreamId";
 	public static final String SUBMITID="submitId";
+	public static final String PAYBACKID="paybackId";
 	@RequestMapping(value={"/account/thirdPartyRegist/request"})
 	public void thirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
 	{
@@ -186,7 +196,7 @@ public class AccountServlet {
 			}
 			return;
 		}
-		Integer submitId=Integer.parseInt(StringUtil.checkNullAndTrim("submitId", req.getParameter(SUBMITID)));
+		Integer submitId=Integer.parseInt(StringUtil.checkNullAndTrim(SUBMITID, req.getParameter(SUBMITID)));
 		Submit submit=ObjectUtil.checkNullObject(Submit.class,submitService.find(submitId));
 		Integer cashStreamId=null;
 		try {
@@ -212,7 +222,7 @@ public class AccountServlet {
 	@RequestMapping(value={"/account/buy/response"})
 	public void completeBuy(HttpServletRequest req, HttpServletResponse resp)
 	{
-		Integer cashStreamId=Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", req.getParameter(CASHSTREAMID)));
+		Integer cashStreamId=Integer.parseInt(StringUtil.checkNullAndTrim(CASHSTREAMID, req.getParameter(CASHSTREAMID)));
 		try {
 			log.debug("购买成功");
 			CashStream cashStream=cashStreamDao.find(cashStreamId);
@@ -223,6 +233,66 @@ public class AccountServlet {
 		}
 		//TODO 重定向到指定页面
 		write(resp, "购买成功，转向我的订单页面");
+	}
+	@RequestMapping(value={"/account/repay/request"})
+	public void repay(HttpServletRequest req, HttpServletResponse resp)
+	{
+		HttpSession session=req.getSession();
+		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+		if(user==null)
+		{
+			try {
+				resp.sendError(403,"未找到用户信息，请重新登录");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+		Integer payBackId=Integer.parseInt(StringUtil.checkNullAndTrim(PAYBACKID, req.getParameter(PAYBACKID)));
+		PayBack payBack=payBackService.find(payBackId);
+		Integer cashStreamId=null;
+		try {
+			cashStreamId = accountService.freezeBorrowerAccount(((Borrower)user).getAccountId(), payBack.getChiefAmount().add(payBack.getInterest()), payBack.getId(), "还款");
+		} catch (InsufficientBalanceException e) {
+			try {
+				resp.sendError(400,"余额不足");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			log.debug(e.getMessage(),e);
+			return;
+		}
+		log.debug("还款：amount="+payBack.getChiefAmount().add(payBack.getInterest())+",cashStreamId="+cashStreamId);
+		log.debug("跳转到第三方进行还款");
+		log.debug("第三方还款完毕，跳转回本地");
+		try {
+			resp.sendRedirect("/account/repay/response?cashStreamId="+cashStreamId);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	@RequestMapping(value={"/account/repay/response"})
+	public void completeRepay(HttpServletRequest req, HttpServletResponse resp)
+	{
+		Integer cashStreamId=Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", req.getParameter(CASHSTREAMID)));
+		try {
+			log.debug("购买成功");
+			CashStream cashStream=cashStreamDao.find(cashStreamId);
+			//TODO 增加还款任务
+			Task task=new Task();
+			task.setCreateTime(System.currentTimeMillis());
+			task.setPayBackId(cashStream.getPaybackId());
+			PayBack payBack=payBackService.find(cashStream.getPaybackId());
+			task.setProductId(payBack.getProductId());
+			task.setState(Task.STATE_INIT);
+			task.setType(Task.TYPE_REPAY);
+			taskService.submit(task);
+			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+		} catch (IllegalConvertException e) {
+			log.error(e.getMessage(),e);
+		}
+		//TODO 重定向到指定页面
+		write(resp, "还款成功，转向我的账户页面");
 	}
 	private void write(HttpServletResponse resp,String message)
 	{

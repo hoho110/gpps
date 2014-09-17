@@ -49,7 +49,7 @@ public interface IAccountService {
 	 * @param amount
 	 * @throws IllegalConvertException 
 	 */
-	public Integer freezeBorrowerAccount(Integer borrowerAccountId,BigDecimal amount,Integer paybackId,String description) throws InsufficientBalanceException, IllegalConvertException;
+	public Integer freezeBorrowerAccount(Integer borrowerAccountId,BigDecimal amount,Integer paybackId,String description) throws InsufficientBalanceException;
 	/**
 	 * 贷款人将冻结资金支付给借款人
 	 * @param amount

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.ws.Response;
 
+import gpps.dao.ICashStreamDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
 import gpps.model.CashStream;
@@ -37,6 +38,8 @@ public class AccountServlet {
 	ILenderService lenderService;
 	@Autowired
 	ISubmitService submitService;
+	@Autowired
+	ICashStreamDao cashStreamDao;
 	Logger log=Logger.getLogger(AccountServlet.class);
 	public static final String AMOUNT="amount";
 	public static final String CASHSTREAMID="cashStreamId";
@@ -170,7 +173,7 @@ public class AccountServlet {
 		write(resp, "取现成功，转向我的账户页面");
 	}
 	@RequestMapping(value={"/account/buy/request"})
-	public void bug(HttpServletRequest req, HttpServletResponse resp)
+	public void buy(HttpServletRequest req, HttpServletResponse resp)
 	{
 		HttpSession session=req.getSession();
 		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
@@ -207,11 +210,13 @@ public class AccountServlet {
 		}
 	}
 	@RequestMapping(value={"/account/buy/response"})
-	public void completeBug(HttpServletRequest req, HttpServletResponse resp)
+	public void completeBuy(HttpServletRequest req, HttpServletResponse resp)
 	{
 		Integer cashStreamId=Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", req.getParameter(CASHSTREAMID)));
 		try {
 			log.debug("购买成功");
+			CashStream cashStream=cashStreamDao.find(cashStreamId);
+			submitService.confirmBuy(cashStream.getSubmitId());
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		} catch (IllegalConvertException e) {
 			log.error(e.getMessage(),e);

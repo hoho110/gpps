@@ -143,4 +143,9 @@ public class SubmitServiceImpl implements ISubmitService {
 	public Map<String, Object> findMyAllSubmitsByProductState(int productState) {
 		return null;
 	}
+
+	@Override
+	public void confirmBuy(Integer submitId) {
+		submitDao.changeState(submitId, Submit.STATE_COMPLETEPAY);
+	}
 }

@@ -46,6 +46,10 @@
 		from Submit a,Product b where a.productId=b.id and a.state=2 and a.lenderId=#{lenderId} and b.state=#{productState}
 		LIMIT #{offset}, #{recnum}
 	</select>
+	<select id="countByLenderAndProductState" resultType="int">
+        select count(*)
+        from Submit a,Product b where a.productId=b.id and a.state=2 and a.lenderId=#{lenderId} and b.state=#{productState}
+    </select>
 	<update id="changeState">
 		update Submit set
 		state=#{state}

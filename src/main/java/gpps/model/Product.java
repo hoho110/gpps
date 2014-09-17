@@ -37,6 +37,7 @@ public class Product {
 	private int levelToBuy;
 	private long createtime=System.currentTimeMillis();
 	private int minimum=1;//最小额度,单位元
+	private int miniAdd=1;//最小追加金额
 	public Integer getId() {
 		return id;
 	}
@@ -109,7 +110,16 @@ public class Product {
 	public void setMinimum(int minimum) {
 		this.minimum = minimum;
 	}
-	
+	public int getMiniAdd() {
+		return miniAdd;
+	}
+	public void setMiniAdd(int miniAdd) {
+		this.miniAdd = miniAdd;
+	}
+
+
+
+
 	//辅助对象
 	private GovermentOrder govermentOrder;
 	public GovermentOrder getGovermentOrder() {

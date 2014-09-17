@@ -8,6 +8,7 @@ import gpps.dao.ILenderAccountDao;
 import gpps.dao.IProductDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.CashStream;
+import gpps.model.GovermentOrder;
 import gpps.model.Lender;
 import gpps.model.LenderAccount;
 import gpps.model.Product;
@@ -149,13 +150,62 @@ public class SubmitServiceImpl implements ISubmitService {
 	}
 
 	@Override
-	public Map<String, Object> findMyAllWaitforPayingSubmits(int offset, int recnum) {
-		return null;
+	public List<Submit> findMyAllWaitforPayingSubmits() {
+		Lender lender=lenderService.getCurrentUser();
+		List<Integer> states=new ArrayList<Integer>();
+		states.add(Submit.STATE_WAITFORPAY);
+		List<Submit> submits=submitDao.findAllByLenderAndStates(lender.getId(), states);
+		if(submits==null||submits.size()==0)
+			return new ArrayList<Submit>(0);
+		for(Submit submit:submits)
+		{
+			submit.setProduct(productDao.find(submit.getProductId()));
+			submit.getProduct().setGovermentOrder(govermentOrderDao.find(submit.getProduct().getGovermentorderId()));
+			submit.setPayExpiredTime(submit.getCreatetime()+Submit.PAYEXPIREDTIME);
+		}
+		return submits;
+//		List<Submit> submits=new ArrayList<Submit>();
+//		for(int i=0;i<100;i++)
+//		{
+//			Submit submit=new Submit();
+//			submit.setId(i);
+//			submit.setAmount(new BigDecimal(10000));
+//			submit.setProduct(new Product());
+//			submit.getProduct().setId(i);
+//			submit.getProduct().setGovermentOrder(new GovermentOrder());
+//			submit.getProduct().getGovermentOrder().setTitle("淘宝借款三期");
+//			submit.setPayExpiredTime(System.currentTimeMillis()+Submit.PAYEXPIREDTIME);
+//			submits.add(submit);
+//		}
+//		return submits;
 	}
 
 	@Override
-	public Map<String, Object> findMyAllSubmitsByProductState(int productState) {
-		return null;
+	public Map<String, Object> findMyAllSubmitsByProductState(int productState,int offset,int recnum) {
+		Lender lender=lenderService.getCurrentUser();
+		int count=submitDao.countByLenderAndProductState(lender.getId(), productState);
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		List<Submit> submits=submitDao.findAllPayedByLenderAndProductState(lender.getId(), productState, offset, recnum);
+		for(Submit submit:submits)
+		{
+			submit.setProduct(productDao.find(submit.getProductId()));
+			submit.getProduct().setGovermentOrder(govermentOrderDao.find(submit.getProduct().getGovermentorderId()));
+			//计算已还款
+			if(submit.getState()!=Submit.STATE_COMPLETEPAY)
+				continue;
+			List<CashStream> cashStreams=findSubmitCashStream(submit.getId());
+			if(cashStreams==null||cashStreams.size()==0)
+				continue;
+			for(CashStream cashStream:cashStreams)
+			{
+				if(cashStream.getAction()==CashStream.ACTION_REPAY&&cashStream.getState()==CashStream.STATE_SUCCESS)
+				{
+					submit.getRepayedAmount().add(cashStream.getChiefamount());
+				}
+			}
+		}
+		return Pagination.buildResult(submits,count,offset, recnum);
 	}
 
 	@Override

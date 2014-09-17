@@ -3,6 +3,7 @@ package gpps.model;
 import java.math.BigDecimal;
 
 public class Submit {
+	public static final long PAYEXPIREDTIME=30L*60*1000;
 	private Integer id;
 	/**
 //	 * 1:申请竞标-> 2:待支付 （支付） 4:竞标中 (融资审核成功) 8:还款中 16：还款完毕
@@ -70,6 +71,7 @@ public class Submit {
 	//辅助对象
 	private Product product;
 	private BigDecimal repayedAmount=BigDecimal.ZERO;
+	private long payExpiredTime;
 	public Product getProduct() {
 		return product;
 	}
@@ -81,5 +83,11 @@ public class Submit {
 	}
 	public void setRepayedAmount(BigDecimal repayedAmount) {
 		this.repayedAmount = repayedAmount;
+	}
+	public long getPayExpiredTime() {
+		return payExpiredTime;
+	}
+	public void setPayExpiredTime(long payExpiredTime) {
+		this.payExpiredTime = payExpiredTime;
 	}
 }

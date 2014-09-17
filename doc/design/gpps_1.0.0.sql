@@ -193,6 +193,7 @@ create table Product
    levelToBuy           int not null,
    createtime           bigint not null default 0,
    minimum              int not null default 1,
+   miniadd              int not null default 1,
    primary key (ID)
 );
 
@@ -375,6 +376,7 @@ create table productseries
    title                varchar(100) not null,
    tag              mediumtext,
    description         varchar(2000),
+   type                 int not null default 0,
    primary key (ID)
 );
 

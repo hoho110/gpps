@@ -272,18 +272,58 @@ var submitall = function(){
 }
 
 var submittoafford = function(){
+//	var content = $('<div></div>');
+//	var str = "";
+//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
+//	str += '<thead>';	
+//	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">状态</td><td style="min-width:100px;">投标完成时间</td><td style="min-width:50px;">金额</td><td style="min-width:50px;">最迟支付时间</td><td style="min-width:50px;">操作</td></tr>';
+//	str += '</thead>';
+//	str += '<tbody>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>待支付</td><td>2014-8-5</td><td>500</td><td>2014-8-7</td><td><a href="#">立即支付</a></td></tr>';
+//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>待支付</td><td>2014-8-6</td><td>200</td><td>2014-8-7</td><td><a href="#">立即支付</a></td></tr>';
+//	str += '</tbody>';
+//	str += '</table>';
+//	content.append(str);
+//	return content;
+	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
+	var columns = [ {
+		"sTitle" : "项目信息",
+			"code" : "info"
+	}, {
+		"sTitle" : "状态",
+		"code" : "state"
+	}, {
+		"sTitle" : "投标完成时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "金额",
+		"code" : "amount"
+	}, {
+		"sTitle" : "最迟支付时间",
+		"code" : "repayed"
+	}, {
+		"sTitle" : "操作",
+		"code" : "contract"
+	}];
+	var datas = null;
+	datas = submitService.findMyAllWaitforPayingSubmits();
+	var aaData = new Array();
+	for(var i=0; i<datas.size(); i++){
+		var data=datas.get(i);
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"</a>",
+		                    "待支付",
+		                    formatDate(data.product.govermentOrder.financingEndtime),
+		                    data.amount.value,
+		                    formatDate(data.payExpiredTime),
+		                    "<a href='/account/buy/request?submitId="+data.id+"'>立即支付</a>"]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
 	var content = $('<div></div>');
-	var str = "";
-	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-	str += '<thead>';	
-	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">状态</td><td style="min-width:100px;">投标完成时间</td><td style="min-width:50px;">金额</td><td style="min-width:50px;">最迟支付时间</td><td style="min-width:50px;">操作</td></tr>';
-	str += '</thead>';
-	str += '<tbody>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>待支付</td><td>2014-8-5</td><td>500</td><td>2014-8-7</td><td><a href="#">立即支付</a></td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>待支付</td><td>2014-8-6</td><td>200</td><td>2014-8-7</td><td><a href="#">立即支付</a></td></tr>';
-	str += '</tbody>';
-	str += '</table>';
-	content.append(str);
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	table.dataTable(mySettings);
 	return content;
 }
 

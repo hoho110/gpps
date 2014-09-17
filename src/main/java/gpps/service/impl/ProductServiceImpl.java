@@ -68,13 +68,14 @@ public class ProductServiceImpl implements IProductService {
 		product.setState(Product.STATE_FINANCING);
 		product.setCreatetime(System.currentTimeMillis());
 		checkNullObject("productseriesId", product.getProductseriesId());
-		checkNullObject(ProductSeries.class,productSeriesDao.find(product.getProductseriesId()));
+		ProductSeries productSeries=productSeriesDao.find(product.getProductseriesId());
+		checkNullObject(ProductSeries.class,productSeries);
 		checkNullObject("expectAmount", product.getExpectAmount());
 		checkNullObject("rate", product.getRate());
 		product.setRealAmount(BigDecimal.ZERO);
 		productDao.create(product);
 		Borrower borrower=borrowerDao.find(order.getBorrowerId());
-		//TODO 创建还款计划
+		// 创建还款计划
 		PayBack payBack=null;
 		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
 		Calendar starttime=Calendar.getInstance();
@@ -84,7 +85,7 @@ public class ProductServiceImpl implements IProductService {
 		int monthNum=(endtime.get(Calendar.YEAR)-starttime.get(Calendar.YEAR))*12+(endtime.get(Calendar.MONTH)-starttime.get(Calendar.MONTH));
 		if(endtime.get(Calendar.DAY_OF_MONTH)>starttime.get(Calendar.DAY_OF_MONTH))
 			monthNum++;
-		if(product.getPaybackmodel()==Product.PAYBACKMODEL_AVERAGECAPITALPLUSINTEREST)
+		if(productSeries.getType()==ProductSeries.TYPE_AVERAGECAPITALPLUSINTEREST)
 		{
 			//等额本息，息按天算;本金按月算
 			for(int i=0;i<monthNum;i++)
@@ -97,7 +98,7 @@ public class ProductServiceImpl implements IProductService {
 				else
 				{
 					currentMonthEnd=(Calendar)(starttime.clone());
-					currentMonthEnd.add(Calendar.MONTH, 1);
+					currentMonthEnd.add(Calendar.MONTH, i+1);
 				}
 				int days=getDays(currentMonthStart, currentMonthEnd);
 				payBack=new PayBack();
@@ -114,7 +115,7 @@ public class ProductServiceImpl implements IProductService {
 				payBack.setDeadline(currentMonthEnd.getTimeInMillis());
 				payBackDao.create(payBack);
 			}
-		}else if(product.getPaybackmodel()==Product.PAYBACKMODEL_FINISHPAYINTERESTANDCAPITAL||product.getPaybackmodel()==Product.PAYBACKMODEL_FIRSTINTERESTENDCAPITAL)
+		}else if(productSeries.getType()==ProductSeries.TYPE_FINISHPAYINTERESTANDCAPITAL||productSeries.getType()==ProductSeries.TYPE_FIRSTINTERESTENDCAPITAL)
 		{
 			for(int i=0;i<monthNum;i++)
 			{

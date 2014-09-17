@@ -374,7 +374,7 @@ create table productseries
    ID                   integer not null auto_increment,
    title                varchar(100) not null,
    tag              mediumtext,
-   desctription         varchar(2000),
+   description         varchar(2000),
    primary key (ID)
 );
 

@@ -3,6 +3,7 @@ package gpps.service.impl;
 import static gpps.tools.ObjectUtil.checkNullObject;
 import gpps.constant.Pagination;
 import gpps.dao.ICashStreamDao;
+import gpps.dao.IGovermentOrderDao;
 import gpps.dao.ILenderAccountDao;
 import gpps.dao.IProductDao;
 import gpps.dao.ISubmitDao;
@@ -46,6 +47,8 @@ public class SubmitServiceImpl implements ISubmitService {
 	ILenderAccountDao lenderAccountDao;
 	@Autowired
 	IGovermentOrderService orderService;
+	@Autowired
+	IGovermentOrderDao govermentOrderDao;
 	@Autowired
 	IProductDao productDao;
 	Logger logger=Logger.getLogger(this.getClass());
@@ -114,7 +117,16 @@ public class SubmitServiceImpl implements ISubmitService {
 	@Override
 	public Map<String,Object> findMyAllSubmits(int offset,int recnum) {
 		Lender lender=lenderService.getCurrentUser();
-		return Pagination.buildResult(submitDao.findAllByLender(lender.getId(), offset, recnum), submitDao.countByLender(lender.getId()), offset, recnum);
+		int count=submitDao.countByLender(lender.getId());
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		List<Submit> submits=submitDao.findAllByLender(lender.getId(), offset, recnum);
+		for(Submit submit:submits)
+		{
+			submit.setProduct(productDao.find(submit.getProductId()));
+			submit.getProduct().setGovermentOrder(govermentOrderDao.find(submit.getProduct().getGovermentorderId()));
+		}
+		return Pagination.buildResult(submits,count,offset, recnum);
 	}
 
 	@Override

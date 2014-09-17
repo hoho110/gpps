@@ -41,14 +41,28 @@
 		select *
 		from Submit where id=#{id}
 	</select>
-	<select id="findAllPayedByLenderAndProductState" resultType="gpps.model.Submit">
+	<select id="findAllPayedByLenderAndProductStates" resultType="gpps.model.Submit">
 		select a.*
-		from Submit a,Product b where a.productId=b.id and a.state=2 and a.lenderId=#{lenderId} and b.state=#{productState}
+		from Submit a,Product b where a.productId=b.id and a.state=2 and a.lenderId=#{lenderId} 
+		<if test="productStates != null">
+			and b.state in
+			<foreach item="item" index="index" collection="productStates" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
 		LIMIT #{offset}, #{recnum}
 	</select>
-	<select id="countByLenderAndProductState" resultType="int">
+	<select id="countByLenderAndProductStates" resultType="int">
         select count(*)
-        from Submit a,Product b where a.productId=b.id and a.state=2 and a.lenderId=#{lenderId} and b.state=#{productState}
+        from Submit a,Product b where a.productId=b.id and a.state=2 and a.lenderId=#{lenderId} 
+        <if test="productStates != null">
+			and b.state in
+			<foreach item="item" index="index" collection="productStates" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
     </select>
 	<update id="changeState">
 		update Submit set

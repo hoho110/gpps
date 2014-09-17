@@ -22,6 +22,6 @@ public interface ISubmitDao {
 	public Submit find(Integer id);
 	public void changeState(@Param("id")Integer id,@Param("state")int state);
 	public void delete(Integer id);
-	public List<Submit> findAllPayedByLenderAndProductState(@Param("lenderId")Integer lenderId,@Param("productState") int productState,@Param("offset")int offset,@Param("recnum")int recnum);
-	public int countByLenderAndProductState(@Param("lenderId")Integer lenderId,@Param("productState") int productState);
+	public List<Submit> findAllPayedByLenderAndProductStates(@Param("lenderId")Integer lenderId,@Param("productStates") List<Integer> productStates,@Param("offset")int offset,@Param("recnum")int recnum);
+	public int countByLenderAndProductStates(@Param("lenderId")Integer lenderId,@Param("productStates") List<Integer> productStates);
 }

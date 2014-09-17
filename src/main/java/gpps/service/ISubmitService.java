@@ -58,7 +58,7 @@ public interface ISubmitService {
 
 	public List<Submit> findMyAllWaitforPayingSubmits();
 
-	public Map<String, Object> findMyAllSubmitsByProductState(int productState,int offset,int recnum);
+	public Map<String, Object> findMyAllSubmitsByProductStates(int productStates,int offset,int recnum);
 
 	/**
 	 * 找到该订单的资金流,倒序排列返回

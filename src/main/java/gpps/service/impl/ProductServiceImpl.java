@@ -50,15 +50,6 @@ public class ProductServiceImpl implements IProductService {
 	@Autowired
 	IPayBackDao payBackDao;
 	Logger logger=Logger.getLogger(this.getClass());
-	static int[] productStates={
-		Product.STATE_FINANCING,
-		Product.STATE_REPAYING,
-		Product.STATE_QUITFINANCING,
-		Product.STATE_FINISHREPAY,
-		Product.STATE_POSTPONE,
-		Product.STATE_APPLYTOCLOSE,
-		Product.STATE_CLOSE
-	};
 	@Override
 	@Transactional
 	public void create(Product product) {

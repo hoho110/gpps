@@ -327,7 +327,9 @@ public class AccountServiceImpl implements IAccountService {
 	@Override
 	public List<PayBack> findLenderWaitforRepay() {
 		Lender lender=lenderService.getCurrentUser();
-		List<Submit> submits=submitDao.findAllPayedByLenderAndProductState(lender.getId(), Product.STATE_REPAYING,0,Integer.MAX_VALUE);
+		List<Integer> productStates=new ArrayList<Integer>();
+		productStates.add(Product.STATE_REPAYING);
+		List<Submit> submits=submitDao.findAllPayedByLenderAndProductStates(lender.getId(), productStates,0,Integer.MAX_VALUE);
 		if(submits==null||submits.size()==0)
 			return new ArrayList<PayBack>(0);
 		Map<String, Integer> productIds=new HashMap<String, Integer>();

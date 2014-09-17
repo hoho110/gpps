@@ -181,12 +181,22 @@ public class SubmitServiceImpl implements ISubmitService {
 	}
 
 	@Override
-	public Map<String, Object> findMyAllSubmitsByProductState(int productState,int offset,int recnum) {
+	public Map<String, Object> findMyAllSubmitsByProductStates(int productStates,int offset,int recnum) {
 		Lender lender=lenderService.getCurrentUser();
-		int count=submitDao.countByLenderAndProductState(lender.getId(), productState);
+		List<Integer> stateList=null;
+		if(productStates!=-1)
+		{
+			stateList=new ArrayList<Integer>();
+			for(int productState:IProductService.productStates)
+			{
+				if((productState&productStates)>0)
+					stateList.add(productState);
+			}
+		}
+		int count=submitDao.countByLenderAndProductStates(lender.getId(), stateList);
 		if(count==0)
 			return Pagination.buildResult(null, count, offset, recnum);
-		List<Submit> submits=submitDao.findAllPayedByLenderAndProductState(lender.getId(), productState, offset, recnum);
+		List<Submit> submits=submitDao.findAllPayedByLenderAndProductStates(lender.getId(), stateList, offset, recnum);
 		for(Submit submit:submits)
 		{
 			submit.setProduct(productDao.find(submit.getProductId()));

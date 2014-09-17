@@ -8,6 +8,15 @@ import gpps.model.ProductAction;
 import gpps.service.exception.IllegalConvertException;
 
 public interface IProductService {
+	public static final int[] productStates={
+		Product.STATE_FINANCING,
+		Product.STATE_REPAYING,
+		Product.STATE_QUITFINANCING,
+		Product.STATE_FINISHREPAY,
+		Product.STATE_POSTPONE,
+		Product.STATE_APPLYTOCLOSE,
+		Product.STATE_CLOSE
+	};
 	/**
 	 * 创建一个产品，同时创建payback
 	 * @param product

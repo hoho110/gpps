@@ -355,7 +355,7 @@ var createSingleProduct2 = function(order){
 	var str = '<li class="clearfix">';
 	str    += '<div class="product-status">';
 	str    += '<p class="product-name">';
-	str    += '<a class="product-title" href="productdetail.html?pid='+pro.id+'"  target="_blank">'+order.title+'['+seriesname[pro.productseriesId]+']'+'</a>';
+	str    += '<a class="product-title" href="productdetail.html?pid='+pro.id+'">'+order.title+'['+seriesname[pro.productseriesId]+']'+'</a>';
 	str    += '</p>';
 	str    += '<div class="product-info-wrap clearfix">';
 	str    += '<p class="product-info-l">';
@@ -380,7 +380,7 @@ var createSingleProduct2 = function(order){
 		str    += '<div class="current-amount">';
 		str    += '<strong>投资金额</strong>';
 		str    += '<span class="cur">'+pro.minimum+'</span> 元起            </div>';
-		str    += '<a href="productdetail.html?pid='+pro.id+'" target="_blank" class="btns">投资中</a>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" class="btns">投资中</a>';
 		str    += '<div style="clear:both;"></div>';
 		str    += '</div>';
 		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'截止</div>';
@@ -390,7 +390,7 @@ var createSingleProduct2 = function(order){
 		str    += '<div class="current-amount">';
 		str    += '<strong>投资金额</strong>';
 		str    += '<span class="cur">'+pro.minimum+'</span> 元起            </div>';
-		str    += '<a href="productdetail.html?pid='+pro.id+'" target="_blank" class="done-success">预发布</a>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" class="done-success">预发布</a>';
 		str    += '<div style="clear:both;"></div>';
 		str    += '</div>';
 		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingStarttime)+'开始</div>';	
@@ -400,7 +400,7 @@ var createSingleProduct2 = function(order){
 		str    += '<div class="current-amount">';
 		str    += '<strong>已融金额</strong>';
 		str    += '<span class="cur">'+pro.realAmount.value+'</span> 元           </div>';
-		str    += '<a href="productdetail.html?pid='+pro.id+'" target="_blank" class="done-success">还款中</a>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" class="done-success">还款中</a>';
 		str    += '<div style="clear:both;"></div>';
 		str    += '</div>';
 		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.incomeStarttime)+'开始还款</div>';	
@@ -410,7 +410,7 @@ var createSingleProduct2 = function(order){
 		str    += '<div class="current-amount">';
 		str    += '<strong>已融金额</strong>';
 		str    += '<span class="cur">'+pro.realAmount.value+'</span> 元           </div>';
-		str    += '<a href="productdetail.html?pid='+pro.id+'" target="_blank" class="done-success">已关闭</a>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" class="done-success">已关闭</a>';
 		str    += '<div style="clear:both;"></div>';
 		str    += '</div>';
 		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'关闭</div>';	
@@ -420,7 +420,7 @@ var createSingleProduct2 = function(order){
 		str    += '<div class="current-amount">';
 		str    += '<strong>流标</strong>';
 		str    += '</div>';
-		str    += '<a href="productdetail.html?pid='+pro.id+'" target="_blank" class="done-success">查看</a>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" class="done-success">查看</a>';
 		str    += '<div style="clear:both;"></div>';
 		str    += '</div>';
 		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'流标</div>';	

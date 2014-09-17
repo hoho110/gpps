@@ -31,7 +31,7 @@
     <div class="product-detail-head">
         <div class="product-name-info">
             <span id="product-title" style="font-size:16px; font-weight:bold; color:orange;"></span>
-            <span id="product-code" class="product-code"></span>
+            <span id="product-code" class="product-code" style="margin-left:20px;"></span>
                                                 <span class="detail-promotion"></span>
         </div>
         <p id="product-published-date" class="product-published-date">
@@ -45,26 +45,26 @@
                 <li>
                     <p>项目本金</p>
  
-                    <p><strong>177,000.00 元</strong></p>
+                    <p><strong id="totalAmount">177,000.00 元</strong></p>
                 </li>
                 <li>
                     <p>预期年化利率</p>
  
-                    <p><strong class="tips-title" title="按照中国人民银行同期贷款基准利率上浮40%">12%</strong>
+                    <p><strong id="rate" class="tips-title" title="按照中国人民银行同期贷款基准利率上浮40%">12%</strong>
                     </p>
                 </li>
                 <li>
                     <p>最长期限</p>
  
                     <p>
-                        <strong>36个月</strong>
+                        <strong id="duration">36个月</strong>
                     </p>
                 </li>
                 <li class="last-col">
-                    <p>风险模型</p>
+                    <p>产品类型</p>
                                                                         <td class="descriptData raise-data">
                                 <a class="tips-title" href="plIntroduction.html" target="_blank" title="查看稳健型产品的详细说明">
-                                    <strong>稳健型</strong></a>
+                                    <strong id="pseriestitle">稳健型</strong></a>
                             </td>
                                             
                 </li>
@@ -80,7 +80,7 @@
                         <div class="progress">
                             <div class="bar" id="progressBar" style="width:22px;"></div>
                         </div>
-                        <span class="progressTxt">15%</span>
+                        <span id="progressTxt" class="progressTxt">15%</span>
                     </div>
                                             </div>
                         <div class="invest-reward-wrap clearfix">
@@ -103,16 +103,16 @@
  
                                     <div class="raise-status-wrap">
             <div class="raise-status-online">
-                <p class="remaining-amount">
-                               单笔最高可投金额：<strong>177,000.00
-                   元</strong>                </p>
+                <p id="remainamount" class="remaining-amount">
+                               剩余可投金额：<strong>177,000.00元</strong>
+                                               </p>
                 <label>请填写投资金额：</label>
                                     <div class="raise-operate operate clearfix">
                         <div class="inputs-gather clearfix">
                             <a class="reduce-btn disabled" disabled="disabled"></a>
                             <input type="text" class="raise-input" id="raiseAmount"
                                    value="1000">
-                            <a class="plus-btn"></a>
+                            <a class="plus-btn disabled" disabled="disabled"></a>
                         </div>
  
                         <a class="btns btn_xlarge investBtn" href="javascript:void(0);" id="invest">立即投资</a>
@@ -142,7 +142,7 @@
                         <p class="mark-up-info">
                             <span id="initAmount">起投金额：1,000.00
                                 元</span>
-                            <span>递增金额：100
+                            <span id="addAmount">递增金额：100
                                 元</span>
                         </p>
                     </div>
@@ -162,10 +162,10 @@
             
             
             <ul class="list-detail-wrap clearfix">
-    			<li class="selected"><a href="javascript: void(0);" data-sk="项目详情"><span class="min-price">项目详情</span></a></li>
-    			<li class=""><a href="javascript: void(0);" data-sk="还款计划"><span class="min-price">还款计划</span></a></li>
-    			<li class=""><a href="javascript: void(0);" data-sk="相关资料"><span class="min-price">相关资料</span></a></li>
-    			<li class=""><a href="javascript: void(0);" data-sk="项目进程"><span class="min-price">项目进程</span></a></li>
+    			<li class="selected"><a href="javascript: void(0);" data-sk="detail"><span class="min-price">项目详情</span></a></li>
+    			<li class=""><a href="javascript: void(0);" data-sk="payback"><span class="min-price">还款计划</span></a></li>
+    			<li class=""><a href="javascript: void(0);" data-sk="resource"><span class="min-price">相关资料</span></a></li>
+    			<li class=""><a href="javascript: void(0);" data-sk="progress"><span class="min-price">项目进程</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="签约视频"><span class="min-price">签约视频</span></a></li>
 			</ul>
             
@@ -209,22 +209,9 @@
                         </tr>
                     </table>
                             
-            <div class="expect-income clearfix">
-                <strong>预期收益*</strong>
-                                    （以下数据根据“投资金额6.3
-                    万元、期限36个月”计算，您的收益以实际到账为准）
-                            </div>
-            <div class="total-income" id="total-income">
- 
-            </div>
-            <div class="collection-detail" id="collection-detail">
- 
-            </div>
-            <div class="comments">
-                <p class="asterisk">说明：</p>
- 
-                <p class="item">每期实际收款日期、金额以最终到账为准，本项目最终解释权归春蕾投资管理有限公司所有。</p>
-            </div>
+            
+            
+            
  
         </div>
     </div>
@@ -233,37 +220,13 @@
                     <div class="invest-record">
                                     <div class="invest-record-title">投资记录</div>
                     <table class="invest-record-list">
-                        <tbody>
+                        <tbody id="invest-record">
                         <tr>
                             <th>投资人</th>
                             <th>金额（元）</th>
                             <th>时间</th>
                             </tr>
-                            <tr>
-                            <td>wd******</td>
-                            <td>5500</td>
-                            <td>2014-8-12</td>
-                        </tr>
-                        <tr>
-                            <td>wd******</td>
-                            <td>5500</td>
-                            <td>2014-8-12</td>
-                        </tr>
-                        <tr>
-                            <td>wd******</td>
-                            <td>5500</td>
-                            <td>2014-8-12</td>
-                        </tr>
-                        <tr>
-                            <td>wd******</td>
-                            <td>5500</td>
-                            <td>2014-8-12</td>
-                        </tr>
-                        <tr>
-                            <td>wd******</td>
-                            <td>5500</td>
-                            <td>2014-8-12</td>
-                        </tr>
+                            
                         </tbody>
                     </table>
                 
@@ -310,7 +273,7 @@
  <script type="text/javascript"
 				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
 <script type="text/javascript"
-				src="/easyservice/gpps.dao.IProductSeriesDao?json"></script>
+				src="/easyservice/gpps.service.IProductSeriesService?json"></script>
 <script type="text/javascript"
 				src="/easyservice/gpps.service.IProductService?json"></script>
 <script type="text/javascript"
@@ -318,21 +281,26 @@
 <script type="text/javascript"
 		src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
 <script type="text/javascript"
-		src="/easyservice/gpps.service.ISubmitService?json"></script>				
+		src="/easyservice/gpps.service.ISubmitService?json"></script>
+<script type="text/javascript"
+		src="/easyservice/gpps.service.IPayBackService?json"></script>				
  <script>
   $(document).ready(function () {
 	  
-	  var seriesDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IProductSeriesDao");
+	  var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
  	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
  	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
  	var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
  	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
  	var submit = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
+ 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
  	var pid = getQueryString('pid');
  	
  	var order = null;
  	var series = null;
  	var product = null;
+ 	var paybacks = null;
+ 	var seriesname = {};
  	
  	try{
  	
@@ -343,27 +311,65 @@
  			break;
  		}
  	}
- 	series = seriesDao.find(product.productseriesId);
-	  
+ 	series = seriesService.find(product.productseriesId);
  	
- 	$('li#productseries').html('<a href="productlist.html?sid='+series.id+'">'+series.title+'</a> <span class="divider">&gt;</span>');
- 	$('span#product-title').html(order.title);
- 	$('span#product-code').html('编号:  '+order.id+"_"+pid);
- 	$('span#product-published-date').html('发布时间： '+formatDateToDay(order.createtime));
+ 	var allseries = seriesService.findAll();
+ 	for(var i=0; i<allseries.size(); i++){
+ 		seriesname[allseries.get(i).id] = allseries.get(i).title;
+ 	}
+ 	
+	paybacks = paybackService.findAll(product.id);
+ 	
  	}catch(e){
  		alert(e);
  		$('body').html('获取产品信息出错！');
  		return;
  	}
  	
+ 	$('li#productseries').html('<a href="productlist.html?sid='+series.id+'">'+series.title+'</a> <span class="divider">&gt;</span>');
+ 	$('span#product-title').html(order.title+'['+series.title+']');
+ 	
+ 	var str = "";
+ 	for(var i=0; i<order.products.size(); i++){
+ 		if(order.products.get(i).id!=parseInt(pid)){
+ 			var pro = order.products.get(i);
+ 			str += '&nbsp;&nbsp;<a style="color:#999;" href="productdetail.html?pid='+pro.id+'">'+seriesname[pro.productseriesId]+'</a>';
+ 		}
+ 	}
+ 	
+ 	$('span#product-code').html(str);
+ 	$('p#product-published-date').html('发布时间： '+formatDateToDay(order.createtime));
+ 	
+ 	$('#totalAmount').html(product.expectAmount.value+"元");
+ 	
  	$('#raiseAmount').val(product.minimum);
  	$('#initAmount').html('起投金额：'+product.minimum+'元');
+ 	$('#addAmount').html('递增金额：'+product.miniAdd+'元');
+ 	$('#rate').html(parseInt(parseFloat(product.rate.value)*100)+"%");
+ 	$('#duration').html(parseInt((order.incomeEndtime-order.incomeStarttime+23*3600*1000)/(24*3600*1000))+'天');
+ 	$('#pseriestitle').html(series.title);
+ 	$('#remainamount').html( '剩余可投金额：<strong>'+(parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))+'元</strong>');
  	
+ 	$('#progressTxt').html((parseInt(product.realAmount.value)*100/parseInt(product.expectAmount.value)).toFixed(2)+"%");
+ 	$('#progressBar').css('width', parseInt(product.realAmount.value)*145/parseInt(product.expectAmount.value)+'px');
  	
  	$('a#invest').click(function(e){
- 		var am = {'_t_':'java.math.BigDecimal','_i_':'4', 'value':'2000'};
+ 		var cuser = lenderService.getCurrentUser();  
+ 		if(cuser==null){
+ 			if(confirm('登录后才能购买产品，现在登录？')){
+ 				window.parent.toward("login");
+ 			}
+ 			return;
+ 		}
+ 		
  		try{
- 		submit.buy(parseInt(pid), am);
+ 		var oid = submit.buy(parseInt(pid), parseInt($('#raiseAmount').val()));
+ 		window.open("/account/buy/request?submitId="+oid);
+		if (confirm("付款是否成功?")) {
+				window.parent.toward("myaccount");
+		} else {
+			window.parent.toward("myaccount");
+		}
  		}catch(e){
  			alert('error:'+e.message);
  		}
@@ -374,7 +380,18 @@
         	 $('ul.list-detail-wrap li a').click(function(e){
         		 $('ul.list-detail-wrap').find('li').removeClass('selected');
         		 $(this).parent().addClass('selected');
-        		
+        		if($(this).attr('data-sk')=='payback'){
+        			$('.detail-content-body').html('<p>以投资10万元为例，收益如下所示：</p>');
+        			
+        			var table = $('<table class="product-description"></table>');
+        			table.append('<tr><th>本金</th><th>利息</th><th>预计还款时间</th><th>实际还款时间</th><th>状态</th></tr>');
+        			for(var t=0; t<paybacks.size(); t++){
+        				table.append('<tr><td>'+paybacks.get(t).chiefAmount.value+'</td><td>'+paybacks.get(t).interest.value+'</td><td>'+formatDateToDay(paybacks.get(t).deadline)+'</td><td>-</td><td>'+paybacks.get(t).state+'</td></tr>');
+        			}
+        			$('.detail-content-body').append(table);
+        			
+        			$('.detail-content-body').append('<div class="comments"><p class="asterisk">说明：</p><p class="item">每期实际收款日期、金额以最终到账为准，本项目最终解释权归春蕾投资管理有限公司所有。</p></div>');
+        		}
         	 });
         	 
         	 

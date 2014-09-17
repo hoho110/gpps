@@ -54,7 +54,7 @@ public class SubmitServiceImpl implements ISubmitService {
 	Logger logger=Logger.getLogger(this.getClass());
 	@Override
 	@Transactional
-	public Integer buy(Integer productId, double num)
+	public Integer buy(Integer productId, int num)
 			throws InsufficientBalanceException,ProductSoldOutException,InsufficientProductException,UnreachBuyLevelException {
 		//TODO 验证amount格式，例如：1w起之类的
 		Lender lender=lenderService.getCurrentUser();

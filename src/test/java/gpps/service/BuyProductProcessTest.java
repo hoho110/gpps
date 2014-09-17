@@ -144,17 +144,17 @@ public class BuyProductProcessTest extends TestSupport{
 				{
 					mockLogin(lender_a);
 					//a用户余额不足
-					submitService.buy(product.getId(), new BigDecimal(12*10000));
+					submitService.buy(product.getId(), 12*10000);
 				}else if(i==1){
 					mockLogin(lender_b);
 					//b用户权限不够
-					submitService.buy(product.getId(), new BigDecimal(12*10000));
+					submitService.buy(product.getId(), 12*10000);
 				}else if(i==2){
 					lenderService.changeLevel(lender_b.getId(), Lender.LEVEL_VIP1);
 					lender_b.setLevel(Lender.LEVEL_VIP1);
 					mockLogin(lender_b);
 					//产品余额不足
-					submitService.buy(product.getId(), new BigDecimal(20*10000));
+					submitService.buy(product.getId(), 20*10000);
 				}
 				Assert.fail();
 			}catch (Exception e) {
@@ -177,12 +177,12 @@ public class BuyProductProcessTest extends TestSupport{
 		//正常购买
 		try {
 			mockLogin(lender_b);
-			submitService.buy(product.getId(), new BigDecimal(10*10000));
+			submitService.buy(product.getId(), 10*10000);
 			
 			productService.changeBuyLevel(product.getId(), Lender.LEVEL_COMMON);
 			
 			mockLogin(lender_a);
-			submitService.buy(product.getId(), new BigDecimal(4*10000));
+			submitService.buy(product.getId(), 4*10000);
 		} catch (Exception e) {
 			Assert.fail(e.getMessage());
 		}
@@ -207,7 +207,7 @@ public class BuyProductProcessTest extends TestSupport{
 		try {
 			//售完购买
 			mockLogin(lender_b);
-			submitService.buy(product.getId(), new BigDecimal(10*10000));
+			submitService.buy(product.getId(), 10*10000);
 		} catch (Exception e) {
 			Assert.assertTrue(e instanceof ProductSoldOutException);
 		} 

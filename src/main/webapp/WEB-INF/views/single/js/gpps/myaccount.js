@@ -112,6 +112,15 @@ _$fd = function(longt) {
 			4 : '还款',
 			5 : '提现'
 	}
+	var productstate = {
+			1:'融资中',
+			2:'还款中',
+			4:'流标',
+			8:'还款完成',
+			16:'还款中', 
+			32:'还款完成',
+			64:'还款完成'
+	}
 
 
 var myscore = function(){
@@ -239,7 +248,7 @@ var submitall = function(){
 				iDisplayLength = data.value;
 		}
 		var res = null;
-		res = submitService.findMyAllSubmits(iDisplayStart, iDisplayLength);
+		res = submitService.findMyAllSubmitsByProductStates(-1,iDisplayStart, iDisplayLength);
 		var result = {};
 		result.iTotalRecords = res.get('total');
 		result.iTotalDisplayRecords = res.get('total');
@@ -250,7 +259,7 @@ var submitall = function(){
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
 				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
-				                    item.product.state,
+				                    productstate[item.product.state],
 				                    formatDate(item.createtime),
 				                    item.amount.value,
 				                    item.repayedAmount.value,

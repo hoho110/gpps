@@ -35,5 +35,6 @@
 				#{item}
 			</foreach>
 		</if>
+		order by deadline desc
 	</select>
 </mapper>

@@ -249,7 +249,7 @@ var submitall = function(){
 		{
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"</a>",
+				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
 				                    item.product.state,
 				                    formatDate(item.createtime),
 				                    item.amount.value,
@@ -312,7 +312,7 @@ var submittoafford = function(){
 	var aaData = new Array();
 	for(var i=0; i<datas.size(); i++){
 		var data=datas.get(i);
-		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"'>"+data.product.govermentOrder.title+"</a>",
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"'>"+data.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
 		                    "待支付",
 		                    formatDate(data.createtime),
 		                    data.amount.value,
@@ -416,7 +416,7 @@ var submitpayback = function(){
 		{
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"</a>",
+				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
 				                    "还款中",
 				                    formatDate(item.product.govermentOrder.financingEndtime),
 				                    item.amount.value,
@@ -506,12 +506,12 @@ var submitdone = function(){
 		{
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"</a>",
+				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
 				                    "还款中",
 				                    formatDate(item.createtime),
 				                    item.amount.value,
 				                    item.repayedAmount.value,
-				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)),
+				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)).toFixed(2),
 				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
 			}
 		}
@@ -683,8 +683,8 @@ var paybackhave = function(){
 		{
 			for(var i=0; i<datas.size(); i++){
 				var data=datas.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+data.submit.product.id+"' >"+data.submit.product.govermentOrder.title+"</a>",
-				                    parseFloat(data.chiefamount.value)+parseFloat(data.interest.value),
+				result.aaData.push(["<a href='productdetail.html?pid="+data.submit.product.id+"' >"+data.submit.product.govermentOrder.title+"("+data.submit.product.productSeries.title+")</a>",
+				                    (parseFloat(data.chiefamount.value)+parseFloat(data.interest.value)).toFixed(2),
 				                    data.chiefamount.value,
 				                    data.interest.value,
 				                    formatDate(data.createtime)]);
@@ -750,8 +750,8 @@ var paybackto = function(){
 	var aaData = new Array();
 	for(var i=0; i<datas.size(); i++){
 		var data=datas.get(i);
-		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"</a>",
-		                    parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value),
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+		                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 		                    data.chiefAmount.value,
 		                    data.interest.value,
 		                    formatDate(data.deadline)]);

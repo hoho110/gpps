@@ -24,6 +24,7 @@ import gpps.model.Submit;
 import gpps.service.IAccountService;
 import gpps.service.IBorrowerService;
 import gpps.service.ILenderService;
+import gpps.service.IProductService;
 import gpps.service.PayBackDetail;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
@@ -64,6 +65,8 @@ public class AccountServiceImpl implements IAccountService {
 	IBorrowerService borrowerService;
 	@Autowired
 	IGovermentOrderDao orderDao;
+	@Autowired
+	IProductService productService;
 	
 	@Override
 	public Integer rechargeLenderAccount(Integer lenderAccountId, BigDecimal amount, String description) {
@@ -305,7 +308,7 @@ public class AccountServiceImpl implements IAccountService {
 		for(CashStream cashStream:cashStreams)
 		{
 			cashStream.setSubmit(submitDao.find(cashStream.getSubmitId()));
-			cashStream.getSubmit().setProduct(productDao.find(cashStream.getSubmit().getProductId()));
+			cashStream.getSubmit().setProduct(productService.find(cashStream.getSubmit().getProductId()));
 			cashStream.getSubmit().getProduct().setGovermentOrder(orderDao.find(cashStream.getSubmit().getProduct().getGovermentorderId()));
 		}
 		return Pagination.buildResult(cashStreams, count, offset, recnum);
@@ -345,7 +348,7 @@ public class AccountServiceImpl implements IAccountService {
 			return new ArrayList<PayBack>(0);
 		for(PayBack payBack:payBacks)
 		{
-			Product product=productDao.find(payBack.getProductId());
+			Product product=productService.find(payBack.getProductId());
 			List<Submit> list=findSubmits(submits, payBack.getProductId());
 			if(list==null||list.size()==0)
 				continue;

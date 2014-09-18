@@ -171,7 +171,9 @@ public class ProductServiceImpl implements IProductService {
 	@Override
 	public Product find(Integer productId) {
 		checkNullObject("productId", productId);
-		return productDao.find(productId);
+		Product product=productDao.find(productId);
+		product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
+		return product;
 	}
 
 	@Override

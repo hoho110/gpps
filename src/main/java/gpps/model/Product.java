@@ -136,4 +136,11 @@ public class Product {
 	public void setGovermentOrder(GovermentOrder govermentOrder) {
 		this.govermentOrder = govermentOrder;
 	}
+	private ProductSeries productSeries;
+	public ProductSeries getProductSeries() {
+		return productSeries;
+	}
+	public void setProductSeries(ProductSeries productSeries) {
+		this.productSeries = productSeries;
+	}
 }

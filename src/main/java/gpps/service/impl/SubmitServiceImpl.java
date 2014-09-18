@@ -126,7 +126,7 @@ public class SubmitServiceImpl implements ISubmitService {
 		List<Submit> submits=submitDao.findAllByLender(lender.getId(), offset, recnum);
 		for(Submit submit:submits)
 		{
-			submit.setProduct(productDao.find(submit.getProductId()));
+			submit.setProduct(productService.find(submit.getProductId()));
 			submit.getProduct().setGovermentOrder(govermentOrderDao.find(submit.getProduct().getGovermentorderId()));
 			//计算已还款
 			if(submit.getState()!=Submit.STATE_COMPLETEPAY)
@@ -160,7 +160,7 @@ public class SubmitServiceImpl implements ISubmitService {
 			return new ArrayList<Submit>(0);
 		for(Submit submit:submits)
 		{
-			submit.setProduct(productDao.find(submit.getProductId()));
+			submit.setProduct(productService.find(submit.getProductId()));
 			submit.getProduct().setGovermentOrder(govermentOrderDao.find(submit.getProduct().getGovermentorderId()));
 			submit.setPayExpiredTime(submit.getCreatetime()+Submit.PAYEXPIREDTIME);
 		}
@@ -200,7 +200,7 @@ public class SubmitServiceImpl implements ISubmitService {
 		List<Submit> submits=submitDao.findAllPayedByLenderAndProductStates(lender.getId(), stateList, offset, recnum);
 		for(Submit submit:submits)
 		{
-			submit.setProduct(productDao.find(submit.getProductId()));
+			submit.setProduct(productService.find(submit.getProductId()));
 			submit.getProduct().setGovermentOrder(govermentOrderDao.find(submit.getProduct().getGovermentorderId()));
 			//计算已还款
 			if(submit.getState()!=Submit.STATE_COMPLETEPAY)

@@ -129,10 +129,10 @@ public class ProductServiceImpl implements IProductService {
 				if(i+1==monthNum)
 				{
 					payBack.setChiefAmount(PayBack.BASELINE);
-					payBack.setType(PayBack.TYPE_INTERESTANDCHIEF);
+					payBack.setType(PayBack.TYPE_LASTPAY);
 				}
 				else
-					payBack.setType(PayBack.TYPE_LASTPAY);
+					payBack.setType(PayBack.TYPE_INTERESTANDCHIEF);
 				currentMonthEnd.add(Calendar.DAY_OF_YEAR, 1);
 				payBack.setDeadline(currentMonthEnd.getTimeInMillis());
 				payBackDao.create(payBack);

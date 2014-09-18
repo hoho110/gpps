@@ -54,7 +54,7 @@ public interface IGovermentOrderService {
 	public void startRepaying(Integer orderId)throws IllegalConvertException, IllegalOperationException;//启动还款
 	public void quitFinancing(Integer orderId)throws IllegalConvertException, IllegalOperationException;//放弃融资（流标）
 	public void closeFinancing(Integer orderId)throws IllegalConvertException;//关闭融资
-	
+	public void closeComplete(Integer orderId)throws IllegalConvertException;
 	/**
 	 * 申请融资中产品，并对订单加锁,必须相应地在finally中调用releaseFinancingProduct方法
 	 * @param productId

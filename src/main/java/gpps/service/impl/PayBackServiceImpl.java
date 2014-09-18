@@ -45,7 +45,7 @@ public class PayBackServiceImpl implements IPayBackService {
 				payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
 			}
 		}
-		return payBackDao.findAllByProduct(productId);
+		return payBacks;
 	}
 
 	@Override

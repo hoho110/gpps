@@ -48,7 +48,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		GovermentOrder.STATE_FINANCING,
 		GovermentOrder.STATE_QUITFINANCING,
 		GovermentOrder.STATE_REPAYING,
-		GovermentOrder.STATE_CLOSE
+		GovermentOrder.STATE_WAITINGCLOSE
 	};
 	// Order状态变化，融资金额变化需要修改下面的缓存
 	Map<String,GovermentOrder> financingOrders=new HashMap<String,GovermentOrder>();  
@@ -117,7 +117,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		{GovermentOrder.STATE_PREPUBLISH,GovermentOrder.STATE_FINANCING},
 		{GovermentOrder.STATE_FINANCING,GovermentOrder.STATE_QUITFINANCING},
 		{GovermentOrder.STATE_FINANCING,GovermentOrder.STATE_REPAYING},
-		{GovermentOrder.STATE_REPAYING,GovermentOrder.STATE_CLOSE}};
+		{GovermentOrder.STATE_REPAYING,GovermentOrder.STATE_WAITINGCLOSE}};
 	private void changeState(int orderId, int state) throws IllegalConvertException {
 		GovermentOrder order = govermentOrderDao.find(orderId);
 		if (order == null)
@@ -203,7 +203,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	}
 	@Override
 	public void closeFinancing(Integer orderId) throws IllegalConvertException {
-		changeState(orderId, GovermentOrder.STATE_CLOSE);		
+		changeState(orderId, GovermentOrder.STATE_WAITINGCLOSE);		
 	}
 	@Override
 	public Product applyFinancingProduct(Integer productId, Integer orderId) {
@@ -347,5 +347,9 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		GovermentOrder order=govermentOrderDao.find(product.getGovermentorderId());
 		order.setProducts(productDao.findByGovermentOrder(order.getId()));
 		return order;
+	}
+	@Override
+	public void closeComplete(Integer orderId) throws IllegalConvertException {
+		changeState(orderId, GovermentOrder.STATE_CLOSE);
 	}
 }

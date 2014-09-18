@@ -75,6 +75,17 @@ public class BorrowerHandle {
 			e.printStackTrace();
 		}
 	}
+	public static void quitOrder(ApplicationContext context,Integer orderId)
+	{
+		IGovermentOrderService orderService=context.getBean(IGovermentOrderService.class);
+		try {
+			orderService.quitFinancing(orderId);
+		} catch (IllegalConvertException e) {
+			e.printStackTrace();
+		} catch (IllegalOperationException e) {
+			e.printStackTrace();
+		}
+	}
 	//订单开始还款
 	public static void startOrderRepay(ApplicationContext context,Integer orderId)
 	{

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,12 +18,15 @@ import gpps.model.Borrower;
 import gpps.model.CashStream;
 import gpps.model.Lender;
 import gpps.model.PayBack;
+import gpps.model.Product;
 import gpps.model.Submit;
 import gpps.model.Task;
 import gpps.service.IAccountService;
+import gpps.service.IGovermentOrderService;
 import gpps.service.ILenderService;
 import gpps.service.ILoginService;
 import gpps.service.IPayBackService;
+import gpps.service.IProductService;
 import gpps.service.ISubmitService;
 import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
@@ -49,6 +53,10 @@ public class AccountServlet {
 	IPayBackService payBackService;
 	@Autowired
 	ITaskService taskService;
+	@Autowired
+	IProductService productService;
+	@Autowired
+	IGovermentOrderService orderService;
 	Logger log=Logger.getLogger(AccountServlet.class);
 	public static final String AMOUNT="amount";
 	public static final String CASHSTREAMID="cashStreamId";
@@ -292,6 +300,24 @@ public class AccountServlet {
 			taskService.submit(task);
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 			payBackService.changeState(cashStream.getPaybackId(), PayBack.STATE_FINISHREPAY);
+			if(payBack.getType()==PayBack.TYPE_LASTPAY)
+			{
+				//TODO 金额正确，设置产品状态为还款完毕
+				productService.finishRepay(payBack.getProductId());
+				Product product=productService.find(payBack.getProductId());
+				List<Product> products=productService.findByGovermentOrder(product.getGovermentorderId());
+				boolean isAllRepay=true;
+				for(Product pro:products)
+				{
+					if(pro.getState()!=Product.STATE_FINISHREPAY)
+					{
+						isAllRepay=false;
+						break;
+					}
+				}
+				if(isAllRepay)
+					orderService.closeFinancing(product.getGovermentorderId());
+			}
 		} catch (IllegalConvertException e) {
 			log.error(e.getMessage(),e);
 		}

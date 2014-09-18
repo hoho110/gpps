@@ -88,9 +88,36 @@ public class LenderHandle {
 		Submit submit=submitService.find(submitId);
 		try {
 			Integer cashStreamId=accountService.freezeLenderAccount(lender.getAccountId(), submit.getAmount(), submitId, "购买");
+			
+			//下面是第三方返回成功
 			CashStream cashStream=cashStreamDao.find(cashStreamId);
 			submitService.confirmBuy(cashStream.getSubmitId());
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			
+			//第三方返回失败
+//			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_FAIL);
+		} catch (InsufficientBalanceException e) {
+			e.printStackTrace();
+		} catch (IllegalConvertException e) {
+			e.printStackTrace();
+		}
+	}
+	public static void failPay(ApplicationContext context,Lender lender,Integer submitId)
+	{
+		ISubmitService submitService=context.getBean(ISubmitService.class);
+		IAccountService accountService=context.getBean(IAccountService.class);
+		ICashStreamDao cashStreamDao=context.getBean(ICashStreamDao.class);
+		Submit submit=submitService.find(submitId);
+		try {
+			Integer cashStreamId=accountService.freezeLenderAccount(lender.getAccountId(), submit.getAmount(), submitId, "购买");
+			
+			//下面是第三方返回成功
+//			CashStream cashStream=cashStreamDao.find(cashStreamId);
+//			submitService.confirmBuy(cashStream.getSubmitId());
+//			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			
+			//第三方返回失败
+			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_FAIL);
 		} catch (InsufficientBalanceException e) {
 			e.printStackTrace();
 		} catch (IllegalConvertException e) {

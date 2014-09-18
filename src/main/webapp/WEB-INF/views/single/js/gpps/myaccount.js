@@ -209,7 +209,7 @@ var submitall = function(){
 		"sTitle" : "状态",
 		"code" : "state"
 	}, {
-		"sTitle" : "投标完成时间",
+		"sTitle" : "购买时间",
 		"code" : "financingEndtime"
 	}, {
 		"sTitle" : "金额",
@@ -249,9 +249,9 @@ var submitall = function(){
 		{
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' target='_blank'>"+item.product.govermentOrder.title+"</a>",
-				                    item.state,
-				                    formatDate(item.product.govermentOrder.financingEndtime),
+				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"</a>",
+				                    item.product.state,
+				                    formatDate(item.createtime),
 				                    item.amount.value,
 				                    item.repayedAmount.value,
 				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)).toFixed(2),
@@ -295,7 +295,7 @@ var submittoafford = function(){
 		"sTitle" : "状态",
 		"code" : "state"
 	}, {
-		"sTitle" : "投标完成时间",
+		"sTitle" : "购买时间",
 		"code" : "financingEndtime"
 	}, {
 		"sTitle" : "金额",
@@ -312,9 +312,9 @@ var submittoafford = function(){
 	var aaData = new Array();
 	for(var i=0; i<datas.size(); i++){
 		var data=datas.get(i);
-		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"</a>",
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"'>"+data.product.govermentOrder.title+"</a>",
 		                    "待支付",
-		                    formatDate(data.product.govermentOrder.financingEndtime),
+		                    formatDate(data.createtime),
 		                    data.amount.value,
 		                    formatDate(data.payExpiredTime),
 		                    "<a href='/account/buy/request?submitId="+data.id+"'>立即支付</a>"]);
@@ -416,7 +416,7 @@ var submitpayback = function(){
 		{
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' target='_blank'>"+item.product.govermentOrder.title+"</a>",
+				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"</a>",
 				                    "还款中",
 				                    formatDate(item.product.govermentOrder.financingEndtime),
 				                    item.amount.value,
@@ -466,7 +466,7 @@ var submitdone = function(){
 		"sTitle" : "状态",
 		"code" : "state"
 	}, {
-		"sTitle" : "投标完成时间",
+		"sTitle" : "购买时间",
 		"code" : "financingEndtime"
 	}, {
 		"sTitle" : "金额",
@@ -506,9 +506,9 @@ var submitdone = function(){
 		{
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' target='_blank'>"+item.product.govermentOrder.title+"</a>",
+				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"</a>",
 				                    "还款中",
-				                    formatDate(item.product.govermentOrder.financingEndtime),
+				                    formatDate(item.createtime),
 				                    item.amount.value,
 				                    item.repayedAmount.value,
 				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)),
@@ -581,11 +581,11 @@ var paybackall = function(){
  							 	 +repayedDetail.get("threemonth").interest.value+'</td><td>'
  							 	 +repayedDetail.get("twomonth").interest.value+'</td><td>'
  							 	 +repayedDetail.get("onemonth").interest.value+'</td></tr>';
-	str += '<tr><td>总计</td><td>'+(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("oneyear").interest.value))+'</td><td>'
-	 							 +(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("halfyear").interest.value))+'</td><td>'
-	 							 +(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("threemonth").interest.value))+'</td><td>'
-	 							 +(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("twomonth").interest.value))+'</td><td>'
-	 							 +(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("onemonth").interest.value))+'</td></tr>';
+	str += '<tr><td>总计</td><td>'+(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("oneyear").interest.value)).toFixed(2)+'</td><td>'
+	 							 +(parseFloat(repayedDetail.get("halfyear").chiefAmount.value)+parseFloat(repayedDetail.get("halfyear").interest.value)).toFixed(2)+'</td><td>'
+	 							 +(parseFloat(repayedDetail.get("threemonth").chiefAmount.value)+parseFloat(repayedDetail.get("threemonth").interest.value)).toFixed(2)+'</td><td>'
+	 							 +(parseFloat(repayedDetail.get("twomonth").chiefAmount.value)+parseFloat(repayedDetail.get("twomonth").interest.value)).toFixed(2)+'</td><td>'
+	 							 +(parseFloat(repayedDetail.get("onemonth").chiefAmount.value)+parseFloat(repayedDetail.get("onemonth").interest.value)).toFixed(2)+'</td></tr>';
 	str += '</tbody>';
 	str += '</table>';
 	
@@ -608,11 +608,11 @@ var paybackall = function(){
 							 	 +willBeRepayedDetail.get("threemonth").interest.value+'</td><td>'
 							 	 +willBeRepayedDetail.get("twomonth").interest.value+'</td><td>'
 							 	 +willBeRepayedDetail.get("onemonth").interest.value+'</td></tr>';
-	str += '<tr><td>总计</td><td>'+(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("oneyear").interest.value))+'</td><td>'
-								 +(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("halfyear").interest.value))+'</td><td>'
-								 +(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("threemonth").interest.value))+'</td><td>'
-								 +(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("twomonth").interest.value))+'</td><td>'
-								 +(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("onemonth").interest.value))+'</td></tr>';
+	str += '<tr><td>总计</td><td>'+(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("oneyear").interest.value)).toFixed(2)+'</td><td>'
+								 +(parseFloat(willBeRepayedDetail.get("halfyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("halfyear").interest.value)).toFixed(2)+'</td><td>'
+								 +(parseFloat(willBeRepayedDetail.get("threemonth").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("threemonth").interest.value)).toFixed(2)+'</td><td>'
+								 +(parseFloat(willBeRepayedDetail.get("twomonth").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("twomonth").interest.value)).toFixed(2)+'</td><td>'
+								 +(parseFloat(willBeRepayedDetail.get("onemonth").chiefAmount.value)+parseFloat(repayedDetail.get("onemonth").interest.value)).toFixed(2)+'</td></tr>';
 	str += '</tbody>';
 	str += '</table>';
 	
@@ -683,7 +683,7 @@ var paybackhave = function(){
 		{
 			for(var i=0; i<datas.size(); i++){
 				var data=datas.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+data.submit.product.id+"' target='_blank'>"+data.submit.product.govermentOrder.title+"</a>",
+				result.aaData.push(["<a href='productdetail.html?pid="+data.submit.product.id+"' >"+data.submit.product.govermentOrder.title+"</a>",
 				                    parseFloat(data.chiefamount.value)+parseFloat(data.interest.value),
 				                    data.chiefamount.value,
 				                    data.interest.value,
@@ -750,7 +750,7 @@ var paybackto = function(){
 	var aaData = new Array();
 	for(var i=0; i<datas.size(); i++){
 		var data=datas.get(i);
-		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"</a>",
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"</a>",
 		                    parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value),
 		                    data.chiefAmount.value,
 		                    data.interest.value,

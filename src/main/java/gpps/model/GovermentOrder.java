@@ -20,7 +20,8 @@ public class GovermentOrder {
 	public static final int STATE_FINANCING=1;
 	public static final int STATE_QUITFINANCING=1<<4;
 	public static final int STATE_REPAYING=1<<2;
-	public static final int STATE_CLOSE=1<<3;
+	public static final int STATE_WAITINGCLOSE=1<<3;
+	public static final int STATE_CLOSE=1<<5;
 	private int state=STATE_PREPUBLISH;
 	private long financingStarttime;
 	private long financingEndtime;

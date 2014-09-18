@@ -1,13 +1,26 @@
 package gpps.service.impl;
 
+import gpps.dao.IBorrowerDao;
 import gpps.dao.ICashStreamDao;
+import gpps.dao.IGovermentOrderDao;
+import gpps.dao.ILenderDao;
+import gpps.dao.IPayBackDao;
 import gpps.dao.IProductDao;
 import gpps.dao.ISubmitDao;
 import gpps.dao.ITaskDao;
+import gpps.model.Borrower;
+import gpps.model.GovermentOrder;
+import gpps.model.Lender;
+import gpps.model.PayBack;
+import gpps.model.Product;
 import gpps.model.Submit;
 import gpps.model.Task;
+import gpps.service.IAccountService;
+import gpps.service.IPayBackService;
 import gpps.service.ITaskService;
+import gpps.service.exception.IllegalConvertException;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -30,6 +43,16 @@ public class TaskServiceImpl implements ITaskService {
 	ISubmitDao submitDao;
 	@Autowired
 	ICashStreamDao cashStreamDao;
+	@Autowired
+	IAccountService accountService;
+	@Autowired
+	ILenderDao lenderDao;
+	@Autowired
+	IBorrowerDao borrowerDao;
+	@Autowired
+	IGovermentOrderDao govermentOrderDao;
+	@Autowired
+	IPayBackDao payBackDao;
 	@PostConstruct
 	public void init() {
 		try {
@@ -115,13 +138,67 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	private void executePayTask(Task task,boolean interrupted)
 	{
+		//TODO 考虑打断情况
+		logger.info("开始执行产品id="+task.getProductId()+"的支付任务taskID="+task.getId());
 		List<Submit> submits=submitDao.findAllByProductAndState(task.getProductId(), Submit.STATE_COMPLETEPAY);
+		if(submits==null||submits.size()==0)
+			return;
+		Product product=productDao.find(task.getProductId());
+		GovermentOrder order=govermentOrderDao.find(product.getGovermentorderId());
+		Borrower borrower=borrowerDao.find(order.getBorrowerId());
+		for(Submit submit:submits)
+		{
+			Lender lender=lenderDao.find(submit.getLenderId());
+			try {
+				accountService.pay(lender.getAccountId(), borrower.getAccountId(),submit.getAmount(), submit.getId(), "支付");
+			} catch (IllegalConvertException e) {
+				logger.error(e.getMessage(),e);
+			}
+			logger.debug("支付任务["+task.getId()+"],Lender["+lender.getId()+"]为Submit["+submit.getId()+"]支付了"+submit.getAmount()+"元");
+		}
+		logger.info("支付任务["+task.getId()+"]完毕，涉及Submit"+submits.size()+"个");
 	}
 	private void executeQuitFinancingTask(Task task,boolean interrupted)
 	{
+		//TODO 考虑打断情况
+		logger.info("开始执行产品id="+task.getProductId()+"的流标任务taskID="+task.getId());
+		List<Submit> submits=submitDao.findAllByProductAndState(task.getProductId(), Submit.STATE_COMPLETEPAY);
+		if(submits==null||submits.size()==0)
+			return;
+		for(Submit submit:submits)
+		{
+			Lender lender=lenderDao.find(submit.getLenderId());
+			try {
+				accountService.unfreezeLenderAccount(lender.getAccountId(), submit.getAmount(), submit.getId(), "流标");
+			} catch (IllegalConvertException e) {
+				logger.error(e.getMessage(),e);
+			}
+			logger.debug("流标任务["+task.getId()+"],Lender["+lender.getId()+"]从Submit["+submit.getId()+"]解冻了"+submit.getAmount()+"元");
+		}
+		logger.info("流标任务["+task.getId()+"]完毕，涉及Submit"+submits.size()+"个");
 	}
 	private void executeRepayTask(Task task,boolean interrupted)
 	{
+		//TODO 考虑打断情况
+		logger.info("开始执行产品id="+task.getProductId()+"的还款任务taskID="+task.getId());
+		List<Submit> submits=submitDao.findAllByProductAndState(task.getProductId(), Submit.STATE_COMPLETEPAY);
+		if(submits==null||submits.size()==0)
+			return;
+		PayBack payBack=payBackDao.find(task.getPayBackId());
+		for(Submit submit:submits)
+		{
+			Lender lender=lenderDao.find(submit.getLenderId());
+			BigDecimal lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(PayBack.BASELINE, 2, BigDecimal.ROUND_DOWN);
+			BigDecimal lenderInterest=payBack.getInterest().multiply(submit.getAmount()).divide(PayBack.BASELINE, 2, BigDecimal.ROUND_DOWN);
+			try {
+			
+				accountService.repay(lender.getAccountId(), payBack.getBorrowerAccountId(), lenderChiefAmount, lenderInterest, submit.getId(), payBack.getId(), "还款");
+			} catch (IllegalConvertException e) {
+				logger.error(e.getMessage(),e);
+			}
+			logger.debug("还款任务["+task.getId()+"],Lender["+lender.getId()+"]因Submit["+submit.getId()+"]获取还款本金"+lenderChiefAmount+"元,利息"+lenderInterest+"元");
+		}
+		logger.info("还款任务["+task.getId()+"]完毕，涉及Submit"+submits.size()+"个");
 	}
 	@Override
 	public void submit(Task task) {

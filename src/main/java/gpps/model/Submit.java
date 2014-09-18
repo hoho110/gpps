@@ -70,7 +70,7 @@ public class Submit {
 	
 	//辅助对象
 	private Product product;
-	private BigDecimal repayedAmount=BigDecimal.ZERO;
+	private BigDecimal repayedAmount=new BigDecimal(0);
 	private long payExpiredTime;
 	public Product getProduct() {
 		return product;

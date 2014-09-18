@@ -254,7 +254,7 @@ var submitall = function(){
 				                    formatDate(item.product.govermentOrder.financingEndtime),
 				                    item.amount.value,
 				                    item.repayedAmount.value,
-				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)),
+				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)).toFixed(2),
 				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
 			}
 		}
@@ -421,7 +421,7 @@ var submitpayback = function(){
 				                    formatDate(item.product.govermentOrder.financingEndtime),
 				                    item.amount.value,
 				                    item.repayedAmount.value,
-				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)),
+				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)).toFixed(2),
 				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
 			}
 		}

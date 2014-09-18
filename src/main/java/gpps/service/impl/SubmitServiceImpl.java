@@ -138,7 +138,7 @@ public class SubmitServiceImpl implements ISubmitService {
 			{
 				if(cashStream.getAction()==CashStream.ACTION_REPAY&&cashStream.getState()==CashStream.STATE_SUCCESS)
 				{
-					submit.getRepayedAmount().add(cashStream.getChiefamount());
+					submit.setRepayedAmount(submit.getRepayedAmount().add(cashStream.getChiefamount()));
 				}
 			}
 		}
@@ -212,7 +212,7 @@ public class SubmitServiceImpl implements ISubmitService {
 			{
 				if(cashStream.getAction()==CashStream.ACTION_REPAY&&cashStream.getState()==CashStream.STATE_SUCCESS)
 				{
-					submit.getRepayedAmount().add(cashStream.getChiefamount());
+					submit.setRepayedAmount(submit.getRepayedAmount().add(cashStream.getChiefamount()));
 				}
 			}
 		}

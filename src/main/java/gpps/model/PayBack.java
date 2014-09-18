@@ -15,8 +15,8 @@ public class PayBack {
 	public static int STATE_FINISHREPAY=2;
 	public static int STATE_DELAY=3;
 	private int state;
-	private BigDecimal chiefAmount;
-	private BigDecimal interest;
+	private BigDecimal chiefAmount=BigDecimal.ZERO;
+	private BigDecimal interest=BigDecimal.ZERO;
 	private long deadline;//还款时间
 	private long realtime;//实际还款时间
 	public static final int TYPE_INTERESTANDCHIEF=0;

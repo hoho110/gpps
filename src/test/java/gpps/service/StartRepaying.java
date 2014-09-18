@@ -9,9 +9,10 @@ public class StartRepaying {
 	public static void main(String args[]) throws Exception{
 		IProductService proService = context.getBean(IProductService.class);
 		IGovermentOrderService orderService = context.getBean(IGovermentOrderService.class);
-		proService.startRepaying(7);
-		proService.startRepaying(8);
-		orderService.startRepaying(3);
+		proService.startRepaying(13);
+		proService.startRepaying(14);
+		proService.startRepaying(15);
+		orderService.startRepaying(6);
 		System.exit(0);
 	}
 }

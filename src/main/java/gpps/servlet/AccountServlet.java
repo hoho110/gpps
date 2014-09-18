@@ -237,22 +237,25 @@ public class AccountServlet {
 	@RequestMapping(value={"/account/repay/request"})
 	public void repay(HttpServletRequest req, HttpServletResponse resp)
 	{
-		HttpSession session=req.getSession();
-		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
-		if(user==null)
-		{
-			try {
-				resp.sendError(403,"未找到用户信息，请重新登录");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
+//		HttpSession session=req.getSession();
+//		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+//		if(user==null)
+//		{
+//			try {
+//				resp.sendError(403,"未找到用户信息，请重新登录");
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			return;
+//		}
+		//测试暂时借款人账户ID不从Session取,而从payback中取
 		Integer payBackId=Integer.parseInt(StringUtil.checkNullAndTrim(PAYBACKID, req.getParameter(PAYBACKID)));
 		PayBack payBack=payBackService.find(payBackId);
+		
+		
 		Integer cashStreamId=null;
 		try {
-			cashStreamId = accountService.freezeBorrowerAccount(((Borrower)user).getAccountId(), payBack.getChiefAmount().add(payBack.getInterest()), payBack.getId(), "还款");
+			cashStreamId = accountService.freezeBorrowerAccount(payBack.getBorrowerAccountId(), payBack.getChiefAmount().add(payBack.getInterest()), payBack.getId(), "还款");
 		} catch (InsufficientBalanceException e) {
 			try {
 				resp.sendError(400,"余额不足");

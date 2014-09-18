@@ -64,19 +64,19 @@ public class SubmitServiceImpl implements ISubmitService {
 		BigDecimal amount=new BigDecimal(num);
 		//判断当前账户余额是否足够购买
 		if(amount.compareTo(account.getUsable())>0)
-			throw new InsufficientBalanceException();
+			throw new InsufficientBalanceException("您账户的余额不足，请先充值");
 		Product product=productService.find(productId);
 		checkNullObject(Product.class, product);
 		//判断用户购买级别
 		if(lender.getLevel()<product.getLevelToBuy())
-			throw new UnreachBuyLevelException();
+			throw new UnreachBuyLevelException("您尚未达到购买此产品的级别");
 		try
 		{
 			product=orderService.applyFinancingProduct(productId, product.getGovermentorderId());
 			if(product==null)
-				throw new ProductSoldOutException();
+				throw new ProductSoldOutException("产品已售完");
 			if(amount.compareTo(product.getExpectAmount().subtract(product.getRealAmount()))>0)
-				throw new InsufficientProductException();
+				throw new InsufficientProductException("产品余额不足");
 			
 			Submit submit=new Submit();
 			submit.setAmount(amount);

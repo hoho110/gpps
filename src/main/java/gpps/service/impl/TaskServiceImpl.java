@@ -88,7 +88,7 @@ public class TaskServiceImpl implements ITaskService {
 					if(task==null)
 					{
 						try {
-							Thread.sleep(60*1000);
+							Thread.sleep(1*1000);
 							continue;
 						} catch (InterruptedException e) {
 							e.printStackTrace();

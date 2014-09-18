@@ -291,6 +291,7 @@ public class AccountServlet {
 			task.setType(Task.TYPE_REPAY);
 			taskService.submit(task);
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			payBackService.changeState(cashStream.getPaybackId(), PayBack.STATE_FINISHREPAY);
 		} catch (IllegalConvertException e) {
 			log.error(e.getMessage(),e);
 		}

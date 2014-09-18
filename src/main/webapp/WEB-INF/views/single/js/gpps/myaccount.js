@@ -679,13 +679,16 @@ var paybackhave = function(){
 		result.iTotalDisplayRecords = res.get('total');
 		result.aaData = new Array();
 		var datas = res.get('result');
-		for(var i=0; i<datas.size(); i++){
-			var data=datas.get(i);
-			result.aaData.push(["<a href='productdetail.html?pid="+data.submit.product.id+"' target='_blank'>"+data.submit.product.govermentOrder.title+"</a>",
-			                    parseFloat(data.chiefamount.value)+parseFloat(data.interest.value),
-			                    data.chiefamount.value,
-			                    data.interest.value,
-			                    formatDate(data.createtime)]);
+		if(datas)
+		{
+			for(var i=0; i<datas.size(); i++){
+				var data=datas.get(i);
+				result.aaData.push(["<a href='productdetail.html?pid="+data.submit.product.id+"' target='_blank'>"+data.submit.product.govermentOrder.title+"</a>",
+				                    parseFloat(data.chiefamount.value)+parseFloat(data.interest.value),
+				                    data.chiefamount.value,
+				                    data.interest.value,
+				                    formatDate(data.createtime)]);
+			}
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);

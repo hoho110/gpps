@@ -118,6 +118,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setChiefamount(amount.negate());
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_FREEZE);
+		cashStream.setPaybackId(paybackId);
 		cashStreamDao.create(cashStream);
 //		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//TODO 调用第三方接口冻结,如不成功则事务回滚
@@ -296,32 +297,33 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	public Map<String, Object> findLenderRepayCashStream(int offset, int recnum) {
-//		Lender lender=lenderService.getCurrentUser();
-//		int count=cashStreamDao.countByActionAndState(lender.getAccountId(), null, CashStream.ACTION_REPAY, CashStream.STATE_SUCCESS);
-//		if(count==0)
-//			return Pagination.buildResult(null, count, offset, recnum);
-//		List<CashStream> cashStreams=cashStreamDao.findByActionAndState(lender.getAccountId(), null, CashStream.ACTION_REPAY, CashStream.STATE_SUCCESS, offset, recnum);
-//		for(CashStream cashStream:cashStreams)
-//		{
-//			cashStream.setSubmit(submitDao.find(cashStream.getSubmitId()));
-//			cashStream.getSubmit().setProduct(productDao.find(cashStream.getSubmit().getProductId()));
-//			cashStream.getSubmit().getProduct().setGovermentOrder(orderDao.find(cashStream.getSubmit().getProduct().getGovermentorderId()));
-//		}
-		List<CashStream> cashStreams=new ArrayList<CashStream>();
-		int count=100;
-		for(int i=0;i<10;i++)
+		Lender lender=lenderService.getCurrentUser();
+		int count=cashStreamDao.countByActionAndState(lender.getAccountId(), null, CashStream.ACTION_REPAY, CashStream.STATE_SUCCESS);
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		List<CashStream> cashStreams=cashStreamDao.findByActionAndState(lender.getAccountId(), null, CashStream.ACTION_REPAY, CashStream.STATE_SUCCESS, offset, recnum);
+		for(CashStream cashStream:cashStreams)
 		{
-			CashStream cashStream=new CashStream();
-			cashStream.setChiefamount(new BigDecimal(10000));
-			cashStream.setInterest(new BigDecimal(1000));
-			cashStreams.add(cashStream);
-			cashStream.setSubmit(new Submit());
-			cashStream.getSubmit().setProduct(new Product());
-			cashStream.getSubmit().getProduct().setId(123);
-			cashStream.getSubmit().getProduct().setGovermentOrder(new GovermentOrder());
-			cashStream.getSubmit().getProduct().getGovermentOrder().setTitle("淘宝借钱二期");
+			cashStream.setSubmit(submitDao.find(cashStream.getSubmitId()));
+			cashStream.getSubmit().setProduct(productDao.find(cashStream.getSubmit().getProductId()));
+			cashStream.getSubmit().getProduct().setGovermentOrder(orderDao.find(cashStream.getSubmit().getProduct().getGovermentorderId()));
 		}
 		return Pagination.buildResult(cashStreams, count, offset, recnum);
+//		List<CashStream> cashStreams=new ArrayList<CashStream>();
+//		int count=100;
+//		for(int i=0;i<10;i++)
+//		{
+//			CashStream cashStream=new CashStream();
+//			cashStream.setChiefamount(new BigDecimal(10000));
+//			cashStream.setInterest(new BigDecimal(1000));
+//			cashStreams.add(cashStream);
+//			cashStream.setSubmit(new Submit());
+//			cashStream.getSubmit().setProduct(new Product());
+//			cashStream.getSubmit().getProduct().setId(123);
+//			cashStream.getSubmit().getProduct().setGovermentOrder(new GovermentOrder());
+//			cashStream.getSubmit().getProduct().getGovermentOrder().setTitle("淘宝借钱二期");
+//		}
+//		return Pagination.buildResult(cashStreams, count, offset, recnum);
 	}
 
 	@Override
@@ -356,6 +358,7 @@ public class AccountServiceImpl implements IAccountService {
 				lenderPayBack.setId(payBack.getId());
 				lenderPayBack.setInterest(payBack.getInterest().multiply(submit.getAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_DOWN));
 				lenderPayBack.setProduct(product);
+				lenderPayBack.getProduct().setGovermentOrder(orderDao.find(lenderPayBack.getProduct().getGovermentorderId()));
 				lenderPayBack.setProductId(payBack.getProductId());
 				lenderPayBack.setState(payBack.getState());
 				lenderPayBack.setType(payBack.getType());

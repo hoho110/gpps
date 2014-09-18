@@ -118,7 +118,7 @@ public class ProductServiceImpl implements IProductService {
 				else
 				{
 					currentMonthEnd=(Calendar)(starttime.clone());
-					currentMonthEnd.add(Calendar.MONTH, 1);
+					currentMonthEnd.add(Calendar.MONTH, i+1);
 				}
 				int days=getDays(currentMonthStart, currentMonthEnd);
 				payBack=new PayBack();

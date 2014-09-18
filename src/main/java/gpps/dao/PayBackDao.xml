@@ -25,7 +25,7 @@
 		where
 		id=#{id}
 	</delete>
-	<select id="findByProductsAndState" resultType="gpps.model.Product">
+	<select id="findByProductsAndState" resultType="gpps.model.PayBack">
 		select * from PayBack
 		where state=#{state}
 		<if test="productIds != null">

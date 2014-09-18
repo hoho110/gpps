@@ -123,7 +123,7 @@ _$fd = function(longt) {
 	}
 
 
-var myscore = function(){
+var myscore = function(container){
 	var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 	var lender=lenderService.getCurrentUser();
 	var content = $('<div></div>');
@@ -166,9 +166,9 @@ var myscore = function(){
 	str1 += '</tbody>';
 	str1 += '</table>';
 	content.append(str1);
-	return content;
+	container.append(content);
 }
-var myactivity = function(){
+var myactivity = function(container){
 	var content = $('<div></div>');
 	var str = "";
 	str += '<table class="table table-striped table-hover" style="min-width:300px;">';
@@ -185,10 +185,10 @@ var myactivity = function(){
 	str += '</tbody>';
 	str += '</table>';
 	content.append(str);
-	return content;
+	container.append(content);
 }
 
-var submitall = function(){
+var submitall = function(container){
 //	var content = $('<div></div>');
 //	var str = "";
 //	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
@@ -278,11 +278,11 @@ var submitall = function(){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
 	table.dataTable(mySettings);
-	return content;
 }
 
-var submittoafford = function(){
+var submittoafford = function(container){
 //	var content = $('<div></div>');
 //	var str = "";
 //	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
@@ -334,8 +334,8 @@ var submittoafford = function(){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
 	table.dataTable(mySettings);
-	return content;
 }
 
 var submittoaudit = function(){
@@ -356,7 +356,7 @@ var submittoaudit = function(){
 	return content;
 }
 
-var submitpayback = function(){
+var submitpayback = function(container){
 //	var content = $('<div></div>');
 //	var str = "";
 //	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
@@ -445,11 +445,11 @@ var submitpayback = function(){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
 	table.dataTable(mySettings);
-	return content;
 }
 
-var submitdone = function(){
+var submitdone = function(container){
 //	var content = $('<div></div>');
 //	var str = "";
 //	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
@@ -535,11 +535,11 @@ var submitdone = function(){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
 	table.dataTable(mySettings);
-	return content;
 }
 
-var paybackall = function(){
+var paybackall = function(container){
 //	var content = $('<div></div>');
 //	var str = "";
 //	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
@@ -626,11 +626,11 @@ var paybackall = function(){
 	str += '</table>';
 	
 	content.append(str);
-	return content;
+	container.append(content);
 }
 
 
-var paybackhave = function(){
+var paybackhave = function(container){
 //	var content = $('<div></div>');
 //	var str = "";
 //	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
@@ -710,13 +710,12 @@ var paybackhave = function(){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
 	table.dataTable(mySettings);
-	return content;
-	
 }
 
 
-var paybackto = function(){
+var paybackto = function(container){
 //	var content = $('<div></div>');
 //	var str = "";
 //	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
@@ -771,10 +770,10 @@ var paybackto = function(){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
 	table.dataTable(mySettings);
-	return content;
 }
-var cashProcessor=function(action,state){
+var cashProcessor=function(action,state,container){
 	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
 	var columns = [ {
 		"sTitle" : "时间",
@@ -833,31 +832,31 @@ var cashProcessor=function(action,state){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
 	table.dataTable(mySettings);
-	return content;
 }
-var cashall = function(){
-	return cashProcessor(-1,-1);
-}
-
-var cashrecharge = function(){
-	return cashProcessor(0,-1);
+var cashall = function(container){
+	return cashProcessor(-1,-1,container);
 }
 
-var cashwithdraw = function(){
-	return cashProcessor(5,-1);
+var cashrecharge = function(container){
+	return cashProcessor(0,-1,container);
+}
+
+var cashwithdraw = function(container){
+	return cashProcessor(5,-1,container);
 }
 
 
-var cashinvest = function(){
-	return cashProcessor(3,-1);
+var cashinvest = function(container){
+	return cashProcessor(3,-1,container);
 }
 
-var cashreceive = function(){
-	return cashProcessor(4,-1);
+var cashreceive = function(container){
+	return cashProcessor(4,-1,container);
 }
 
-var mynote = function(){
+var mynote = function(container){
 	var content = $('<div></div>');
 	var str = "";
 	str += '<table class="table table-striped table-hover" style="min-width:300px;">';
@@ -871,7 +870,7 @@ var mynote = function(){
 	str += '</tbody>';
 	str += '</table>';
 	content.append(str);
-	return content;
+	container.append(content);
 }
 
 

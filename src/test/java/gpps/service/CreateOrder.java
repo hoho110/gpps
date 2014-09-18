@@ -13,7 +13,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 public class CreateOrder {
 	
 	
-	public static Integer createSingleOrder(ApplicationContext context, String title, Integer bid){
+	public static Integer createSingleOrder(ApplicationContext context, String title, Integer bid, String description){
 		IGovermentOrderService orderService = context.getBean(IGovermentOrderService.class);
 		GovermentOrder or = new GovermentOrder();
 		or.setBorrowerId(bid);
@@ -27,6 +27,7 @@ public class CreateOrder {
 		or.setLastModifytime((new Date()).getTime());
 		
 		or.setState(1);
+		or.setDescription(description);
 		or = orderService.create(or);
 		return or.getId();
 	}

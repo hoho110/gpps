@@ -92,7 +92,7 @@
 	BORDER-BOTTOM: #eee 1px solid; TEXT-ALIGN: center; BORDER-LEFT: #eee 1px solid; PADDING-BOTTOM: 3px; LINE-HEIGHT: 20px; BACKGROUND-COLOR: #eee; PADDING-LEFT: 20px; PADDING-RIGHT: 20px; DISPLAY: inline-block; BACKGROUND-REPEAT: repeat-x; MARGIN-BOTTOM: 0px; COLOR: #fff; FONT-SIZE: 12px; VERTICAL-ALIGN: middle; BORDER-TOP: #eee 0px solid; CURSOR: pointer; FONT-WEIGHT: bold; BORDER-RIGHT: #eee 1px solid; PADDING-TOP: 3px; border-radius: 5px; text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25)
 }
 .list-table a.btns-grey:hover {
-	BACKGROUND-COLOR: #ffbb01; TEXT-DECORATION: none
+	TEXT-DECORATION: none
 }
 .list-table a.btns:hover {
 	BACKGROUND-COLOR: #ffbb01; TEXT-DECORATION: none

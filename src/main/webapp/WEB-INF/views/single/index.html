@@ -466,21 +466,21 @@ $(document).ready(function () {
                    window.parent.justify(document.body.scrollHeight);
                    
                    
-                   $('a.constructure').click(function(e){
+                   $('a.constructure, a.stat').click(function(e){
                 	   var info = $(this).parents('li').find('div.productinfo');
                 	  	if(info.css('display')=='block'){
                 	  		info.css('display', 'none');
-                	  		var stat = $(this).parents('li').find('div.stat');
+                	  		var stat = $(this).parents('li').find('a.stat');
                 	  		if(stat.text()=='投资中'){
-                	  			stat.removeClass('stategrey').addClass('state');
+                	  			stat.removeClass('btns-grey').addClass('btns');
                 	  		}else if(stat.text()=='预发布'){
-                	  			stat.removeClass('stategrey').addClass('stategreen');
+                	  			stat.removeClass('btns-grey').addClass('btns-green');
                 	  		}
                 	  	}else{
                 	  		//$('ul#productlist li').find('div.productinfo').css('display', 'none');
                 	  		info.css('display', 'block');
-                	  		var stat = $(this).parents('li').find('div.stat');
-                	  		stat.removeClass('state').removeClass('stategreen').addClass('stategrey');
+                	  		var stat = $(this).parents('li').find('a.stat');
+                	  		stat.removeClass('btns').removeClass('btns-green').addClass('btns-grey');
                 	  	}
                 	  	window.parent.justify(document.body.scrollHeight);
                    });

@@ -70,7 +70,7 @@
                 </li>
             </ul>
             <div class="income-count clearfix">
-                <p>本产品由XXX担保公司进行本息担保，项目设置最迟还款期限，但是根据政府订单的回款情况可能提前还款。</p>
+                <p id="productdescription">本产品由XXX担保公司进行本息担保，项目设置最迟还款期限，但是根据政府订单的回款情况可能提前还款。</p>
  
             </div>
             <div class="other-detail-info clearfix">
@@ -86,7 +86,7 @@
                         <div class="invest-reward-wrap clearfix">
                 <p class="reward-label">还款模式：</p>
                   <div class="invest-reward-body">
-                              <span class="reward-info clearfix">
+                              <span id="reward-info" class="reward-info clearfix">
         按月还息，到期一次性还本
      </span>
     
@@ -97,18 +97,21 @@
             </div>
             
         </div>
+        
+        
+        
+        
         <div class="product-detail-status">
             <div class="product-detail-status-inner">
-                                <div id="userStatus"></div>
  
-                                    <div class="raise-status-wrap">
+                 <div class="raise-status-wrap">
             <div class="raise-status-online">
                 <p id="remainamount" class="remaining-amount">
-                               剩余可投金额：<strong>177,000.00元</strong>
-                                               </p>
-                <label>请填写投资金额：</label>
-                                    <div class="raise-operate operate clearfix">
-                        <div class="inputs-gather clearfix">
+                                                                              剩余可投金额：<strong>177,000.00元</strong>
+                </p>
+                <label id="stateMessage">请填写投资金额：</label>
+                    <div class="raise-operate operate clearfix">
+                        <div id="inputAmount" class="inputs-gather clearfix">
                             <a class="reduce-btn disabled" disabled="disabled"></a>
                             <input type="text" class="raise-input" id="raiseAmount"
                                    value="1000">
@@ -117,10 +120,7 @@
  
                         <a class="btns btn_xlarge investBtn" href="javascript:void(0);" id="invest">立即投资</a>
                     </div>
-                    <div class="showStatus">
-
-
-
+            <div class="showStatus">
 
             <div class="balanceAmount">
             <p id="loginstatus" class="balanceAmountCon clearfix">
@@ -129,21 +129,12 @@
             </p>
 </div>    
 
-
-
-
-
-
-
-
                     </div>
  
-                    <div class="markUpInfo">
+                    <div id="init-add" class="markUpInfo">
                         <p class="mark-up-info">
-                            <span id="initAmount">起投金额：1,000.00
-                                元</span>
-                            <span id="addAmount">递增金额：100
-                                元</span>
+                            <span id="initAmount">起投金额：1,000.00元</span>
+                            <span id="addAmount">递增金额：100元</span>
                         </p>
                     </div>
                                 
@@ -151,6 +142,9 @@
     
 </div>                            </div>
         </div>
+        
+        
+        
     </div>
 </div>
  
@@ -189,22 +183,20 @@
                         </tr>
                         <tr>
                             <td>收益起始日期：</td>
-                            <td> 2014-9-13
-                            </td>
+                            <td id="incomeStarttime"> 2014-9-13</td>
                         </tr>
                         <tr>
                             <td>最晚还款日期：</td>
-                            <td>2014-12-13
-                            </td>
+                            <td id="incomeEndtime">2014-12-13</td>
                         </tr>
                         <tr>
                             <td>项目简介：</td>
-                            <td>本产品是XXXX公司中标了XXX政府的XX订单，需要融资XXXX钱，预计X个月回款，由XXX公司担保的稳健型P2P融资产品，项目采用按月还息，到期一次性还本的方式XXXXXXXXXXXXXX...
+                            <td id="orderdescription">本产品是XXXX公司中标了XXX政府的XX订单，需要融资XXXX钱，预计X个月回款，由XXX公司担保的稳健型P2P融资产品，项目采用按月还息，到期一次性还本的方式XXXXXXXXXXXXXX...
                             </td>
                         </tr>
                         <tr>
                             <td>融资方：</td>
-                            <td>河北XXXX股份有限公司
+                            <td id="companyname">河北XXXX股份有限公司
                             </td>
                         </tr>
                     </table>
@@ -283,7 +275,9 @@
 <script type="text/javascript"
 		src="/easyservice/gpps.service.ISubmitService?json"></script>
 <script type="text/javascript"
-		src="/easyservice/gpps.service.IPayBackService?json"></script>				
+		src="/easyservice/gpps.service.IPayBackService?json"></script>
+<script type="text/javascript"
+		src="/easyservice/gpps.service.IBorrowerService?json"></script>				
  <script>
   $(document).ready(function () {
 	  
@@ -292,14 +286,17 @@
  	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
  	var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
  	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
- 	var submit = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
+ 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
  	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
+ 	var borrowerService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
  	var pid = getQueryString('pid');
  	
  	var order = null;
+ 	var borrower = null;
  	var series = null;
  	var product = null;
  	var paybacks = null;
+ 	var submits = null;
  	var seriesname = {};
  	
  	try{
@@ -311,11 +308,14 @@
  			break;
  		}
  	}
+ 	borrower = borrowerService.find(order.borrowerId);
  	series = seriesService.find(product.productseriesId);
+ 	
+ 	submits = submitService.findPayedSubmitsByProduct(product.id, 0, 10);
  	
  	var allseries = seriesService.findAll();
  	for(var i=0; i<allseries.size(); i++){
- 		seriesname[allseries.get(i).id] = allseries.get(i).title;
+ 		seriesname[allseries.get(i).id] = allseries.get(i);
  	}
  	
 	paybacks = paybackService.findAll(product.id);
@@ -326,14 +326,14 @@
  		return;
  	}
  	
- 	$('li#productseries').html('<a href="productlist.html?sid='+series.id+'">'+series.title+'</a> <span class="divider">&gt;</span>');
- 	$('span#product-title').html(order.title+'['+series.title+']');
+ 	$('li#productseries').html('<a href="productlist.html?sid='+product.productseriesId+'">'+seriesname[product.productseriesId].title+'</a> <span class="divider">&gt;</span>');
+ 	$('span#product-title').html(order.title+'['+seriesname[product.productseriesId].title+']');
  	
  	var str = "";
  	for(var i=0; i<order.products.size(); i++){
  		if(order.products.get(i).id!=parseInt(pid)){
  			var pro = order.products.get(i);
- 			str += '&nbsp;&nbsp;<a style="color:#999;" href="productdetail.html?pid='+pro.id+'">'+seriesname[pro.productseriesId]+'</a>';
+ 			str += '&nbsp;&nbsp;<a style="color:#999;" href="productdetail.html?pid='+pro.id+'">'+seriesname[pro.productseriesId].title+'</a>';
  		}
  	}
  	
@@ -350,8 +350,60 @@
  	$('#pseriestitle').html(series.title);
  	$('#remainamount').html( '剩余可投金额：<strong>'+(parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))+'元</strong>');
  	
+ 	$('#productdescription').html(seriesname[product.productseriesId].description);
  	$('#progressTxt').html((parseInt(product.realAmount.value)*100/parseInt(product.expectAmount.value)).toFixed(2)+"%");
  	$('#progressBar').css('width', parseInt(product.realAmount.value)*145/parseInt(product.expectAmount.value)+'px');
+ 	$('#reward-info').html(seriesname[product.productseriesId].typeDetail);
+ 	
+ 	
+ 	$('#incomeStarttime').html(formatDateToDay(order.incomeStarttime));
+ 	$('#incomeEndtime').html(formatDateToDay(order.incomeEndtime));
+ 	$('#orderdescription').html(order.description);
+ 	$('#companyname').html(borrower.companyName);
+ 	
+ 	if(order.state==2){
+ 		$('#remainamount').html('开始融资时间：'+formatDateToDay(order.financingStarttime));
+ 		$('#stateMessage').html('剩余可投金额：'+parseInt(product.expectAmount.value)+'元');
+ 		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('预发布');
+ 		$('#inputAmount').css('display', 'none');
+ 	}
+ 	else if(product.state==1 && (parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))==0){
+ 		$('#remainamount').html('产品已售罄');
+ 		$('a#invest').addClass('disabled').attr('disabled',"disabled");
+ 	}else if(product.state==2){
+ 		$('#remainamount').html('融资完成，正在还款');
+ 		$('#stateMessage').html('共融资金'+product.realAmount.value+'元');
+ 		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('还款中');
+ 		$('#inputAmount').css('display', 'none');
+ 		$('#init-add').css('display', 'none');
+ 	}else if(product.state==4){
+ 		$('#remainamount').html('融资失败，流标');
+ 		$('#stateMessage').html('实际融资额不足');
+ 		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('流标');
+ 		$('#inputAmount').css('display', 'none');
+ 		$('#init-add').css('display', 'none');
+ 	}else if(product.state==8){
+ 		$('#remainamount').html('还款完成，等待关闭');
+ 		$('#stateMessage').html('共融资金'+product.realAmount.value+'元');
+ 		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('还款完成');
+ 		$('#inputAmount').css('display', 'none');
+ 		$('#init-add').css('display', 'none');
+ 	}else if(product.state==16){
+ 		$('#remainamount').html('还款完成，已关闭');
+ 		$('#stateMessage').html('共融资金'+product.realAmount.value+'元');
+ 		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('已关闭');
+ 		$('#inputAmount').css('display', 'none');
+ 		$('#init-add').css('display', 'none');
+ 	}
+ 	
+ 	var subs = submits.get('result');
+ 	if(subs!=null)
+ 		{
+ 	for(var i=0; i<subs.size(); i++){
+ 		$('#invest-record').append('<tr><td>'+subs.get(i).lenderId+'</td><td>'+subs.get(i).amount.value+'</td><td>'+formatDateToDay(subs.get(i).createtime)+'</td></tr>');
+ 	}
+ 		}
+ 	
  	
  	$('a#invest').click(function(e){
  		var cuser = lenderService.getCurrentUser();  
@@ -363,7 +415,7 @@
  		}
  		
  		try{
- 		var oid = submit.buy(parseInt(pid), parseInt($('#raiseAmount').val()));
+ 		var oid = submitService.buy(parseInt(pid), parseInt($('#raiseAmount').val()));
  		window.open("/account/buy/request?submitId="+oid);
 		if (confirm("付款是否成功?")) {
 				window.parent.toward("myaccount");

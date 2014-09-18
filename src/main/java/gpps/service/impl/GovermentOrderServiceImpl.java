@@ -70,6 +70,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	public GovermentOrder create(GovermentOrder govermentOrder) {
 		checkNullObject("borrowerId", govermentOrder.getBorrowerId());
 		checkNullObject(Borrower.class, borrowerDao.find(govermentOrder.getBorrowerId()));
+		govermentOrder.setState(GovermentOrder.STATE_PREPUBLISH);
 		govermentOrderDao.create(govermentOrder);
 		return govermentOrder;
 	}

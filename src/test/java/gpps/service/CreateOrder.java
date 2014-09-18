@@ -26,7 +26,7 @@ public class CreateOrder {
 		or.setIncomeEndtime((new Date()).getTime()+96L*24*3600*1000);
 		or.setLastModifytime((new Date()).getTime());
 		
-		or.setState(1);
+		or.setState(GovermentOrder.STATE_PREPUBLISH);
 		or.setDescription(description);
 		or = orderService.create(or);
 		return or.getId();

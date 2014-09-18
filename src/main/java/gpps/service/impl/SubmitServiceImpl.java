@@ -60,6 +60,7 @@ public class SubmitServiceImpl implements ISubmitService {
 			throws InsufficientBalanceException,ProductSoldOutException,InsufficientProductException,UnreachBuyLevelException {
 		//TODO 验证amount格式，例如：1w起之类的
 		Lender lender=lenderService.getCurrentUser();
+		lender=lenderService.find(lender.getId());
 		LenderAccount account=lenderAccountDao.find(lender.getAccountId());
 		BigDecimal amount=new BigDecimal(num);
 		//判断当前账户余额是否足够购买

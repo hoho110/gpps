@@ -11,7 +11,7 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 public class CreateProduct {
 	
-	public static void createSingle(ApplicationContext context, Integer oid, Integer sid, int leveltobuy, int amount, double rate, int min){
+	public static Integer createSingle(ApplicationContext context, Integer oid, Integer sid, int leveltobuy, int amount, double rate, int min){
 		IProductService productService = context.getBean(IProductService.class);
 		Product pro = new Product();
 		pro.setCreatetime((new Date()).getTime());
@@ -24,6 +24,7 @@ public class CreateProduct {
 		pro.setMinimum(min);
 		pro.setState(1);
 		productService.create(pro);
+		return pro.getId();
 	}	
 	
 	public static void create(ApplicationContext context){

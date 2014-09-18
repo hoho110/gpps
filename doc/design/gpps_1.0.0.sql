@@ -60,6 +60,7 @@ create table Borrower
             11：申请融资权限的企业用户
             12：有融资权限的企业用户',
    creditValue          int not null default 0,
+   companyName          varchar(255),
    primary key (id)
 );
 
@@ -99,6 +100,7 @@ create table Govermentorder
    incomeStarttime      bigint not null,
    incomeEndtime        bigint not null,
    lastModifytime       bigint not null,
+   description          varchar(2000),
    primary key (ID)
 );
 
@@ -194,6 +196,7 @@ create table Product
    createtime           bigint not null default 0,
    minimum              int not null default 1,
    miniadd              int not null default 1,
+   description          varchar(2000),
    primary key (ID)
 );
 
@@ -377,6 +380,7 @@ create table productseries
    tag              mediumtext,
    description         varchar(2000),
    type                 int not null default 0,
+   typedetail           varchar(255),
    primary key (ID)
 );
 

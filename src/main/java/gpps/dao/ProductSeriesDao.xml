@@ -4,8 +4,8 @@
 	<insert id="create" parameterType="gpps.model.ProductSeries"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
-		ProductSeries(title,tag,description)
-		values(#{title},#{tag},#{description})
+		ProductSeries(title,tag,description,type,typeDetail)
+		values(#{title},#{tag},#{description},#{type},#{typeDetail})
 	</insert>
 	<select id="findAll" resultType="gpps.model.ProductSeries">
 		select *

@@ -67,6 +67,8 @@ public interface ISubmitService {
 	 * @return
 	 */
 	public List<CashStream> findSubmitCashStream(Integer submitId);
+	
+	public Map<String, Object> findPayedSubmitsByProduct(Integer productId,int offset, int recnum);
 	// public void refuseApply(Integer submitId)throws
 	// IllegalConvertException;//拒绝申请
 	// public void passApply(Integer submitId)throws

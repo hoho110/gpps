@@ -30,6 +30,7 @@ public class ProductSeries {
 	public static final int TYPE_FIRSTINTERESTENDCAPITAL=1;
 	public static final int TYPE_FINISHPAYINTERESTANDCAPITAL=2;
 	private int type=TYPE_AVERAGECAPITALPLUSINTEREST;
+	private String typeDetail;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	public Integer getId() {
 		return id;
@@ -69,6 +70,15 @@ public class ProductSeries {
 	public void setType(int type) {
 		this.type = type;
 	}
+	public String getTypeDetail() {
+		return typeDetail;
+	}
+	public void setTypeDetail(String typeDetail) {
+		this.typeDetail = typeDetail;
+	}
+
+
+
 
 	private TagCol tagCol;
 	public TagCol getTagCol() {

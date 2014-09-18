@@ -38,6 +38,7 @@ public class Product {
 	private long createtime=System.currentTimeMillis();
 	private int minimum=1;//最小额度,单位元
 	private int miniAdd=1;//最小追加金额
+	private String description;
 	public Integer getId() {
 		return id;
 	}
@@ -116,6 +117,13 @@ public class Product {
 	public void setMiniAdd(int miniAdd) {
 		this.miniAdd = miniAdd;
 	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 
 
 

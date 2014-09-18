@@ -222,4 +222,14 @@ public class SubmitServiceImpl implements ISubmitService {
 	public void confirmBuy(Integer submitId) {
 		submitDao.changeState(submitId, Submit.STATE_COMPLETEPAY);
 	}
+
+	@Override
+	public Map<String, Object> findPayedSubmitsByProduct(Integer productId, int offset,
+			int recnum) {
+		int count=submitDao.countByProductAndStateWithPaged(productId, Submit.STATE_COMPLETEPAY);
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		List<Submit> submits=submitDao.findAllByProductAndStateWithPaged(productId, Submit.STATE_COMPLETEPAY, offset, recnum);
+		return Pagination.buildResult(submits, count, offset, recnum);
+	}
 }

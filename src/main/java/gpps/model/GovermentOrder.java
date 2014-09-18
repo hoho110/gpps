@@ -31,6 +31,7 @@ public class GovermentOrder {
 	private long incomeStarttime;
 	private long incomeEndtime;
 	private long lastModifytime;
+	private String description;
 	public Integer getId() {
 		return id;
 	}
@@ -97,6 +98,12 @@ public class GovermentOrder {
 	}
 	public void setLastModifytime(long lastModifytime) {
 		this.lastModifytime = lastModifytime;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	//辅助
 	public List<Product> getProducts() {

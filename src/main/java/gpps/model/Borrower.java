@@ -3,6 +3,7 @@ package gpps.model;
 public class Borrower {
 	private Integer id;//主键ID
 	private String name;//名称
+	private String companyName;//公司名称
 	private String tel;//手机
 	private String email;//email
 	private String loginId;//登录名
@@ -94,5 +95,11 @@ public class Borrower {
 	}
 	public void setCreditValue(int creditValue) {
 		this.creditValue = creditValue;
+	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
 	}
 }

@@ -24,4 +24,7 @@ public interface ISubmitDao {
 	public void delete(Integer id);
 	public List<Submit> findAllPayedByLenderAndProductStates(@Param("lenderId")Integer lenderId,@Param("productStates") List<Integer> productStates,@Param("offset")int offset,@Param("recnum")int recnum);
 	public int countByLenderAndProductStates(@Param("lenderId")Integer lenderId,@Param("productStates") List<Integer> productStates);
+	
+	public List<Submit> findAllByProductAndStateWithPaged(@Param("productId")Integer productId,@Param("state")int state,@Param("offset")int offset,@Param("recnum")int recnum);
+	public int countByProductAndStateWithPaged(@Param("productId")Integer productId,@Param("state")int state);
 }

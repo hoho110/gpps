@@ -4,8 +4,8 @@
 	<insert id="create" parameterType="gpps.model.Product"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
-		Product(state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime,minimum)
-		values(#{state},#{govermentorderId},#{expectAmount},#{realAmount},#{rate},#{paybackmodel},#{productseriesId},#{levelToBuy},#{createtime},#{minimum})
+		Product(state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime,minimum,description)
+		values(#{state},#{govermentorderId},#{expectAmount},#{realAmount},#{rate},#{paybackmodel},#{productseriesId},#{levelToBuy},#{createtime},#{minimum},#{description})
 	</insert>
 	<update id="changeState">
 		update Product set

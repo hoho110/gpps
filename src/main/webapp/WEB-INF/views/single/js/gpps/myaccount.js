@@ -516,7 +516,7 @@ var submitdone = function(container){
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
 				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
-				                    "还款中",
+				                    "还款完毕",
 				                    formatDate(item.createtime),
 				                    item.amount.value,
 				                    item.repayedAmount.value,
@@ -621,7 +621,7 @@ var paybackall = function(container){
 								 +(parseFloat(willBeRepayedDetail.get("halfyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("halfyear").interest.value)).toFixed(2)+'</td><td>'
 								 +(parseFloat(willBeRepayedDetail.get("threemonth").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("threemonth").interest.value)).toFixed(2)+'</td><td>'
 								 +(parseFloat(willBeRepayedDetail.get("twomonth").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("twomonth").interest.value)).toFixed(2)+'</td><td>'
-								 +(parseFloat(willBeRepayedDetail.get("onemonth").chiefAmount.value)+parseFloat(repayedDetail.get("onemonth").interest.value)).toFixed(2)+'</td></tr>';
+								 +(parseFloat(willBeRepayedDetail.get("onemonth").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("onemonth").interest.value)).toFixed(2)+'</td></tr>';
 	str += '</tbody>';
 	str += '</table>';
 	
@@ -819,7 +819,13 @@ var cashProcessor=function(action,state,container){
 		result.aaData = new Array();
 		var cashs = res.get('result');
 		for(var i=0; i<cashs.size(); i++){
-			result.aaData.push([formatDate(cashs.get(i).createtime), cashs.get(i).chiefamount.value, cashs.get(i).chiefamount.value, cashs.get(i).interest.value, 0, cashstate[cashs.get(i).action], cashs.get(i).description]);
+			result.aaData.push([formatDate(cashs.get(i).createtime), 
+			                    (parseFloat(cashs.get(i).chiefamount.value)+parseFloat(cashs.get(i).interest.value)).toFixed(2), 
+			                    cashs.get(i).chiefamount.value, 
+			                    cashs.get(i).interest.value, 
+			                    0, 
+			                    cashstate[cashs.get(i).action], 
+			                    cashs.get(i).description]);
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);

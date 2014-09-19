@@ -14,8 +14,8 @@ public interface IPayBackDao {
 
 	public List<PayBack> findAllByProduct(Integer productId);
 
-	public void changeState(@Param("id") Integer id, @Param("state") int state);
-
+	public void changeState(@Param("id") Integer id, @Param("state") int state,@Param("datetime") long datetime);
+	
 	public PayBack find(Integer id);
 
 	public void delete(Integer id);

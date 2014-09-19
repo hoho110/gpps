@@ -50,7 +50,7 @@ public class PayBackServiceImpl implements IPayBackService {
 
 	@Override
 	public void changeState(Integer paybackId, int state) {
-		payBackDao.changeState(paybackId, state);
+		payBackDao.changeState(paybackId, state,System.currentTimeMillis());
 	}
 
 	@Override

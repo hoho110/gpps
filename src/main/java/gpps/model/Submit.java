@@ -72,6 +72,7 @@ public class Submit {
 	private Product product;
 	private BigDecimal repayedAmount=new BigDecimal(0);
 	private long payExpiredTime;
+	private String lenderName;
 	public Product getProduct() {
 		return product;
 	}
@@ -89,5 +90,11 @@ public class Submit {
 	}
 	public void setPayExpiredTime(long payExpiredTime) {
 		this.payExpiredTime = payExpiredTime;
+	}
+	public String getLenderName() {
+		return lenderName;
+	}
+	public void setLenderName(String lenderName) {
+		this.lenderName = lenderName;
 	}
 }

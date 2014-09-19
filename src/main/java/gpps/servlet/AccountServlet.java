@@ -220,27 +220,59 @@ public class AccountServlet {
 		}
 		log.debug("购买：amount="+submit.getAmount()+",cashStreamId="+cashStreamId);
 		log.debug("跳转到第三方进行购买");
-		log.debug("第三方购买完毕，跳转回本地");
+//		log.debug("第三方购买完毕，跳转回本地");
+//		try {
+//			resp.sendRedirect("/account/buy/response?cashStreamId="+cashStreamId);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		resp.setContentType("text/html;charset=UTF-8");
+		PrintWriter writer=null;
 		try {
-			resp.sendRedirect("/account/buy/response?cashStreamId="+cashStreamId);
+			writer=resp.getWriter();
+			String html="<a href='/account/buy/response?cashStreamId="+cashStreamId+"&success=true'>购买成功</a><p>"
+					+"<a href='/account/buy/response?cashStreamId="+cashStreamId+"&success=false'>购买失败</a>";
+			writer.write(html);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally
+		{
+			if(writer!=null)
+			{
+				writer.flush();
+				writer.close();
+			}
 		}
 	}
 	@RequestMapping(value={"/account/buy/response"})
 	public void completeBuy(HttpServletRequest req, HttpServletResponse resp)
 	{
 		Integer cashStreamId=Integer.parseInt(StringUtil.checkNullAndTrim(CASHSTREAMID, req.getParameter(CASHSTREAMID)));
-		try {
-			log.debug("购买成功");
-			CashStream cashStream=cashStreamDao.find(cashStreamId);
-			submitService.confirmBuy(cashStream.getSubmitId());
-			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-		} catch (IllegalConvertException e) {
-			log.error(e.getMessage(),e);
+		boolean success=Boolean.parseBoolean(StringUtil.checkNullAndTrim(CASHSTREAMID, req.getParameter("success")));
+		if(success)
+		{
+			try {
+				log.debug("购买成功");
+				CashStream cashStream=cashStreamDao.find(cashStreamId);
+				submitService.confirmBuy(cashStream.getSubmitId());
+				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			} catch (IllegalConvertException e) {
+				log.error(e.getMessage(),e);
+			}
+			//TODO 重定向到指定页面
+			write(resp, "购买成功，转向我的订单页面");
 		}
-		//TODO 重定向到指定页面
-		write(resp, "购买成功，转向我的订单页面");
+		else
+		{
+			try {
+				log.debug("购买失败");
+				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_FAIL);
+			} catch (IllegalConvertException e) {
+				e.printStackTrace();
+			}
+			write(resp, "购买失败，转向我的待支付页面");
+		}
+		
 	}
 	@RequestMapping(value={"/account/repay/request"})
 	public void repay(HttpServletRequest req, HttpServletResponse resp)

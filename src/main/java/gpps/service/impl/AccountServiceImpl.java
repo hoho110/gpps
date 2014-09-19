@@ -146,7 +146,17 @@ public class AccountServiceImpl implements IAccountService {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
 		checkNullObject(BorrowerAccount.class, borrowerAccountDao.find(borrowerAccountId));
 		checkNullObject(Submit.class, submitDao.find(submitId));
+		//支付先解冻
 		CashStream cashStream=new CashStream();
+		cashStream.setLenderAccountId(lenderAccountId);
+		cashStream.setChiefamount(chiefamount);
+		cashStream.setSubmitId(submitId);
+		cashStream.setDescription("支付解冻");
+		cashStream.setAction(CashStream.ACTION_UNFREEZE);
+		cashStream.setState(CashStream.STATE_SUCCESS);
+		cashStreamDao.create(cashStream);
+		
+		cashStream=new CashStream();
 		cashStream.setLenderAccountId(lenderAccountId);
 		cashStream.setBorrowerAccountId(borrowerAccountId);
 		cashStream.setChiefamount(chiefamount.negate());

@@ -42,29 +42,29 @@ public class CreateMain2 {
 		Lender lender=LenderHandle.createLender(context, "wangm", "1234", "12312341234");
 		LenderHandle.recharge(context, lender, 100000);
 		LenderHandle.changeLenderLevel(context, lender, 9);
-		Integer submitId=LenderHandle.buy(context, lender, proid_1, 50000);
-		LenderHandle.pay(context, lender, submitId);
+//		Integer submitId=LenderHandle.buy(context, lender, proid_1, 50000);
+//		LenderHandle.pay(context, lender, submitId);
 //		
-		BorrowerHandle.startProductRepay(context, proid_1);
+//		BorrowerHandle.startProductRepay(context, proid_1);
 //		BorrowerHandle.startProductRepay(context, 5);
 //		BorrowerHandle.startProductRepay(context, 6);
-		BorrowerHandle.startOrderRepay(context, order1);
+//		BorrowerHandle.startOrderRepay(context, order1);
 //		BorrowerHandle.quitProductFinancing(context, 1);
 //		BorrowerHandle.quitProductFinancing(context, 2);
 //		BorrowerHandle.quitProductFinancing(context, 3);
 //		BorrowerHandle.quitOrder(context, 1);
-		BorrowerHandle.recharge(context, borrower, 1000000);
-		IPayBackService payBackService=context.getBean(IPayBackService.class);
-		List<PayBack> payBacks=payBackService.findAll(proid_1);
-		for(PayBack payBack:payBacks)
-		{
-			BorrowerHandle.repay(context, payBack.getId());
-		}
-		try {
-			Thread.sleep(10*1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		BorrowerHandle.recharge(context, borrower, 1000000);
+//		IPayBackService payBackService=context.getBean(IPayBackService.class);
+//		List<PayBack> payBacks=payBackService.findAll(proid_1);
+//		for(PayBack payBack:payBacks)
+//		{
+//			BorrowerHandle.repay(context, payBack.getId());
+//		}
+//		try {
+//			Thread.sleep(10*1000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		System.exit(0);
 	}
 }

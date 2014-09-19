@@ -321,7 +321,7 @@ var submittoafford = function(container){
 	var aaData = new Array();
 	for(var i=0; i<datas.size(); i++){
 		var data=datas.get(i);
-		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"'>"+data.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"'>"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
 		                    "待支付",
 		                    formatDate(data.createtime),
 		                    data.amount.value,
@@ -842,24 +842,24 @@ var cashProcessor=function(action,state,container){
 	table.dataTable(mySettings);
 }
 var cashall = function(container){
-	return cashProcessor(-1,-1,container);
+	return cashProcessor(-1,2,container);
 }
 
 var cashrecharge = function(container){
-	return cashProcessor(0,-1,container);
+	return cashProcessor(0,2,container);
 }
 
 var cashwithdraw = function(container){
-	return cashProcessor(5,-1,container);
+	return cashProcessor(5,2,container);
 }
 
 
 var cashinvest = function(container){
-	return cashProcessor(3,-1,container);
+	return cashProcessor(3,2,container);
 }
 
 var cashreceive = function(container){
-	return cashProcessor(4,-1,container);
+	return cashProcessor(4,2,container);
 }
 
 var mynote = function(container){

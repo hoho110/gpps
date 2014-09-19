@@ -192,7 +192,7 @@
         		 $('li#nav_name').html('全部');
         		 var orders = orderService.findByStatesByPage(-1,0,10);
         		 refreshList(orders);
-        		 $('a.constructure').click(function(e){
+        		 $('a.constructure, a.stat').click(function(e){
               	   var info = $(this).parents('li').find('div.productinfo');
               	  	if(info.css('display')=='block'){
               	  		info.css('display', 'none');

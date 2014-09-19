@@ -289,7 +289,7 @@ var createStructureProduct2 = function(order){
 		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.incomeStarttime)+'开始还款</div>';	
 	}else if(state==8){
 		status = 'done-status';
-		stateName = '已关闭';
+		stateName = '待关闭';
 		stateCls = 'btns-grey';
 		str    += '<div class="operate-status '+status+' clearfix">';
 		str    += '<div>';
@@ -299,7 +299,7 @@ var createStructureProduct2 = function(order){
 		str    += '<a id='+order.id+' class="stat '+stateCls+'">'+stateName+'</a>';
 		str    += '<div style="clear:both;"></div>';
 		str    += '</div>';
-		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'关闭</div>';	
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'还款完毕</div>';	
 	}else if(state==16){
 		status = 'done-status';
 		stateName = '流标';
@@ -313,6 +313,19 @@ var createStructureProduct2 = function(order){
 		str    += '<div style="clear:both;"></div>';
 		str    += '</div>';
 		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'流标</div>';	
+	}else if(state==32){
+		status = 'done-status';
+		stateName = '已关闭';
+		stateCls = 'btns-grey';
+		str    += '<div class="operate-status '+status+' clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>可投金额</strong>';
+		str    += '<span class="cur">'+(totalamount- realamount)+'</span> 元           </div>';
+		str    += '<a id='+order.id+' class="stat '+stateCls+'">'+stateName+'</a>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'关闭</div>';	
 	}
 	str    += '</div>';
 	str    += '<div style="clear:both;"></div>';
@@ -329,12 +342,26 @@ var createStructureProduct2 = function(order){
 		str    +=  '</div>';
 		if(state==1)
 			{
+				if(parseInt(pros.get(i).expectAmount.value)==parseInt(pros.get(i).realAmount.value))
+					{
+				str    += '<a href="productdetail.html?pid='+pros.get(i).id+'" class="btns-grey">售罄</a>';
+					}else{
 				str    += '<a href="productdetail.html?pid='+pros.get(i).id+'" class="btns">投资</a>';
+					}
 			}else if(state==2){
-				str    += '<a href="productdetail.html?pid='+pros.get(i).id+'" class="btns-green">查看</a>';
+				str    += '<a href="productdetail.html?pid='+pros.get(i).id+'" class="btns-green">预发布</a>';
 			}
-		else{
-				str    += '<a href="productdetail.html?pid='+pros.get(i).id+'" class="done-success">查看</a>';
+			else if(state==4){
+				if(pros.get(i).state==8)
+					str    += '<a href="productdetail.html?pid='+pros.get(i).id+'" class="btns-grey">还款完毕</a>';
+				else
+				str    += '<a href="productdetail.html?pid='+pros.get(i).id+'" class="btns-grey">还款中</a>';
+			}else if(state==8){
+				str    += '<a href="productdetail.html?pid='+pros.get(i).id+'" class="btns-grey">还款完毕</a>';
+			}else if(state==16){
+				str    += '<a href="productdetail.html?pid='+pros.get(i).id+'" class="btns-grey">流标</a>';
+			}else if(state==32){
+				str    += '<a href="productdetail.html?pid='+pros.get(i).id+'" class="btns-grey">已关闭</a>';
 			}
 		str    += '<div style="clear:both;"></div>';
 		str    += '</div>';
@@ -412,20 +439,30 @@ var createSingleProduct2 = function(order){
 		str    += '<div class="current-amount">';
 		str    += '<strong>已融金额</strong>';
 		str    += '<span class="cur">'+pro.realAmount.value+'</span> 元           </div>';
-		str    += '<a href="productdetail.html?pid='+pro.id+'" class="done-success">已关闭</a>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" class="done-success">待关闭</a>';
 		str    += '<div style="clear:both;"></div>';
 		str    += '</div>';
-		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'关闭</div>';	
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'还款完毕</div>';	
 	}else if(state==16){
 		str    += '<div class="operate-status done-status clearfix">';
 		str    += '<div>';
 		str    += '<div class="current-amount">';
 		str    += '<strong>流标</strong>';
 		str    += '</div>';
-		str    += '<a href="productdetail.html?pid='+pro.id+'" class="done-success">查看</a>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" class="done-success">流标</a>';
 		str    += '<div style="clear:both;"></div>';
 		str    += '</div>';
 		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'流标</div>';	
+	}else if(state==32){
+		str    += '<div class="operate-status done-status clearfix">';
+		str    += '<div>';
+		str    += '<div class="current-amount">';
+		str    += '<strong>已融金额</strong>';
+		str    += '<span class="cur">'+pro.realAmount.value+'</span> 元           </div>';
+		str    += '<a href="productdetail.html?pid='+pro.id+'" class="done-success">已关闭</a>';
+		str    += '<div style="clear:both;"></div>';
+		str    += '</div>';
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(order.financingEndtime)+'关闭</div>';	
 	}
 	str    += '</div>';
 	str    += '<div style="clear:both;"></div>';

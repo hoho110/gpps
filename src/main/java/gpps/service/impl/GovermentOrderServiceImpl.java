@@ -117,7 +117,8 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		{GovermentOrder.STATE_PREPUBLISH,GovermentOrder.STATE_FINANCING},
 		{GovermentOrder.STATE_FINANCING,GovermentOrder.STATE_QUITFINANCING},
 		{GovermentOrder.STATE_FINANCING,GovermentOrder.STATE_REPAYING},
-		{GovermentOrder.STATE_REPAYING,GovermentOrder.STATE_WAITINGCLOSE}};
+		{GovermentOrder.STATE_REPAYING,GovermentOrder.STATE_WAITINGCLOSE},
+		{GovermentOrder.STATE_WAITINGCLOSE,GovermentOrder.STATE_CLOSE}};
 	private void changeState(int orderId, int state) throws IllegalConvertException {
 		GovermentOrder order = govermentOrderDao.find(orderId);
 		if (order == null)

@@ -156,7 +156,7 @@
             
             
             <ul class="list-detail-wrap clearfix">
-    			<li class="selected"><a href="javascript: void(0);" data-sk="detail"><span class="min-price">项目详情</span></a></li>
+    			<li class="selected"><a href="javascript: void(0);" data-sk="basic"><span class="min-price">项目详情</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="payback"><span class="min-price">还款计划</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="resource"><span class="min-price">相关资料</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="progress"><span class="min-price">项目进程</span></a></li>
@@ -168,38 +168,7 @@
             
         </div>
         <div class="detail-content-body">
-                                                <table class="product-description">
-                        <tr>
-                            <td>收益方式：</td>
-                            <td><span class="tips-title"
-                                      title="每月按年华利率计算还利息，到期一次性还本金，<br>其中回款期限为最迟期限，可能提前还款，以订单回款日期为准。">每月还息，到期还本</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>担 保：</td>
-                            <td><span class="tips-title"
-                                      title="担保公司：平安融资担保（天津）有限公司。若借款方未能履行还款责任，担保公司<br/>将对未被偿还的剩余本金和截止到代偿日的全部应还未还利息与罚息进行全额偿付。">X担保</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>收益起始日期：</td>
-                            <td id="incomeStarttime"> 2014-9-13</td>
-                        </tr>
-                        <tr>
-                            <td>最晚还款日期：</td>
-                            <td id="incomeEndtime">2014-12-13</td>
-                        </tr>
-                        <tr>
-                            <td>项目简介：</td>
-                            <td id="orderdescription">本产品是XXXX公司中标了XXX政府的XX订单，需要融资XXXX钱，预计X个月回款，由XXX公司担保的稳健型P2P融资产品，项目采用按月还息，到期一次性还本的方式XXXXXXXXXXXXXX...
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>融资方：</td>
-                            <td id="companyname">河北XXXX股份有限公司
-                            </td>
-                        </tr>
-                    </table>
+                                               
                             
             
             
@@ -356,11 +325,6 @@
  	$('#reward-info').html(seriesname[product.productseriesId].typeDetail);
  	
  	
- 	$('#incomeStarttime').html(formatDateToDay(order.incomeStarttime));
- 	$('#incomeEndtime').html(formatDateToDay(order.incomeEndtime));
- 	$('#orderdescription').html(order.description);
- 	$('#companyname').html(borrower.companyName);
- 	
  	if(order.state==2){
  		$('#remainamount').html('开始融资时间：'+formatDateToDay(order.financingStarttime));
  		$('#stateMessage').html('剩余可投金额：'+parseInt(product.expectAmount.value)+'元');
@@ -436,15 +400,27 @@
         			$('.detail-content-body').html('<p>以投资10万元为例，收益如下所示：</p>');
         			
         			var table = $('<table class="product-description"></table>');
-        			table.append('<tr><th>本金</th><th>利息</th><th>预计还款时间</th><th>实际还款时间</th><th>状态</th></tr>');
+        			table.append('<tr><td>本金</td><td>利息</td><td>预计还款时间</td><td>实际还款时间</td><td>状态</td></tr>');
         			for(var t=0; t<paybacks.size(); t++){
         				table.append('<tr><td>'+paybacks.get(t).chiefAmount.value+'</td><td>'+paybacks.get(t).interest.value+'</td><td>'+formatDateToDay(paybacks.get(t).deadline)+'</td><td>-</td><td>'+paybacks.get(t).state+'</td></tr>');
         			}
         			$('.detail-content-body').append(table);
         			
         			$('.detail-content-body').append('<div class="comments"><p class="asterisk">说明：</p><p class="item">每期实际收款日期、金额以最终到账为准，本项目最终解释权归春蕾投资管理有限公司所有。</p></div>');
+        		}else if($(this).attr('data-sk')=='basic'){
+        			var table = $('<table class="product-description"></table>');
+        			table.append('<tr><td>收益方式：</td><td><span class="tips-title">每月还息，到期还本</span></td></tr>');
+        			table.append('<tr><td>担 保：</td><td><span class="tips-title">X担保</span></td></tr>');
+        			table.append('<tr><td>收益起始日期：</td><td>'+formatDateToDay(order.incomeStarttime)+'</td></tr>');
+        			table.append('<tr><td>最晚还款日期：</td><td>'+formatDateToDay(order.incomeEndtime)+'</td></tr>');
+        			table.append('<tr><td>项目简介：</td><td>'+order.description+'</td></tr>');
+        			table.append('<tr><td>融资方：</td><td>'+borrower.companyName+'</td></tr>');
+        			$('.detail-content-body').html('');
+        			$('.detail-content-body').append(table);
         		}
         	 });
+        	 
+        	 $('ul.list-detail-wrap li.selected a').trigger('click');
         	 
         	 
      var cuser = lenderService.getCurrentUser();  

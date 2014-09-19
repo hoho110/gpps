@@ -362,7 +362,7 @@ a.accordion-toggle {
 
 							var identity = cuser.identityCard;
 							if (identity != null && identity != "") {
-								$('img#identity').attr('src', 'img/people.jpg');
+								$('img#identity').attr('src', 'img/people.jpg').attr('title', '身份证已绑定').attr('disabled', 'disabled');
 								$('a#identity').attr('href', '#');
 								$('div#identity')
 										.css('color', 'green')
@@ -372,7 +372,7 @@ a.accordion-toggle {
 
 							var spsw = cuser.thirdPartyAccount;
 							if (spsw != null && spsw != "") {
-								$('img#spsw').attr('src', 'img/sanfang.jpg');
+								$('img#spsw').attr('src', 'img/sanfang.jpg').attr('title', '第三方账户已开通').attr('disabled', 'disabled');
 								$('a#spsw').attr('href', '#').attr('data-sk',
 										'done');
 								$('div#spsw')

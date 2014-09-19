@@ -105,7 +105,7 @@ margin:20px 0 0 -150px;
         <input type="text" placeholder="验证码" value="" class="ui-input ui-input-checkcode" id="J-input-checkcode" data-type="IMAGE" maxlength="5" name="checkCode" autocomplete="off" tabindex="3" data="" seed="authcenter-input-checkcode">
         <span class="sl-checkcode" id="J-checkcodeIcon"></span>
         <div class="ui-checkcode">
-                        <img class="ui-checkcode-img" id="J-checkcode-img" src="#" title="点击图片刷新验证码" alt="点击图片刷新验证码" seed="authcenter-img-checkcode">
+                        <img class="ui-checkcode-img" id="J-checkcode-img" src="../../login/graphValidateCode?t=100" title="点击图片刷新验证码" alt="点击图片刷新验证码" seed="authcenter-img-checkcode">
                         
                     </div>
                     </div>
@@ -139,7 +139,10 @@ $(document).ready(function() {
 	
 	var src="../../login/graphValidateCode?t="+Math.random();
 	
-	$('img#J-checkcode-img').attr('src', src);
+	
+	//setTimeout(function(){
+	//	$('img#J-checkcode-img').attr('src', src);
+	//}, 1000);
 	
 	$('img#J-checkcode-img').click(function(e){
 		var srcn="../../login/graphValidateCode?t="+Math.random();
@@ -182,6 +185,7 @@ $(document).ready(function() {
 				alert(e.message);
 				$('input#password_input').val('');
 				$('input#J-input-checkcode').val('');
+				$('img#J-checkcode-img').trigger('click');
 			}
 			
            });

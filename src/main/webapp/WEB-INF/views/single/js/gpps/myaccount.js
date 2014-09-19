@@ -326,7 +326,7 @@ var submittoafford = function(container){
 		                    formatDate(data.createtime),
 		                    data.amount.value,
 		                    formatDate(data.payExpiredTime),
-		                    "<a href='/account/buy/request?submitId="+data.id+"'>立即支付</a>"]);
+		                    "<a href='/account/buy/request?submitId="+data.id+"' target='_blank'>立即支付</a>"]);
 	}
 	var mySettings = $.extend({}, defaultSettings_noCallBack, {
 		"aoColumns" : columns,

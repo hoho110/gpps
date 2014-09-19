@@ -10,7 +10,7 @@ public class GovermentOrder {
 	private Integer borrowerId;
 	private String material;// 记录相关资料附件的路径
 	/**
-	 * 1：申请融资 ,2：驳回重填, 4：重新申请 ,8：拒绝 ,16：预发布,32：融资中,64:流标, 128：还款中 ,256：已关闭
+	 * 订单 1：融资中 2：预发布 4：还款中 8：还款完成 32：关闭 16：流标
 	 */
 //	public static final int STATE_APPLY=1;
 //	public static final int STATE_MODIFY=1<<1;

@@ -354,15 +354,9 @@
  		$('#inputAmount').css('display', 'none');
  		$('#init-add').css('display', 'none');
  	}else if(product.state==8){
- 		$('#remainamount').html('还款完成，等待关闭');
+ 		$('#remainamount').html('还款完成');
  		$('#stateMessage').html('共融资金'+product.realAmount.value+'元');
  		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('还款完成');
- 		$('#inputAmount').css('display', 'none');
- 		$('#init-add').css('display', 'none');
- 	}else if(product.state==16){
- 		$('#remainamount').html('还款完成，已关闭');
- 		$('#stateMessage').html('共融资金'+product.realAmount.value+'元');
- 		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('已关闭');
  		$('#inputAmount').css('display', 'none');
  		$('#init-add').css('display', 'none');
  	}
@@ -371,7 +365,7 @@
  	if(subs!=null)
  		{
  	for(var i=0; i<subs.size(); i++){
- 		$('#invest-record').append('<tr><td>'+subs.get(i).lenderId+'</td><td>'+subs.get(i).amount.value+'</td><td>'+formatDateToDay(subs.get(i).createtime)+'</td></tr>');
+ 		$('#invest-record').append('<tr><td>'+subs.get(i).lenderName+'</td><td>'+subs.get(i).amount.value+'</td><td>'+formatDateToDay(subs.get(i).createtime)+'</td></tr>');
  	}
  		}
  	

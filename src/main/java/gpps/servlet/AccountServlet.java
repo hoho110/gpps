@@ -66,12 +66,30 @@ public class AccountServlet {
 	public void thirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
 	{
 		//TODO 重定向到第三方注册
-		log.debug("第三方注册完毕，跳转回本地");
+		log.debug("第三方注册开始");
+//		try {
+//			resp.sendRedirect("/account/thirdPartyRegist/response");
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+		
+		resp.setContentType("text/html;charset=UTF-8");
+		PrintWriter writer=null;
 		try {
-			resp.sendRedirect("/account/thirdPartyRegist/response");
+			writer=resp.getWriter();
+			String html="<a href='/account/thirdPartyRegist/response'>第三方认证</a>";
+			writer.write(html);
 		} catch (IOException e) {
 			e.printStackTrace();
+		}finally
+		{
+			if(writer!=null)
+			{
+				writer.flush();
+				writer.close();
+			}
 		}
+		log.debug("第三方注册完毕，跳转回本地");
 	}
 	@RequestMapping(value={"/account/thirdPartyRegist/response"})
 	public void completeThirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)

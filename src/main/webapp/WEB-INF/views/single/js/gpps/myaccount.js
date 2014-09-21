@@ -127,7 +127,7 @@ var myscore = function(container){
 	var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 	var lender=lenderService.getCurrentUser();
 	var content = $('<div></div>');
-	content.append('<p>您好'+lender.name+'，您的积分是<span class="orange">'+lender.grade+'</span>分，等级为<span class="orange">钻石会员</span></p>');
+	content.append('<p>您好'+lender.name+'，您的积分是<span class="orange">'+lender.grade+'</span>分，等级为<span class="orange">普通会员</span></p>');
 	content.append('<br><span class="orange">积分规则：</span>');
 	content.append('<p>如何获取积分的说明</p>');
 	var str = "";

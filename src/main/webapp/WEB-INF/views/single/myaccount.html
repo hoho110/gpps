@@ -381,6 +381,9 @@ a.accordion-toggle {
 												'<span class="glyphicon glyphicon-ok"></span>第三方账户已开通')
 							}
 
+							
+							if(identity!=null && identity!="")
+							{
 							$('a#spsw')
 									.click(
 											function(e) {
@@ -397,6 +400,7 @@ a.accordion-toggle {
 															.toward("myaccount");
 												}
 											});
+							}
 
 							$('#recharge').click(function(e) {
 								window.location.href = "recharge.html";
@@ -405,15 +409,7 @@ a.accordion-toggle {
 							$('#cashout')
 									.click(
 											function(e) {
-												window
-														.open("/account/cash/request?amount=200");
-												if (confirm("提现是否成功?")) {
-													window.parent
-															.toward("myaccount");
-												} else {
-													window.parent
-															.toward("myaccount");
-												}
+												window.location.href = "cashout.html";
 											});
 
 							$('button.nav')

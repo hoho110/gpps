@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+<title>政X融X网</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<link href="css/mine.css" rel="stylesheet">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="js/cdn/html5shiv.min.js"></script>
+      <script src="js/cdn/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/cdn/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+
+<div class="container-fluid">
+<div class="row" style="padding-left:5px; padding-right:5px; margin-top:5px;">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+			<div style="border: #eee solid 1px; padding: 5px 10px 5px 10px; BACKGROUND-COLOR: #fef9f1;">
+				提示：<br/>
+                1.投资人取款过程全程免费，手续费由网站垫付；<br />
+                2.最低取款金额应大于等于 100 元；<br />
+                3.请投资人根据发标计划合理充值，因政采贷无法触及用户资金账户，无法收取用户任何费用；为防止套现，所充资金必须经投标回款后才能提现，否则需偿还网站垫付的充值手续费；<br />
+                4.严禁利用充值功能进行信用卡套现、转账、洗钱等行为，一经发现，将封停账号30天；<br />
+                5.取款期间，请勿关闭浏览器，待取款成功并返回首页后，所充资金才能入账，如有疑问，请联系客服；<br />
+                6.充值需开通银行卡网上支付功能，如有疑问请咨询开户行客服；<br />
+                7.支付限额请参照 <a href="http://www.chinapnr.com/helpcenter_zfsm.html" target="_blank">支付说明</a>。
+                
+               </div>
+                
+                <div>
+                 <div class="rechargeBoxTitle">
+               		 请输入取款金额</div>
+            <div class="rechargeNO">
+                <input name="txtAccount" type="text" id="txtAccount" /><span
+                    id="msg" style="color: #b94a48; font-weight: bold;"></span></div>
+            <div class="confirmAndCancel">
+                <input type="button" name="btnSub" value="确 认" id="rechargeConfirm" class="confirmAndCancelBtn" />
+                <input type="button" class="confirmAndCancelBtn" value="重 置" />
+            </div>
+            </div>
+                
+                
+
+</div>
+</div>
+</div>
+<script src="js/cookies.js"></script>
+<script type="text/javascript"
+	src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+	src="/easyservice/gpps.service.ILenderService?json"></script>
+<script>
+$(document).ready(function() {
+	
+	
+	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	var cuser = service.getCurrentUser();
+	if(cuser==null){
+		window.location.href="login.html"; 
+		return;
+	}
+	
+	var thirdPartyAccount = cuser.thirdPartyAccount;
+	if(thirdPartyAccount==null || thirdPartyAccount==''){
+		if(confirm("您尚未在第三方支付平台注册，马上注册?")){
+			window.open("/account/thirdPartyRegist/request"); 
+ 	  		if(confirm("第三方认证是否成功?")){
+ 	  			window.parent.toward("myaccount");
+ 	  		}else{
+ 	  			window.parent.toward("myaccount");
+ 	  		}
+  		}else{
+  			window.parent.toward("myaccount");
+  		}
+	}
+	
+	
+	window.parent.justify(document.body.scrollHeight);
+	
+	
+	$('#txtAccount').keyup(function(e){
+		var myreg=/^[+]?(([1-9]\d*[.]?)|(0.))(\d{0,2})?$/;
+		if(!myreg.test(this.value))
+		{
+			document.getElementById('msg').innerHTML='金额必须大于0且为整数或小数，小数点后不超过两位';
+			this.value=''; 
+			}else{
+				document.getElementById('msg').innerHTML='';
+				};
+	});
+	
+	$('#rechargeConfirm').click(function(e){
+		var myreg=/^[+]?(([1-9]\d*[.]?)|(0.))(\d{0,2})?$/;
+		var value = $('#txtAccount').val();
+		if(!myreg.test(value))
+		{
+			document.getElementById('msg').innerHTML='金额必须大于0且为整数或小数，小数点后不超过两位';
+			$('#txtAccount').val('');
+			}else{
+				document.getElementById('msg').innerHTML='';
+				window.open("/account/cash/request?amount="+value); 
+    	  		if(confirm("取款是否成功?")){
+    	  			window.parent.toward("myaccount");
+    	  		}else{
+    	  			window.parent.toward("myaccount");
+    	  		}
+				};
+	})
+})
+</script>
+</body>
+</html>

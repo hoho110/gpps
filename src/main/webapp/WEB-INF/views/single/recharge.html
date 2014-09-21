@@ -103,6 +103,28 @@
 </div>
 </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">充值</h4>
+      </div>
+      <div class="modal-body">
+       充值完成前请不要关闭该对话框，在充值完毕后点击相应的操作以完成充值。
+      </div>
+      <div class="modal-footer">
+        <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">充值成功</button>
+        <button id="false" type="button" class="btn btn-default">充值失败</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <script src="js/cookies.js"></script>
 <script type="text/javascript"
 	src="/resources/EasyServiceClientFullZ.js"></script>
@@ -160,14 +182,22 @@ $(document).ready(function() {
 			$('#txtAccount').val('');
 			}else{
 				document.getElementById('msg').innerHTML='';
-				window.open("/account/recharge/request?amount="+value); 
-    	  		if(confirm("充值是否成功?")){
-    	  			window.parent.toward("myaccount");
-    	  		}else{
-    	  			window.parent.toward("myaccount");
-    	  		}
+				
+				$('#myModal').modal({
+					  keyboard: false,
+					  backdrop: false
+				});
+				window.open("/account/recharge/request?amount="+value, "", "toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes, fullscreen = yes"); 
 				};
-	})
+	});
+	
+	$('#success').click(function(e){
+		window.parent.toward("myaccount");
+	});
+	
+	$('#fail').click(function(e){
+		window.parent.toward("myaccount");
+	});
 })
 </script>
 </body>

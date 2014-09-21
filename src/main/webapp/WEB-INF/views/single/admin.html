@@ -121,11 +121,18 @@ function refreshRepayingOrder(){
 			var pbs = paybackService.findAll(products.get(t).id);
 			for(var l=0; l<pbs.size(); l++){
 				var state = "";
+				var button = "";
 				if(pbs.get(l).state==0)
+					{
 					state="待还款";
+					button = "<button class='repay' id='"+pbs.get(l).id+"'>还款</button>";
+					}
 				else if(pbs.get(l).state==2)
+					{
 					state="已还款";
-				$('#repayingOrder').append('&nbsp;&nbsp;--------还款('+pbs.get(l).id+')['+state+']<br>');
+					button = "";
+					}
+				$('#repayingOrder').append('&nbsp;&nbsp;--------还款('+pbs.get(l).id+')['+state+']'+button+'<br>');
 			}
 		}
 		
@@ -231,7 +238,9 @@ $('button#closedone').click(function(e){
 });
 
 
-
+$('button.repay').click(function(e){
+	window.location.href = '/account/repay/request?paybackId='+$(this).attr('id');
+});
 
 
 });

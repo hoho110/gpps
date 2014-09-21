@@ -114,18 +114,20 @@
 
 
 
-
-
 <script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
     <script src="js/plugins/morris/morris.js"></script>
     <script src="js/mine.js"></script>
 <script src="js/cookies.js"></script>
+<script src="js/gpps/tool.js"></script>
 <script src="js/gpps/data.js"></script>
 <script type="text/javascript"
 				src="/resources/EasyServiceClientFullZ.js"></script>
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.ILenderService?json"></script>
 <script>
+
+var navtitle = getQueryString('nav');
+
 var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 
 var index = {};
@@ -284,7 +286,9 @@ function refreshNav(){
         	 
         	 
         	 
-        	 
+        	 if(navtitle!=null)
+        		 toward(navtitle);
+        	 else
         	 		toward('index');
 					
 					

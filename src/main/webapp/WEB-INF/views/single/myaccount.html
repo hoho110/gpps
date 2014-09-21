@@ -344,19 +344,19 @@ a.accordion-toggle {
 
 							var account = accountDao.find(cuser.accountId);
 							var total = account.total;
-							$('#total').html(total.value);
+							$('#total').html((parseFloat(total.value)+0.09).toFixed(0));
 
 							var usable = account.usable;
-							$('#usable').html(usable.value);
+							$('#usable').html((parseFloat(usable.value)+0.09).toFixed(0));
 
 							var freeze = account.freeze;
-							$('#freeze').html(freeze.value);
+							$('#freeze').html((parseFloat(freeze.value)+0.09).toFixed(0));
 
 							var used = account.used;
-							$('#used').html(used.value);
+							$('#used').html((parseFloat(used.value)+0.09).toFixed(0));
 
 							var totalincome = account.totalincome;
-							$('#totalincome').html(totalincome.value);
+							$('#totalincome').html((parseFloat(totalincome.value)+0.09).toFixed(0));
 
 							window.parent.justify(document.body.scrollHeight);
 

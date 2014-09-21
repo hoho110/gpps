@@ -57,6 +57,26 @@
 </div>
 </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">提现</h4>
+      </div>
+      <div class="modal-body">
+       提现完成前请不要关闭该对话框，在提现完毕后点击相应的操作以完成提现。
+      </div>
+      <div class="modal-footer">
+        <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">提现成功</button>
+        <button id="false" type="button" class="btn btn-default">提现失败</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="js/cookies.js"></script>
 <script type="text/javascript"
 	src="/resources/EasyServiceClientFullZ.js"></script>
@@ -111,14 +131,21 @@ $(document).ready(function() {
 			$('#txtAccount').val('');
 			}else{
 				document.getElementById('msg').innerHTML='';
-				window.open("/account/cash/request?amount="+value); 
-    	  		if(confirm("取款是否成功?")){
-    	  			window.parent.toward("myaccount");
-    	  		}else{
-    	  			window.parent.toward("myaccount");
-    	  		}
+				$('#myModal').modal({
+					  keyboard: false,
+					  backdrop: false
+				});
+				window.open("/account/cash/request?amount="+value, "", "toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes, fullscreen = yes"); 
 				};
-	})
+	});
+	
+	$('#success').click(function(e){
+		window.parent.toward("myaccount");
+	});
+	
+	$('#fail').click(function(e){
+		window.parent.toward("myaccount");
+	});
 })
 </script>
 </body>

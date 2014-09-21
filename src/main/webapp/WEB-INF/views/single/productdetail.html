@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8"/>
     <title>政采贷</title>
- 
     <link rel="stylesheet" type="text/css" href="css/new-lufax-main.css">
     <link rel="stylesheet" type="text/css" href="css/new-lufax.css">
     <link rel="stylesheet" type="text/css" href="css/detail/productDetail.css">
@@ -226,6 +225,8 @@
  
  
 </div>
+
+
  
  <script src="js/cdn/jquery.min.js"></script>
  <script src="js/gpps/tool.js"></script>
@@ -381,14 +382,14 @@
  		
  		try{
  		var oid = submitService.buy(parseInt(pid), parseInt($('#raiseAmount').val()));
- 		window.open("/account/buy/request?submitId="+oid);
-		if (confirm("付款是否成功?")) {
+ 		window.open("/account/buy/request?submitId="+oid, "", "toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes, fullscreen = yes");
+ 		if(confirm('购买是否成功？')){
 				window.parent.toward("myaccount");
-		} else {
-			window.parent.toward("myaccount");
-		}
+			}else{
+				window.parent.toward("myaccount");
+			}
  		}catch(e){
- 			alert('error:'+e.message);
+ 			alert(e.message);
  		}
  	});
  	

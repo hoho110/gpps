@@ -70,6 +70,17 @@
 </div>
 </div>
 
+
+<div class="row" style="border : #eee solid 1px;">
+添加项目进程:<br>
+<div id="action" class="col-sm-12 col-md-12">
+项目ID<input type="text" id="productid" size=40></input><br>
+进程名<input type="text" id="title" size=40></input><br>
+进程说明<textarea id="detail" cols=50 rows=10></textarea><br>
+<button id="add">添加</button>
+</div>
+</div>
+
 </div>
 </body>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -84,10 +95,13 @@
 				src="/easyservice/gpps.service.IProductService?json"></script>
 <script type="text/javascript"
 				src="/easyservice/gpps.service.IPayBackService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IProductActionService?json"></script>
 <script>
 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
 var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
+var actionService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductActionService");
 function refreshPreviewOrder(){
 	var pores = orderService.findByStatesByPage(2, 0, 100);
 	var pos = pores.get('result');
@@ -241,6 +255,20 @@ $('button#closedone').click(function(e){
 $('button.repay').click(function(e){
 	window.location.href = '/account/repay/request?paybackId='+$(this).attr('id');
 });
+
+
+$('button#add').click(function(e){
+	try{
+	var action = {'_t_': 'gpps.model.ProductAction','title': $('#title').val(), 'detail': $('#detail').val(), 'productId':parseInt($('#productid').val()), 'type':parseInt(1), 'createtime':(new java.util.Date()).getTime()};
+	actionService.create(action);
+	alert('添加成功！');
+	$('#title').val('');
+	$('#detail').val('');
+	$('#productid').val('');
+	}catch(e){
+		alert(e.message);
+	}
+})
 
 
 });

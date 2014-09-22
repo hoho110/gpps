@@ -62,4 +62,9 @@
 		delete from Lender
 		where id=#{id}
 	</delete>
+	<update id="addGrade">
+        update Lender set
+        grade=grade+#{addGrade} 
+        where id=#{id}
+    </update>
 </mapper>

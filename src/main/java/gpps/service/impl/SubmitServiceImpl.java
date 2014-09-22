@@ -5,6 +5,7 @@ import gpps.constant.Pagination;
 import gpps.dao.ICashStreamDao;
 import gpps.dao.IGovermentOrderDao;
 import gpps.dao.ILenderAccountDao;
+import gpps.dao.ILenderDao;
 import gpps.dao.IProductDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.CashStream;
@@ -53,6 +54,8 @@ public class SubmitServiceImpl implements ISubmitService {
 	IGovermentOrderDao govermentOrderDao;
 	@Autowired
 	IProductDao productDao;
+	@Autowired
+	ILenderDao lenderDao;
 	Logger logger=Logger.getLogger(this.getClass());
 	@Override
 	@Transactional
@@ -220,8 +223,12 @@ public class SubmitServiceImpl implements ISubmitService {
 	}
 
 	@Override
+	@Transactional
 	public void confirmBuy(Integer submitId) {
 		submitDao.changeState(submitId, Submit.STATE_COMPLETEPAY);
+		Submit submit=submitDao.find(submitId);
+		Lender lender=lenderService.getCurrentUser();
+		lenderDao.addGrade(lender.getId(), submit.getAmount().intValue());
 	}
 
 	@Override
@@ -236,5 +243,13 @@ public class SubmitServiceImpl implements ISubmitService {
 			submit.setLenderName(lenderService.find(submit.getLenderId()).getName());
 		}
 		return Pagination.buildResult(submits, count, offset, recnum);
+	}
+
+	@Override
+	public Integer buyByAdmin(Integer productId, int amount)
+			throws InsufficientBalanceException, ProductSoldOutException,
+			InsufficientProductException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -34,6 +34,8 @@ public interface ISubmitService {
 	 */
 	public Integer buy(Integer productId, int amount) throws InsufficientBalanceException, ProductSoldOutException, InsufficientProductException, UnreachBuyLevelException;
 	public void confirmBuy(Integer submitId);
+	
+	public Integer buyByAdmin(Integer productId,int amount) throws InsufficientBalanceException, ProductSoldOutException,InsufficientProductException;
 
 	/**
 	 * 系统任务调用

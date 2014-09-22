@@ -8,12 +8,13 @@ public class PayBack {
 	private Integer borrowerAccountId;
 	private Integer productId;
 	/**
-	 * 0：待还款 1：正在还款 2:已还款 3：延期(待确定)
+	 * 0：待还款 1：正在还款 2:已还款 3：延期(待确定) 4:失效
 	 */
 	public static int STATE_WAITFORREPAY=0;
 	public static int STATE_REPAYING=1;
 	public static int STATE_FINISHREPAY=2;
 	public static int STATE_DELAY=3;
+	public static int STATE_INVALID=4;
 	private int state;
 	private BigDecimal chiefAmount=BigDecimal.ZERO;
 	private BigDecimal interest=BigDecimal.ZERO;

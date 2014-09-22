@@ -376,7 +376,7 @@ public class AccountServlet {
 	}
 	private void write(HttpServletResponse resp,String message)
 	{
-		resp.setContentType("text/plain");
+		resp.setContentType("text/html");
 		resp.setCharacterEncoding("utf-8");
 		PrintWriter writer=null;
 		try {

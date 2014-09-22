@@ -19,4 +19,5 @@ public interface ILenderDao {
 	public void delete(Integer id);
 	public void registerSecondStep(@Param("id")Integer id,@Param("name")String name,@Param("identityCard")String identityCard,@Param("sex")int sex,@Param("address")String address,@Param("annualIncome")String annualIncome);
 	public void registerThirdPartyAccount(@Param("id")Integer id,@Param("thirdPartyAccount")String thirdPartyAccount);
+	public void addGrade(Integer id,int addGrade);
 }

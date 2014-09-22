@@ -117,4 +117,18 @@ public class Lender {
 	public void setAnnualIncome(String annualIncome) {
 		this.annualIncome = annualIncome;
 	}
+	public static int gradeToLevel(int grade)
+	{
+		if(grade>10000000)
+			return 5;//钻石VIP用户
+		if(grade>1000000)
+			return 4;//白金VIP用户
+		if(grade>200000)
+			return 3;//黄金VIP用户
+		if(grade>50000)
+			return 2;//白银VIP用户
+		if(grade>10000)
+			return 1;//VIP用户
+		return 0;//普通用户
+	}
 }

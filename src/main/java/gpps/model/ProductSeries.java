@@ -26,8 +26,8 @@ public class ProductSeries {
 	/**
 	 * 1： 等额本息 0：按月还息，到期还本 2：按月还息,本金以订单回款为准
 	 */
-	public static final int TYPE_AVERAGECAPITALPLUSINTEREST=1;
-	public static final int TYPE_FIRSTINTERESTENDCAPITAL=0;
+	public static final int TYPE_AVERAGECAPITALPLUSINTEREST=0;
+	public static final int TYPE_FIRSTINTERESTENDCAPITAL=1;
 	public static final int TYPE_FINISHPAYINTERESTANDCAPITAL=2;
 	private int type=TYPE_AVERAGECAPITALPLUSINTEREST;
 	private String typeDetail;

@@ -30,7 +30,7 @@ public class GovermentOrder {
 	private List<Product> products=new ArrayList<Product>();//非持久化字段
 	public Lock lock=null;
 	private long incomeStarttime;
-	private long incomeEndtime;
+//	private long incomeEndtime;
 	private long lastModifytime;
 	private String description;
 	public Integer getId() {
@@ -88,12 +88,12 @@ public class GovermentOrder {
 	public void setIncomeStarttime(long incomeStarttime) {
 		this.incomeStarttime = incomeStarttime;
 	}
-	public long getIncomeEndtime() {
-		return incomeEndtime;
-	}
-	public void setIncomeEndtime(long incomeEndtime) {
-		this.incomeEndtime = incomeEndtime;
-	}
+//	public long getIncomeEndtime() {
+//		return incomeEndtime;
+//	}
+//	public void setIncomeEndtime(long incomeEndtime) {
+//		this.incomeEndtime = incomeEndtime;
+//	}
 	public long getLastModifytime() {
 		return lastModifytime;
 	}

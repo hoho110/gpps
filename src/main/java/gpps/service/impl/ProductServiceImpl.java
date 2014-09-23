@@ -64,46 +64,52 @@ public class ProductServiceImpl implements IProductService {
 		checkNullObject("expectAmount", product.getExpectAmount());
 		checkNullObject("rate", product.getRate());
 		product.setRealAmount(BigDecimal.ZERO);
+		
+		Calendar starttime=Calendar.getInstance();
+		starttime.setTimeInMillis(order.getIncomeStarttime());
+		
+		Calendar endtime=Calendar.getInstance();
+		endtime.setTimeInMillis(product.getIncomeEndtime());
+		endtime.set(endtime.get(Calendar.YEAR), endtime.get(Calendar.MONTH), endtime.get(Calendar.DATE), 0, 0, 0);
+		product.setIncomeEndtime(endtime.getTimeInMillis());
+		
 		productDao.create(product);
 		Borrower borrower=borrowerDao.find(order.getBorrowerId());
 		// 创建还款计划
 		PayBack payBack=null;
-		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
-		Calendar starttime=Calendar.getInstance();
-		starttime.setTimeInMillis(order.getIncomeStarttime());
-		Calendar endtime=Calendar.getInstance();
-		endtime.setTimeInMillis(order.getIncomeEndtime());
 		int monthNum=(endtime.get(Calendar.YEAR)-starttime.get(Calendar.YEAR))*12+(endtime.get(Calendar.MONTH)-starttime.get(Calendar.MONTH));
 		if(endtime.get(Calendar.DAY_OF_MONTH)>starttime.get(Calendar.DAY_OF_MONTH))
 			monthNum++;
-		if(productSeries.getType()==ProductSeries.TYPE_AVERAGECAPITALPLUSINTEREST)
+		if(productSeries.getType()==ProductSeries.TYPE_AVERAGECAPITALPLUSINTEREST)//等额本息
 		{
-			//等额本息，息按天算;本金按月算
+			BigDecimal mRate=product.getRate().divide(new BigDecimal(12));//月利息
+			//每月还款额
+			BigDecimal amountEachMonth=PayBack.BASELINE.multiply(mRate).multiply(mRate.add(new BigDecimal(1)).pow(monthNum)).divide(mRate.add(new BigDecimal(1)).pow(monthNum).subtract(new BigDecimal(1)),2,BigDecimal.ROUND_UP);//每月归还额
 			for(int i=0;i<monthNum;i++)
 			{
-				Calendar currentMonthStart=(Calendar)(starttime.clone());
-				currentMonthStart.add(Calendar.MONTH, i);
-				Calendar currentMonthEnd=null;
+				Calendar paybackCal;
 				if(i+1==monthNum)
-					currentMonthEnd=(Calendar)(endtime.clone());
+					paybackCal=endtime;
 				else
 				{
-					currentMonthEnd=(Calendar)(starttime.clone());
-					currentMonthEnd.add(Calendar.MONTH, i+1);
+					paybackCal=(Calendar)(starttime.clone());
+					paybackCal.add(Calendar.MONTH, i+1);
 				}
-				int days=getDays(currentMonthStart, currentMonthEnd);
+				//计算第n月利息，  第n月还款利息＝（a×i－b）×（1＋i）^（n－1）＋b
+				//贷款额为a，月利率为i，还款月数为n，每月还款额为b
+				BigDecimal interest=PayBack.BASELINE.multiply(mRate).subtract(amountEachMonth).multiply(mRate.add(new BigDecimal(1)).pow(monthNum-1)).add(amountEachMonth).setScale(2, BigDecimal.ROUND_UP);
 				payBack=new PayBack();
 				payBack.setBorrowerAccountId(borrower.getAccountId());
-				payBack.setChiefAmount(PayBack.BASELINE.divide(new BigDecimal(monthNum),2,BigDecimal.ROUND_UP));
-				payBack.setInterest(PayBack.BASELINE.multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
+				payBack.setChiefAmount(amountEachMonth.subtract(interest));
+				payBack.setInterest(interest);
 				payBack.setProductId(product.getId());
 				payBack.setState(PayBack.STATE_WAITFORREPAY);
 				if(i+1==monthNum)
 					payBack.setType(PayBack.TYPE_LASTPAY);
 				else
 					payBack.setType(PayBack.TYPE_INTERESTANDCHIEF);
-				currentMonthEnd.add(Calendar.DAY_OF_YEAR, 1);
-				payBack.setDeadline(currentMonthEnd.getTimeInMillis());
+				paybackCal.add(Calendar.DAY_OF_YEAR, 1);
+				payBack.setDeadline(paybackCal.getTimeInMillis());
 				payBackDao.create(payBack);
 			}
 		}else if(productSeries.getType()==ProductSeries.TYPE_FINISHPAYINTERESTANDCAPITAL||productSeries.getType()==ProductSeries.TYPE_FIRSTINTERESTENDCAPITAL)

@@ -39,6 +39,7 @@ public class Product {
 	private int minimum=1;//最小额度,单位元
 	private int miniAdd=1;//最小追加金额
 	private String description;
+	private long incomeEndtime;//收益截止时间
 	public Integer getId() {
 		return id;
 	}
@@ -123,6 +124,13 @@ public class Product {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	public long getIncomeEndtime() {
+		return incomeEndtime;
+	}
+	public void setIncomeEndtime(long incomeEndtime) {
+		this.incomeEndtime = incomeEndtime;
+	}
+
 
 
 

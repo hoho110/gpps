@@ -21,4 +21,6 @@ public interface IPayBackDao {
 	public void delete(Integer id);
 	
 	public List<PayBack> findByProductsAndState(@Param("productIds")List<Integer> productIds,@Param("state")int state);
+	
+	public PayBack findLastest(Integer productId);
 }

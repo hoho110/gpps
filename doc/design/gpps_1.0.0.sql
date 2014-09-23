@@ -98,7 +98,6 @@ create table Govermentorder
    createtime           bigint not null default 0,
    title                varchar(255),
    incomeStarttime      bigint not null,
-   incomeEndtime        bigint not null,
    lastModifytime       bigint not null,
    description          varchar(2000),
    primary key (ID)
@@ -197,6 +196,7 @@ create table Product
    minimum              int not null default 1,
    miniadd              int not null default 1,
    description          varchar(2000),
+   incomeEndtime        bigint not null,
    primary key (ID)
 );
 

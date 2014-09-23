@@ -8,9 +8,11 @@
 		values(#{borrowerAccountId},#{productId},#{state},#{chiefAmount},#{interest},#{deadline},#{realtime},#{type})
 	</insert>
 	<select id="findAllByProduct" resultType="gpps.model.PayBack">
+	   <![CDATA[
 		select *
 		from PayBack
-		where productId=#{productId}
+		where productId=#{productId} where state <> 4
+		]]>
 	</select>
 	<select id="find" parameterType="Integer" resultType="gpps.model.PayBack">
 		select *
@@ -41,4 +43,12 @@
 		</if>
 		order by deadline desc
 	</select>
+	<select id="findLastest" resultType="gpps.model.PayBack">
+	 <![CDATA[
+        select * from PayBack
+        where productId=#{productId} where state <> 4 
+        order by deadline desc
+        LIMIT 1, 1
+        ]]>
+    </select>
 </mapper>

@@ -323,7 +323,7 @@
  	$('#initAmount').html('起投金额：'+product.minimum+'元');
  	$('#addAmount').html('递增金额：'+product.miniAdd+'元');
  	$('#rate').html(parseInt(parseFloat(product.rate.value)*100)+"%");
- 	$('#duration').html(parseInt((order.incomeEndtime-order.incomeStarttime+23*3600*1000)/(24*3600*1000))+'天');
+ 	$('#duration').html(parseInt((product.incomeEndtime-order.incomeStarttime+23*3600*1000)/(24*3600*1000))+'天');
  	$('#pseriestitle').html(series.title);
  	$('#remainamount').html( '剩余可投金额：<strong>'+(parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))+'元</strong>');
  	
@@ -417,7 +417,7 @@
         			table.append('<tr><td>收益方式：</td><td><span class="tips-title">每月还息，到期还本</span></td></tr>');
         			table.append('<tr><td>担 保：</td><td><span class="tips-title">X担保</span></td></tr>');
         			table.append('<tr><td>收益起始日期：</td><td>'+formatDateToDay(order.incomeStarttime)+'</td></tr>');
-        			table.append('<tr><td>最晚还款日期：</td><td>'+formatDateToDay(order.incomeEndtime)+'</td></tr>');
+        			table.append('<tr><td>最晚还款日期：</td><td>'+formatDateToDay(product.incomeEndtime)+'</td></tr>');
         			table.append('<tr><td>项目简介：</td><td>'+order.description+'</td></tr>');
         			table.append('<tr><td>融资方：</td><td>'+borrower.companyName+'</td></tr>');
         			$('.detail-content-body').html('');

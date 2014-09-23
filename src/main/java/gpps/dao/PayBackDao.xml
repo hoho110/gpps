@@ -11,7 +11,7 @@
 	   <![CDATA[
 		select *
 		from PayBack
-		where productId=#{productId} where state <> 4 order by deadline asc
+		where productId=#{productId} and state <> 4 order by deadline asc
 		]]>
 	</select>
 	<select id="find" parameterType="Integer" resultType="gpps.model.PayBack">

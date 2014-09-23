@@ -23,7 +23,7 @@
 				#{item}
 			</foreach>
 		</if>
-		order by state asc,createtime desc 
+		order by state asc,createtime asc 
 		LIMIT #{offset}, #{recnum}
 	</select>
 	<select id="findByStates" resultType="gpps.model.GovermentOrder">

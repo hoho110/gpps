@@ -13,17 +13,16 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 public class CreateOrder {
 	
 	
-	public static Integer createSingleOrder(ApplicationContext context, String title, Integer bid, String description){
+	public static Integer createSingleOrder(ApplicationContext context, String title, Integer bid, String description, long fstart, long fend, long istart){
 		IGovermentOrderService orderService = context.getBean(IGovermentOrderService.class);
 		GovermentOrder or = new GovermentOrder();
 		or.setBorrowerId(bid);
 		or.setCreatetime((new Date()).getTime());
-		or.setFinancingStarttime((new Date()).getTime()+24L*3600*1000);
-		or.setFinancingEndtime((new Date()).getTime()+5L*24*3600*1000);
+		or.setFinancingStarttime(fstart);
+		or.setFinancingEndtime(fend);
 		
 		or.setTitle(title);
-		or.setIncomeStarttime((new Date()).getTime()+6L*24*3600*1000);
-		or.setIncomeEndtime((new Date()).getTime()+96L*24*3600*1000);
+		or.setIncomeStarttime(istart);
 		or.setLastModifytime((new Date()).getTime());
 		
 		or.setState(GovermentOrder.STATE_PREPUBLISH);
@@ -44,7 +43,6 @@ public class CreateOrder {
 		or.setFinancingEndtime((new Date()).getTime()+5L*24*3600*1000);
 		or.setTitle("政府采购项目一");
 		or.setIncomeStarttime((new Date()).getTime()+6L*24*3600*1000);
-		or.setIncomeEndtime((new Date()).getTime()+96L*24*3600*1000);
 		or.setLastModifytime((new Date()).getTime());
 		
 		or.setState(1);
@@ -58,7 +56,6 @@ public class CreateOrder {
 		or2.setFinancingEndtime((new Date()).getTime()+5L*24*3600*1000);
 		or2.setTitle("市政绿化工程项目");
 		or2.setIncomeStarttime((new Date()).getTime()+6L*24*3600*1000);
-		or2.setIncomeEndtime((new Date()).getTime()+96L*24*3600*1000);
 		or2.setLastModifytime((new Date()).getTime());
 		
 		or2.setState(1);
@@ -74,7 +71,6 @@ public class CreateOrder {
 		or3.setFinancingEndtime((new Date()).getTime()+5L*24*3600*1000);
 		or3.setTitle("办公用品采购项目");
 		or3.setIncomeStarttime((new Date()).getTime()+6L*24*3600*1000);
-		or3.setIncomeEndtime((new Date()).getTime()+96L*24*3600*1000);
 		or3.setLastModifytime((new Date()).getTime());
 		
 		or3.setState(2);

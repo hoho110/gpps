@@ -1,4 +1,12 @@
 
+var lenderLevelToName = {
+		0 : '普通会员',
+		1 : 'VIP会员',
+		2 : '白银VIP会员',
+		3 : '黄金VIP会员',
+		4 : '白金VIP会员',
+		5 : '钻石VIP会员'
+}
 _defaultDataTableOLanguage = {
 		"sProcessing" : "<img src ='images/waiting.gif' height = 18/>正在查询中，请稍后......",
 		"sLengthMenu" : "每页 _MENU_ 条记录",
@@ -127,7 +135,8 @@ var myscore = function(container){
 	var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 	var lender=lenderService.getCurrentUser();
 	var content = $('<div></div>');
-	content.append('<p>您好'+lender.name+'，您的积分是<span class="orange">'+lender.grade+'</span>分，等级为<span class="orange">普通会员</span></p>');
+	var name = lender.name==null?lender.loginId : lender.name
+	content.append('<p>您好'+name+'，您的积分是<span class="orange">'+lender.grade+'</span>分，等级为<span class="orange">'+lenderLevelToName[lender.level]+'</span></p>');
 	content.append('<br><span class="orange">积分规则：</span>');
 	content.append('<p>如何获取积分的说明</p>');
 	var str = "";

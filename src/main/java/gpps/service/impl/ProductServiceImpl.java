@@ -21,6 +21,7 @@ import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -82,7 +83,7 @@ public class ProductServiceImpl implements IProductService {
 			monthNum++;
 		if(productSeries.getType()==ProductSeries.TYPE_AVERAGECAPITALPLUSINTEREST)//等额本息
 		{
-			BigDecimal mRate=product.getRate().divide(new BigDecimal(12));//月利息
+			BigDecimal mRate=product.getRate().divide(new BigDecimal(12),4,RoundingMode.HALF_DOWN);//月利息
 			//每月还款额
 			BigDecimal amountEachMonth=PayBack.BASELINE.multiply(mRate).multiply(mRate.add(new BigDecimal(1)).pow(monthNum)).divide(mRate.add(new BigDecimal(1)).pow(monthNum).subtract(new BigDecimal(1)),2,BigDecimal.ROUND_UP);//每月归还额
 			for(int i=0;i<monthNum;i++)

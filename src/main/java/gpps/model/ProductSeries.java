@@ -24,7 +24,7 @@ public class ProductSeries {
 	private String tag;//schema title description
 	private String description;
 	/**
-	 * 1： 等额本息 0：按月还息，到期还本 2：按月还息,本金以订单回款为准
+	 * 0： 等额本息 1：按月还息，到期还本  2：按月还息,本金以订单回款为准
 	 */
 	public static final int TYPE_AVERAGECAPITALPLUSINTEREST=0;
 	public static final int TYPE_FIRSTINTERESTENDCAPITAL=1;

@@ -1,5 +1,7 @@
 package gpps.service;
 
+import java.util.Date;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 
@@ -11,23 +13,49 @@ public class CreateMain {
 		Integer series_wj = CreateProductSeries.createWJ(context);
 		Integer series_jh = CreateProductSeries.createJH(context);
 		Integer series_jq = CreateProductSeries.createJQ(context);
-		Integer order1 = CreateOrder.createSingleOrder(context, "政府绿化项目融资", bid, "政府绿化项目融资详细介绍，XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-		Integer order2 = CreateOrder.createSingleOrder(context, "计算机采购项目融资", bid, "计算机采购项目融资XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-		Integer order3 = CreateOrder.createSingleOrder(context, "市政道路建设项目融资", bid, "市政道路建设项目融资XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-		Integer order4 = CreateOrder.createSingleOrder(context, "办公用品采购项目融资", bid, "办公用品采购项目融资XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-		CreateProduct.createSingle(context, order1, series_wj, 0, 800000, 0.08, 1000);
-		CreateProduct.createSingle(context, order1, series_jh, 0, 150000, 0.16, 2000);
-		CreateProduct.createSingle(context, order1, series_jq, 1, 50000, 0.24, 10000);
+		long istart1 = (new Date(2014-1900, 9, 1)).getTime();
+		long fstart1 = (new Date(2014-1900, 8, 29, 8, 0, 0)).getTime();
+		long fend1 = (new Date(2014-1900, 8, 30, 18, 0, 0)).getTime();
+		Integer order1 = CreateOrder.createSingleOrder(context, "政府绿化项目融资", bid, "政府绿化项目融资详细介绍，XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", fstart1, fend1, istart1);
 		
-		CreateProduct.createSingle(context, order2, series_wj, 0, 160000, 0.1, 1000);
-		CreateProduct.createSingle(context, order2, series_jh, 0, 100000, 0.15, 2000);
-		CreateProduct.createSingle(context, order2, series_jq, 1, 8000, 0.26, 10000);
+		long istart2 = (new Date(2014-1900, 9, 2)).getTime();
+		long fstart2 = (new Date(2014-1900, 8, 30, 8, 0, 0)).getTime();
+		long fend2 = (new Date(2014-1900, 8, 31, 18, 0, 0)).getTime();
+		Integer order2 = CreateOrder.createSingleOrder(context, "计算机采购项目融资", bid, "计算机采购项目融资XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", fstart2, fend2, istart2);
+		
+		long istart3 = (new Date(2014-1900, 9, 5)).getTime();
+		long fstart3 = (new Date(2014-1900, 9, 3, 8, 0, 0)).getTime();
+		long fend3 = (new Date(2014-1900, 9, 4, 18, 0, 0)).getTime();
+		Integer order3 = CreateOrder.createSingleOrder(context, "市政道路建设项目融资", bid, "市政道路建设项目融资XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", fstart3, fend3, istart3);
+		
+		long istart4 = (new Date(2014-1900, 9, 7)).getTime();
+		long fstart4 = (new Date(2014-1900, 9, 5, 8, 0, 0)).getTime();
+		long fend4 = (new Date(2014-1900, 9, 6, 18, 0, 0)).getTime();
+		Integer order4 = CreateOrder.createSingleOrder(context, "办公用品采购项目融资", bid, "办公用品采购项目融资XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", fstart4, fend4, istart4);
+		
+		long iend11 = (new Date(2014-1900, 12, 1)).getTime();
+		long iend12 = (new Date(2015-1900, 3, 1)).getTime();
+		long iend13 = (new Date(2015-1900, 9, 1)).getTime();
+		CreateProduct.createSingle(context, order1, series_wj, 0, 800000, 0.08, 1000, 100, iend11);
+		CreateProduct.createSingle(context, order1, series_jh, 0, 150000, 0.16, 2000, 200, iend12);
+		CreateProduct.createSingle(context, order1, series_jq, 1, 50000, 0.24, 10000, 1000, iend13);
 		
 		
-		CreateProduct.createSingle(context, order3, series_wj, 0, 500000, 0.12, 1000);
-		CreateProduct.createSingle(context, order3, series_jh, 0, 190000, 0.18, 5000);
+		long iend21 = (new Date(2014-1900, 12, 2)).getTime();
+		long iend22 = (new Date(2015-1900, 3, 2)).getTime();
+		long iend23 = (new Date(2015-1900, 9, 2)).getTime();
+		CreateProduct.createSingle(context, order2, series_wj, 0, 160000, 0.1, 1000, 100, iend21);
+		CreateProduct.createSingle(context, order2, series_jh, 0, 100000, 0.15, 2000, 200, iend22);
+		CreateProduct.createSingle(context, order2, series_jq, 1, 8000, 0.26, 10000, 1000, iend23);
 		
-		CreateProduct.createSingle(context, order4, series_jh, 0, 800000, 0.15, 2000);
+		
+		long iend31 = (new Date(2014-1900, 12, 5)).getTime();
+		long iend32 = (new Date(2015-1900, 3, 5)).getTime();
+		CreateProduct.createSingle(context, order3, series_wj, 0, 500000, 0.12, 1000, 100, iend31);
+		CreateProduct.createSingle(context, order3, series_jh, 0, 190000, 0.18, 5000, 200, iend32);
+		
+		long iend41 = (new Date(2015-1900, 3, 7)).getTime();
+		CreateProduct.createSingle(context, order4, series_jh, 0, 800000, 0.15, 2000, 200, iend41);
 		
 //		BorrowerHandle.startOrderFinancing(context, 2);
 		

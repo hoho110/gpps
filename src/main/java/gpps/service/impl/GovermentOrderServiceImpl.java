@@ -293,6 +293,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			if(product.getState()==Product.STATE_FINANCING)
 			{
 				product.setAccessory(null);
+				product.setGovermentOrder(order);
 				order.getProducts().add(product);
 			}
 		}
@@ -359,7 +360,17 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		return order;
 	}
 	@Override
+	@Transactional
 	public void closeComplete(Integer orderId) throws IllegalConvertException {
 		changeState(orderId, GovermentOrder.STATE_CLOSE);
+		GovermentOrder order=govermentOrderDao.find(orderId);
+		List<Product> products=productDao.findByGovermentOrder(orderId);
+		int creditValue=0;
+		for(Product product:products)
+		{
+			creditValue+=product.getRealAmount().intValue();
+		}
+		if(creditValue>0)
+			borrowerDao.addCreditValue(order.getBorrowerId(), creditValue);
 	}
 }

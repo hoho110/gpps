@@ -20,4 +20,5 @@ public interface IBorrowerDao {
 	public void changePassword(@Param("id") Integer id,@Param("password") String password);
 	public void changeCreditValue(@Param("id")Integer id,@Param("creditValue")int creditValue);
 	public void delete(Integer id);
+	public void addCreditValue(@Param("id")Integer id,@Param("creditValue")int creditValue);
 }

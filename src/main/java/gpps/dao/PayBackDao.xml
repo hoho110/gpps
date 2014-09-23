@@ -11,7 +11,7 @@
 	   <![CDATA[
 		select *
 		from PayBack
-		where productId=#{productId} where state <> 4
+		where productId=#{productId} where state <> 4 order by deadline asc
 		]]>
 	</select>
 	<select id="find" parameterType="Integer" resultType="gpps.model.PayBack">
@@ -51,4 +51,9 @@
         LIMIT 1, 1
         ]]>
     </select>
+    <update id="update" parameterType="gpps.model.PayBack">
+		update
+		PayBack set borrowerAccountId=#{borrowerAccountId},productId=#{productId},state=#{state},chiefAmount=#{chiefAmount},interest=#{interest},deadline=#{deadline},realtime=#{realtime},type=#{type}
+		where id=#{id}
+	</update>
 </mapper>

@@ -22,5 +22,7 @@ public interface IPayBackDao {
 	
 	public List<PayBack> findByProductsAndState(@Param("productIds")List<Integer> productIds,@Param("state")int state);
 	
+	public void update(PayBack payBack);
+	
 	public PayBack findLastest(Integer productId);
 }

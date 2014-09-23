@@ -1,7 +1,7 @@
 package gpps.service;
 
 import gpps.model.PayBack;
-import gpps.service.exception.UnSupportDelayException;
+import gpps.service.exception.UnSupportRepayInAdvanceException;
 
 import java.util.List;
 
@@ -18,5 +18,6 @@ public interface IPayBackService {
 	 * @return
 	 * @throws UnSupportDelayException
 	 */
-	public PayBack applyToDelay(Integer payBackId,long delayTo) throws UnSupportDelayException;
+	public void applyRepayInAdvance(Integer payBackId) throws UnSupportRepayInAdvanceException;
+	public void delay(Integer payBackId);
 }

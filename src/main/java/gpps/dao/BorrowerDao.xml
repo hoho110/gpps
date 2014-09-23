@@ -54,4 +54,9 @@
 		delete from Borrower
 		where id=#{id}
 	</delete>
+	<update id="addCreditValue">
+		update Borrower set
+		creditValue=creditValue+#{creditValue}
+		where id=#{id}
+	</update>
 </mapper>

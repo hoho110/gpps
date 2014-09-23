@@ -79,6 +79,8 @@ public class SubmitServiceImpl implements ISubmitService {
 			product=orderService.applyFinancingProduct(productId, product.getGovermentorderId());
 			if(product==null)
 				throw new ProductSoldOutException("产品已售完");
+			if(System.currentTimeMillis()>product.getGovermentOrder().getFinancingEndtime())
+				throw new ProductSoldOutException("产品已结束融资");
 			if(amount.compareTo(product.getExpectAmount().subtract(product.getRealAmount()))>0)
 				throw new InsufficientProductException("产品余额不足");
 			

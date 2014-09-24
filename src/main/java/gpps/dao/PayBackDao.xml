@@ -41,7 +41,7 @@
 				#{item}
 			</foreach>
 		</if>
-		order by deadline desc
+		order by deadline asc
 	</select>
 	<select id="findLastest" resultType="gpps.model.PayBack">
 	 <![CDATA[

@@ -149,15 +149,15 @@ $(document).ready(function() {
 	if(identityCard==null || identityCard==''){
 		if(confirm("您尚未实名认证，马上认证?")){
 			window.location.href="register2.html";
-		}
+		}else{
+  			window.parent.toward("myaccount");
+  		}
 	}
 	else if(thirdPartyAccount==null || thirdPartyAccount==''){
 		if(confirm("您尚未在第三方支付平台注册，马上注册?")){
 			window.open("/account/thirdPartyRegist/request"); 
  	  		if(confirm("第三方认证是否成功?")){
- 	  			window.parent.toward("myaccount");
- 	  		}else{
- 	  			window.parent.toward("myaccount");
+ 	  			window.location.href="recharge.html";
  	  		}
   		}else{
   			window.parent.toward("myaccount");

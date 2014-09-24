@@ -4,10 +4,12 @@ import gpps.dao.ICashStreamDao;
 import gpps.dao.IPayBackDao;
 import gpps.dao.IProductDao;
 import gpps.dao.IProductSeriesDao;
+import gpps.dao.IStateLogDao;
 import gpps.model.GovermentOrder;
 import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.ProductSeries;
+import gpps.model.StateLog;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IPayBackService;
 import gpps.service.exception.IllegalConvertException;
@@ -33,6 +35,8 @@ public class PayBackServiceImpl implements IPayBackService {
 	IProductSeriesDao productSeriesDao;
 	@Autowired
 	IGovermentOrderService orderSerivce;
+	@Autowired
+	IStateLogDao stateLogDao;
 	@Override
 	public void create(PayBack payback) {
 		payBackDao.create(payback);
@@ -61,7 +65,14 @@ public class PayBackServiceImpl implements IPayBackService {
 
 	@Override
 	public void changeState(Integer paybackId, int state) {
+		PayBack payBack=payBackDao.find(paybackId);
 		payBackDao.changeState(paybackId, state,System.currentTimeMillis());
+		StateLog stateLog=new StateLog();
+		stateLog.setSource(payBack.getState());
+		stateLog.setTarget(state);
+		stateLog.setType(StateLog.TYPE_PAYBACK);
+		stateLog.setRefid(paybackId);
+		stateLogDao.create(stateLog);
 	}
 
 	@Override

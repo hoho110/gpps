@@ -7,9 +7,11 @@ import gpps.constant.Pagination;
 import gpps.dao.IBorrowerDao;
 import gpps.dao.IGovermentOrderDao;
 import gpps.dao.IProductDao;
+import gpps.dao.IStateLogDao;
 import gpps.model.Borrower;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
+import gpps.model.StateLog;
 import gpps.service.IGovermentOrderService;
 import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
@@ -45,6 +47,8 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	IProductDao productDao;
 	@Autowired
 	ITaskService taskService;
+	@Autowired
+	IStateLogDao stateLogDao;
 	static int[] orderStates={
 		GovermentOrder.STATE_PREPUBLISH,
 		GovermentOrder.STATE_FINANCING,
@@ -137,6 +141,12 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			if(order.getState()==validStateConvert[0]&&state==validStateConvert[1])
 			{
 				govermentOrderDao.changeState(orderId, state,System.currentTimeMillis());
+				StateLog stateLog=new StateLog();
+				stateLog.setSource(order.getState());
+				stateLog.setTarget(state);
+				stateLog.setType(StateLog.TYPE_GOVERMENTORDER);
+				stateLog.setRefid(orderId);
+				stateLogDao.create(stateLog);
 				return;
 			}
 		}

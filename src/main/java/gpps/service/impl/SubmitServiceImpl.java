@@ -7,13 +7,16 @@ import gpps.dao.IGovermentOrderDao;
 import gpps.dao.ILenderAccountDao;
 import gpps.dao.ILenderDao;
 import gpps.dao.IProductDao;
+import gpps.dao.IStateLogDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.Lender;
 import gpps.model.LenderAccount;
 import gpps.model.Product;
+import gpps.model.StateLog;
 import gpps.model.Submit;
+import gpps.model.Task;
 import gpps.service.IAccountService;
 import gpps.service.IGovermentOrderService;
 import gpps.service.ILenderService;
@@ -29,6 +32,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +61,40 @@ public class SubmitServiceImpl implements ISubmitService {
 	IProductDao productDao;
 	@Autowired
 	ILenderDao lenderDao;
+	@Autowired
+	IStateLogDao stateLogDao;
 	Logger logger=Logger.getLogger(this.getClass());
+	@PostConstruct
+	public void init() {
+		//构建守护线程，检查待支付Submit，到一定时间未支付成功设置为“退订”
+		Thread taskThread=new Thread(){
+			public void run()
+			{
+				while(true)
+				{
+					
+					try {
+						List<Submit> submits=submitDao.findAllByState(Submit.STATE_WAITFORPAY);
+						if(submits!=null&&submits.size()>0)
+						{
+							for(Submit submit:submits)
+							{
+								if((submit.getCreatetime()+Submit.PAYEXPIREDTIME)>System.currentTimeMillis())
+									continue;
+								submitDao.changeState(submit.getId(), Submit.STATE_UNSUBSCRIBE);
+								logger.debug("Submit[id:"+submit.getId()+"]未支付，过期退订");
+							}
+						}
+						sleep(10L*1000);
+					} catch (Throwable e) {
+						logger.error(e.getMessage(),e);
+					}
+				}
+			}
+		};
+		taskThread.setName("SubmitCheckThread");
+		taskThread.start();
+	}
 	@Override
 	@Transactional
 	public Integer buy(Integer productId, int num)
@@ -111,6 +149,12 @@ public class SubmitServiceImpl implements ISubmitService {
 			if(submit.getState()==validStateConvert[0]&&state==validStateConvert[1])
 			{
 				submitDao.changeState(submitId, state);
+				StateLog stateLog=new StateLog();
+				stateLog.setSource(submit.getState());
+				stateLog.setTarget(state);
+				stateLog.setType(StateLog.TYPE_SUBMIT);
+				stateLog.setRefid(submitId);
+				stateLogDao.create(stateLog);
 				return;
 			}
 		}

@@ -86,4 +86,9 @@
         select count(*)
         from Submit where productId=#{productId} and state=#{state}
     </select>
+    <select id="findAllByState"
+        resultType="gpps.model.Submit">
+        select *
+        from Submit where state=#{state}
+    </select>
 </mapper>

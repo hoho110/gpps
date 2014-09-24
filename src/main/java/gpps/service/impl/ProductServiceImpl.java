@@ -8,12 +8,14 @@ import gpps.dao.IPayBackDao;
 import gpps.dao.IProductActionDao;
 import gpps.dao.IProductDao;
 import gpps.dao.IProductSeriesDao;
+import gpps.dao.IStateLogDao;
 import gpps.model.Borrower;
 import gpps.model.GovermentOrder;
 import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.ProductAction;
 import gpps.model.ProductSeries;
+import gpps.model.StateLog;
 import gpps.model.Task;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IPayBackService;
@@ -53,6 +55,8 @@ public class ProductServiceImpl implements IProductService {
 	IPayBackDao payBackDao;
 	@Autowired
 	IPayBackService payBackService;
+	@Autowired
+	IStateLogDao stateLogDao;
 	Logger logger=Logger.getLogger(this.getClass());
 	@Override
 	@Transactional
@@ -109,6 +113,12 @@ public class ProductServiceImpl implements IProductService {
 			if(product.getState()==validStateConvert[0]&&state==validStateConvert[1])
 			{
 				productDao.changeState(productId, state);
+				StateLog stateLog=new StateLog();
+				stateLog.setSource(product.getState());
+				stateLog.setTarget(state);
+				stateLog.setType(StateLog.TYPE_PRODUCT);
+				stateLog.setRefid(productId);
+				stateLogDao.create(stateLog);
 				return;
 			}
 		}

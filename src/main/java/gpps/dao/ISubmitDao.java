@@ -27,4 +27,6 @@ public interface ISubmitDao {
 	
 	public List<Submit> findAllByProductAndStateWithPaged(@Param("productId")Integer productId,@Param("state")int state,@Param("offset")int offset,@Param("recnum")int recnum);
 	public int countByProductAndStateWithPaged(@Param("productId")Integer productId,@Param("state")int state);
+	
+	public List<Submit> findAllByState(int state);
 }

@@ -1,5 +1,6 @@
 package gpps.service;
 
+import java.util.Date;
 import java.util.List;
 
 import gpps.model.Borrower;
@@ -18,11 +19,18 @@ public class CreateMain2 {
 		Integer series_wj = CreateProductSeries.createWJ(context);
 		Integer series_jh = CreateProductSeries.createJH(context);
 		Integer series_jq = CreateProductSeries.createJQ(context);
-		Integer order1 = CreateOrder.createSingleOrder(context, "政府绿化项目融资", borrower.getId(), "政府绿化项目融资详细介绍，XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+		
+		long istart1 = (new Date(2014-1900, 9, 1)).getTime();
+		long fstart1 = (new Date(2014-1900, 8, 29, 8, 0, 0)).getTime();
+		long fend1 = (new Date(2014-1900, 8, 30, 18, 0, 0)).getTime();
+		
+		Integer order1 = CreateOrder.createSingleOrder(context, "政府绿化项目融资", borrower.getId(), "政府绿化项目融资详细介绍，XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX", fstart1, fend1, istart1);
 //		Integer order2 = CreateOrder.createSingleOrder(context, "计算机采购项目融资", borrower.getId(), "计算机采购项目融资XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 //		Integer order3 = CreateOrder.createSingleOrder(context, "市政道路建设项目融资", borrower.getId(), "市政道路建设项目融资XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
 //		Integer order4 = CreateOrder.createSingleOrder(context, "办公用品采购项目融资", borrower.getId(), "办公用品采购项目融资XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-		Integer proid_1=CreateProduct.createSingle(context, order1, series_wj, 2, 800000, 0.08, 1000);
+		
+		long iend11 = (new Date(2014-1900, 12, 1)).getTime();
+		Integer proid_1=CreateProduct.createSingle(context, order1, series_wj, 0, 800000, 0.08, 1000, 100, iend11);
 //		CreateProduct.createSingle(context, order1, series_jh, 3, 150000, 0.16, 2000);
 //		CreateProduct.createSingle(context, order1, series_jq, 4, 50000, 0.24, 10000);
 //		

@@ -1,6 +1,7 @@
 package gpps.service;
 
 import gpps.model.PayBack;
+import gpps.model.ProductSeries;
 import gpps.service.exception.UnSupportRepayInAdvanceException;
 
 import java.util.List;
@@ -19,5 +20,21 @@ public interface IPayBackService {
 	 * @throws UnSupportDelayException
 	 */
 	public void applyRepayInAdvance(Integer payBackId) throws UnSupportRepayInAdvanceException;
+	/**
+	 * 设置payback 延时
+	 * @param payBackId
+	 */
 	public void delay(Integer payBackId);
+	/**
+	 * 生成还款计划
+	 * @param amount 贷款金额
+	 * @param rate 年利率
+	 * @param payBackModel 还款模型{@link ProductSeries.type}
+	 * @param from 起始时间
+	 * @param to 结束时间
+	 * @return
+	 */
+	public List<PayBack> generatePayBacks(int amount,double rate,int payBackModel,
+			long from, long to);
+	
 }

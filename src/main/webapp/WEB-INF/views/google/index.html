@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>政采贷</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/index/justified-nav.css" rel="stylesheet">
+    
+    <link href="css/index/carousel.css" rel="stylesheet">
+    
+    <link href="css/index/sidebar.css" rel="stylesheet">
+    
+    <link href="css/mine.css" rel="stylesheet">
+    
+    
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/docs.min.js"></script>
+
+    <script src="js/ie-emulation-modes-warning.js"></script>
+    
+    <script src="js/tool.js"></script>
+<script src="js/data.js"></script>
+<script type="text/javascript"
+				src="/resources/EasyServiceClientFullZ.js"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.ILenderService?json"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.IProductSeriesService?json"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+     	<script src="js/cdn/html5shiv.min.js"></script>
+        <script src="js/cdn/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="masthead">
+        <h2 class="text-muted">政采贷<small>&nbsp;&nbsp;信用创造价值</small></h2>
+        <ul class="nav nav-justified">
+          <li class="active"><a href="#">首页</a></li>
+          <li><a href="#">我要理财</a></li>
+          <li><a href="#">我的账户</a></li>
+          <li><a href="#">活动中心</a></li>
+          <li><a href="#">我要融资</a></li>
+          <li><a href="#" class="nav-action" data-sk="login">登录</a></li>
+        </ul>
+      </div>
+
+
+	<div class="row" style="margin-top:5px; padding-bottom:0px;">
+
+
+	<div class="col-lg-9 col-md-9" style="padding-right:0px;">
+
+          <!-- Carousel
+    ================================================== -->
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner" role="listbox">
+        <div class="item active">
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAGZmZgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="First slide">
+          <div class="container">
+            <div class="carousel-caption">
+         	  <h1>春蕾晨跑会</h1>
+              <p>跑啊跑啊跑啊跑，跑跑更健康</p>
+              <p><a class="btn btn-lg btn-success" href="#" role="button">我要参加</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAGZmZgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Second slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>信用创造价值</h1>
+              <p>严格以企业中标的政府订单为抵押，用第一还款来源偿还本息，您的信用就是您拥有的最大的价值。</p>
+              <p><a class="btn btn-lg btn-warning" href="#" role="button">马上体验</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAFVVVQAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Third slide">
+          <div class="container">
+            <div class="carousel-caption">
+              <h1>创新的结构化产品设计</h1>
+              <p>对于同一个政府订单融资项目，设计出风格不同的融资产品，总有适合您的生钱之道</p>
+              <p><a class="btn btn-lg btn-danger" href="#" role="button">我要投资</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div><!-- /.carousel -->
+    </div>
+    
+    <div class="col-lg-3 col-md-3" style="padding-left:5px;">
+    <div class="sidebar-module sidebar-module-inset" style="height:250px;">
+            <h4>数据中心</h4>
+            <p>
+            <span class="glyphicon glyphicon-pencil"></span>总募集资金50,000,000元<br>
+			<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>投资人次25,471次<br>
+			<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>获得收益6,000,000元<br>
+			<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已注册人数10548人<br>
+            </p>
+            <div id="user_content" style="width:100%; margin-top:30px;">
+
+			</div>
+          </div>
+    </div>
+    
+    </div>
+
+      <div class="row" style="margin-top:5px; margin-left:0px; margin-right:0px; padding-top:0px;">
+        
+
+  		<div class="col-sm-4 col-md-4" id="projectList1" style="margin-top:0px;">
+  		</div>
+ 		 <div class="col-sm-4 col-md-4" id="projectList2" style="margin-top:0px;">
+ 		 </div>
+  		<div class="col-sm-4 col-md-4" id="projectList3" style="margin-top:0px;">
+  		</div>
+  
+        
+      </div><!-- /.row -->
+      
+      
+      <div class="row" style="margin-top:5px;">
+      <div class="col-md-7">
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#">系统公告</a></li>
+        <li role="presentation"><a href="#">企业资讯</a></li>
+        <li role="presentation"><a href="#">理财资讯</a></li>
+      </ul>
+      <div class="col-md-12" style="margin-top:5px;">123123123123213213123123</div>
+      </div>
+      <div class="col-md-5">
+      
+      <div class="panel panel-default" style="height:230px;">
+<div class="panel-heading">
+<span class="glyphicon glyphicon-pencil"></span>银行理财产品收益率<a style="float:right;" target="_blank" href="financialInfo.html">更多....</a>
+	<div style="clear:both;"></div>
+</div>
+<div class="panel-body" style="width:100%; height:80%;">
+
+<iframe style="width:100%; height:100%" class="financial-graphic" frameborder="0" scrolling="no"
+ src="http://localhost:8080/views/single/chart.html"></iframe>
+ 
+ </div>
+ 
+ 
+</div>
+      
+      
+      
+			<div class="panel panel-default" style="margin-top:3px;">
+<div class="panel-heading">
+常见问题<a style="float:right;" href="help.html" target="_blank">更多....</a>
+	<div style="clear:both;"></div>
+</div>
+<div class="panel-body">
+<ul class="news" style="margin-top:10px;">
+    <li style="margin-top:3px;"><a href="#">投资连结保险收益普遍赶不上“宝宝”</a></li>
+    <li style="margin-top:3px;"><a href="#">理财产品超8%收益AB面 或拼不过活期</a></li>
+    <li style="margin-top:3px;"><a href="#">投资连结保险收益普遍赶不上“宝宝”</a></li>
+    <li style="margin-top:3px;"><a href="#">理财产品超8%收益AB面 或拼不过活期</a></li>
+    <li style="margin-top:3px;"><a href="#">理财产品超8%收益AB面 或拼不过活期</a></li>
+    </ul>
+
+</div>
+</div>
+		</div>
+      </div>
+      
+      
+      
+	<div class="row foot" style="border: #eee solid 1px; background:#eee; height:120px; font-size:13px; margin-top:5px; margin-left: 0px; margin-right:0px;">
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border-bottom : #999 dotted 1px; padding : 10px 10px 10px 10px;">
+<strong>友情链接:</strong><a href="#">网贷天眼</a><a href="#">网贷之家</a><a href="#">融投贷</a><a href="#">陆金所</a><a href="#">人人贷</a>
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding : 10px 10px 10px 10px;">
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="text-align:center; color:#999">
+政采贷  Copyright © 2013-2014. All rights reserved<br>
+地址：北京XXXXXXXXXXX国际大厦<br>
+京ICP备14001357号-3
+</div>
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+<img src="img/cx.jpg"></img>
+<img src="img/hftxlogo.jpg"></img>
+<img src="img/wxrz.jpg"></img>
+</div>
+</div>
+
+</div>
+
+    </div> <!-- /container -->
+
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+    <script>
+var seriesname = {};
+$(document).ready(function () {
+	
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	var cuser = service.getCurrentUser();
+	
+	var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
+	
+	if(cuser==null){
+		$('#user_content').html('<a href="register.html" class="btn btn-warning" style="width:100%;">立即注册</a>')
+	}else{
+		$('#user_content').html('下午好：'+cuser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="myaccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
+	}
+	
+	
+		var series = seriesService.findAll();
+					var id1 = series.get(0).id;
+					var title1 = series.get(0).title;
+					
+					
+					var tagCol1 = series.get(0).tagCol;
+					var label11 = tagCol1.items.get(0).title;
+					var des11 = tagCol1.items.get(0).description;
+					var label12 = tagCol1.items.get(1).title;
+					var des12 = tagCol1.items.get(1).description;
+					var description1 = series.get(0).description;
+					var menkan1 = '5.00-10.00';
+					var qixian1 = '3-6个月';
+					var rate1 = '6％-10%';
+					var style1 = '每日还本息';
+					var pl = createProductLine('#projectList1', id1, title1, label11, des11, label12, des12, description1, menkan1, qixian1, rate1, style1);
+					
+					
+					
+					
+					var id2 = series.get(1).id;
+					var title2 =  series.get(1).title;
+					
+					var tagCol2 = series.get(1).tagCol;
+					var label21 = tagCol2.items.get(0).title;
+					var des21 = tagCol2.items.get(0).description;
+					var label22 = tagCol2.items.get(1).title;
+					var des22 = tagCol2.items.get(1).description;
+					var description2 = series.get(1).description;
+					var menkan2 = '1.00-5.00';
+					var qixian2 = '3-9个月';
+					var rate2 = '8％-12%';
+					var style2 = '每月还本息';
+					var p2 = createProductLine('#projectList2', id2, title2, label21, des21, label22, des22, description2, menkan2, qixian2, rate2, style2);
+					
+					
+					
+					var id3 = series.get(2).id;
+					var title3 = series.get(2).title;
+					
+					var tagCol3 = series.get(2).tagCol;
+					var label31 = tagCol3.items.get(0).title;
+					var des31 = tagCol3.items.get(0).description;
+					var label32 = tagCol3.items.get(1).title;
+					var des32 = tagCol3.items.get(1).description;
+					var description3 = series.get(2).description;
+					var menkan3 = '1.00-5.00';
+					var qixian3 = '6-12个月';
+					var rate3 = '12％-18%';
+					var style3 = '到期还本付息';
+					var p3 = createProductLine('#projectList3', id3, title3, label31, des31, label32, des32, description3, menkan3, qixian3, rate3, style3);
+					
+					
+					for(var i=0; i<series.size(); i++){
+					var id = series.get(i).id;
+	        		 seriesname[id] = series.get(i).title;
+					}
+					
+					
+					
+					
+					
+
+             
+                   $(".newProjectTitleRightBtnList p.BtnNormal").hover(function () {
+                             $(this).next(".promptQX").css("display", "block");
+                       }, function () {
+                               $(this).next(".promptQX").css("display", "none");
+                          });
+                   $('.spanPro').hover(function () {
+                       $(this).next(".promptQX").css("display", "block");
+                   }, function () {
+                           $(this).next(".promptQX").css("display", "none");
+                      });
+
+                   $('#viewMore').click(function(e){
+                	   window.location.href="projectlist.html";
+                       });
+                   
+                   
+                   });
+ </script>
+  </body>
+</html>

@@ -27,4 +27,6 @@ public interface IProductDao {
 	public void changeBuyLevel(@Param("id")Integer id,@Param("levelToBuy")int levelToBuy);
 	public void buy(@Param("id")Integer id,@Param("amount")BigDecimal amount);
 	public void delete(Integer id);
+	public String findAccessory(Integer productId);
+	public void updateAccessory(@Param("productId")Integer productId,@Param("accessory")String accessory);
 }

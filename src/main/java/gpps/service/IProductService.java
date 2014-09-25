@@ -2,9 +2,12 @@ package gpps.service;
 
 import java.util.List;
 
+import com.easyservice.xml.XMLParseException;
+
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.model.ProductAction;
+import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 
@@ -66,4 +69,8 @@ public interface IProductService {
 	public void finishRepay(Integer productId)throws IllegalConvertException;//还款完毕
 	public void applyToClose(Integer productId)throws IllegalConvertException;//申请关闭
 	public void closeProduct(Integer productId)throws IllegalConvertException;//关闭产品
+	
+	public void addAccessory(Integer productId,int category,MimeItem item) throws XMLParseException;
+	public void delAccessory(Integer productId,int category,String path) throws XMLParseException;
+	public List<MimeItem> findMimeItems(Integer productId,int category)throws XMLParseException;
 }

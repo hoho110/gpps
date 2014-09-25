@@ -87,4 +87,14 @@
 		where
 		id=#{id}
 	</delete>
+	<select id="findAccessory" parameterType="Integer" resultType="String">
+        select accessory
+        from Product where id=#{id}
+    </select>
+    <update id="updateAccessory">
+        update Product set
+        accessory=#{accessory}
+        where
+        id=#{productId}
+    </update>
 </mapper>

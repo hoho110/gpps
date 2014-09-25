@@ -2,6 +2,7 @@ package gpps.servlet;
 
 import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.IGovermentOrderService;
+import gpps.service.IProductService;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,8 +28,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UploadServlet{
 	private Resource officalDir;//上传文件存在根目录
 	private Resource tempDir;//临时目录
+	private static final long MAXFILESIZE=1024L*1024*1024;//1G
 	@Autowired
 	IGovermentOrderService orderService;
+	@Autowired
+	IProductService productService;
 	public Resource getOfficalDir() {
 		return officalDir;
 	}
@@ -67,7 +71,7 @@ public class UploadServlet{
          // 设置路径、文件名的字符集  
         upload.setHeaderEncoding("UTF-8");  
         // 设置允许用户上传文件大小,单位:字节  
-        upload.setSizeMax(1024*1024*1024);  //最大限制1G
+        upload.setSizeMax(MAXFILESIZE);  //最大限制1G
         // 得到所有的表单域，它们目前都被当作FileItem  
          List<FileItem> fileItems;
 		try {
@@ -87,13 +91,22 @@ public class UploadServlet{
 				if(!officalDir.exists())
 					officalDir.getFile().mkdirs();
 				File uploadFile=new File(officalDir.getFile(),path);
+				if(!uploadFile.getParentFile().exists())
+					uploadFile.getParentFile().mkdirs();
 				uploadFile.createNewFile();
 				item.write(uploadFile);
 				MimeItem mimeItem=new MimeItem();
+				mimeItem.setMimeType(request.getHeader(""));
 				mimeItem.setFileName(fileName);
 				mimeItem.setPath(path);
 				if(type.equals(TYPE_ORDER))
 					orderService.addAccessory(id, category, mimeItem);
+				else if(type.equals(TYPE_PRODUCT))
+					productService.addAccessory(id, category, mimeItem);
+				else {
+					response.sendError(400, "不支持的上传类型:"+type);
+					return;
+				}
 				System.out.println("文件" + uploadFile.getName()+ "上传成功");
 			}
 			response.setStatus(200);

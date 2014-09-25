@@ -19,12 +19,16 @@ import gpps.model.ProductSeries;
 import gpps.model.StateLog;
 import gpps.model.Submit;
 import gpps.model.Task;
+import gpps.model.ref.Accessory;
+import gpps.model.ref.Accessory.MimeCol;
+import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IPayBackService;
 import gpps.service.IProductService;
 import gpps.service.ITaskService;
 import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
+import gpps.tools.StringUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -38,6 +42,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.easyservice.xml.EasyObjectXMLTransformerImpl;
+import com.easyservice.xml.IEasyObjectXMLTransformer;
+import com.easyservice.xml.XMLParseException;
 @Service
 public class ProductServiceImpl implements IProductService {
 	@Autowired
@@ -62,6 +70,7 @@ public class ProductServiceImpl implements IProductService {
 	IStateLogDao stateLogDao;
 	@Autowired
 	ISubmitDao submitDao;
+	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	Logger logger=Logger.getLogger(this.getClass());
 	@Override
 	@Transactional
@@ -291,5 +300,71 @@ public class ProductServiceImpl implements IProductService {
 //		cal.add(Calendar.MONTH, 1);
 		System.out.println(cal);
 		
+	}
+
+	@Override
+	public void addAccessory(Integer productId, int category, MimeItem item)
+			throws XMLParseException {
+		String text=productDao.findAccessory(productId);
+		Accessory accessory=null;
+		if(StringUtil.isEmpty(text))
+			accessory=new Accessory();
+		else {
+			accessory=xmlTransformer.parse(text, Accessory.class);
+		}
+		if(accessory.getCols()==null)
+			accessory.setCols(new ArrayList<Accessory.MimeCol>());
+		MimeCol col=accessory.findMimeCol(category);
+		if(col==null)
+		{
+			col=new MimeCol();
+			col.setCategory(category);
+			accessory.getCols().add(col);
+		}
+		if(col.getItems()==null)
+			col.setItems(new ArrayList<Accessory.MimeItem>());
+		col.getItems().add(item);
+		text=xmlTransformer.export(accessory);
+		productDao.updateAccessory(productId, text);
+	}
+
+	@Override
+	public void delAccessory(Integer productId, int category, String path)
+			throws XMLParseException {
+		String text=productDao.findAccessory(productId);
+		if(StringUtil.isEmpty(text))
+			return;
+		Accessory accessory=xmlTransformer.parse(text, Accessory.class);
+		if(accessory.getCols()==null)
+			return;
+		MimeCol col=accessory.findMimeCol(category);
+		if(col==null)
+			return;
+		List<MimeItem> items=col.getItems();
+		if(items==null||items.size()==0)
+			return;
+		for(int i=0;i<items.size();i++)
+		{
+			if(items.get(i).getPath().equals(path))
+			{
+				items.remove(i);
+				break;
+			}
+		}
+		text=xmlTransformer.export(accessory);
+		productDao.updateAccessory(productId, text);
+	}
+
+	@Override
+	public List<MimeItem> findMimeItems(Integer productId, int category)
+			throws XMLParseException {
+		String text=productDao.findAccessory(productId);
+		if(StringUtil.isEmpty(text))
+			return new ArrayList<Accessory.MimeItem>(0);
+		Accessory accessory=xmlTransformer.parse(text, Accessory.class);
+		MimeCol col=accessory.findMimeCol(category);
+		if(col==null)
+			return new ArrayList<Accessory.MimeItem>(0);
+		return col.getItems();
 	}
 }

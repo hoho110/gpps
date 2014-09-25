@@ -35,8 +35,8 @@ var createProductLine = function(cont, id, title, label1, des1, label2, des2, de
 	var row2_col1 = $('<div></div>').addClass('col-xs-3 col-sm-3 col-md-4');
 	
 	
-	var a = $('<a href="productlist.html?sid='+id+'" title="产品列表"></a>');
-	row2_col1.append($('<div class="seemall"></div>').append(a));
+	var a = $('<a href="plIntroduction.html?sid='+id+'" title="详细介绍"></a>');
+	row2_col1.append($('<div class="seeMore"></div>').append(a));
 	
 	var row2_col2 = $('<div></div>').addClass('col-xs-9 col-sm-9 col-md-8');
 	row2_col2.html('<div class="row"><div class="col-xs-12 col-sm-12 col-md-12">'+description+'</div></div>');
@@ -454,7 +454,7 @@ var createSingleProduct2 = function(order){
 		str    += '<a href="productdetail.html?pid='+pro.id+'" class="btns-grey">待关闭</a>';
 		str    += '<div style="clear:both;"></div>';
 		str    += '</div>';
-		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(pro.financingEndtime)+'还款完毕</div>';	
+		str    += '<div class="publish-time" style="margin-top:10px; padding-top:5px;">'+formatDateToDay(pro.incomeEndtime)+'还款完毕</div>';	
 	}else if(state==16){
 		str    += '<div class="operate-status done-status clearfix">';
 		str    += '<div>';

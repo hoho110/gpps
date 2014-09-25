@@ -71,4 +71,14 @@
 		where
 		id=#{id}
 	</delete>
+	<select id="findAccessory" parameterType="Integer" resultType="String">
+        select material
+        from GovermentOrder where id=#{id}
+    </select>
+    <update id="updateAccessory">
+        update GovermentOrder set
+        material=#{material}
+        where
+        id=#{orderId}
+    </update>
 </mapper>

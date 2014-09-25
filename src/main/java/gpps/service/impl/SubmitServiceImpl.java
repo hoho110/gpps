@@ -296,10 +296,41 @@ public class SubmitServiceImpl implements ISubmitService {
 	}
 
 	@Override
-	public Integer buyByAdmin(Integer productId, int amount)
+	public Integer buyByAdmin(Integer productId, int num)
 			throws InsufficientBalanceException, ProductSoldOutException,
 			InsufficientProductException {
-		// TODO Auto-generated method stub
-		return null;
+		//TODO 验证amount格式，例如：1w起之类的
+		Lender lender=lenderService.getCurrentUser();
+		lender=lenderService.find(lender.getId());
+		LenderAccount account=lenderAccountDao.find(lender.getAccountId());
+		BigDecimal amount=new BigDecimal(num);
+		//判断当前账户余额是否足够购买
+		if(amount.compareTo(account.getUsable())>0)
+			throw new InsufficientBalanceException("您账户的余额不足，请先充值");
+		Product product=productService.find(productId);
+		checkNullObject(Product.class, product);
+		try
+		{
+			product=orderService.applyFinancingProduct(productId, product.getGovermentorderId());
+			if(product==null)
+				throw new ProductSoldOutException("产品已售完");
+			if(amount.compareTo(product.getExpectAmount().subtract(product.getRealAmount()))>0)
+				throw new InsufficientProductException("产品余额不足");
+			
+			Submit submit=new Submit();
+			submit.setAmount(amount);
+			submit.setLenderId(lenderService.getCurrentUser().getId());
+			submit.setProductId(productId);
+			submit.setState(Submit.STATE_WAITFORPAY);
+			submitDao.create(submit);
+			productDao.buy(productId, amount);
+//			Integer cashStreamId=accountService.freezeLenderAccount(lender.getAccountId(), amount, submit.getId(), null);
+			product.setRealAmount(product.getRealAmount().add(amount));
+			return submit.getId();
+		}finally
+		{
+			orderService.releaseFinancingProduct(product);
+		}
+	
 	}
 }

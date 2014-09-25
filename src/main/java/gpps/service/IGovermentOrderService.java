@@ -2,11 +2,14 @@ package gpps.service;
 
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
+import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 
 import java.util.List;
 import java.util.Map;
+
+import com.easyservice.xml.XMLParseException;
 
 public interface IGovermentOrderService {
 	/**
@@ -37,9 +40,6 @@ public interface IGovermentOrderService {
 	 * @return
 	 */
 	public List<GovermentOrder> findByBorrowerIdAndStates(int borrowerId,int states);
-	
-	public void addAccessory(Integer orderId,String path);
-	
 //	public void passApplying(Integer orderId)throws IllegalConvertException;//通过申请
 //	public void refuseApplying(Integer orderId)throws IllegalConvertException;//拒绝申请
 //	public void reviseApplying(Integer orderId)throws IllegalConvertException;//修订申请
@@ -96,4 +96,9 @@ public interface IGovermentOrderService {
 	 * @return
 	 */
 	public GovermentOrder findGovermentOrderByProduct(Integer productId);
+	
+
+	public void addAccessory(Integer orderId,int category,MimeItem item) throws XMLParseException;
+	public void delAccessory(Integer orderId,int category,String path) throws XMLParseException;
+	public List<MimeItem> findMimeItems(Integer orderId,int category)throws XMLParseException;
 }

@@ -12,10 +12,14 @@ import gpps.model.Borrower;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.model.StateLog;
+import gpps.model.ref.Accessory;
+import gpps.model.ref.Accessory.MimeCol;
+import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.IGovermentOrderService;
 import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
+import gpps.tools.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,6 +34,10 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.easyservice.xml.EasyObjectXMLTransformerImpl;
+import com.easyservice.xml.IEasyObjectXMLTransformer;
+import com.easyservice.xml.XMLParseException;
 
 import static gpps.tools.ObjectUtil.*;
 
@@ -49,6 +57,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	ITaskService taskService;
 	@Autowired
 	IStateLogDao stateLogDao;
+	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	static int[] orderStates={
 		GovermentOrder.STATE_PREPUBLISH,
 		GovermentOrder.STATE_FINANCING,
@@ -118,12 +127,6 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 				return new ArrayList<GovermentOrder>(0);
 		}
 		return govermentOrderDao.findByBorrowerIdAndState(borrowerId, list);
-	}
-
-	@Override
-	public void addAccessory(Integer orderId, String path) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	static int[][] validConverts={
@@ -382,5 +385,68 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		}
 		if(creditValue>0)
 			borrowerDao.addCreditValue(order.getBorrowerId(), creditValue);
+	}
+	
+	public void addAccessory(Integer orderId,int category,MimeItem item) throws XMLParseException
+	{
+		String text=govermentOrderDao.findAccessory(orderId);
+		Accessory accessory=null;
+		if(StringUtil.isEmpty(text))
+			accessory=new Accessory();
+		else {
+			accessory=xmlTransformer.parse(text, Accessory.class);
+		}
+		if(accessory.getCols()==null)
+			accessory.setCols(new ArrayList<Accessory.MimeCol>());
+		MimeCol col=accessory.findMimeCol(category);
+		if(col==null)
+		{
+			col=new MimeCol();
+			col.setCategory(category);
+			accessory.getCols().add(col);
+		}
+		if(col.getItems()==null)
+			col.setItems(new ArrayList<Accessory.MimeItem>());
+		col.getItems().add(item);
+		text=xmlTransformer.export(accessory);
+		govermentOrderDao.updateAccessory(orderId, text);
+	}
+	@Override
+	public void delAccessory(Integer orderId, int category, String path)
+			throws XMLParseException {
+		String text=govermentOrderDao.findAccessory(orderId);
+		if(StringUtil.isEmpty(text))
+			return;
+		Accessory accessory=xmlTransformer.parse(text, Accessory.class);
+		if(accessory.getCols()==null)
+			return;
+		MimeCol col=accessory.findMimeCol(category);
+		if(col==null)
+			return;
+		List<MimeItem> items=col.getItems();
+		if(items==null||items.size()==0)
+			return;
+		for(int i=0;i<items.size();i++)
+		{
+			if(items.get(i).getPath().equals(path))
+			{
+				items.remove(i);
+				break;
+			}
+		}
+		text=xmlTransformer.export(accessory);
+		govermentOrderDao.updateAccessory(orderId, text);
+	}
+	@Override
+	public List<MimeItem> findMimeItems(Integer orderId, int category)
+			throws XMLParseException {
+		String text=govermentOrderDao.findAccessory(orderId);
+		if(StringUtil.isEmpty(text))
+			return new ArrayList<Accessory.MimeItem>(0);
+		Accessory accessory=xmlTransformer.parse(text, Accessory.class);
+		MimeCol col=accessory.findMimeCol(category);
+		if(col==null)
+			return new ArrayList<Accessory.MimeItem>(0);
+		return col.getItems();
 	}
 }

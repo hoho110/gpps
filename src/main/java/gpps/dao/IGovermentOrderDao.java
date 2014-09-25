@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import gpps.model.GovermentOrder;
+import gpps.model.ref.Accessory.MimeItem;
 
 public interface IGovermentOrderDao {
 	public void create(GovermentOrder govermentOrder);
@@ -15,4 +16,6 @@ public interface IGovermentOrderDao {
 	public List<GovermentOrder> findByBorrowerIdAndState(@Param("borrowerId")Integer borrowerId,@Param("states")List<Integer> states);
 	public void delete(Integer id);
 	public GovermentOrder find(Integer id);
+	public String findAccessory(Integer orderId);
+	public void updateAccessory(@Param("orderId")Integer orderId,@Param("material")String material);
 }

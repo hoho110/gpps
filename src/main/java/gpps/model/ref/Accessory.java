@@ -11,7 +11,18 @@ public class Accessory {
 	public void setCols(List<MimeCol> cols) {
 		this.cols = cols;
 	}
-	public class MimeCol{
+	public MimeCol findMimeCol(int category)
+	{
+		if(cols==null||cols.size()==0)
+			return null;
+		for(MimeCol col:cols)
+		{
+			if(col.getCategory()==category)
+				return col;
+		}
+		return null;
+	}
+	public static class MimeCol{
 		private int category;//逻辑类别
 		private List<MimeItem> items=new ArrayList<Accessory.MimeItem>();
 		public int getCategory() {
@@ -27,11 +38,11 @@ public class Accessory {
 			this.items = items;
 		}
 	}
-	public class MimeItem {
+	public static class MimeItem {
 		private String mimeType;//mime类型
 		private long uploadTime=System.currentTimeMillis();//上传时间
 		private String fileName;//文件名称
-		private String showName;//展现名称
+//		private String showName;//展现名称
 		private String path;//存储路径
 		public String getMimeType() {
 			return mimeType;
@@ -51,12 +62,12 @@ public class Accessory {
 		public void setFileName(String fileName) {
 			this.fileName = fileName;
 		}
-		public String getShowName() {
-			return showName;
-		}
-		public void setShowName(String showName) {
-			this.showName = showName;
-		}
+//		public String getShowName() {
+//			return showName;
+//		}
+//		public void setShowName(String showName) {
+//			this.showName = showName;
+//		}
 		public String getPath() {
 			return path;
 		}

@@ -26,5 +26,9 @@
 	<bean id="authorityValidateService" class="com.easyservice.security.AuthorityValidateServiceImpl">
 		<property name="configLocation" value="classpath:StaticRolesConfig.xml"></property>
 	</bean>
+	<bean id="uploadServlet" class="gpps.servlet.UploadServlet">
+        <property name="officalDir" value="file:d:/test/officalDir"></property>
+        <property name="tempDir" value="file:d:/test/tempDir"></property>
+    </bean>
 	<import resource="classpath:spring-dao.xml"/>
 </beans>

@@ -13,6 +13,7 @@ import javax.xml.ws.Response;
 
 import gpps.dao.ICashStreamDao;
 import gpps.dao.IPayBackDao;
+import gpps.dao.IProductSeriesDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
 import gpps.model.CashStream;
@@ -58,6 +59,8 @@ public class AccountServlet {
 	IProductService productService;
 	@Autowired
 	IGovermentOrderService orderService;
+	@Autowired
+	IProductSeriesDao productSeriesDao;
 	Logger log=Logger.getLogger(AccountServlet.class);
 	public static final String AMOUNT="amount";
 	public static final String CASHSTREAMID="cashStreamId";
@@ -330,6 +333,7 @@ public class AccountServlet {
 				}
 				continue;
 			}
+			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
 			if(product.getProductSeries().getType()<currentProduct.getProductSeries().getType())
 			{
 				List<PayBack> payBacks=payBackService.findAll(product.getId());

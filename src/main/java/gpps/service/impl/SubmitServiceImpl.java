@@ -82,6 +82,12 @@ public class SubmitServiceImpl implements ISubmitService {
 								if((submit.getCreatetime()+Submit.PAYEXPIREDTIME)>System.currentTimeMillis())
 									continue;
 								submitDao.changeState(submit.getId(), Submit.STATE_UNSUBSCRIBE);
+								//TODO 金额回滚
+								Product product=productDao.find(submit.getProductId());
+								product=orderService.applyFinancingProduct(submit.getProductId(), product.getGovermentorderId());
+								product.setRealAmount(product.getRealAmount().subtract(submit.getAmount()));
+								productDao.buy(product.getId(), submit.getAmount().negate());
+								orderService.releaseFinancingProduct(product);
 								logger.debug("Submit[id:"+submit.getId()+"]未支付，过期退订");
 							}
 						}

@@ -43,9 +43,9 @@
 		password=#{password} 
 		where id=#{id}
 	</update>
-	<update id="changeGrade">
+	<update id="changeGradeAndLevel">
 		update Lender set
-		grade=#{grade} 
+		grade=#{grade},level=#{level}
 		where id=#{id}
 	</update>
 	<update id="registerSecondStep">

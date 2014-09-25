@@ -5,6 +5,7 @@ import java.util.List;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.model.ProductAction;
+import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 
 public interface IProductService {
@@ -59,7 +60,7 @@ public interface IProductService {
 	
 	public void changeBuyLevel(Integer productId,int buyLevel);
 	
-	public void startRepaying(Integer productId)throws IllegalConvertException;//启动还款
+	public void startRepaying(Integer productId)throws IllegalConvertException,ExistWaitforPaySubmitException;//启动还款
 	public void quitFinancing(Integer productId)throws IllegalConvertException;//放弃融资（流标）
 	public void delayRepay(Integer productId)throws IllegalConvertException;//延期还款
 	public void finishRepay(Integer productId)throws IllegalConvertException;//还款完毕

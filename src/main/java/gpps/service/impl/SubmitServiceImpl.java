@@ -274,7 +274,11 @@ public class SubmitServiceImpl implements ISubmitService {
 		submitDao.changeState(submitId, Submit.STATE_COMPLETEPAY);
 		Submit submit=submitDao.find(submitId);
 		Lender lender=lenderService.getCurrentUser();
-		lenderDao.addGrade(lender.getId(), submit.getAmount().intValue());
+		int grade=lender.getGrade()+submit.getAmount().intValue();
+		int level=Lender.gradeToLevel(grade);
+		lenderDao.changeGradeAndLevel(lender.getId(), grade, level);
+		lender.setGrade(grade);
+		lender.setLevel(level);
 	}
 
 	@Override

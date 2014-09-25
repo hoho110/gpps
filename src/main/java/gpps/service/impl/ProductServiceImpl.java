@@ -9,6 +9,7 @@ import gpps.dao.IProductActionDao;
 import gpps.dao.IProductDao;
 import gpps.dao.IProductSeriesDao;
 import gpps.dao.IStateLogDao;
+import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
 import gpps.model.GovermentOrder;
 import gpps.model.PayBack;
@@ -16,11 +17,13 @@ import gpps.model.Product;
 import gpps.model.ProductAction;
 import gpps.model.ProductSeries;
 import gpps.model.StateLog;
+import gpps.model.Submit;
 import gpps.model.Task;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IPayBackService;
 import gpps.service.IProductService;
 import gpps.service.ITaskService;
+import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 
 import java.math.BigDecimal;
@@ -57,6 +60,8 @@ public class ProductServiceImpl implements IProductService {
 	IPayBackService payBackService;
 	@Autowired
 	IStateLogDao stateLogDao;
+	@Autowired
+	ISubmitDao submitDao;
 	Logger logger=Logger.getLogger(this.getClass());
 	@Override
 	@Transactional
@@ -209,7 +214,11 @@ public class ProductServiceImpl implements IProductService {
 	
 	@Override
 	@Transactional
-	public void startRepaying(Integer productId) throws IllegalConvertException {
+	public void startRepaying(Integer productId) throws IllegalConvertException,ExistWaitforPaySubmitException {
+		//TODO 验证是否有待付款的Submit
+		int count=submitDao.countByProductAndStateWithPaged(productId, Submit.STATE_WAITFORPAY);
+		if(count>0)
+			throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始还款");
 		//从竞标缓存中移除
 		checkNullObject("productId", productId);
 		Product product=productDao.find(productId);

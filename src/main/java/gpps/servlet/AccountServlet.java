@@ -16,6 +16,7 @@ import gpps.dao.IPayBackDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
 import gpps.model.CashStream;
+import gpps.model.GovermentOrder;
 import gpps.model.Lender;
 import gpps.model.PayBack;
 import gpps.model.Product;
@@ -309,7 +310,41 @@ public class AccountServlet {
 		//测试暂时借款人账户ID不从Session取,而从payback中取
 		Integer payBackId=Integer.parseInt(StringUtil.checkNullAndTrim(PAYBACKID, req.getParameter(PAYBACKID)));
 		PayBack payBack=payBackService.find(payBackId);
-		
+		Product currentProduct=productService.find(payBack.getProductId());
+		//验证还款顺序
+		List<Product> products=productService.findByGovermentOrder(currentProduct.getGovermentorderId());
+		for(Product product:products)
+		{
+			if(product.getId()==(int)(currentProduct.getId()))
+			{
+				List<PayBack> payBacks=payBackService.findAll(product.getId());
+				for(PayBack pb:payBacks)
+				{
+					if(pb.getState()==PayBack.STATE_FINISHREPAY||pb.getState()==PayBack.STATE_REPAYING)
+						continue;
+					if(pb.getDeadline()<payBack.getDeadline())
+					{
+						write(resp, "请按时间顺序进行还款");
+						return;
+					}
+				}
+				continue;
+			}
+			if(product.getProductSeries().getType()<currentProduct.getProductSeries().getType())
+			{
+				List<PayBack> payBacks=payBackService.findAll(product.getId());
+				for(PayBack pb:payBacks)
+				{
+					if(pb.getState()==PayBack.STATE_FINISHREPAY||pb.getState()==PayBack.STATE_REPAYING)
+						continue;
+					if(pb.getDeadline()<=payBack.getDeadline())
+					{
+						write(resp, "请先还完稳健型/平衡型产品再进行此次还款");
+						return;
+					}
+				}
+			}
+		}
 		
 		Integer cashStreamId=null;
 		try {

@@ -11,6 +11,7 @@ import gpps.model.CashStream;
 import gpps.model.Lender;
 import gpps.model.PayBack;
 import gpps.model.Task;
+import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
@@ -62,6 +63,9 @@ public class BorrowerHandle {
 		try {
 			productService.startRepaying(productId);
 		} catch (IllegalConvertException e) {
+			e.printStackTrace();
+		} catch (ExistWaitforPaySubmitException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

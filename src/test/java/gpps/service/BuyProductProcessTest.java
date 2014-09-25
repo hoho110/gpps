@@ -21,6 +21,7 @@ import gpps.model.LenderAccount;
 import gpps.model.Product;
 import gpps.model.ProductSeries;
 import gpps.model.Submit;
+import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
@@ -201,6 +202,9 @@ public class BuyProductProcessTest extends TestSupport{
 			productService.startRepaying(product.getId());
 		} catch (IllegalConvertException e) {
 			Assert.fail(e.getMessage());
+		} catch (ExistWaitforPaySubmitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		Assert.assertNull(orderService.applyFinancingProduct(product.getId(), product.getGovermentorderId()));
 		

@@ -51,7 +51,8 @@
 				#{item}
 			</foreach>
 		</if>
-		LIMIT #{offset}, #{recnum}
+		order by a.createtime desc 
+		LIMIT #{offset}, #{recnum} 
 	</select>
 	<select id="countByLenderAndProductStates" resultType="int">
         select count(*)

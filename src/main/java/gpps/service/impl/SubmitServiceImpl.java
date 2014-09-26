@@ -70,6 +70,12 @@ public class SubmitServiceImpl implements ISubmitService {
 		Thread taskThread=new Thread(){
 			public void run()
 			{
+				try {
+					//等待服务及初始数据加载完
+					sleep(120L*1000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 				while(true)
 				{
 					

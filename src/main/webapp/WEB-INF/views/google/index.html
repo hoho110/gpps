@@ -39,6 +39,7 @@
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
 
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
      	<script src="js/cdn/html5shiv.min.js"></script>
@@ -50,16 +51,8 @@
 
     <div class="container">
 
-      <div class="masthead">
-        <h2 class="text-muted">政采贷<small>&nbsp;&nbsp;信用创造价值</small></h2>
-        <ul class="nav nav-justified">
-          <li class="active"><a href="#">首页</a></li>
-          <li><a href="#">我要理财</a></li>
-          <li><a href="#">我的账户</a></li>
-          <li><a href="#">活动中心</a></li>
-          <li><a href="#">我要融资</a></li>
-          <li><a href="#" class="nav-action" data-sk="login">登录</a></li>
-        </ul>
+      <div class="row" id="header" style="padding-left:15px; padding-right:15px;">
+      
       </div>
 
 
@@ -121,17 +114,8 @@
     </div>
     
     <div class="col-lg-3 col-md-3" style="padding-left:5px;">
-    <div class="sidebar-module sidebar-module-inset" style="height:250px;">
-            <h4>数据中心</h4>
-            <p>
-            <span class="glyphicon glyphicon-pencil"></span>总募集资金50,000,000元<br>
-			<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>投资人次25,471次<br>
-			<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>获得收益6,000,000元<br>
-			<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已注册人数10548人<br>
-            </p>
-            <div id="user_content" style="width:100%; margin-top:30px;">
-
-			</div>
+    <div id="sider-content" class="sidebar-module sidebar-module-inset" style="height:250px;">
+            
           </div>
     </div>
     
@@ -212,46 +196,48 @@
       
       
       
-	<div class="row foot" style="border: #eee solid 1px; background:#eee; height:120px; font-size:13px; margin-top:5px; margin-left: 0px; margin-right:0px;">
+	<div class="row foot" id="footer" style="border: #eee solid 1px; background:#eee; height:120px; font-size:13px; margin-top:5px; margin-left: 0px; margin-right:0px;">
 
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border-bottom : #999 dotted 1px; padding : 10px 10px 10px 10px;">
-<strong>友情链接:</strong><a href="#">网贷天眼</a><a href="#">网贷之家</a><a href="#">融投贷</a><a href="#">陆金所</a><a href="#">人人贷</a>
-</div>
-
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding : 10px 10px 10px 10px;">
-<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="text-align:center; color:#999">
-政采贷  Copyright © 2013-2014. All rights reserved<br>
-地址：北京XXXXXXXXXXX国际大厦<br>
-京ICP备14001357号-3
-</div>
-<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-<img src="img/cx.jpg"></img>
-<img src="img/hftxlogo.jpg"></img>
-<img src="img/wxrz.jpg"></img>
-</div>
-</div>
-
-</div>
+	</div>
 
     </div> <!-- /container -->
 
-
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="js/ie10-viewport-bug-workaround.js"></script>
+<script src="js/head.js"></script>
+<script src="js/foot.js"></script>
     <script>
 var seriesname = {};
 $(document).ready(function () {
 	
-	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
-	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
-	var cuser = service.getCurrentUser();
+	header('index');
 	
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
 	var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
 	
 	if(cuser==null){
-		$('#user_content').html('<a href="register.html" class="btn btn-warning" style="width:100%;">立即注册</a>')
+		$('#sider-content').html('<h4>数据中心</h4>');
+		var str = '<p>';
+		str += '<span class="glyphicon glyphicon-pencil"></span>总募集资金50,000,000元<br>';
+		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>投资人次25,471次<br>';
+		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>获得收益6,000,000元<br>';
+		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已注册人数10548人<br>';
+		str += '</p>';
+		$('#sider-content').append(str);
+		var usercontent = $('<div id="user_content" style="width:100%; margin-top:30px;"></div>');
+		usercontent.html('<a href="register.html" class="btn btn-warning" style="width:100%;">立刻注册</a>');
+		$('#sider-content').append(usercontent);
 	}else{
-		$('#user_content').html('下午好：'+cuser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="myaccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
+		var name = cuser.name==null?cuser.loginId:cuser.name;
+		$('#sider-content').html('<h4>您好:'+name+'<small style="color:red; float:right;">&nbsp;&nbsp;级别level3</small></h4>');
+		var str = '<p>';
+		str += '<span class="glyphicon glyphicon-pencil"></span>总资产50,000,000元<br>';
+		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>可用资金2000000元<br>';
+		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已投金额3000000元<br>';
+		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已获利息40000元<br>';
+		str += '</p>';
+		$('#sider-content').append(str);
+		var usercontent = $('<div id="user_content" style="width:100%; margin-top:30px;"></div>');
+		usercontent.html('<a href="recharge.html" class="btn btn-warning" style="width:100%;">充值</a>');
+		$('#sider-content').append(usercontent);
 	}
 	
 	

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>政采贷</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="css/index/justified-nav.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin/signin.css" rel="stylesheet">
+
+    <script src="js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="js/cdn/html5shiv.min.js"></script>
+      <script src="js/cdn/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+		
+		<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
+      
+      </div>
+		
+		
+      
+      <div class="row" style="padding-left:5px; padding-right:5px;">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+<div class="panel panel-default" style="padding-bottom:50px;">
+
+<div class="row" style="margin-top:15px;">
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="col-xs-4 col-sm-2 col-md-2"></div>
+<div class="col-xs-4 col-sm-2 col-md-3" style="color:#f60;">第二步:填写详细信息</div>
+<div class="col-xs-4 col-sm-2 col-md-1"><a href="#" id="skip">跳过</a></div>
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="hidden-xs col-sm-2 col-md-2">您的姓名*</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="name" type="text" class="form-control" placeholder="请输入您的姓名"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"><span id="nameLabel" style="font-size:small"></span></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="hidden-xs col-sm-2 col-md-2">身份证号*</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="identity" type="text" class="form-control" placeholder="请输入您的身份证号"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"><span id="identityLabel" style="font-size:small"></span></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="hidden-xs col-sm-2 col-md-2">性别</div>
+<div class="col-xs-12 col-sm-4 col-md-4">
+<input type="radio" name="sex" id="1" value=1 checked="checked"/>男
+<input type="radio" name="sex" id="0" value=0 style="margin-left:20px;"/>女
+</div>
+<div class="col-xs-12 col-sm-3 col-md-3"></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="hidden-xs col-sm-2 col-md-2">通信地址</div>
+<div class="col-xs-12 col-sm-4 col-md-4"><input id="addr" type="text" class="form-control" placeholder="请输入您的通信地址"></input></div>
+<div class="col-xs-12 col-sm-3 col-md-3"></div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+<div class="hidden-xs col-sm-3 col-md-3"></div>
+<div class="hidden-xs col-sm-2 col-md-2">年收入</div>
+<input type="radio" name="salary" id="1" value="-50000" checked="checked"/>5万以内
+<input type="radio" name="salary" id="2" value="50000-100000" style="margin-left:10px;"/>5万-10万
+<input type="radio" name="salary" id="3" value="100000-300000" style="margin-left:10px;"/>10万-30万
+<input type="radio" name="salary" id="4" value="300000-" style="margin-left:10px;"/>30万以上
+</div>
+
+
+<div class="row" style="margin-top:5px;">
+<div class="col-xs-2 col-sm-4 col-md-6"></div>
+<div class="col-xs-8 col-sm-4 col-md-4"><button id="confirm" type="button" class="btn btn-warning" style="width:150px;">确定</button></div>
+<div class="col-xs-2 col-sm-4 col-md-2"></div>
+</div>
+
+
+</div>
+
+
+
+</div>
+</div>
+      
+      
+      
+      
+      
+
+    </div> <!-- /container -->
+    
+    <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">第三方认证</h4>
+      </div>
+      <div class="modal-body">
+       认证完成前请不要关闭该对话框，在认证完毕后点击相应的操作以完成认证。
+      </div>
+      <div class="modal-footer">
+        <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">认证成功</button>
+        <button id="false" type="button" class="btn btn-default">认证失败</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+		<script type="text/javascript"
+				src="/resources/EasyServiceClientFullZ.js"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.ILenderService?json"></script>
+  </body>
+  
+  
+  <script src="js/head.js"></script>
+  
+  <script>
+
+  function addMessage(title){
+		$('#message').html('');
+		var div = $('<div class="alert alert-warning alert-dismissible" role="alert" style="margin-bottom:2px;"></div>');
+		div.append('<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>');
+		div.append(title);
+		$('#message').append(div);
+  }
+  
+  function removeMessage(){
+	  $('#message').html('');
+  }
+
+  
+$(document).ready(function() {
+	
+	header('register2');
+	
+	
+	var thirdPartyAccount = cuser.thirdPartyAccount;
+	
+	
+	$('#name').focus();
+		$('#skip').click(function(e){
+			window.parent.toward("myaccount");
+		});
+       $('#confirm').click(function(e){
+    	   var name = $('input#name').val();
+    	   var identity = $('input#identity').val();
+    	   var addr = $('input#addr').val();
+    	   var sex = $("input[name='sex']:checked").val();
+    	   var salary = $("input[name='salary']:checked").val();
+    	   
+    	   if(name==null||name==''){
+				$('#nameLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入姓名');
+				return;
+				}else{
+				$('#nameLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+				}
+    	   if(identity==null||identity==''){
+				$('#identityLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入身份证号');
+				return;
+				}else{
+				$('#identityLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+				}
+    	   
+    	   if(addr==null){
+    		   addr = "";
+    	   }
+    	   
+    	   var sexint = parseInt(sex);
+    	   
+    	   try{
+    	   service.registerSecondStep(name, identity, sexint, addr, salary);
+    	   }catch(e){
+    		   alert(e.message);
+    		   return;
+    	   }
+    	   
+    	   if(thirdPartyAccount==null || thirdPartyAccount=="")
+    		   {
+    		   $('#myModal').modal({
+					  keyboard: false,
+					  backdrop: false
+				});
+    	  		 window.open("/account/thirdPartyRegist/request"); 
+    		   }
+    	   else
+    		   window.location.href="myaccount.html";
+       });
+       
+       $('#success').click(function(e){
+    	   window.location.href="myaccount.html";
+   		});
+   	
+   		$('#fail').click(function(e){
+   			window.location.href="myaccount.html";
+   		});
+
+
+       
+})
+</script>
+  
+</html>

@@ -82,7 +82,7 @@
           <img src="data:image/gif;base64,R0lGODlhAQABAIAAAGZmZgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="First slide">
           <div class="container">
             <div class="carousel-caption">
-         	  <h1>春蕾晨跑会</h1>
+         	  <p>春蕾晨跑会</p><br>
               <p>跑啊跑啊跑啊跑，跑跑更健康</p>
               <p><a class="btn btn-lg btn-success" href="#" role="button">我要参加</a></p>
             </div>
@@ -152,17 +152,18 @@
       
       
       <div class="row" style="margin-top:5px;">
-      <div class="col-md-7">
-      <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#">系统公告</a></li>
-        <li role="presentation"><a href="#">企业资讯</a></li>
-        <li role="presentation"><a href="#">理财资讯</a></li>
+      <div class="col-md-7" style="padding-right:0px;">
+      <ul id="announ" class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a class="announce" data-sk="platform" href="javascript:void(0);">平台公告</a></li>
+        <li role="presentation"><a class="announce" data-sk="company" href="javascript:void(0);">企业资讯</a></li>
       </ul>
-      <div class="col-md-12" style="margin-top:5px;">123123123123213213123123</div>
+      <div class="col-md-12" style="padding-left:0px; padding-right:0px;" id="announcement">
+		
+		</div>
       </div>
       <div class="col-md-5">
       
-      <div class="panel panel-default" style="height:230px;">
+      <div class="panel panel-default" style="height:230px; margin-bottom:5px;">
 <div class="panel-heading">
 <span class="glyphicon glyphicon-pencil"></span>银行理财产品收益率<a style="float:right;" target="_blank" href="financialInfo.html">更多....</a>
 	<div style="clear:both;"></div>
@@ -179,20 +180,31 @@
       
       
       
-			<div class="panel panel-default" style="margin-top:3px;">
+<div class="panel panel-default">
 <div class="panel-heading">
-常见问题<a style="float:right;" href="help.html" target="_blank">更多....</a>
+理财资讯<a style="float:right;" href="help.html" target="_blank">更多....</a>
 	<div style="clear:both;"></div>
 </div>
 <div class="panel-body">
-<ul class="news" style="margin-top:10px;">
+<div style="padding:5px 0 5px 0; border-bottom: dotted 1px;">
+    <div style="font-size:14px;margin:0 0 5px 0; font-weight:600;">
+	<a href="http://finance.qq.com/a/20140731/015113.htm" target="_blank">银行理财收益降温“6时代”渐行渐远</a>
+    </div>
+    <div style="color:#777777; font-size:12px;">
+	<img src="http://img1.gtimg.com/finance/pics/hv1/51/107/1667/108424011.jpg" width="75" height="50" style="float:left;margin-right:8px;"/>
+	随着8月下旬的到来，银行理财产品的“月末效应”依旧难觅影踪。银行理财产品、债基、货币基金的...
+<div class="clear"></div>
+    </div>
+    
+</div>
+
+<ul style="margin-top:20px; padding-left:5px;">
     <li style="margin-top:3px;"><a href="#">投资连结保险收益普遍赶不上“宝宝”</a></li>
     <li style="margin-top:3px;"><a href="#">理财产品超8%收益AB面 或拼不过活期</a></li>
     <li style="margin-top:3px;"><a href="#">投资连结保险收益普遍赶不上“宝宝”</a></li>
     <li style="margin-top:3px;"><a href="#">理财产品超8%收益AB面 或拼不过活期</a></li>
     <li style="margin-top:3px;"><a href="#">理财产品超8%收益AB面 或拼不过活期</a></li>
     </ul>
-
 </div>
 </div>
 		</div>
@@ -322,6 +334,41 @@ $(document).ready(function () {
                 	   window.location.href="projectlist.html";
                        });
                    
+                   
+                   
+                   
+                   $('a.announce').click(function(e){
+                	   $(this).parent().parent().find('li').removeClass('active');
+                	   $(this).parent().addClass('active');
+                	   
+                	   if($(this).attr('data-sk')=='platform'){
+                		   $('div#announcement').html('');
+                           
+                           var listgroup = $('<div class="list-group" style="margin-bottom:0px; color:#999;"></div>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           
+                           $('div#announcement').append(listgroup);
+                	   }else{
+							$('div#announcement').html('');
+                           
+                           var listgroup = $('<div class="list-group" style="margin-bottom:0px;"></div>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">发布时间 2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           
+                           $('div#announcement').append(listgroup);
+                	   }
+                   });
+                   $('ul#announ').find('li.active').find('a.announce').trigger('click');
                    
                    });
  </script>

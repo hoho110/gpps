@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>政采贷</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/signin/signin.css" rel="stylesheet">
+
+    <script src="js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="js/cdn/html5shiv.min.js"></script>
+      <script src="js/cdn/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <form class="form-signin" role="form">
+        <h2 class="form-signin-heading">登陆到政采贷</h2>
+        <input type="text" id="J-input-user" class="form-control" placeholder="请输入用户名" required autofocus>
+        <input type="password" id="password_input" class="form-control" placeholder="请输入密码" required>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> 记住密码
+          </label>
+          <a href="#" style="float:right;">忘记密码?</a>
+        </div>
+        <div style="display:inline;">
+        <input class="form-control" id="J-input-checkcode" type="text" style="float:left; width:130px; height:50px;"></input>
+        <img class="form-control" style="width:170px; height:50px; float:right;" id="J-checkcode-img" src="../../login/graphValidateCode?t=100" title="点击图片刷新验证码" alt="点击图片刷新验证码"></img>
+        </div>
+        <button id="J-login-btn" class="btn btn-lg btn-primary btn-block">登陆</button>
+      </form>
+
+    </div> <!-- /container -->
+
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+    <script src="js/jquery.min.js"></script>
+		<script type="text/javascript"
+				src="/resources/EasyServiceClientFullZ.js"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.ILenderService?json"></script>
+  </body>
+  
+  <script>
+$(document).ready(function() {
+	
+	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	
+	
+	
+	
+	var src="../../login/graphValidateCode?t="+Math.random();
+	
+	$('img#J-checkcode-img').click(function(e){
+		var srcn="../../login/graphValidateCode?t="+Math.random();
+		$(this).attr('src', srcn);
+	});
+	
+	$('#J-input-user').focus();
+       $('#J-login-btn').click(function(e){
+			var username = $('input#J-input-user').val();
+			var password = $('input#password_input').val();
+			var validate = $('input#J-input-checkcode').val();
+
+			if(username==null||username==''){
+				$('#J-errorBox').removeClass('sl-error').addClass('sl-error-display').html('*请输入用户名');
+					return;
+				}else{
+					$('#J-errorBox').addClass('sl-error').removeClass('sl-error-display').html('');
+					}
+
+			if(password==null||password==''){
+				$('#J-errorBox').removeClass('sl-error').addClass('sl-error-display').html('*请输入密码');
+				return;
+			}else{
+				$('#J-errorBox').addClass('sl-error').removeClass('sl-error-display').html('');
+				}
+
+
+			if(validate==null||validate==''){
+				$('#J-errorBox').removeClass('sl-error').addClass('sl-error-display').html('*验证码错误！');
+				return; 
+			}else{
+				$('#J-errorBox').addClass('sl-error').removeClass('sl-error-display').html('');
+				}
+
+
+			try{
+			service.login(username, password, validate);
+			alert('登陆成功');
+			}catch(e){
+				alert(e.message);
+				$('input#password_input').val('');
+				$('input#J-input-checkcode').val('');
+				$('img#J-checkcode-img').trigger('click');
+			}
+			
+           });
+
+       $('.register').click(function(){
+    	   window.parent.toward('register');
+       });
+
+
+       $('input#J-input-checkcode').on('keyup', function(e) {
+
+			var key = e.keyCode;
+			if (key === 13) { // 表示按的是enter键
+				$('#J-login-btn').click();
+			}
+       });
+})
+</script>
+  
+</html>

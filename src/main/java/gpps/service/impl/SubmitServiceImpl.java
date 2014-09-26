@@ -37,9 +37,11 @@ import javax.annotation.PostConstruct;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 @Service
+@DependsOn({"gpps.service.IGovermentOrderService"})
 public class SubmitServiceImpl implements ISubmitService {
 	@Autowired
 	ISubmitDao submitDao;
@@ -70,12 +72,7 @@ public class SubmitServiceImpl implements ISubmitService {
 		Thread taskThread=new Thread(){
 			public void run()
 			{
-				try {
-					//等待服务及初始数据加载完
-					sleep(120L*1000);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
+				logger.info("启动Submit过期验证服务线程");
 				while(true)
 				{
 					

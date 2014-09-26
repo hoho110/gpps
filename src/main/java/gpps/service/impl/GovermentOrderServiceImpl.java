@@ -45,7 +45,7 @@ import static gpps.tools.ObjectUtil.*;
  * @author wangm
  *
  */
-@Service
+@Service("gpps.service.IGovermentOrderService")
 public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	@Autowired
 	IGovermentOrderDao govermentOrderDao;

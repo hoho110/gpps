@@ -64,7 +64,7 @@ public interface IProductService {
 	public void changeBuyLevel(Integer productId,int buyLevel);
 	
 	public void startRepaying(Integer productId)throws IllegalConvertException,ExistWaitforPaySubmitException;//启动还款
-	public void quitFinancing(Integer productId)throws IllegalConvertException;//放弃融资（流标）
+	public void quitFinancing(Integer productId)throws IllegalConvertException, ExistWaitforPaySubmitException;//放弃融资（流标）
 	public void delayRepay(Integer productId)throws IllegalConvertException;//延期还款
 	public void finishRepay(Integer productId)throws IllegalConvertException;//还款完毕
 	public void applyToClose(Integer productId)throws IllegalConvertException;//申请关闭

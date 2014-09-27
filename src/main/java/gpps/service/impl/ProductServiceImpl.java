@@ -224,7 +224,7 @@ public class ProductServiceImpl implements IProductService {
 	@Override
 	@Transactional
 	public void startRepaying(Integer productId) throws IllegalConvertException,ExistWaitforPaySubmitException {
-		//TODO 验证是否有待付款的Submit
+		// 验证是否有待付款的Submit
 		int count=submitDao.countByProductAndStateWithPaged(productId, Submit.STATE_WAITFORPAY);
 		if(count>0)
 			throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始还款");
@@ -251,7 +251,11 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	@Transactional
-	public void quitFinancing(Integer productId) throws IllegalConvertException {
+	public void quitFinancing(Integer productId) throws IllegalConvertException, ExistWaitforPaySubmitException {
+		// 验证是否有待付款的Submit
+		int count=submitDao.countByProductAndStateWithPaged(productId, Submit.STATE_WAITFORPAY);
+		if(count>0)
+			throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始流标");
 		//从竞标缓存中移除
 		checkNullObject("productId", productId);
 		Product product=productDao.find(productId);

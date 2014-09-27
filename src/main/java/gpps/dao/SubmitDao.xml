@@ -10,6 +10,7 @@
 	<select id="findAllByLender" parameterType="Integer" resultType="gpps.model.Submit">
 		select *
 		from Submit where lenderId=#{lenderId} 
+		order by a.createtime desc 
 		LIMIT #{offset}, #{recnum}
 	</select>
 	<select id="countByLender" resultType="int">

@@ -77,6 +77,8 @@ public class BorrowerHandle {
 			productService.quitFinancing(productId);
 		} catch (IllegalConvertException e) {
 			e.printStackTrace();
+		} catch (ExistWaitforPaySubmitException e) {
+			e.printStackTrace();
 		}
 	}
 	public static void quitOrder(ApplicationContext context,Integer orderId)

@@ -84,13 +84,7 @@ public class SubmitServiceImpl implements ISubmitService {
 							{
 								if((submit.getCreatetime()+Submit.PAYEXPIREDTIME)>System.currentTimeMillis())
 									continue;
-								submitDao.changeState(submit.getId(), Submit.STATE_UNSUBSCRIBE);
-								//TODO 金额回滚
-								Product product=productDao.find(submit.getProductId());
-								product=orderService.applyFinancingProduct(submit.getProductId(), product.getGovermentorderId());
-								product.setRealAmount(product.getRealAmount().subtract(submit.getAmount()));
-								productDao.buy(product.getId(), submit.getAmount().negate());
-								orderService.releaseFinancingProduct(product);
+								processUnsubscribeSubmit(submit);
 								logger.debug("Submit[id:"+submit.getId()+"]未支付，过期退订");
 							}
 						}
@@ -100,15 +94,38 @@ public class SubmitServiceImpl implements ISubmitService {
 					}
 				}
 			}
+
+			
 		};
 		taskThread.setName("SubmitCheckThread");
 		taskThread.start();
+	}
+	@Transactional
+	private void processUnsubscribeSubmit(Submit submit) {
+		submitDao.changeState(submit.getId(), Submit.STATE_UNSUBSCRIBE);
+		// 金额回滚
+		Product product=productDao.find(submit.getProductId());
+		try{
+			productDao.buy(product.getId(), submit.getAmount().negate());
+			product=orderService.applyFinancingProduct(submit.getProductId(), product.getGovermentorderId());
+			product.setRealAmount(product.getRealAmount().subtract(submit.getAmount()));
+		}finally
+		{
+			orderService.releaseFinancingProduct(product);
+		}
 	}
 	@Override
 	@Transactional
 	public Integer buy(Integer productId, int num)
 			throws InsufficientBalanceException,ProductSoldOutException,InsufficientProductException,UnreachBuyLevelException {
 		//TODO 验证amount格式，例如：1w起之类的
+		Product product=productService.find(productId);
+		checkNullObject(Product.class, product);
+		if(num<product.getMinimum())
+			throw new IllegalArgumentException("提交失败，最小投资金额为:"+product.getMinimum());
+		if(num%product.getMiniAdd()!=0)
+			throw new IllegalArgumentException("提交失败，最小递增金额为:"+product.getMiniAdd());
+		
 		Lender lender=lenderService.getCurrentUser();
 		lender=lenderService.find(lender.getId());
 		LenderAccount account=lenderAccountDao.find(lender.getAccountId());
@@ -116,8 +133,6 @@ public class SubmitServiceImpl implements ISubmitService {
 		//判断当前账户余额是否足够购买
 		if(amount.compareTo(account.getUsable())>0)
 			throw new InsufficientBalanceException("您账户的余额不足，请先充值");
-		Product product=productService.find(productId);
-		checkNullObject(Product.class, product);
 		//判断用户购买级别
 		if(lender.getLevel()<product.getLevelToBuy())
 			throw new UnreachBuyLevelException("您尚未达到购买此产品的级别");

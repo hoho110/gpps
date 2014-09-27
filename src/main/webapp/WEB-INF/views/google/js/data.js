@@ -241,6 +241,7 @@ var createStructureProduct2 = function(order){
 	
 	
 	var str = '<li class="clearfix">';
+	str    += '<div class="product-info-wrap clearfix">';
 	str    += '<div class="product-status">';
 	str    += '<p class="product-name">';
 	str    += '<a class="product-title constructure" href="#" id="'+order.id+'">'+order.title+'[结构化]'+'</a>';

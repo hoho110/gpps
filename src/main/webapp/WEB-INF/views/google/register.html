@@ -1,147 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>政采贷</title>
+<title>政采贷</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    
-    <link href="css/index/justified-nav.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="css/signin/signin.css" rel="stylesheet">
-
-    <script src="js/ie-emulation-modes-warning.js"></script>
-
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="js/cdn/html5shiv.min.js"></script>
-      <script src="js/cdn/respond.min.js"></script>
-    <![endif]-->
-  </head>
-
-  <body>
-
-    <div class="container">
-		
-		<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
-      
-      </div>
-		
-		
-      
-      
-      <div class="row" style="padding-left:5px; padding-right:5px;">
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-<div class="panel panel-default" style="padding-bottom:50px;">
-
-<div class="row" style="margin-top:15px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="col-xs-4 col-sm-2 col-md-1"></div>
-<div class="col-xs-4 col-sm-2 col-md-3" style="color:#f60;">第一步:平台注册</div>
-<div class="col-xs-4 col-sm-2 col-md-1"><a href="index.html">取消</a></div>
-<div class="hidden-xs col-sm-3 col-md-3"></div>
-</div>
-
-<div class="row" style="margin-top:5px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="hidden-xs col-sm-2 col-md-1">用户名</div>
-<div class="col-xs-12 col-sm-4 col-md-4"><input id="username" type="text" class="form-control" placeholder="请输入您的用户名"></input></div>
-<div class="col-xs-12 col-sm-3 col-md-3"><span id="usernameLabel" style="font-size:small"></span></div>
-</div>
-<div class="row" style="margin-top:5px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="hidden-xs col-sm-2 col-md-1">密码</div>
-<div class="col-xs-12 col-sm-4 col-md-4"><input id="password" type="password" class="form-control" placeholder="请输入您的密码"></input></div>
-<div class="col-xs-12 col-sm-3 col-md-3"><span id="passwordLabel" style="font-size:small"></span></div>
-</div>
-<div class="row" style="margin-top:5px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="hidden-xs col-sm-2 col-md-1">确认密码</div>
-<div class="col-xs-12 col-sm-4 col-md-4"><input id="password_r" type="password" class="form-control" placeholder="请再次输入您的密码"></input></div>
-<div class="col-xs-12 col-sm-3 col-md-3"><span id="password_rLabel" style="font-size:small"></span></div>
-</div>
-
-<div class="row" style="margin-top:15px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="hidden-xs col-sm-2 col-md-1">手机</div>
-<div class="col-xs-7 col-sm-3 col-md-2"><input id="phone" type="text" class="form-control" placeholder="请输入您的手机号"></input></div>
-<div class="col-xs-5 col-sm-2 col-md-2"><button id="sendValCode" type="button" class="btn btn-default" style="width:160px;">发送验证码</button></div>
-<div class="col-xs-12 col-sm-2 col-md-3"><span id="phoneLabel" style="font-size:small"></span></div>
-</div>
-
-<div class="row" style="margin-top:5px;">
-<div class="hidden-xs col-sm-3 col-md-4"></div>
-<div class="hidden-xs col-sm-2 col-md-1">验证码</div>
-<div class="col-xs-12 col-sm-4 col-md-4"><input id="validate" type="text" class="form-control" placeholder="请输入验证码"></input></div>
-<div class="col-xs-12 col-sm-3 col-md-3"><span id="validateLabel" style="font-size:small"></span></div>
-</div>
-
-<div class="row" style="margin-top:5px;">
-<div class="col-xs-2 col-sm-4 col-md-6"></div>
-<div class="col-xs-8 col-sm-4 col-md-4"><button id="login" type="button" class="btn btn-warning" style="width:150px;">注册</button></div>
-<div class="col-xs-2 col-sm-4 col-md-2"></div>
-</div>
-
-
-</div>
-
-
-
-</div>
-</div>
-      
-      
-      
-      
-      
-      
-      
-      
-
-    </div> <!-- /container -->
-
-
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-		<script type="text/javascript"
+<!-- Bootstrap core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/index/justified-nav.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript"
 				src="/resources/EasyServiceClientFullZ.js"></script>
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.ILenderService?json"></script>
-  </body>
-  
-  
-  <script src="js/head.js"></script>
-  
-  <script>
+<!--[if lt IE 9]>
+      <script src="js/cdn/html5shiv.min.js"></script>
+      <script src="js/cdn/respond.min.js"></script>
+<![endif]-->
+</head>
+<body>
+	<div class="container">
+	
+	<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
+      
+      </div>
+	
+	<div class="form-horizontal" role="form" style="width:400px; margin: 0 auto;">
+		<div class="form-group">
+    		<label class="col-sm-3 control-label">第一步</label>
+    		<div class="col-sm-7">
+      			<p class="form-control-static">平台注册</p>
+    		</div>
+    		<div class="col-sm-2">
+      			<p class="form-control-static"><a href="index.html">取消</a></p>
+    		</div>
+  		</div>
+  		<div style="width:100%" id="message"></div>
+		
+	
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">用户名</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="username">
+			</div>
+		</div>
+		
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">密码</label>
+			<div class="col-sm-9">
+				<input type="password" class="form-control" id="password">
+			</div>
+		</div>
+		
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">确认密码</label>
+			<div class="col-sm-9">
+				<input type="password" class="form-control" id="password_r">
+			</div>
+		</div>
 
-  function addMessage(title){
+			
+			<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputError2">手机</label>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" id="phone">
+			</div>
+			<button type="submit" class="btn btn-default" id="sendValCode">发送验证码</button>
+			</div>
+			
+			
+			<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">验证码</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="validate">
+			</div>
+			</div>
+			
+			<button id="login" class="btn btn-lg btn-success btn-block">注册</button>
+			
+
+		</div>
+		
+	</div>
+
+</body>
+<script src="js/head.js"></script>
+ <script>
+ 
+ var ok = '<span class="glyphicon glyphicon-ok form-control-feedback"></span>';
+ var error = '<span class="glyphicon glyphicon-remove form-control-feedback"></span>';
+ 
+ function addMessage(title){
 		$('#message').html('');
 		var div = $('<div class="alert alert-warning alert-dismissible" role="alert" style="margin-bottom:2px;"></div>');
 		div.append('<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>');
 		div.append(title);
 		$('#message').append(div);
-  }
-  
-  function removeMessage(){
-	  $('#message').html('');
-  }
+}
 
-  
+function removeMessage(){
+	  $('#message').html('');
+}
+ 
 $(document).ready(function() {
 	
 	header('login');
-	var where =document.referrer;
 	
-	$('.login_text').click(function(e){
-		
-		window.location.href="login.html";
-	});
 	
 	$('#username').focus();
     $('#login').click(function(e){
@@ -150,35 +117,53 @@ $(document).ready(function() {
 			var password_r = $('input#password_r').val();
 			var phone = $('input#phone').val();
 			var validate = $('input#validate').val();
-
+			
 			if(username==null||username==''){
-					$('#usernameLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入用户名');
+					$('input#username').parent().find('span').remove();
+					$('input#username').parent().append(error);
+					addMessage('*请输入用户名');
 					return;
 					}else if(service.isLoginIdExist(username)){
-						$('#usernameLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*用户名已被注册');
+						$('input#username').parent().find('span').remove();
+						$('input#username').parent().append(error);
+						addMessage('*用户名已被注册');
 						return;
 					}else{
-					$('#usernameLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+						$('input#username').parent().find('span').remove();
+						$('input#username').parent().append(ok);
+						removeMessage();
 					}
 
 			if(password==null||password==''){
-				$('#passwordLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入密码');
+				$('input#password').parent().find('span').remove();
+				$('input#password').parent().append(error);
+				addMessage('*请输入密码');
 				return;
 				}else if(password_r!=password){
-				$('#password_rLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*输入密码不一致');
+					$('input#password_r').parent().find('span').remove();
+					$('input#password_r').parent().append(error);
+					addMessage('*密码不一致');
 				return;
 				}
 			else{
-				$('#passwordLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+				$('input#password').parent().find('span').remove();
+				$('input#password').parent().append(ok);
+				$('input#password_r').parent().find('span').remove();
+				$('input#password_r').parent().append(ok);
+				removeMessage();
 				}
 
 
 			if(validate==null||validate==''){
-				$('#validateLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*验证码错误');
+				$('input#validate').parent().find('span').remove();
+				$('input#validate').parent().append(error);
+				addMessage('*请填写验证码');
 				return;
 				}
 				else{
-				$('#validateLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+					$('input#validate').parent().find('span').remove();
+					$('input#validate').parent().append(ok);
+					removeMessage();
 				}
 
 
@@ -191,11 +176,6 @@ $(document).ready(function() {
 				$('input#password').val('');
 				$('input#password_r').val('');
 				$('input#validate').val('');
-				$('#usernameLabel').html('').removeClass('glyphicon glyphicon-ok');
-				$('#passwordLabel').html('').removeClass('glyphicon glyphicon-ok');
-				$('#password_rLabel').html('').removeClass('glyphicon glyphicon-ok');
-				$('#phoneLabel').html('').removeClass('glyphicon glyphicon-ok');
-				$('#validateLabel').html('').removeClass('glyphicon glyphicon-ok');
 			}
 			
 			
@@ -204,12 +184,18 @@ $(document).ready(function() {
     $('input#username').blur(function(e){
         var username = $(this).val();
         if(username==null||username==''){
-				$('#usernameLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入用户名');
+        	$('input#username').parent().find('span').remove();
+			$('input#username').parent().append(error);
+			addMessage('*请输入用户名');
         }else if(service.isLoginIdExist(username)){
-				$('#usernameLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*用户名已被注册');
+        	$('input#username').parent().find('span').remove();
+			$('input#username').parent().append(error);
+			addMessage('*用户名已被注册');
 			}
         else{
-				$('#usernameLabel').html('ok').addClass('glyphicon glyphicon-ok').css('color', 'green');
+        	$('input#username').parent().find('span').remove();
+			$('input#username').parent().append(ok);
+			removeMessage();
         		}
         });
     
@@ -219,24 +205,36 @@ $(document).ready(function() {
  	  var reg=/^1\d{10}$/;
  	  
  	  if(phone==null || phone==''){
- 		  $('#phoneLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入手机号');
+ 		 $('input#phone').parent().find('span').remove();
+			$('input#phone').parent().append(error);
+			addMessage('*请输入手机号码');
  	  }else if(!reg.test(phone)){
- 		  $('#phoneLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*手机号格式不对');
+ 		 $('input#phone').parent().find('span').remove();
+			$('input#phone').parent().append(error);
+			addMessage('*手机号码格式不对');
  	  }
  	  else if(service.isPhoneNumberExist(phone)){
- 		  $('#phoneLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*手机号已存在');
+ 		 $('input#phone').parent().find('span').remove();
+			$('input#phone').parent().append(error);
+			addMessage('*该手机号码已被注册');
  	  }else{
- 		  $('#phoneLabel').html('ok').addClass('glyphicon glyphicon-ok').css('color', 'green');
+ 		 $('input#phone').parent().find('span').remove();
+			$('input#phone').parent().append(ok);
  		  service.sendMessageValidateCode();
+ 		 removeMessage();
  	  }
     });
     
     $('input#password').blur(function(e){
  	   var password = $(this).val();
  	   if(password==null||password==''){
-				$('#passwordLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请输入密码');
+ 		  $('input#password').parent().find('span').remove();
+			$('input#password').parent().append(error);
+			addMessage('*请输入密码');
 			}else{
-				$('#passwordLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+				$('input#password').parent().find('span').remove();
+				$('input#password').parent().append(ok);
+				removeMessage();
 				}
         });
 
@@ -244,12 +242,18 @@ $(document).ready(function() {
  	   var password_r = $(this).val();
  	   var password = $('input#password').val();
  	   if(password_r==null||password_r==''){
-				$('#password_rLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*请再次输入密码');
+ 		  $('input#password_r').parent().find('span').remove();
+			$('input#password_r').parent().append(error);
+			addMessage('*请再次输入密码');
 			}else if(password_r!=password){
-				$('#password_rLabel').removeClass('glyphicon glyphicon-ok').css('color', 'red').html('*输入密码不一致');
+				$('input#password_r').parent().find('span').remove();
+				$('input#password_r').parent().append(error);
+				addMessage('*密码不一致');
 				}
 			else{
-				$('#password_rLabel').html('').addClass('glyphicon glyphicon-ok').css('color', 'green');
+				$('input#password_r').parent().find('span').remove();
+				$('input#password_r').parent().append(ok);
+				removeMessage();
 				}
         });
 
@@ -263,5 +267,4 @@ $(document).ready(function() {
 	
 })
 </script>
-  
 </html>

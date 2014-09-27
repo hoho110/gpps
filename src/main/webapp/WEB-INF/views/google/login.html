@@ -124,7 +124,7 @@ $(document).ready(function() {
 			}
 			try{
 			service.login(username, password, validate);
-			window.location.href=where;
+			window.location.href="index.html";
 			}catch(e){
 				alert(e.message);
 				$('input#password_input').val('');
@@ -133,10 +133,6 @@ $(document).ready(function() {
 			}
 			
            });
-
-       $('.register').click(function(){
-    	   window.parent.toward('register');
-       });
 
 
        $('input#J-input-checkcode').on('keyup', function(e) {

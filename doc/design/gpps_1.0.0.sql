@@ -197,6 +197,7 @@ create table Product
    miniadd              int not null default 1,
    description          varchar(2000),
    incomeEndtime        bigint not null,
+   lastmodifytime       bigint not null,
    primary key (ID)
 );
 

@@ -33,7 +33,7 @@ public interface ISubmitService {
 	 * @return 返回订单号
 	 */
 	public Integer buy(Integer productId, int amount) throws InsufficientBalanceException, ProductSoldOutException, InsufficientProductException, UnreachBuyLevelException;
-	public void confirmBuy(Integer submitId);
+	public void confirmBuy(Integer submitId) throws IllegalConvertException;
 	
 	public Integer buyByAdmin(Integer productId,int amount) throws InsufficientBalanceException, ProductSoldOutException,InsufficientProductException;
 

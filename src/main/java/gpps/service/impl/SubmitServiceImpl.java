@@ -101,8 +101,8 @@ public class SubmitServiceImpl implements ISubmitService {
 		taskThread.start();
 	}
 	@Transactional
-	private void processUnsubscribeSubmit(Submit submit) {
-		submitDao.changeState(submit.getId(), Submit.STATE_UNSUBSCRIBE);
+	private void processUnsubscribeSubmit(Submit submit) throws IllegalConvertException {
+		changeState(submit.getId(), Submit.STATE_UNSUBSCRIBE);
 		// 金额回滚
 		Product product=productDao.find(submit.getProductId());
 		try{
@@ -162,6 +162,9 @@ public class SubmitServiceImpl implements ISubmitService {
 		}
 	}
 	static int[][] validConverts={
+		{Submit.STATE_WAITFORPAY,Submit.STATE_UNSUBSCRIBE},
+		{Submit.STATE_WAITFORPAY,Submit.STATE_COMPLETEPAY},
+		{Submit.STATE_COMPLETEPAY,Submit.STATE_FAILBIDDING}
 		};
 	private void changeState(Integer submitId, int state)
 			throws IllegalConvertException {
@@ -172,7 +175,7 @@ public class SubmitServiceImpl implements ISubmitService {
 		{
 			if(submit.getState()==validStateConvert[0]&&state==validStateConvert[1])
 			{
-				submitDao.changeState(submitId, state);
+				submitDao.changeState(submitId, state,System.currentTimeMillis());
 				StateLog stateLog=new StateLog();
 				stateLog.setSource(submit.getState());
 				stateLog.setTarget(state);
@@ -294,8 +297,8 @@ public class SubmitServiceImpl implements ISubmitService {
 
 	@Override
 	@Transactional
-	public void confirmBuy(Integer submitId) {
-		submitDao.changeState(submitId, Submit.STATE_COMPLETEPAY);
+	public void confirmBuy(Integer submitId) throws IllegalConvertException {
+		changeState(submitId, Submit.STATE_COMPLETEPAY);
 		Submit submit=submitDao.find(submitId);
 		Lender lender=lenderService.getCurrentUser();
 		int grade=lender.getGrade()+submit.getAmount().intValue();

@@ -40,6 +40,7 @@ public class Product {
 	private int miniAdd=1;//最小追加金额
 	private String description;
 	private long incomeEndtime;//收益截止时间
+	private long lastmodifytime=System.currentTimeMillis();//上次更改时间
 	public Integer getId() {
 		return id;
 	}
@@ -129,6 +130,12 @@ public class Product {
 	}
 	public void setIncomeEndtime(long incomeEndtime) {
 		this.incomeEndtime = incomeEndtime;
+	}
+	public long getLastmodifytime() {
+		return lastmodifytime;
+	}
+	public void setLastmodifytime(long lastmodifytime) {
+		this.lastmodifytime = lastmodifytime;
 	}
 
 

@@ -20,7 +20,7 @@ public interface ISubmitDao {
 	public List<Submit> findAllByProduct(Integer productId);
 	public List<Submit> findAllByProductAndState(@Param("productId")Integer productId,@Param("state")int state);
 	public Submit find(Integer id);
-	public void changeState(@Param("id")Integer id,@Param("state")int state);
+	public void changeState(@Param("id")Integer id,@Param("state")int state,@Param("lastmodifytime")long lastmodifytime);
 	public void delete(Integer id);
 	public List<Submit> findAllPayedByLenderAndProductStates(@Param("lenderId")Integer lenderId,@Param("productStates") List<Integer> productStates,@Param("offset")int offset,@Param("recnum")int recnum);
 	public int countByLenderAndProductStates(@Param("lenderId")Integer lenderId,@Param("productStates") List<Integer> productStates);

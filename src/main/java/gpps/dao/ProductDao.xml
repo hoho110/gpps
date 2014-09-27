@@ -9,7 +9,7 @@
 	</insert>
 	<update id="changeState">
 		update Product set
-		state=#{state}
+		state=#{state},lastmodifytime=#{lastmodifytime}
 		where
 		id=#{id}
 	</update>

@@ -160,7 +160,7 @@ public class PayBackServiceImpl implements IPayBackService {
 		PayBack payBack=payBackDao.find(payBackId);
 		changeState(payBackId, PayBack.STATE_DELAY);
 		try {
-			productDao.changeState(payBack.getProductId(), Product.STATE_POSTPONE);
+			productDao.changeState(payBack.getProductId(), Product.STATE_POSTPONE,System.currentTimeMillis());
 		} catch (IllegalConvertException e) {
 			e.printStackTrace();
 		}

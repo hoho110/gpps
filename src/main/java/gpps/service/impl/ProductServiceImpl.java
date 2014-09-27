@@ -126,7 +126,7 @@ public class ProductServiceImpl implements IProductService {
 		{
 			if(product.getState()==validStateConvert[0]&&state==validStateConvert[1])
 			{
-				productDao.changeState(productId, state);
+				productDao.changeState(productId, state,System.currentTimeMillis());
 				StateLog stateLog=new StateLog();
 				stateLog.setSource(product.getState());
 				stateLog.setTarget(state);

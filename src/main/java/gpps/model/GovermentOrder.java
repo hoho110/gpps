@@ -31,7 +31,7 @@ public class GovermentOrder {
 	public Lock lock=null;
 	private long incomeStarttime;
 //	private long incomeEndtime;
-	private long lastModifytime;
+	private long lastModifytime=System.currentTimeMillis();
 	private String description;
 	public Integer getId() {
 		return id;

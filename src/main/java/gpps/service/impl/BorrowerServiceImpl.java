@@ -5,13 +5,16 @@ import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.IBorrowerDao;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
-import gpps.model.Lender;
-import gpps.model.LenderAccount;
+import gpps.model.ref.Accessory;
+import gpps.model.ref.Accessory.MimeCol;
+import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.IBorrowerService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
+import gpps.tools.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -19,12 +22,17 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.easyservice.xml.EasyObjectXMLTransformerImpl;
+import com.easyservice.xml.IEasyObjectXMLTransformer;
+import com.easyservice.xml.XMLParseException;
+
 @Service
 public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBorrowerService {
 	@Autowired
 	IBorrowerDao borrowerDao;
 	@Autowired
 	IBorrowerAccountDao borrowerAccountDao;
+	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	@Override
 	public void login(String loginId, String password, String graphValidateCode) throws LoginException, ValidateCodeException {
 		checkGraphValidateCode(graphValidateCode);
@@ -159,4 +167,66 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		return (Borrower)session.getAttribute(SESSION_ATTRIBUTENAME_USER);
 	}
 
+	public void addAccessory(Integer borrowerId,int category,MimeItem item) throws XMLParseException
+	{
+		String text=borrowerDao.findAccessory(borrowerId);
+		Accessory accessory=null;
+		if(StringUtil.isEmpty(text))
+			accessory=new Accessory();
+		else {
+			accessory=xmlTransformer.parse(text, Accessory.class);
+		}
+		if(accessory.getCols()==null)
+			accessory.setCols(new ArrayList<Accessory.MimeCol>());
+		MimeCol col=accessory.findMimeCol(category);
+		if(col==null)
+		{
+			col=new MimeCol();
+			col.setCategory(category);
+			accessory.getCols().add(col);
+		}
+		if(col.getItems()==null)
+			col.setItems(new ArrayList<Accessory.MimeItem>());
+		col.getItems().add(item);
+		text=xmlTransformer.export(accessory);
+		borrowerDao.updateAccessory(borrowerId, text);
+	}
+	@Override
+	public void delAccessory(Integer borrowerId, int category, String path)
+			throws XMLParseException {
+		String text=borrowerDao.findAccessory(borrowerId);
+		if(StringUtil.isEmpty(text))
+			return;
+		Accessory accessory=xmlTransformer.parse(text, Accessory.class);
+		if(accessory.getCols()==null)
+			return;
+		MimeCol col=accessory.findMimeCol(category);
+		if(col==null)
+			return;
+		List<MimeItem> items=col.getItems();
+		if(items==null||items.size()==0)
+			return;
+		for(int i=0;i<items.size();i++)
+		{
+			if(items.get(i).getPath().equals(path))
+			{
+				items.remove(i);
+				break;
+			}
+		}
+		text=xmlTransformer.export(accessory);
+		borrowerDao.updateAccessory(borrowerId, text);
+	}
+	@Override
+	public List<MimeItem> findMimeItems(Integer borrowerId, int category)
+			throws XMLParseException {
+		String text=borrowerDao.findAccessory(borrowerId);
+		if(StringUtil.isEmpty(text))
+			return new ArrayList<Accessory.MimeItem>(0);
+		Accessory accessory=xmlTransformer.parse(text, Accessory.class);
+		MimeCol col=accessory.findMimeCol(category);
+		if(col==null)
+			return new ArrayList<Accessory.MimeItem>(0);
+		return col.getItems();
+	}
 }

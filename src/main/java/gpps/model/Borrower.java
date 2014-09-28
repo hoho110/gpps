@@ -10,7 +10,7 @@ public class Borrower {
 	private String password;//md5加密密码
 	private String identityCard;//身份证
 	private Integer accountId;//账户ID
-	private String material;
+	private String material;//附件
 	private String request;
 	private long createtime=System.currentTimeMillis();
 	public static final int PRIVILEGE_VIEW=10;//有查看权限的企业用户

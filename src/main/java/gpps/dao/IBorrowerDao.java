@@ -21,4 +21,8 @@ public interface IBorrowerDao {
 	public void changeCreditValue(@Param("id")Integer id,@Param("creditValue")int creditValue);
 	public void delete(Integer id);
 	public void addCreditValue(@Param("id")Integer id,@Param("creditValue")int creditValue);
+	
+	
+	public String findAccessory(Integer borrowerId);
+	public void updateAccessory(@Param("borrowerId")Integer borrowerId,@Param("material")String material);
 }

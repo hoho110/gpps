@@ -39,11 +39,18 @@ public class Accessory {
 		}
 	}
 	public static class MimeItem {
+		private String id;
 		private String mimeType;//mime类型
 		private long uploadTime=System.currentTimeMillis();//上传时间
 		private String fileName;//文件名称
 //		private String showName;//展现名称
 		private String path;//存储路径
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
 		public String getMimeType() {
 			return mimeType;
 		}

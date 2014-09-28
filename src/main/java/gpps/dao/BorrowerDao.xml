@@ -59,4 +59,14 @@
 		creditValue=creditValue+#{creditValue}
 		where id=#{id}
 	</update>
+	<select id="findAccessory" parameterType="Integer" resultType="String">
+        select material
+        from Borrower where id=#{id}
+    </select>
+    <update id="updateAccessory">
+        update Borrower set
+        material=#{material}
+        where
+        id=#{borrowerId}
+    </update>
 </mapper>

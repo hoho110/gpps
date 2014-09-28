@@ -1,11 +1,14 @@
 package gpps.service;
 
 import gpps.model.Borrower;
+import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
 
 import java.util.List;
+
+import com.easyservice.xml.XMLParseException;
 
 public interface IBorrowerService extends ILoginService {
 	/**
@@ -77,4 +80,8 @@ public interface IBorrowerService extends ILoginService {
 	 * @throws IllegalConvertException
 	 */
 	public void refuseFundingApplying(Integer borrowerId)throws IllegalConvertException;
+	
+	public void addAccessory(Integer borrowerId,int category,MimeItem item) throws XMLParseException;
+	public void delAccessory(Integer borrowerId,int category,String path) throws XMLParseException;
+	public List<MimeItem> findMimeItems(Integer borrowerId,int category)throws XMLParseException;
 }

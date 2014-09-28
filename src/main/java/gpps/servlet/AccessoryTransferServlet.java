@@ -4,6 +4,7 @@ import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IProductService;
+import gpps.tools.MimeType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -116,7 +117,7 @@ public class AccessoryTransferServlet {
 				item.write(uploadFile);
 				MimeItem mimeItem = new MimeItem();
 				mimeItem.setId(uuid);
-				mimeItem.setMimeType(request.getHeader(""));
+				mimeItem.setMimeType(MimeType.getMimeTypeFromFileName(fileName));
 				mimeItem.setFileName(fileName);
 				mimeItem.setPath(path);
 				if (type.equals(TYPE_ORDER))
@@ -129,7 +130,7 @@ public class AccessoryTransferServlet {
 					response.sendError(400, "不支持的上传类型:" + type);
 					return;
 				}
-				System.out.println("文件" + uploadFile.getName() + "上传成功");
+				System.out.println("文件" + fileName + "上传成功");
 			}
 			response.setStatus(200);
 			ServletUtils.write(response, "上传成功");
@@ -204,38 +205,5 @@ public class AccessoryTransferServlet {
 				return item;
 		}
 		return null;
-	}
-
-	private void writeFile(String contentType, String fileName,
-			HttpServletResponse response, File file) {
-		OutputStream outputStream = null;
-		InputStream inputStream = null;
-		try {
-			response.setContentType(contentType);
-			response.setHeader("Content-Disposition", "attachment; filename="
-					+ file.getName());
-			response.addHeader("Content-Length", String.valueOf(file.length()));
-			outputStream = response.getOutputStream();
-			inputStream = new FileInputStream(file);
-			byte[] buffer = new byte[1024];
-			int i = -1;
-			while ((i = inputStream.read(buffer)) != -1) {
-				outputStream.write(buffer, 0, i);
-			}
-			outputStream.flush();
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-		} finally {
-			try {
-				if (inputStream != null)
-					inputStream.close();
-			} catch (IOException e) {
-			}
-			try {
-				if (outputStream != null)
-					outputStream.close();
-			} catch (IOException e) {
-			}
-		}
 	}
 }

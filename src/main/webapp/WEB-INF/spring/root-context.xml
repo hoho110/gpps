@@ -26,7 +26,7 @@
 	<bean id="authorityValidateService" class="com.easyservice.security.AuthorityValidateServiceImpl">
 		<property name="configLocation" value="classpath:StaticRolesConfig.xml"></property>
 	</bean>
-	<bean id="uploadServlet" class="gpps.servlet.AccessoryTransferServlet">
+	<bean id="accessoryTransferServlet" class="gpps.servlet.AccessoryTransferServlet">
         <property name="officalDir" value="file:d:/test/officalDir"></property>
         <property name="tempDir" value="file:d:/test/tempDir"></property>
     </bean>

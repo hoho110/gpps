@@ -542,12 +542,12 @@ var createJQIntro = function(){
 
 
 var createNavLevel2 = function(nav){
-	var ul = $('<ul class="nav nav-tabs" style="float:right;" role="tablist"></ul>');
+	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
 	if(nav=='myaccount'){
-		var li2 = $('<li role="presentation" class="active"><a href="#" data-sk="my-score">积分等级</a></li>');
-		var li3 = $('<li role="presentation"><a href="#" data-sk="my-activity">我的活动</a></li>');
+		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
 		
-		var li5 = $('<li role="presentation"><a href="#" data-sk="my-note">系统通知</a></li>');
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-note">系统通知</a></li>');
 		
 		
 	//	var li4 = $('<li role="presentation" class="dropdown"></li>');
@@ -562,39 +562,39 @@ var createNavLevel2 = function(nav){
 	//	ul.append(li4);
 		ul.append(li5);
 	}else if(nav=='submit'){
-		var li1 = $('<li role="presentation" class="active"><a href="#" data-sk="submit-all">全部</a></li>');
-		var li2 = $('<li role="presentation"><a href="#" data-sk="submit-toafford">待支付</a></li>');
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="submit-all">全部</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="submit-toafford">待支付</a></li>');
 //		var li3 = $('<li role="presentation"><a href="#" data-sk="submit-toaudit">待审核</a></li>');
-		var li4 = $('<li role="presentation"><a href="#" data-sk="submit-payback">还款中</a></li>');
-		var li5 = $('<li role="presentation"><a href="#" data-sk="submit-done">还款完毕</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="submit-payback">还款中</a></li>');
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="submit-done">还款完毕</a></li>');
 		ul.append(li1);
 		ul.append(li2);
 //		ul.append(li3);
 		ul.append(li4);
 		ul.append(li5);
 	}else if(nav=='payback'){
-		var li1 = $('<li role="presentation" class="active"><a href="#" data-sk="payback-all">总览</a></li>');
-		var li2 = $('<li role="presentation"><a href="#" data-sk="payback-to">待回款</a></li>');
-		var li3 = $('<li role="presentation"><a href="#" data-sk="payback-have">已回款</a></li>');
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="payback-all">总览</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-to">待回款</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-have">已回款</a></li>');
 		ul.append(li1);
 		ul.append(li2);
 		ul.append(li3);
 	}else if(nav=='cash'){
-		var li1 = $('<li role="presentation" class="active"><a href="#" data-sk="cash-all">全部</a></li>');
-		var li2 = $('<li role="presentation"><a href="#" data-sk="cash-recharge">充值</a></li>');
-		var li3 = $('<li role="presentation"><a href="#" data-sk="cash-withdraw">提现</a></li>');
-		var li4 = $('<li role="presentation"><a href="#" data-sk="cash-invest">投标</a></li>');
-		var li5 = $('<li role="presentation"><a href="#" data-sk="cash-receive">回款</a></li>');
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="cash-all">全部</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="cash-recharge">充值</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="cash-withdraw">提现</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="cash-invest">投标</a></li>');
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="cash-receive">回款</a></li>');
 		ul.append(li1);
 		ul.append(li2);
 		ul.append(li3);
 		ul.append(li4);
 		ul.append(li5);
 	}else if(nav=='tools'){
-		var li1 = $('<li role="presentation" class="active"><a href="#" data-sk="tools-fluxility">流动性分析</a></li>');
-		var li2 = $('<li role="presentation"><a href="#" data-sk="tools-receive-statistics">回款统计</a></li>');
-		var li3 = $('<li role="presentation"><a href="#" data-sk="tools-analysis">风险分析</a></li>');
-		var li4 = $('<li role="presentation"><a href="#" data-sk="tools-rate">收益率统计</a></li>');
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="tools-fluxility">流动性分析</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tools-receive-statistics">回款统计</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tools-analysis">风险分析</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tools-rate">收益率统计</a></li>');
 		ul.append(li1);
 		ul.append(li2);
 		ul.append(li3);

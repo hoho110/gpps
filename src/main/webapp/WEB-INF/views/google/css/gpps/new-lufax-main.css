@@ -278,5 +278,11 @@ A:hover {
 	DISPLAY: block; HEIGHT: 0px; VISIBILITY: hidden; CLEAR: both; FONT-SIZE: 0px; OVERFLOW: hidden; CONTENT: ""
 }
 .clearfix {
-	
+	clear : both;
+}
+.clf:after{
+	DISPLAY: block; HEIGHT: 0px; VISIBILITY: hidden; CLEAR: both; FONT-SIZE: 0px; OVERFLOW: hidden; CONTENT: ""
+}
+.clf{
+	clear : both;
 }

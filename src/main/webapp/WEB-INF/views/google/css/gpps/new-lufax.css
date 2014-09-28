@@ -1,5 +1,5 @@
 .main-wrap {
-	MARGIN: 20px 0px 40px 0px; MIN-HEIGHT: 420px;
+	MARGIN: 20px 0px 5px 0px; MIN-HEIGHT: 420px; BACKGROUND-COLOR: #fff; FONT-FAMILY: "Microsoft Yahei", "΢���ź�", Tahoma, Arial, Helvetica, STHeiti; COLOR: #333; FONT-SIZE: 12px;
 }
 .bcrumb {
 	LINE-HEIGHT: 40px; HEIGHT: 40px
@@ -48,10 +48,8 @@
 
 
 
-
-
 .list-detail-wrap {
-	
+	 border-sizing : none;
 }
 .list-detail-wrap LI {
 	BORDER-BOTTOM: #eee 1px solid; POSITION: relative; TEXT-ALIGN: center; BORDER-LEFT: #eaeaea 1px solid; BACKGROUND-COLOR: #fafafa; WIDTH: 90px; FLOAT: left; HEIGHT: 32px; MARGIN-LEFT: -1px; BORDER-TOP: #eaeaea 1px solid; BORDER-RIGHT: #eaeaea 1px solid

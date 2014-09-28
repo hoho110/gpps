@@ -9,11 +9,15 @@ function header(title){
 		if(cuser!=null)
 		{
 			window.location.href="myaccount.html";
-		}else
+		}
+		else
 			{
 		divusercontent.html('');
 			}
-	}else{
+	}else if(title=='myaccount'){
+		divusercontent.html('');
+	}
+	else{
 	
 	if(cuser==null){
 		divusercontent.html('<a href="login.html">登陆</a><span>&nbsp;|&nbsp;</span><a href="register.html">注册</a>');
@@ -26,7 +30,7 @@ function header(title){
 	
 	var navul = $('<ul class="nav nav-justified"></ul>');
 	navul.append('<li id="index"><a class="active" href="index.html">首页</a></li>');
-	navul.append('<li id="product"><a href="productlist.html">我要理财</a></li>');
+	navul.append('<li id="productlist"><a href="productlist.html">我要理财</a></li>');
 	navul.append('<li id="myaccount"><a href="myaccount.html">我的帐户</a></li>');
 	navul.append('<li id="activity"><a href="activity.html">活动中心</a></li>');
 	navul.append('<li id="loan"><a href="loan.html">我要融资</a></li>');

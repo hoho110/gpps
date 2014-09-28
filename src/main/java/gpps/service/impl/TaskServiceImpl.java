@@ -9,6 +9,7 @@ import gpps.dao.IProductDao;
 import gpps.dao.ISubmitDao;
 import gpps.dao.ITaskDao;
 import gpps.model.Borrower;
+import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.Lender;
 import gpps.model.PayBack;
@@ -83,37 +84,42 @@ public class TaskServiceImpl implements ITaskService {
 				logger.info("任务执行线程已启动");
 				while(true)
 				{
-					//TODO 外层添加异常捕捉放置循环跳出
-					Task task=queue.peek();//只取不移除，当任务执行完成后移除
-					if(task==null)
+					try
 					{
-						try {
-							Thread.sleep(1*1000);
-							continue;
-						} catch (InterruptedException e) {
-							e.printStackTrace();
+						// 外层添加异常捕捉防止循环跳出
+						Task task=queue.peek();//只取不移除，当任务执行完成后移除
+						if(task==null)
+						{
+							try {
+								Thread.sleep(1*1000);
+								continue;
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
 						}
-					}
-					logger.info("开始处理任务:"+task);
-					boolean interrupted=false;
-					if(task.getState()==Task.STATE_INIT)
-					{
-						taskDao.changeState(task.getId(), Task.STATE_PROCESSING);
-						task.setState(Task.STATE_PROCESSING);
-					}
-					else if(task.getState()==Task.STATE_PROCESSING)
-						interrupted=true;
-					else if(task.getState()==Task.STATE_FINISH)
-					{
-						//任务完成，状态未保存成功,基本不会出现
+						logger.info("开始处理任务:"+task);
+						boolean interrupted=false;
+						if(task.getState()==Task.STATE_INIT)
+						{
+							taskDao.changeState(task.getId(), Task.STATE_PROCESSING);
+							task.setState(Task.STATE_PROCESSING);
+						}
+						else if(task.getState()==Task.STATE_PROCESSING)
+							interrupted=true;
+						else if(task.getState()==Task.STATE_FINISH)
+						{
+							//任务完成，状态未保存成功,基本不会出现
+							taskDao.changeState(task.getId(), Task.STATE_FINISH);
+							continue;
+						}
+						execute(task, interrupted);
+						task.setState(Task.STATE_FINISH);
 						taskDao.changeState(task.getId(), Task.STATE_FINISH);
-						continue;
+						queue.poll();
+						logger.info("任务:"+task+"处理完毕");
+					}catch (Throwable e) {
+						logger.error(e.getMessage(),e);
 					}
-					execute(task, interrupted);
-					task.setState(Task.STATE_FINISH);
-					taskDao.changeState(task.getId(), Task.STATE_FINISH);
-					queue.poll();
-					logger.info("任务:"+task+"处理完毕");
 				}
 			}
 		};
@@ -138,16 +144,30 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	private void executePayTask(Task task,boolean interrupted)
 	{
-		//TODO 考虑打断情况
+		//考虑打断情况
 		logger.info("开始执行产品id="+task.getProductId()+"的支付任务taskID="+task.getId());
+		if(interrupted)
+			logger.info("该支付任务曾被打断过，现在继续执行");
 		List<Submit> submits=submitDao.findAllByProductAndState(task.getProductId(), Submit.STATE_COMPLETEPAY);
 		if(submits==null||submits.size()==0)
 			return;
 		Product product=productDao.find(task.getProductId());
 		GovermentOrder order=govermentOrderDao.find(product.getGovermentorderId());
 		Borrower borrower=borrowerDao.find(order.getBorrowerId());
-		for(Submit submit:submits)
+		loop:for(Submit submit:submits)
 		{
+			if(interrupted)
+			{
+				List<CashStream> cashStreams=cashStreamDao.findSubmitCashStream(submit.getId());
+				for(CashStream cashStream:cashStreams)
+				{
+					if(cashStream.getAction()==CashStream.ACTION_PAY)
+					{
+						logger.debug("支付任务["+task.getId()+"],Submit["+submit.getId()+"]已执行过。");
+						continue loop;
+					}
+				}
+			}
 			Lender lender=lenderDao.find(submit.getLenderId());
 			try {
 				accountService.pay(lender.getAccountId(), borrower.getAccountId(),submit.getAmount(), submit.getId(), "支付");
@@ -160,13 +180,27 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	private void executeQuitFinancingTask(Task task,boolean interrupted)
 	{
-		//TODO 考虑打断情况
+		// 考虑打断情况
 		logger.info("开始执行产品id="+task.getProductId()+"的流标任务taskID="+task.getId());
+		if(interrupted)
+			logger.info("该支付任务曾被打断过，现在继续执行");
 		List<Submit> submits=submitDao.findAllByProductAndState(task.getProductId(), Submit.STATE_COMPLETEPAY);
 		if(submits==null||submits.size()==0)
 			return;
-		for(Submit submit:submits)
+		loop:for(Submit submit:submits)
 		{
+			if(interrupted)
+			{
+				List<CashStream> cashStreams=cashStreamDao.findSubmitCashStream(submit.getId());
+				for(CashStream cashStream:cashStreams)
+				{
+					if(cashStream.getAction()==CashStream.ACTION_UNFREEZE)
+					{
+						logger.debug("流标任务["+task.getId()+"],Submit["+submit.getId()+"]已执行过。");
+						continue loop;
+					}
+				}
+			}
 			Lender lender=lenderDao.find(submit.getLenderId());
 			try {
 				accountService.unfreezeLenderAccount(lender.getAccountId(), submit.getAmount(), submit.getId(), "流标");
@@ -179,14 +213,28 @@ public class TaskServiceImpl implements ITaskService {
 	}
 	private void executeRepayTask(Task task,boolean interrupted)
 	{
-		//TODO 考虑打断情况
+		//考虑打断情况
 		logger.info("开始执行产品id="+task.getProductId()+"的还款任务taskID="+task.getId());
+		if(interrupted)
+			logger.info("该支付任务曾被打断过，现在继续执行");
 		List<Submit> submits=submitDao.findAllByProductAndState(task.getProductId(), Submit.STATE_COMPLETEPAY);
 		if(submits==null||submits.size()==0)
 			return;
 		PayBack payBack=payBackDao.find(task.getPayBackId());
-		for(Submit submit:submits)
+		loop:for(Submit submit:submits)
 		{
+			if(interrupted)
+			{
+				List<CashStream> cashStreams=cashStreamDao.findSubmitCashStream(submit.getId());
+				for(CashStream cashStream:cashStreams)
+				{
+					if(cashStream.getAction()==CashStream.ACTION_REPAY)
+					{
+						logger.debug("流标任务["+task.getId()+"],Submit["+submit.getId()+"]已执行过。");
+						continue loop;
+					}
+				}
+			}
 			Lender lender=lenderDao.find(submit.getLenderId());
 			BigDecimal lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(PayBack.BASELINE, 2, BigDecimal.ROUND_DOWN);
 			BigDecimal lenderInterest=payBack.getInterest().multiply(submit.getAmount()).divide(PayBack.BASELINE, 2, BigDecimal.ROUND_DOWN);

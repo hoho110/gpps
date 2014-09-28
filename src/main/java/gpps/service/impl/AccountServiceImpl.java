@@ -128,6 +128,7 @@ public class AccountServiceImpl implements IAccountService {
 		return cashStream.getId();
 	}
 	@Override
+	@Transactional
 	public Integer unfreezeLenderAccount(Integer lenderAccountId, BigDecimal amount, Integer submitId, String description) throws IllegalConvertException {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
 		CashStream cashStream=new CashStream();
@@ -142,6 +143,7 @@ public class AccountServiceImpl implements IAccountService {
 		return cashStream.getId();
 	}
 	@Override
+	@Transactional
 	public Integer pay(Integer lenderAccountId, Integer borrowerAccountId, BigDecimal chiefamount, Integer submitId, String description) throws IllegalConvertException {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
 		checkNullObject(BorrowerAccount.class, borrowerAccountDao.find(borrowerAccountId));
@@ -170,6 +172,7 @@ public class AccountServiceImpl implements IAccountService {
 	}
 
 	@Override
+	@Transactional
 	public Integer repay(Integer lenderAccountId, Integer borrowerAccountId, BigDecimal chiefamount, BigDecimal interest, Integer submitId, Integer paybackId, String description) throws IllegalConvertException {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
 		checkNullObject(BorrowerAccount.class, borrowerAccountDao.find(borrowerAccountId));

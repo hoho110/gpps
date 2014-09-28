@@ -132,7 +132,7 @@ public class PayBackServiceImpl implements IPayBackService {
 			if(pb.getState()==PayBack.STATE_DELAY||pb.getDeadline()<=cal.getTimeInMillis())
 				throw new UnSupportRepayInAdvanceException("请先将前面的还款还清才允许提前还贷");
 		}
-		long lastRepaytime=0;
+		long lastRepaytime=order.getIncomeStarttime();
 		for(PayBack pb:payBacks)
 		{
 			if(pb.getId()==(int)(payBack.getId()))
@@ -148,7 +148,7 @@ public class PayBackServiceImpl implements IPayBackService {
 		//重新计算最后还款
 		Calendar lastCal=Calendar.getInstance();
 		lastCal.setTimeInMillis(lastRepaytime);
-		int days=cal.get(Calendar.DAY_OF_YEAR)-lastCal.get(Calendar.DAY_OF_YEAR);
+		int days=getDays(lastCal, cal);
 		payBack.setInterest(PayBack.BASELINE.multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
 		payBack.setDeadline(cal.getTimeInMillis());
 		payBackDao.update(payBack);

@@ -32,7 +32,7 @@
 		<div style="width:100%" id="message"></div>
 		<div class="form-group has-success has-feedback">
 			<label class="control-label col-sm-3" for="loginId">用户名</label>
-			<div class="col-sm-9">
+			<div class="col-sm-9" id="loginIdContent">
 				<input type="text" class="form-control" id="loginId">
 			</div>
 		</div>
@@ -94,9 +94,12 @@ function removeMessage(){
 $(document).ready(function() {
 	
 	header('resetpsw');
-	var where =document.referrer;
 	
 	$('#loginId').focus();
+	
+		if(cuser){
+			$('#loginIdContent').html('<label class="control-label">'+cuser.loginId+'</label>');
+		}
 	
        $('#confirm').click(function(e){
     	   var loginId = cuser==null?$('#loginId').val():cuser.loginId;
@@ -149,7 +152,10 @@ $(document).ready(function() {
 
 			try{
 				service.changePassword(loginId, password, validate);
-				window.location.href="login.html";
+				if(cuser)
+					window.location.href="myaccount.html";
+				else
+					window.location.href="login.html";
 			}catch(e){
 				alert(e.message);
 				$('input#password').val('');

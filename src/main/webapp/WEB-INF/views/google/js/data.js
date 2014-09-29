@@ -543,7 +543,7 @@ var createJQIntro = function(){
 
 var createNavLevel2 = function(nav){
 	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
-	if(nav=='myaccount'){
+	if(nav=='mycenter'){
 		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');
 		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
 		

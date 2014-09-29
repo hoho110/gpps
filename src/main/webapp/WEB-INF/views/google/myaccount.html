@@ -148,7 +148,7 @@ a.accordion-toggle {
 
 						<div class="btn-group-vertical"
 							style="width: 100%; margin-top: 42px;">
-							<button type="button" id="myaccount"
+							<button type="button" id="mycenter"
 								class="btn nav-first btn-default btn-lg">会员中心</button>
 							<button type="button" id="submit"
 								class="btn nav-first btn-default btn-lg">投资查看</button>
@@ -199,6 +199,7 @@ a.accordion-toggle {
 	<script src="js/plugins/morris/morris.js"></script>
 	<script src="js/jquery.dataTables.js"></script>
 	<script src="js/mine.js"></script>
+	<script src="js/tool.js"></script>
 	<script src="js/data.js"></script>
 	<script src="js/myaccount.js"></script>
 	<script type="text/javascript"
@@ -214,11 +215,12 @@ a.accordion-toggle {
         <script src="js/head.js"></script>
 		<script src="js/foot.js"></script>
 	<script>
-		$(document)
-				.ready(
-						function() {
+		$(document).ready(function() {
 							
 							header('myaccount');
+							
+							var fid = getQueryString('fid');
+							var sid = getQueryString('sid');
 
 							var service = EasyServiceClient
 									.getRemoteProxy("/easyservice/gpps.service.ILenderService");
@@ -286,11 +288,9 @@ a.accordion-toggle {
 												window
 														.open("/account/thirdPartyRegist/request");
 												if (confirm("第三方认证是否成功?")) {
-													window.parent
-															.toward("myaccount");
+													window.location.href = "myaccount.html";
 												} else {
-													window.parent
-															.toward("myaccount");
+													window.location.href = "myaccount.html";
 												}
 											});
 							}
@@ -305,8 +305,7 @@ a.accordion-toggle {
 												window.location.href = "cashout.html";
 											});
 
-							$('button.nav-first').click(
-											function(e) {
+							$('button.nav-first').click(function(e) {
 												$('button.nav-first').removeClass(
 														'active');
 												$(this).addClass('active');
@@ -322,10 +321,7 @@ a.accordion-toggle {
 														.append(
 																'<div style="clear:both;"></div>');
 
-												$('ul.nav-second li a')
-														.on(
-																'click',
-																function(e) {
+												$('ul.nav-second li a').on('click',function(e) {
 																	$(
 																			'ul.nav-second li')
 																			.removeClass(
@@ -471,11 +467,16 @@ a.accordion-toggle {
 																				});
 																	}
 																});
-
-												$('ul.nav-second li a').first().trigger('click');
-											})
-
+												if(sid!=null)
+													$('ul.nav-second li a[data-sk="'+sid+'"]').trigger('click');
+												else
+													$('ul.nav-second li a').first().trigger('click');
+											});
+							if(fid!=null){
+								$('#'+fid).trigger('click');
+							}else{
 							$('#submit').trigger('click');
+							}
 
 						});
 	</script>

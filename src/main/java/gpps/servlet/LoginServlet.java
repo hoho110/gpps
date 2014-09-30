@@ -1,8 +1,10 @@
 package gpps.servlet;
 
 import gpps.service.ILenderService;
+import gpps.service.ILoginService;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +27,30 @@ public class LoginServlet {
 			lenderService.writeGraphValidateCode(resp.getOutputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	@RequestMapping(value={"/messageValidateCode"})
+	public void getMessageValidateCode(HttpServletRequest req, HttpServletResponse resp)
+	{
+		resp.setContentType("text/html");
+		resp.setCharacterEncoding("utf-8");
+		PrintWriter writer=null;
+		try {
+			writer=resp.getWriter();
+			StringBuilder text=new StringBuilder();
+			text.append("您好，您的***网校验码为:");
+			text.append(String.valueOf(lenderService.getCurrentSession().getAttribute(ILoginService.SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODE)));
+			text.append(",").append("请您在").append(ILoginService.MESSAGEVALIDATECODEEXPIRETIME/60/1000).append("分钟内使用，过期请重新获取。");
+			writer.write(text.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally
+		{
+			if(writer!=null)
+			{
+				writer.flush();
+				writer.close();
+			}
 		}
 	}
 }

@@ -86,7 +86,7 @@ public class AccountServlet {
 		String thirdPartyAccount="thirdPartyAccount";
 		lenderService.registerThirdPartyAccount(thirdPartyAccount);
 		//TODO 重定向到指定页面
-		writeLocal(resp, "第三方注册成功，转向我的账户页面<a href ='/views/google/myaccount.html?nav=myaccount'>返回</a>");
+		writeLocal(resp, "第三方注册成功，转向我的账户页面<a href ='/views/google/myaccount.html?fid=mycenter'>返回</a>");
 	}
 	@RequestMapping(value={"/account/recharge/request"})
 	public void recharge(HttpServletRequest req, HttpServletResponse resp)
@@ -129,7 +129,7 @@ public class AccountServlet {
 			log.error(e.getMessage(),e);
 		}
 		//TODO 重定向到指定页面
-		writeLocal(resp, "充值成功，转向我的账户页面<a href ='/views/google/myaccount.html?nav=myaccount'>返回</a>");
+		writeLocal(resp, "充值成功，转向我的账户页面<a href ='/views/google/myaccount.html?fid=cash&sid=cash-recharge'>返回</a>");
 	}
 	@RequestMapping(value={"/account/cash/request"})
 	public void cash(HttpServletRequest req, HttpServletResponse resp)
@@ -184,7 +184,7 @@ public class AccountServlet {
 			log.error(e.getMessage(),e);
 		}
 		//TODO 重定向到指定页面
-		writeLocal(resp, "取现成功，转向我的账户页面<a href ='/views/google/myaccount.html?nav=myaccount'>返回</a>");
+		writeLocal(resp, "取现成功，转向我的账户页面<a href ='/views/google/myaccount.html?fid=cash&sid=cash-withdraw'>返回</a>");
 	}
 	@RequestMapping(value={"/account/buy/request"})
 	public void buy(HttpServletRequest req, HttpServletResponse resp)
@@ -242,7 +242,7 @@ public class AccountServlet {
 				log.error(e.getMessage(),e);
 			}
 			//TODO 重定向到指定页面
-			writeLocal(resp, "购买成功，转向我的订单页面<a href ='/views/google/myaccount.html?nav=myaccount'>返回</a>");
+			writeLocal(resp, "购买成功，转向我的订单页面<a href ='/views/google/myaccount.html?fid=submit&sid=submit-all'>返回</a>");
 		}
 		else
 		{

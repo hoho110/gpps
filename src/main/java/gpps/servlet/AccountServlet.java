@@ -76,24 +76,8 @@ public class AccountServlet {
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
-		
-		resp.setContentType("text/html;charset=UTF-8");
-		PrintWriter writer=null;
-		try {
-			writer=resp.getWriter();
-			String html="<a href='/account/thirdPartyRegist/response'>第三方认证</a>";
-			writer.write(html);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally
-		{
-			if(writer!=null)
-			{
-				writer.flush();
-				writer.close();
-			}
-		}
-		log.debug("第三方注册完毕，跳转回本地");
+		writeThirdParty(resp, "说明：该步骤跳转到第三方平台进行用户账户注册.<p><a href='/account/thirdPartyRegist/response'>完成第三方认证</a><p><a href='javascript:window.close()'>未在第三方认证</a>");
+//		log.debug("第三方注册完毕，跳转回本地");
 	}
 	@RequestMapping(value={"/account/thirdPartyRegist/response"})
 	public void completeThirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
@@ -102,7 +86,7 @@ public class AccountServlet {
 		String thirdPartyAccount="thirdPartyAccount";
 		lenderService.registerThirdPartyAccount(thirdPartyAccount);
 		//TODO 重定向到指定页面
-		write(resp, "第三方注册成功，转向我的账户页面<a href ='/views/google/container.html?nav=myaccount'>返回</a>");
+		writeLocal(resp, "第三方注册成功，转向我的账户页面<a href ='/views/google/myaccount.html?nav=myaccount'>返回</a>");
 	}
 	@RequestMapping(value={"/account/recharge/request"})
 	public void recharge(HttpServletRequest req, HttpServletResponse resp)
@@ -132,12 +116,7 @@ public class AccountServlet {
 		}
 		log.debug("充值：amount="+amount+",cashStreamId="+cashStreamId);
 		log.debug("跳转到第三方进行充值");
-		log.debug("第三方充值完毕，跳转回本地");
-		try {
-			resp.sendRedirect("/account/recharge/response?cashStreamId="+cashStreamId);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeThirdParty(resp, "说明：该步骤跳转到第三方平台,用户完成从银行卡到第三方平台账户的充值.<p><a href='/account/recharge/response?cashStreamId="+cashStreamId+"'>充值成功</a><p><a href='javascript:window.close()'>充值失败</a>");
 	}
 	@RequestMapping(value={"/account/recharge/response"})
 	public void completeRecharge(HttpServletRequest req, HttpServletResponse resp)
@@ -150,7 +129,7 @@ public class AccountServlet {
 			log.error(e.getMessage(),e);
 		}
 		//TODO 重定向到指定页面
-		write(resp, "充值成功，转向我的账户页面<a href ='/views/google/container.html?nav=myaccount'>返回</a>");
+		writeLocal(resp, "充值成功，转向我的账户页面<a href ='/views/google/myaccount.html?nav=myaccount'>返回</a>");
 	}
 	@RequestMapping(value={"/account/cash/request"})
 	public void cash(HttpServletRequest req, HttpServletResponse resp)
@@ -192,12 +171,7 @@ public class AccountServlet {
 		}
 		log.debug("取现：amount="+amount+",cashStreamId="+cashStreamId);
 		log.debug("跳转到第三方进行取现");
-		log.debug("第三方取现完毕，跳转回本地");
-		try {
-			resp.sendRedirect("/account/cash/response?cashStreamId="+cashStreamId);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeThirdParty(resp, "说明：该步骤跳转到第三方平台,用户输入第三方平台账户密码完成从账户到银行卡的提现.<p><a href='/account/cash/response?cashStreamId="+cashStreamId+"'>提现成功</a><p><a href='javascript:window.close()'>提现失败</a>");
 	}
 	@RequestMapping(value={"/account/cash/response"})
 	public void completeCash(HttpServletRequest req, HttpServletResponse resp)
@@ -210,7 +184,7 @@ public class AccountServlet {
 			log.error(e.getMessage(),e);
 		}
 		//TODO 重定向到指定页面
-		write(resp, "取现成功，转向我的账户页面<a href ='/views/google/container.html?nav=myaccount'>返回</a>");
+		writeLocal(resp, "取现成功，转向我的账户页面<a href ='/views/google/myaccount.html?nav=myaccount'>返回</a>");
 	}
 	@RequestMapping(value={"/account/buy/request"})
 	public void buy(HttpServletRequest req, HttpServletResponse resp)
@@ -248,23 +222,9 @@ public class AccountServlet {
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
-		resp.setContentType("text/html;charset=UTF-8");
-		PrintWriter writer=null;
-		try {
-			writer=resp.getWriter();
-			String html="<a href='/account/buy/response?cashStreamId="+cashStreamId+"&success=true'>购买成功</a><p>"
-					+"<a href='/account/buy/response?cashStreamId="+cashStreamId+"&success=false'>购买失败</a>";
-			writer.write(html);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally
-		{
-			if(writer!=null)
-			{
-				writer.flush();
-				writer.close();
-			}
-		}
+		String html="说明：该步骤跳转到第三方平台,用户输入第三方平台账户密码完成购买<p>.<a href='/account/buy/response?cashStreamId="+cashStreamId+"&success=true'>购买成功</a><p>"
+				+"<a href='javascript:window.close()'>购买失败</a>";
+		writeThirdParty(resp, html);
 	}
 	@RequestMapping(value={"/account/buy/response"})
 	public void completeBuy(HttpServletRequest req, HttpServletResponse resp)
@@ -282,7 +242,7 @@ public class AccountServlet {
 				log.error(e.getMessage(),e);
 			}
 			//TODO 重定向到指定页面
-			write(resp, "购买成功，转向我的订单页面<a href ='/views/google/container.html?nav=myaccount'>返回</a>");
+			writeLocal(resp, "购买成功，转向我的订单页面<a href ='/views/google/myaccount.html?nav=myaccount'>返回</a>");
 		}
 		else
 		{
@@ -292,7 +252,7 @@ public class AccountServlet {
 			} catch (IllegalConvertException e) {
 				e.printStackTrace();
 			}
-			write(resp, "购买失败，转向我的待支付页面<a href ='/views/google/container.html?nav=myaccount'>返回</a>");
+			writeLocal(resp, "购买失败，转向我的待支付页面<a href ='/views/google/myaccount.html?nav=myaccount'>返回</a>");
 		}
 		
 	}
@@ -364,12 +324,7 @@ public class AccountServlet {
 		}
 		log.debug("还款：amount="+payBack.getChiefAmount().add(payBack.getInterest())+",cashStreamId="+cashStreamId);
 		log.debug("跳转到第三方进行还款");
-		log.debug("第三方还款完毕，跳转回本地");
-		try {
-			resp.sendRedirect("/account/repay/response?cashStreamId="+cashStreamId);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		writeThirdParty(resp, "说明：该步骤跳转到第三方平台,借款人输入第三方平台账户密码完成还款.<p><a href='/account/repay/response?cashStreamId="+cashStreamId+"'>还款成功</a><p><a href='javascript:window.close()'>还款失败</a>");
 	}
 	@RequestMapping(value={"/account/repay/response"})
 	public void completeRepay(HttpServletRequest req, HttpServletResponse resp)
@@ -413,6 +368,23 @@ public class AccountServlet {
 		//TODO 重定向到指定页面
 		write(resp, "还款成功，返回管理页面<a href='/views/google/admin.html'>返回</a>");
 	}
+	private void writeThirdParty(HttpServletResponse resp,String message)
+	{
+
+		StringBuilder text=new StringBuilder();
+		text.append("当前页面为第三方平台（如汇付天下）模拟页面，模拟本系统集成第三方平台后用户在第三方平台可以做的操作").append("<p>");
+		text.append("用户可操作如下，如用户在跳转到第三方后未进行任何操作直接关闭第三方平台页面，则该种情况等同于操作失败").append("<p>");
+		text.append(message);
+		write(resp, text.toString());
+	}
+	private void writeLocal(HttpServletResponse resp,String message)
+	{
+		StringBuilder text=new StringBuilder();
+		text.append("该页面为第三方操作成功后的返回页面，会提示\"第三方操作成功\"之类的说明文字，然后自动跳转到用户的相应页面，具体跳转页面如下所示").append("<p>");
+		text.append("实际系统在提示操作成功后倒计时5s自动跳转到相应页面，此处为了流程演示，暂时由用户点击后才跳转到相应页面.").append("<p>");
+		text.append(message);
+		write(resp, text.toString());
+	}
 	private void write(HttpServletResponse resp,String message)
 	{
 		resp.setContentType("text/html");
@@ -420,7 +392,7 @@ public class AccountServlet {
 		PrintWriter writer=null;
 		try {
 			writer=resp.getWriter();
-			writer.write(message);
+			writer.write(message.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally
@@ -433,4 +405,5 @@ public class AccountServlet {
 		}
 		
 	}
+	
 }

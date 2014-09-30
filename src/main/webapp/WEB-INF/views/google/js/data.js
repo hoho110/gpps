@@ -35,7 +35,7 @@ var createProductLine = function(cont, id, title, label1, des1, label2, des2, de
 	var row2_col1 = $('<div></div>').addClass('col-xs-3 col-sm-3 col-md-4');
 	
 	
-	var a = $('<a href="plIntroduction.html?sid='+id+'" title="产品类型详细介绍"></a>');
+	var a = $('<a href="intro/intro.html?sid='+id+'" target="_blank" title="产品类型详细介绍"></a>');
 	row2_col1.append($('<div class="seeMore"></div>').append(a));
 	
 	var row2_col2 = $('<div></div>').addClass('col-xs-9 col-sm-9 col-md-8');

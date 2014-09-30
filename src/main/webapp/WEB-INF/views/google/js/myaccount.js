@@ -178,20 +178,62 @@ var myscore = function(container){
 	container.append(content);
 }
 var myactivity = function(container){
+	
 	var content = $('<div></div>');
 	var str = "";
-	str += '<table class="table table-striped table-hover" style="min-width:300px;">';
-	str += '<thead>';	
-	str += '<tr><td style="min-width:100px;">活动名称</td><td style="min-width:50px;">活动日期</td><td style="min-width:100px;">活动类型</td><td style="min-width:50px;">主办方</td><td style="min-width:50px;">状态</td></tr>';
-	str += '</thead>';
-	str += '<tbody>';
-	str += '<tr><td><a href="../activity/index.html" target="_blank">XXXX杯跑步活动</td><td>2014-9-31</td><td>长跑</td><td>春蕾资产管理</td><td><span class="orange">待参加</span></td></tr>';
-	str += '<tr><td><a href="../activity/index.html" target="_blank">XXXX杯跑步活动</td><td>2014-9-31</td><td>徒步</td><td>春蕾资产管理</td><td><span class="orange">待参加</span></td></tr>';
-	str += '<tr><td><a href="../activity/index.html" target="_blank">XXXX杯跑步活动</td><td>2014-9-31</td><td>自驾游</td><td>春蕾资产管理</td><td>已参加</td></tr>';
-	str += '<tr><td><a href="../activity/index.html" target="_blank">XXXX杯跑步活动</td><td>2014-9-31</td><td>自驾游</td><td>春蕾资产管理</td><td>已参加</td></tr>';
-	str += '<tr><td><a href="../activity/index.html" target="_blank">XXXX杯跑步活动</td><td>2014-9-31</td><td>旅游</td><td>春蕾资产管理</td><td>已参加</td></tr>';
-	str += '<tr><td><a href="../activity/index.html" target="_blank">XXXX杯跑步活动</td><td>2014-9-31</td><td>旅游</td><td>春蕾资产管理</td><td>未参加</td></tr>';
-	str += '</tbody>';
+	str += '<table class="ui-list-invest" style="width:100%">';
+	str += '<tr id="header" style="padding-left:0px; padding-right:0px;">';
+	str += '<td class="color-gray-text text-center">活动名称</td>';
+	str += '<td class="color-gray-text text-center">活动日期</td>';
+	str += '<td class="color-gray-text text-center">活动类型</td>';
+	str += '<td class="color-gray-text text-center">主办方</td>';
+	str += '<td class="color-gray-text text-center">状态</td>';
+	str += '</tr>';
+	
+	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
+	str += '<td class="text-big">';
+	str += '<div style="max-width:150px; overflow:hidden;">';
+	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
+	str += '</td>';
+	str += '<td class="ui-list-field text-center">2014-9-31</td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
+	str += '</tr>';
+	
+	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
+	str += '<td class="text-big">';
+	str += '<div style="max-width:150px; overflow:hidden;">';
+	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
+	str += '</td>';
+	str += '<td class="ui-list-field text-center">2014-9-31</td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
+	str += '</tr>';
+	
+	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
+	str += '<td class="text-big">';
+	str += '<div style="max-width:150px; overflow:hidden;">';
+	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
+	str += '</td>';
+	str += '<td class="ui-list-field text-center">2014-9-31</td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
+	str += '</tr>';
+	
+	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
+	str += '<td class="text-big">';
+	str += '<div style="max-width:150px; overflow:hidden;">';
+	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
+	str += '</td>';
+	str += '<td class="ui-list-field text-center">2014-9-31</td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
+	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
+	str += '</tr>';
+	
 	str += '</table>';
 	content.append(str);
 	container.append(content);

@@ -15,6 +15,9 @@
 <link href="css/mine.css" rel="stylesheet">
 <link href="css/plugins/dataTables/jquery.dataTables.css" rel="stylesheet">
 
+<link href="css/plist/a.css" rel="stylesheet">
+<link href="css/myaccount/myaccount.css" rel="stylesheet">
+
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -322,8 +325,7 @@ a.accordion-toggle {
 																'<div style="clear:both;"></div>');
 
 												$('ul.nav-second li a').on('click',function(e) {
-																	$(
-																			'ul.nav-second li')
+																	$('ul.nav-second li')
 																			.removeClass(
 																					'active');
 																	$(this)
@@ -331,30 +333,15 @@ a.accordion-toggle {
 																			.addClass(
 																					'active');
 
-																	var ff = nav2funtion[$(
-																			this)
-																			.attr(
-																					'data-sk')];
+																	var ff = nav2funtion[$(this).attr('data-sk')];
 
 																	if (ff == null) {
-																		$(
-																				'div#content')
-																				.html(
-																						$(
-																								this)
-																								.attr(
-																										'data-sk'));
+																		$('div#content').html($(this).attr('data-sk'));
 																	} else if (typeof (ff) == "function") {
-																		$(
-																				'div#content')
-																				.html(
-																						'');
+																		$('div#content').html('');
 																		ff($('div#content'));
 																	} else if (ff == "tools-receive-statistics") {
-																		$(
-																				'div#content')
-																				.html(
-																						'');
+																		$('div#content').html('');
 																		$(
 																				'<div id="morris-bar-chart"></div>')
 																				.appendTo(
@@ -467,15 +454,16 @@ a.accordion-toggle {
 																				});
 																	}
 																});
-												if(sid!=null)
-													$('ul.nav-second li a[data-sk="'+sid+'"]').trigger('click');
-												else
 													$('ul.nav-second li a').first().trigger('click');
 											});
 							if(fid!=null){
 								$('#'+fid).trigger('click');
+								if(sid!=null)
+									$('ul.nav-second li a[data-sk="'+sid+'"]').trigger('click');
+								else
+									$('ul.nav-second li a').first().trigger('click');
 							}else{
-							$('#submit').trigger('click');
+								$('#submit').trigger('click');
 							}
 
 						});

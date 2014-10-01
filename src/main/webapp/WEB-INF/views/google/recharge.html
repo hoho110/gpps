@@ -4,11 +4,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
-<title>政X融X网</title>
+<title>政采贷</title>
 
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
 
+
+<link href="css/index/justified-nav.css" rel="stylesheet">
 <link href="css/mine.css" rel="stylesheet">
 
 <link href="css/plist/a.css" rel="stylesheet">
@@ -27,6 +29,10 @@
 <script src="js/bootstrap.min.js"></script>
 
 <div class="container-fluid">
+<div class="row" id="header" style="margin-left:0px; margin-right:0px;">
+      
+</div>
+
 <div class="row" style="padding-left:5px; padding-right:5px; margin-top:5px;">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
@@ -150,12 +156,14 @@
 	src="/resources/EasyServiceClientFullZ.js"></script>
 <script type="text/javascript"
 	src="/easyservice/gpps.service.ILenderService?json"></script>
+	<script src="js/head.js"></script>
 <script>
+
 function getbank(bank){
 	
 }
 $(document).ready(function() {
-	
+	header('recharge');
 	
 	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 	var cuser = service.getCurrentUser();
@@ -214,11 +222,11 @@ $(document).ready(function() {
 	});
 	
 	$('#success').click(function(e){
-		window.location.href = "myaccount.html";
+		window.location.href = "myaccount.html?fid=cash";
 	});
 	
 	$('#fail').click(function(e){
-		window.location.href = "myaccount.html";
+		window.location.href = "myaccount.html?fid=cash";
 	});
 })
 </script>

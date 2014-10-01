@@ -59,6 +59,8 @@ public interface ISubmitService {
 	public Map<String, Object> findMyAllSubmits(int offset, int recnum);
 
 	public List<Submit> findMyAllWaitforPayingSubmits();
+	
+	public List<Submit> findMyAllRetreatSubmits();
 
 	public Map<String, Object> findMyAllSubmitsByProductStates(int productStates,int offset,int recnum);
 

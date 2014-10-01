@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>政采贷</title>
+    <title>政采贷>产品详情</title>
     
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/index/justified-nav.css" rel="stylesheet">
@@ -22,12 +22,17 @@
     
  <div class="container">
 
+<div class="row" id="header" style="padding-left:0px; padding-right:0px;">
+      
+      </div>
+
+
 <div class="row main-wrap">
  
 <div class="row content-head clf">
     <ul class="bcrumb">
-        <li><a href="index.html">政采贷首页</a> <span class="divider">&gt;</span></li>
-        <li id="productseries"></li>
+    	<li><a href="productlist.html">投资中心</a> <span class="divider">&gt;</span></li>
+        <li class="active" id="productseries"></li>
         <li class="active">项目详情</li>
     </ul>
 </div>
@@ -40,7 +45,7 @@
                                                 <span class="detail-promotion"></span>
         </div>
         <p id="product-published-date" class="product-published-date">
-            			发布时间：2014-09-01 14:17:00
+            			
         </p>
     </div>
  
@@ -50,32 +55,37 @@
                 <li>
                     <p>项目本金</p>
  
-                    <p><strong id="totalAmount">177,000.00 元</strong></p>
+                    <p><strong id="totalAmount"></strong></p>
                 </li>
                 <li>
                     <p>预期年化利率</p>
  
-                    <p><strong id="rate" class="tips-title" title="按照中国人民银行同期贷款基准利率上浮40%">12%</strong>
+                    <p><strong id="rate" class="tips-title"></strong>
                     </p>
                 </li>
                 <li>
                     <p>最长期限</p>
  
                     <p>
-                        <strong id="duration">36个月</strong>
+                        <strong id="duration"></strong>
                     </p>
                 </li>
-                <li class="last-col">
+                <li>
                     <p>产品类型</p>
-                                                                        <td class="descriptData raise-data">
                                 <a class="tips-title" href="plIntroduction.html" target="_blank" title="查看稳健型产品的详细说明">
-                                    <strong id="pseriestitle">稳健型</strong></a>
-                            </td>
+                                    <strong id="pseriestitle"></strong></a>
                                             
+                </li>
+                <li class="last-col">
+                    <p>可购级别</p>
+ 
+                    <p>
+                        <strong id="leveltobuy"></strong>
+                    </p>
                 </li>
             </ul>
             <div class="income-count clf">
-                <p id="productdescription">本产品由XXX担保公司进行本息担保，项目设置最迟还款期限，但是根据政府订单的回款情况可能提前还款。</p>
+                <p id="productdescription"></p>
  
             </div>
             <div class="other-detail-info clf">
@@ -85,14 +95,14 @@
                         <div class="progress">
                             <div class="bar" id="progressBar" style="width:22px;"></div>
                         </div>
-                        <span id="progressTxt" class="progressTxt">15%</span>
+                        <span id="progressTxt" class="progressTxt"></span>
                     </div>
                                             </div>
                         <div class="invest-reward-wrap clf">
                 <p class="reward-label">还款模式：</p>
                   <div class="invest-reward-body">
                               <span id="reward-info" class="reward-info clf">
-        按月还息，到期一次性还本
+       
      </span>
     
  
@@ -112,7 +122,7 @@
                  <div class="raise-status-wrap">
             <div class="raise-status-online">
                 <p id="remainamount" class="remaining-amount">
-                                                                              剩余可投金额：<strong>177,000.00元</strong>
+                                                                             
                 </p>
                 <label id="stateMessage">请填写投资金额：</label>
                     <div class="raise-operate operate clf">
@@ -130,7 +140,7 @@
             <div class="balanceAmount">
             <p id="loginstatus" class="balanceAmountCon clf">
             <a href="recharge.html" style="margin-right:20px;">充值</a>
-                		账户可用余额：<span class="amountFormat">19000</span> 元
+                		账户可用余额：<span class="amountFormat"></span> 元
             </p>
 </div>    
 
@@ -280,6 +290,7 @@
 <script type="text/javascript"
 		src="/easyservice/gpps.service.IProductActionService?json"></script>				
 
+<script src="js/head.js"></script>
 <script src="js/foot.js"></script>
  <script>
  
@@ -287,6 +298,8 @@
  
  
   $(document).ready(function () {
+	  header('productdetail');
+	  
 	  var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
  	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
  	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
@@ -354,6 +367,7 @@
  	$('#addAmount').html('递增金额：'+product.miniAdd+'元');
  	$('#rate').html(parseInt(parseFloat(product.rate.value)*100)+"%");
  	$('#duration').html(parseInt((product.incomeEndtime-order.incomeStarttime+23*3600*1000)/(24*3600*1000))+'天');
+ 	$('#leveltobuy').html("level"+product.levelToBuy);
  	$('#pseriestitle').html(series.title);
  	$('#remainamount').html( '剩余可投金额：<strong>'+(parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))+'元</strong>');
  	
@@ -405,7 +419,7 @@
  		var cuser = lenderService.getCurrentUser();  
  		if(cuser==null){
  			if(confirm('登录后才能购买产品，现在登录？')){
- 				window.location.href = "login.html";
+ 				window.location.href = "login.html?rb=productdetail.html%3Fpid="+pid;
  			}
  			return;
  		}
@@ -473,7 +487,7 @@
         	 
      var cuser = lenderService.getCurrentUser();  
      if(cuser==null){
-    	 $('p#loginstatus').html('<a href="login.html" style="margin-right:20px;">登录</a>您尚未登录');
+    	 $('p#loginstatus').html('<a href="login.html?rb=productdetail.html%3Fpid='+pid+'" style="margin-right:20px;">登录</a>您尚未登录');
      }else{
     	 var account = accountDao.find(cuser.accountId);
     	 $('p#loginstatus').html('<a href="recharge.html" style="margin-right:20px;">充值</a>账户可用余额：<span class="amountFormat">'+account.usable.value+'</span> 元');

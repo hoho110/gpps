@@ -227,6 +227,23 @@ public class SubmitServiceImpl implements ISubmitService {
 	}
 
 	@Override
+	public List<Submit> findMyAllRetreatSubmits(){
+		Lender lender=lenderService.getCurrentUser();
+		List<Integer> states=new ArrayList<Integer>();
+		states.add(Submit.STATE_UNSUBSCRIBE);
+		List<Submit> submits=submitDao.findAllByLenderAndStates(lender.getId(), states);
+		if(submits==null||submits.size()==0)
+			return new ArrayList<Submit>(0);
+		for(Submit submit:submits)
+		{
+			submit.setProduct(productService.find(submit.getProductId()));
+			submit.getProduct().setGovermentOrder(govermentOrderDao.find(submit.getProduct().getGovermentorderId()));
+			submit.setPayExpiredTime(submit.getCreatetime()+Submit.PAYEXPIREDTIME);
+		}
+		return submits;
+	}
+	
+	@Override
 	public List<Submit> findMyAllWaitforPayingSubmits() {
 		Lender lender=lenderService.getCurrentUser();
 		List<Integer> states=new ArrayList<Integer>();

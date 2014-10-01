@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>政采贷</title>
+    <title>政采贷>登陆</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -68,6 +68,7 @@
 				src="/resources/EasyServiceClientFullZ.js"></script>
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.ILenderService?json"></script>
+		<script src="js/tool.js"></script>
   </body>
   
   
@@ -91,7 +92,8 @@
 $(document).ready(function() {
 	
 	header('login');
-	var where =document.referrer;
+	
+	var rb = getQueryString('rb');
 	
 	
 	var src="../../login/graphValidateCode?t="+Math.random();
@@ -124,7 +126,10 @@ $(document).ready(function() {
 			}
 			try{
 			service.login(username, password, validate);
-			window.location.href="myaccount.html";
+			if(rb!=null)
+				window.location.href=rb;
+			else
+				window.location.href="myaccount.html";
 			}catch(e){
 				alert(e.message);
 				$('input#password_input').val('');

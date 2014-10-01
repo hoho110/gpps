@@ -1,12 +1,4 @@
 
-var lenderLevelToName = {
-		0 : '普通会员',
-		1 : 'VIP会员',
-		2 : '白银VIP会员',
-		3 : '黄金VIP会员',
-		4 : '白金VIP会员',
-		5 : '钻石VIP会员'
-}
 _defaultDataTableOLanguage = {
 		"sProcessing" : "<img src ='images/waiting.gif' height = 18/>正在查询中，请稍后......",
 		"sLengthMenu" : "每页 _MENU_ 条记录",
@@ -136,7 +128,7 @@ var myscore = function(container){
 	var lender=lenderService.getCurrentUser();
 	var content = $('<div></div>');
 	var name = lender.name==null?lender.loginId : lender.name
-	content.append('<p>您好'+name+'，您的积分是<span class="orange">'+lender.grade+'</span>分，等级为<span class="orange">'+lenderLevelToName[lender.level]+'</span></p>');
+	content.append('<p>您好'+name+'，您的积分是<span class="orange">'+lender.grade+'</span>分，会员等级为<span class="orange">level'+lender.level+'</span></p>');
 	content.append('<br><span class="orange">积分规则：</span>');
 	content.append('<p>如何获取积分的说明</p>');
 	var str = "";
@@ -145,12 +137,12 @@ var myscore = function(container){
 	str += '<tr><td style="min-width:100px;">会员等级</td><td style="min-width:50px;">对应积分</td><td style="min-width:100px;">有效期</td><td style="min-width:50px;">最低贡献值</td><td style="min-width:50px;">说明</td></tr>';
 	str += '</thead>';
 	str += '<tbody>';
-	str += '<tr><td>钻石VIP会员</td><td>10000000以上</td><td>3个月</td><td>1000000</td><td>有最低消费</td></tr>';
-	str += '<tr><td>白金VIP会员</td><td>1000000-10000000</td><td>3个月</td><td>300000</td><td>有最低消费</td></tr>';
-	str += '<tr><td>黄金VIP会员</td><td>200000-1000000</td><td>半年</td><td>100000</td><td>有最低消费</td></tr>';
-	str += '<tr><td>白银VIP会员</td><td>50000-200000</td><td>一年</td><td>10000</td><td>有最低消费</td></tr>';
-	str += '<tr><td>VIP会员</td><td>10000-50000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
-	str += '<tr><td>普通会员</td><td>0-10000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
+	str += '<tr><td>level6</td><td>10000000以上</td><td>3个月</td><td>1000000</td><td>有最低消费</td></tr>';
+	str += '<tr><td>level5</td><td>1000000-10000000</td><td>3个月</td><td>300000</td><td>有最低消费</td></tr>';
+	str += '<tr><td>level4</td><td>200000-1000000</td><td>半年</td><td>100000</td><td>有最低消费</td></tr>';
+	str += '<tr><td>level3</td><td>50000-200000</td><td>一年</td><td>10000</td><td>有最低消费</td></tr>';
+	str += '<tr><td>level2</td><td>10000-50000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
+	str += '<tr><td>level1</td><td>0-10000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
 	str += '</tbody>';
 	str += '</table>';
 	content.append(str);
@@ -166,12 +158,12 @@ var myscore = function(container){
 	str1 += '<tr><td style="min-width:100px;">会员等级</td><td style="min-width:50px;">特权一</td><td style="min-width:100px;">特权二</td><td style="min-width:50px;">特权三</td><td style="min-width:50px;">说明</td></tr>';
 	str1 += '</thead>';
 	str1 += '<tbody>';
-	str1 += '<tr><td>钻石VIP会员</td><td>10000000以上</td><td>3个月</td><td>1000000</td><td>有最低消费</td></tr>';
-	str1 += '<tr><td>白金VIP会员</td><td>1000000-10000000</td><td>3个月</td><td>300000</td><td>有最低消费</td></tr>';
-	str1 += '<tr><td>黄金VIP会员</td><td>200000-1000000</td><td>半年</td><td>100000</td><td>有最低消费</td></tr>';
-	str1 += '<tr><td>白银VIP会员</td><td>50000-200000</td><td>一年</td><td>10000</td><td>有最低消费</td></tr>';
-	str1 += '<tr><td>VIP会员</td><td>10000-50000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
-	str1 += '<tr><td>普通会员</td><td>0-10000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
+	str1 += '<tr><td>level6</td><td>10000000以上</td><td>3个月</td><td>1000000</td><td>有最低消费</td></tr>';
+	str1 += '<tr><td>level5</td><td>1000000-10000000</td><td>3个月</td><td>300000</td><td>有最低消费</td></tr>';
+	str1 += '<tr><td>level4</td><td>200000-1000000</td><td>半年</td><td>100000</td><td>有最低消费</td></tr>';
+	str1 += '<tr><td>level3</td><td>50000-200000</td><td>一年</td><td>10000</td><td>有最低消费</td></tr>';
+	str1 += '<tr><td>level2</td><td>10000-50000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
+	str1 += '<tr><td>level1</td><td>0-10000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
 	str1 += '</tbody>';
 	str1 += '</table>';
 	content.append(str1);
@@ -334,19 +326,6 @@ var submitall = function(container){
 }
 
 var submittoafford = function(container){
-//	var content = $('<div></div>');
-//	var str = "";
-//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-//	str += '<thead>';	
-//	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">状态</td><td style="min-width:100px;">投标完成时间</td><td style="min-width:50px;">金额</td><td style="min-width:50px;">最迟支付时间</td><td style="min-width:50px;">操作</td></tr>';
-//	str += '</thead>';
-//	str += '<tbody>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>待支付</td><td>2014-8-5</td><td>500</td><td>2014-8-7</td><td><a href="#">立即支付</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>待支付</td><td>2014-8-6</td><td>200</td><td>2014-8-7</td><td><a href="#">立即支付</a></td></tr>';
-//	str += '</tbody>';
-//	str += '</table>';
-//	content.append(str);
-//	return content;
 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
 	var columns = [ {
 		"sTitle" : "项目信息",
@@ -499,25 +478,45 @@ var submitpayback = function(container){
 	container.append(content);
 	table.dataTable(mySettings);
 }
-
+var submitretreat = function(container){
+	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
+	var columns = [ {
+		"sTitle" : "项目信息",
+			"code" : "info"
+	}, {
+		"sTitle" : "状态",
+		"code" : "state"
+	}, {
+		"sTitle" : "退订时间",
+		"code" : "lastmodifytime"
+	}, {
+		"sTitle" : "金额",
+		"code" : "amount"
+	}, {
+		"sTitle" : "备注",
+		"code" : "contract"
+	}];
+	var datas = null;
+	datas = submitService.findMyAllRetreatSubmits();
+	var aaData = new Array();
+	for(var i=0; i<datas.size(); i++){
+		var data=datas.get(i);
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"'>"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+		                    "已退订",
+		                    formatDate(data.lastmodifytime),
+		                    data.amount.value,
+		                    "支付失败"]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
 var submitdone = function(container){
-//	var content = $('<div></div>');
-//	var str = "";
-//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-//	str += '<thead>';	
-//	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">状态</td><td style="min-width:100px;">投标完成时间</td><td style="min-width:50px;">金额</td><td style="min-width:50px;">总利息</td><td style="min-width:50px;">合同</td></tr>';
-//	str += '</thead>';
-//	str += '<tbody>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>已关闭</td><td>2014-8-5</td><td>500</td><td>100</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>已关闭</td><td>2014-7-31</td><td>200</td><td>40</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款3</a></td><td>已关闭</td><td>2014-7-16</td><td>300</td><td>60</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款4</a></td><td>已关闭</td><td>2014-7-3</td><td>1500</td><td>300</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款5</a></td><td>已关闭</td><td>2014-6-18</td><td>1000</td><td>200</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款7</a></td><td>已关闭</td><td>2014-7-31</td><td>200</td><td>40</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '</tbody>';
-//	str += '</table>';
-//	content.append(str);
-//	return content;
 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
 	var columns = [ {
 		"sTitle" : "项目信息",
@@ -940,6 +939,7 @@ var nav2funtion = {
 		"submit-toaudit" : submittoaudit,
 		"submit-payback" : submitpayback,
 		"submit-done" : submitdone,
+		"submit-retreat" : submitretreat,
 		"payback-all" : paybackall,
 		"payback-have" : paybackhave,
 		"payback-to" : paybackto,

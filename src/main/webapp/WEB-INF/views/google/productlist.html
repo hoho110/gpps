@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>投资超市</title>
+    <title>政采贷 > 投资中心</title>
     <meta name="keywords" content="政采贷">
     <!-- Bootstrap core CSS -->
     
@@ -29,8 +29,8 @@
       </div>
 	<div class="main-wrap row">
     <ul class="bcrumb">
-        <li><a href="javascript:void(0);" onclick="window.location.reload(true)">投资频道</a> <span class="divider">&gt;</span></li>
-        <li id="nav_name" class="active">稳健型</li>
+        <li><a href="javascript:void(0);">投资中心</a> <span class="divider">&gt;</span></li>
+        <li id="nav_name" class="active"></li>
     </ul>
     <ul id="plnav" class="plnav list-nav-wrap clearfix">
     
@@ -40,9 +40,8 @@
         服务介绍
         <b></b>
     </p>
-    <div class="service-intro-con">
-                    <p>
-	预期年化利率 ：<span style="color:#ff0000;">6.0%~7.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 1000 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 3-12个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：一次性还本付息 &nbsp; &nbsp; &nbsp;<a href="plIntroduction.html" target="_blank">了解详情</a></p>
+    <div class="service-intro-con" id="intro">
+               
                                             </div>
 </div>
     <div class="list-wrap clearfix">
@@ -217,6 +216,9 @@
         		 $('li#nav_name').html('全部');
         		 var orders = orderService.findByStatesByPage(-1,0,10);
         		 refreshList(orders);
+        		 
+        		 $('#intro').html('<p>预期年化利率 ：<span style="color:#ff0000;">6.0%~7.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 1000 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 3-12个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：一次性还本付息 &nbsp; &nbsp; &nbsp;<a href="intro/intro.html" target="_blank">了解详情</a></p>');
+        		 
         		 $('a.constructure, a.stat').click(function(e){
               	   var info = $(this).parents('li').find('div.productinfo');
               	  	if(info.css('display')=='block'){
@@ -233,7 +235,6 @@
               	  		var stat = $(this).parents('li').find('a.stat');
               	  		stat.removeClass('btns').removeClass('btns-green').addClass('btns-grey');
               	  	}
-              	  	window.parent.justify(document.body.scrollHeight);
                  });
         	 });
         	 $('ul.plnav').append(li1);
@@ -248,9 +249,17 @@
         			 $(this).parent().parent().find('li').removeClass('selected');
             		 $(this).parent().addClass('selected');
             		 $('li#nav_name').html($(this).text());
-        			 var orders = orderService.findGovermentOrderByProductSeries(parseInt($(this).attr('id')),-1,0,10);
+        			
+        			 $('#intro').html('<p>预期年化利率 ：<span style="color:#ff0000;">6.0%~7.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 1000 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 3-12个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：一次性还本付息 &nbsp; &nbsp; &nbsp;<a href="intro/intro.html?sid='+id+'" target="_blank">了解详情</a></p>');
+            		 
+            		 var orders = orderService.findGovermentOrderByProductSeries(parseInt($(this).attr('id')),-1,0,10);
         			 refreshList(orders);
         		 })
+        		 
+        		 
+        		 
+        		 
+        		 
         	 }
         	 
         	 //a1.trigger('click');

@@ -3,7 +3,7 @@ var cuser = service.getCurrentUser();
 function header(title){
 	var divtitle = $('<div style="display:inline;"></div>');
 	divtitle.append('<h2 style="float:left;" class="text-muted">政采贷<small>&nbsp;&nbsp;信用创造价值</small></h2>');
-	var divusercontent = $('<div id="usercontent" style="float:right; font-size:16px; padding-top:30px;"></div>');
+	var divusercontent = $('<div id="usercontent" style="float:right; font-size:14px; color:#333; padding-top:30px;"></div>');
 	
 	if(title=='login' || title=='register'){
 		if(cuser!=null)
@@ -22,7 +22,7 @@ function header(title){
 	if(cuser==null){
 		divusercontent.html('<a href="login.html">登陆</a><span>&nbsp;|&nbsp;</span><a href="register.html">注册</a>');
 	}else{
-		divusercontent.html('下午好：'+cuser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="myaccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
+		divusercontent.html('下午好：'+cuser.loginId+'&nbsp;|&nbsp;会员级别:<a href="myaccount.html?fid=mycenter">level'+cuser.level+'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="myaccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
 	}
 		}
 	divtitle.append(divusercontent);

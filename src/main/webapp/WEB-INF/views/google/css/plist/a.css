@@ -71,3 +71,7 @@ a.darkgray:hover{color:#0697da;text-decoration:none}
 a.producttitle{
 	line-height: 30px;
 }
+
+.hidden{
+	display:hidden;
+}

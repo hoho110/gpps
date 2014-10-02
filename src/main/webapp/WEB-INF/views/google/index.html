@@ -40,6 +40,8 @@
 				src="/easyservice/gpps.service.IProductSeriesService?json"></script>
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
 
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -215,7 +217,7 @@ $(document).ready(function () {
 	
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
 	var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
-	
+	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
 	if(cuser==null){
 		$('#sider-content').html('<h4>数据中心</h4>');
 		var str = '<p>';
@@ -229,13 +231,31 @@ $(document).ready(function () {
 		usercontent.html('<a href="register.html" class="btn btn-warning" style="width:100%;">立刻注册</a>');
 		$('#sider-content').append(usercontent);
 	}else{
+		$('#sider-content').css('background-color','#fef9f1');
 		var name = cuser.name==null?cuser.loginId:cuser.name;
-		$('#sider-content').html('<h4>您好:'+name+'<small style="color:red; float:right;">&nbsp;&nbsp;级别level3</small></h4>');
+		
+		var account = accountDao.find(cuser.accountId);
+		var total = account.total;
+		tot = (parseFloat(total.value)+0.09).toFixed(0);
+
+		var usable = account.usable;
+		usa = (parseFloat(usable.value)+0.09).toFixed(0);
+
+		var freeze = account.freeze;
+		fre = (parseFloat(freeze.value)+0.09).toFixed(0);
+
+		var used = account.used;
+		uu = (parseFloat(used.value)+0.09).toFixed(0);
+
+		var totalincome = account.totalincome;
+		income = (parseFloat(totalincome.value)+0.09).toFixed(0);
+		
+		$('#sider-content').html('<h4>您好:'+name+'</h4>');
 		var str = '<p>';
-		str += '<span class="glyphicon glyphicon-pencil"></span>总资产50,000,000元<br>';
-		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>可用资金2000000元<br>';
-		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已投金额3000000元<br>';
-		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已获利息40000元<br>';
+		str += '<span class="glyphicon glyphicon-pencil"></span>总资产'+tot+'元<br>';
+		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>可用资金'+usa+'元<br>';
+		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已投金额'+uu+'元<br>';
+		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已获利息'+income+'元<br>';
 		str += '</p>';
 		$('#sider-content').append(str);
 		var usercontent = $('<div id="user_content" style="width:100%; margin-top:30px;"></div>');
@@ -344,20 +364,20 @@ $(document).ready(function () {
                 		   $('div#announcement').html('');
                            
                            var listgroup = $('<div class="list-group" style="margin-bottom:0px; color:#999;"></div>');
-                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="intro/announce.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="intro/announce.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="intro/announce.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="intro/announce.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
                            
                            $('div#announcement').append(listgroup);
                 	   }else{
 							$('div#announcement').html('');
                            
                            var listgroup = $('<div class="list-group" style="margin-bottom:0px;"></div>');
-                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="#" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="intro/companyinfo.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="intro/companyinfo.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="intro/companyinfo.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           listgroup.append('<a href="intro/companyinfo.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
                            
                            $('div#announcement').append(listgroup);
                 	   }

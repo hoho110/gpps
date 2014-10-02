@@ -46,7 +46,7 @@
 		</div>
 		
 		
-		<div class="form-group has-success">
+		<div class="form-group has-success has-feedback">
 			<label class="control-label col-sm-3" for="password_r">确认密码</label>
 			<div class="col-sm-9">
 				<input type="password" class="form-control" id="password_r">
@@ -112,28 +112,36 @@ $(document).ready(function() {
 			if(loginId==null||loginId==''){
 				$('input#loginId').parent().find('span').remove();
 				$('input#loginId').parent().append(error);
+				$('input#loginId').parent().parent().removeClass('has-success').addClass('has-error');
 				addMessage('*请输入登陆名');
 				return;
 			}else{
 				$('input#loginId').parent().find('span').remove();
 				$('input#loginId').parent().append(ok);
+				$('input#loginId').parent().parent().removeClass('has-error').addClass('has-success');
 				removeMessage();
 			}
 			
 			if(password==null||password==''){
 				$('input#password').parent().find('span').remove();
 				$('input#password').parent().append(error);
+				$('input#password').parent().parent().removeClass('has-success').addClass('has-error');
 				addMessage('*请输入密码');
 				return;
 				}else if(password_r!=password){
 					$('input#password_r').parent().find('span').remove();
 					$('input#password_r').parent().append(error);
+					$('input#password_r').parent().parent().removeClass('has-success').addClass('has-error');
 					addMessage('*输入密码不一致');
 				return;
 				}
 			else{
+				$('input#password').parent().find('span').remove();
+				$('input#password').parent().append(ok);
+				$('input#password').parent().parent().removeClass('has-error').addClass('has-success');
 				$('input#password_r').parent().find('span').remove();
 				$('input#password_r').parent().append(ok);
+				$('input#password_r').parent().parent().removeClass('has-error').addClass('has-success');
 				removeMessage();
 				}
 
@@ -141,12 +149,14 @@ $(document).ready(function() {
 			if(validate==null||validate==''){
 				$('input#validate').parent().find('span').remove();
 				$('input#validate').parent().append(error);
+				$('input#validate').parent().parent().removeClass('has-success').addClass('has-error');
 				addMessage('*验证码错误');
 				return;
 				}
 				else{
 					$('input#validate').parent().find('span').remove();
 					$('input#validate').parent().append(ok);
+					$('input#validate').parent().parent().removeClass('has-error').addClass('has-success');
 					removeMessage();
 				}
 
@@ -168,6 +178,22 @@ $(document).ready(function() {
        
        $('button#sendValCode').click(function(e){
      		  service.sendMessageValidateCode();
+     		 	var t = 60;
+  	    		$('button#sendValCode').attr('disabled', true);
+  				setInterval(count,1000);  
+  				//显示当前的秒数
+  		    	function count(){
+  		    	t --;
+  		    	//秒数自减 
+  		    	if(t >= 0){
+  		    		$('button#sendValCode').html(t+'秒后重发');
+  		    		//刷新当前的秒数，重新显示秒数
+  		    		}else{
+  		    			$('button#sendValCode').html('发送验证码');
+  		    			$('button#sendValCode').attr('disabled', false);
+  		    			clearInterval();
+  		    			}
+  		    	}
         });
 	
 })

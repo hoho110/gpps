@@ -139,7 +139,7 @@
 
             <div class="balanceAmount">
             <p id="loginstatus" class="balanceAmountCon clf">
-            <a href="recharge.html" style="margin-right:20px;">充值</a>
+            <a id="recharge" href="#" style="margin-right:20px;">充值</a>
                 		账户可用余额：<span class="amountFormat"></span> 元
             </p>
 </div>    
@@ -215,24 +215,24 @@
     <div class="clf head">
         <span class="title">常见问题</span>
         <span class="more">
-            <a href="help.html" target="_blank">更多</a><span>&gt;</span>
+            <a href="intro/help.html" target="_blank">更多</a><span>&gt;</span>
         </span>
     </div>
     <ul class="contentList">
                     <li>
-                <b></b><a href="#" title="投资人是否要支付费用？" target="_blank">投资人是否要支付费用？</a>
+                <b></b><a href="intro/help.html" title="投资人是否要支付费用？" target="_blank">投资人是否要支付费用？</a>
             </li>
                     <li>
-                <b></b><a href="#" title="我通过稳盈-安e达成的交易有什么风险吗？" target="_blank">我通过稳盈-安e达成的交易有什么风险吗？</a>
+                <b></b><a href="intro/help.html" title="我通过稳盈-安e达成的交易有什么风险吗？" target="_blank">我通过稳盈-安e达成的交易有什么风险吗？</a>
             </li>
                     <li>
-                <b></b><a href="#" title="我可以投资吗？ " target="_blank">我可以投资吗？ </a>
+                <b></b><a href="intro/help.html" title="我可以投资吗？ " target="_blank">我可以投资吗？ </a>
             </li>
                     <li>
-                <b></b><a href="#" title="债权出让人向陆金所提交转让申请的规则是什么？" target="_blank">债权出让人向陆金所提交转让申请的规则是什么？</a>
+                <b></b><a href="intro/help.html" title="债权出让人向政采贷提交转让申请的规则是什么？" target="_blank">债权出让人向政采贷提交转让申请的规则是什么？</a>
             </li>
                     <li>
-                <b></b><a href="#" title="转让需要支付什么费用吗？" target="_blank">转让需要支付什么费用吗？</a>
+                <b></b><a href="intro/help.html" title="转让需要支付什么费用吗？" target="_blank">转让需要支付什么费用吗？</a>
             </li>
             </ul>
 </div>        
@@ -511,7 +511,7 @@
     	 $('p#loginstatus').html('<a href="login.html?rb=productdetail.html%3Fpid='+pid+'" style="margin-right:20px;">登录</a>您尚未登录');
      }else{
     	 var account = accountDao.find(cuser.accountId);
-    	 $('p#loginstatus').html('<a href="recharge.html" style="margin-right:20px;">充值</a>账户可用余额：<span class="amountFormat">'+account.usable.value+'</span> 元');
+    	 $('p#loginstatus').html('<a href="recharge.html?rb=productdetail.html%3Fpid='+pid+'" style="margin-right:20px;">充值</a>账户可用余额：<span class="amountFormat">'+account.usable.value+'</span> 元');
      }
      
      
@@ -524,7 +524,7 @@
  	});
  	
  	$('#fail').click(function(e){
- 		window.location.href = "myaccount.html";
+ 		window.location.href = "myaccount.html?fid=submit&sid=submit-toafford";
  	});
         	 
         	 

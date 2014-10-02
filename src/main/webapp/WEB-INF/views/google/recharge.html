@@ -143,8 +143,8 @@
       			完成第三方认证才能充值, 认证完成前请不要关闭该对话框，在认证完毕后点击相应的操作以完成认证。
       </div>
       <div class="modal-footer">
-        <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">认证成功</button>
-        <button id="false" type="button" class="btn btn-default">认证失败</button>
+        <button id="success2" type="button" class="btn btn-primary" data-dismiss="modal">认证成功</button>
+        <button id="fail2" type="button" class="btn btn-default">认证失败</button>
       </div>
     </div>
   </div>
@@ -156,6 +156,7 @@
 	src="/resources/EasyServiceClientFullZ.js"></script>
 <script type="text/javascript"
 	src="/easyservice/gpps.service.ILenderService?json"></script>
+	<script src="js/tool.js"></script>
 	<script src="js/head.js"></script>
 <script>
 
@@ -164,6 +165,8 @@ function getbank(bank){
 }
 $(document).ready(function() {
 	header('recharge');
+	
+	var rb = getQueryString('rb');
 	
 	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 	var cuser = service.getCurrentUser();
@@ -178,7 +181,7 @@ $(document).ready(function() {
 		if(confirm("您尚未实名认证，马上认证?")){
 			window.location.href="register2.html";
 		}else{
-			window.location.href="myaccount.html";
+			window.location.href="myaccount.html?fid=mycenter";
   		}
 	}
 	else if(thirdPartyAccount==null || thirdPartyAccount==''){
@@ -222,11 +225,26 @@ $(document).ready(function() {
 	});
 	
 	$('#success').click(function(e){
-		window.location.href = "myaccount.html?fid=cash";
+		if(rb==null)
+			window.location.href = "myaccount.html?fid=cash";
+		else
+			window.location.href = rb;
 	});
 	
 	$('#fail').click(function(e){
-		window.location.href = "myaccount.html?fid=cash";
+		if(rb==null)
+			window.location.href = "myaccount.html?fid=cash";
+		else
+			window.location.href = rb;
+	});
+	
+	
+	$('#success2').click(function(e){
+		window.location.reload();
+	});
+	
+	$('#fail2').click(function(e){
+			window.location.href = "myaccount.html?fid=mycenter";
 	});
 })
 </script>

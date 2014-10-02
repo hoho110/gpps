@@ -190,7 +190,23 @@ a.accordion-toggle {
 
 
 
-
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">投资标的支付</h4>
+      </div>
+      <div class="modal-body">
+      			投资标的支付完成前请不要关闭该对话框，在支付完毕后点击相应的操作以完成支付。
+      </div>
+      <div class="modal-footer">
+        <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">支付成功</button>
+        <button id="fail" type="button" class="btn btn-default">支付失败</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -464,6 +480,23 @@ a.accordion-toggle {
 							}else{
 								$('#submit').trigger('click');
 							}
+							
+							
+							$('a.submittoafford').click(function(e){
+								$('#myModal').modal({
+									  keyboard: false,
+									  backdrop: false
+								});
+								window.open("/account/buy/request?submitId="+$(this).attr('id'));
+							});
+							
+							$('#success').click(function(e){
+									window.location.href = "myaccount.html?fid=submit&sid=submit-toafford";
+							});
+							
+							$('#fail').click(function(e){
+									window.location.href = "myaccount.html?fid=submit&sid=submit-toafford";
+							});
 						});
 	</script>
 </body>

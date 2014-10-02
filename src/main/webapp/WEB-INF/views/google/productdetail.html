@@ -194,7 +194,7 @@
  
     <div class="detail-sidebar">
                     <div class="invest-record">
-                                    <div class="invest-record-title">投资记录</div>
+                                    <div class="invest-record-title" style="padding-left:10px;">投资记录</div>
                     <table class="invest-record-list">
                         <tbody id="invest-record">
                         <tr>
@@ -213,7 +213,7 @@
         
                     <div class="noticeQuestion">
     <div class="clf head">
-        <h3 class="title">常见问题</h3>
+        <span class="title">常见问题</span>
         <span class="more">
             <a href="help.html" target="_blank">更多</a><span>&gt;</span>
         </span>
@@ -358,7 +358,6 @@
  	}
  	
  	$('span#product-code').html(str);
- 	$('p#product-published-date').html('发布时间： '+formatDateToDay(order.createtime));
  	
  	$('#totalAmount').html(product.expectAmount.value+"元");
  	
@@ -378,21 +377,39 @@
  	
  	
  	if(order.state==2){
+ 		var time = order.financingStarttime - (new Date()).getTime();
+ 		var day = parseInt(time/(24*3600*1000));
+ 		var hour = parseInt((time- day*(24*3600*1000))/(3600*1000));
+ 		var min = parseInt((time - day*(24*3600*1000) - hour*(3600*1000))/(60*1000));
+ 		var sec = parseInt((time - day*(24*3600*1000) - hour*(3600*1000) - min*(60*1000))/1000);
  		$('#remainamount').html('开始融资时间：'+formatDateToDay(order.financingStarttime));
+ 		$('p#product-published-date').html('距离融资开始还有： '+day+'天'+hour+'小时'+min+'分'+sec+'秒');
  		$('#stateMessage').html('剩余可投金额：'+parseInt(product.expectAmount.value)+'元');
  		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('预发布');
  		$('#inputAmount').css('display', 'none');
  	}
  	else if(product.state==1 && (parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))==0){
  		$('#remainamount').html('产品已售罄');
+ 		$('#stateMessage').html('共融资金'+product.realAmount.value+'元');
  		$('a#invest').addClass('disabled').attr('disabled',"disabled");
- 	}else if(product.state==2){
+ 		$('p#product-published-date').html('计息开始时间： '+formatDateToDay(order.incomeStarttime));
+ 	}else if(product.state==1){
+ 		var time = order.financingEndtime - (new Date()).getTime();
+ 		var day = parseInt(time/(24*3600*1000));
+ 		var hour = parseInt((time- day*(24*3600*1000))/(3600*1000));
+ 		var min = parseInt((time - day*(24*3600*1000) - hour*(3600*1000))/(60*1000));
+ 		var sec = parseInt((time - day*(24*3600*1000) - hour*(3600*1000) - min*(60*1000))/1000);
+ 		$('p#product-published-date').html('距离融资结束还有： '+day+'天'+hour+'小时'+min+'分'+sec+'秒');
+ 	}
+ 	else if(product.state==2){
  		$('#remainamount').html('融资完成，正在还款');
  		$('#stateMessage').html('共融资金'+product.realAmount.value+'元');
+ 		$('p#product-published-date').html('融资完成时间： '+formatDateToDay(order.financingEndtime));
  		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('还款中');
  		$('#inputAmount').css('display', 'none');
  		$('#init-add').css('display', 'none');
  	}else if(product.state==4){
+ 		$('p#product-published-date').html('流标时间： '+formatDateToDay(order.lastModifytime));
  		$('#remainamount').html('融资失败，流标');
  		$('#stateMessage').html('实际融资额不足');
  		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('流标');
@@ -400,6 +417,7 @@
  		$('#init-add').css('display', 'none');
  	}else if(product.state==8){
  		$('#remainamount').html('还款完成');
+ 		$('p#product-published-date').html('还款完成时间： '+formatDateToDay(order.lastModifytime));
  		$('#stateMessage').html('共融资金'+product.realAmount.value+'元');
  		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('还款完成');
  		$('#inputAmount').css('display', 'none');
@@ -416,6 +434,8 @@
  	
  	
  	$('a#invest').click(function(e){
+ 		if(product.state==1 && (parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))>0)
+ 		{
  		var cuser = lenderService.getCurrentUser();  
  		if(cuser==null){
  			if(confirm('登录后才能购买产品，现在登录？')){
@@ -437,6 +457,7 @@
  		}catch(e){
  			alert(e.message);
  		}
+ 		}
  	});
 	  
         	 $('ul.list-detail-wrap li a').click(function(e){
@@ -446,7 +467,7 @@
         			$('.detail-content-body').html('<p>收益如下所示：</p>');
         			$('.detail-content-body').append('<br>');
         			$('.detail-content-body').append('<br>');
-        			var table = $('<table border=1 width=100%></table>');
+        			var table = $('<table width=100%></table>');
         			table.append('<tr><td>序号</td><td>本金</td><td>利息</td><td>预计还款时间</td><td>实际还款时间</td><td>状态</td></tr>');
         			for(var t=0; t<paybacks.size(); t++){
         				var paybackTime = (paybacks.get(t).state==2)?formatDateToDay(paybacks.get(t).realtime) : '-';
@@ -468,7 +489,7 @@
         			$('.detail-content-body').append(table);
         		}else if($(this).attr('data-sk')=='action'){
         			actions = productActionService.findAllByProduct(product.id);
-        			var table = $('<table border=1 width=100%></table>');
+        			var table = $('<table width=100%></table>');
         			table.append('<tr><td>序号</td><td>时间</td><td>名称</td><td>详细信息</td><td>状态</td></tr>');
         			for(var t=0; t<actions.size(); t++){
         				table.append('<tr style="height:50px;"><td>'+(t+1)+'</td><td>'+formatDateToDay(actions.get(t).createtime)+'</td><td>'+actions.get(t).title+'</td><td>'+actions.get(t).detail+'</td><td>'+actions.get(t).type+'</td></tr>');

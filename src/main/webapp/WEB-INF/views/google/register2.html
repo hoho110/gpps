@@ -157,21 +157,35 @@ $(document).ready(function() {
     	   if(name==null||name==''){
     		   $('input#name').parent().find('span').remove();
 				$('input#name').parent().append(error);
+				$('input#name').parent().parent().removeClass('has-success').addClass('has-error');
 				addMessage('*请输入姓名');
 				return;
 				}else{
 					$('input#name').parent().find('span').remove();
 					$('input#name').parent().append(ok);
+					$('input#name').parent().parent().removeClass('has-error').addClass('has-success');
 					removeMessage();
 				}
+    	   
+    	   
+    	   var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
     	   if(identity==null||identity==''){
     		   $('input#identity').parent().find('span').remove();
 				$('input#identity').parent().append(error);
+				$('input#identity').parent().parent().removeClass('has-success').addClass('has-error');
 				addMessage('*请输入身份证号');
 				return;
-				}else{
+				}else if(reg.test(identity) === false){
+					$('input#identity').parent().find('span').remove();
+					$('input#identity').parent().append(error);
+					$('input#identity').parent().parent().removeClass('has-success').addClass('has-error');
+					addMessage('*请填写正确的身份证号');
+					return;
+				}
+    	   		else{
 					$('input#identity').parent().find('span').remove();
 					$('input#identity').parent().append(ok);
+					$('input#identity').parent().parent().removeClass('has-error').addClass('has-success');
 					removeMessage();
 				}
     	   

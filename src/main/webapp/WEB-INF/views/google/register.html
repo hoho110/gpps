@@ -122,27 +122,32 @@ $(document).ready(function() {
 			if(username==null||username==''){
 					$('input#username').parent().find('span').remove();
 					$('input#username').parent().append(error);
+					$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 					addMessage('*请输入用户名');
 					return;
 					}else if(service.isLoginIdExist(username)){
 						$('input#username').parent().find('span').remove();
 						$('input#username').parent().append(error);
+						$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 						addMessage('*用户名已被注册');
 						return;
 					}else{
 						$('input#username').parent().find('span').remove();
 						$('input#username').parent().append(ok);
+						$('input#username').parent().parent().removeClass('has-error').addClass('has-success');
 						removeMessage();
 					}
 
 			if(password==null||password==''){
 				$('input#password').parent().find('span').remove();
 				$('input#password').parent().append(error);
+				$('input#password').parent().parent().removeClass('has-success').addClass('has-error');
 				addMessage('*请输入密码');
 				return;
 				}else if(password_r!=password){
 					$('input#password_r').parent().find('span').remove();
 					$('input#password_r').parent().append(error);
+					$('input#password_r').parent().parent().removeClass('has-success').addClass('has-error');
 					addMessage('*密码不一致');
 				return;
 				}
@@ -151,6 +156,8 @@ $(document).ready(function() {
 				$('input#password').parent().append(ok);
 				$('input#password_r').parent().find('span').remove();
 				$('input#password_r').parent().append(ok);
+				$('input#password').parent().parent().removeClass('has-error').addClass('has-success');
+				$('input#password_r').parent().parent().removeClass('has-error').addClass('has-success');
 				removeMessage();
 				}
 
@@ -158,12 +165,14 @@ $(document).ready(function() {
 			if(validate==null||validate==''){
 				$('input#validate').parent().find('span').remove();
 				$('input#validate').parent().append(error);
+				$('input#validate').parent().parent().removeClass('has-success').addClass('has-error');
 				addMessage('*请填写验证码');
 				return;
 				}
 				else{
 					$('input#validate').parent().find('span').remove();
 					$('input#validate').parent().append(ok);
+					$('input#validate').parent().parent().removeClass('has-error').addClass('has-success');
 					removeMessage();
 				}
 
@@ -172,8 +181,8 @@ $(document).ready(function() {
 				var lender = {"_t_":"gpps.model.Lender", "loginId":username, "password" : password, "tel" : phone};
 				service.register(lender, validate);
 				window.location.href="register2.html";
-			}catch(e){
-				alert(e.message);
+			}catch(ee){
+				alert(ee.message);
 				$('input#password').val('');
 				$('input#password_r').val('');
 				$('input#validate').val('');
@@ -187,15 +196,18 @@ $(document).ready(function() {
         if(username==null||username==''){
         	$('input#username').parent().find('span').remove();
 			$('input#username').parent().append(error);
+			$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 			addMessage('*请输入用户名');
         }else if(service.isLoginIdExist(username)){
         	$('input#username').parent().find('span').remove();
 			$('input#username').parent().append(error);
+			$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 			addMessage('*用户名已被注册');
 			}
         else{
         	$('input#username').parent().find('span').remove();
 			$('input#username').parent().append(ok);
+			$('input#username').parent().parent().removeClass('has-error').addClass('has-success');
 			removeMessage();
         		}
         });
@@ -208,19 +220,23 @@ $(document).ready(function() {
  	  if(phone==null || phone==''){
  		 $('input#phone').parent().find('span').remove();
 			$('input#phone').parent().append(error);
+			$('input#phone').parent().parent().removeClass('has-success').addClass('has-error');
 			addMessage('*请输入手机号码');
  	  }else if(!reg.test(phone)){
  		 $('input#phone').parent().find('span').remove();
 			$('input#phone').parent().append(error);
+			$('input#phone').parent().parent().removeClass('has-success').addClass('has-error');
 			addMessage('*手机号码格式不对');
  	  }
  	  else if(service.isPhoneNumberExist(phone)){
  		 $('input#phone').parent().find('span').remove();
 			$('input#phone').parent().append(error);
+			$('input#phone').parent().parent().removeClass('has-success').addClass('has-error');
 			addMessage('*该手机号码已被注册');
  	  }else{
  		 $('input#phone').parent().find('span').remove();
 			$('input#phone').parent().append(ok);
+			$('input#phone').parent().parent().removeClass('has-error').addClass('has-success');
  		  service.sendMessageValidateCode();
  		 removeMessage();
  	  }
@@ -231,10 +247,12 @@ $(document).ready(function() {
  	   if(password==null||password==''){
  		  $('input#password').parent().find('span').remove();
 			$('input#password').parent().append(error);
+			$('input#password').parent().parent().removeClass('has-success').addClass('has-error');
 			addMessage('*请输入密码');
 			}else{
 				$('input#password').parent().find('span').remove();
 				$('input#password').parent().append(ok);
+				$('input#password').parent().parent().removeClass('has-error').addClass('has-success');
 				removeMessage();
 				}
         });
@@ -245,15 +263,18 @@ $(document).ready(function() {
  	   if(password_r==null||password_r==''){
  		  $('input#password_r').parent().find('span').remove();
 			$('input#password_r').parent().append(error);
+			$('input#password_r').parent().parent().removeClass('has-success').addClass('has-error');
 			addMessage('*请再次输入密码');
 			}else if(password_r!=password){
 				$('input#password_r').parent().find('span').remove();
 				$('input#password_r').parent().append(error);
+				$('input#password_r').parent().parent().removeClass('has-success').addClass('has-error');
 				addMessage('*密码不一致');
 				}
 			else{
 				$('input#password_r').parent().find('span').remove();
 				$('input#password_r').parent().append(ok);
+				$('input#password_r').parent().parent().removeClass('has-error').addClass('has-success');
 				removeMessage();
 				}
         });

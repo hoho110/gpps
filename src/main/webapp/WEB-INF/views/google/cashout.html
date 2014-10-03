@@ -50,7 +50,7 @@
                 
                 <div>
                  <div class="rechargeBoxTitle">
-               		 请输入取款金额</div>
+               		您好:<span id="username" class="orange"></span>,您的可取现金额:<span id="amount" class="green"></span>元, 请输入取款金额</div>
             <div class="rechargeNO">
                 <input name="txtAccount" type="text" id="txtAccount" /><span
                     id="msg" style="color: #b94a48; font-weight: bold;"></span></div>
@@ -67,48 +67,12 @@
 </div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">提现</h4>
-      </div>
-      <div class="modal-body">
-       提现完成前请不要关闭该对话框，在提现完毕后点击相应的操作以完成提现。
-      </div>
-      <div class="modal-footer">
-        <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">提现成功</button>
-        <button id="fail" type="button" class="btn btn-default">提现失败</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-	    <!-- Modal -->
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">第三方认证</h4>
-      </div>
-      <div class="modal-body">
-      			完成第三方认证才能提现, 认证完成前请不要关闭该对话框，在认证完毕后点击相应的操作以完成认证。
-      </div>
-      <div class="modal-footer">
-        <button id="success2" type="button" class="btn btn-primary" data-dismiss="modal">认证成功</button>
-        <button id="fail2" type="button" class="btn btn-default">认证失败</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script type="text/javascript"
 	src="/resources/EasyServiceClientFullZ.js"></script>
 <script type="text/javascript"
 	src="/easyservice/gpps.service.ILenderService?json"></script>
+<script type="text/javascript"
+		src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
 	<script src="js/head.js"></script>
 <script>
 $(document).ready(function() {
@@ -116,6 +80,7 @@ $(document).ready(function() {
 	header('cashout');
 	
 	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
 	var cuser = service.getCurrentUser();
 	if(cuser==null){
 		window.location.href="login.html"; 
@@ -128,17 +93,24 @@ $(document).ready(function() {
 		if(confirm("您尚未实名认证，马上认证?")){
 			window.location.href="register2.html";
 		}else{
-			window.location.href="myaccount.html?fid=mycenter";
+			window.close();
 		}
 	}
 	else if(thirdPartyAccount==null || thirdPartyAccount==''){
-		$('#myModal2').modal({
-			  keyboard: false,
-			  backdrop: false
-		});
-		window.open("/account/thirdPartyRegist/request"); 
+		if(confirm("您尚未在第三方注册，马上注册？")){
+			window.location.href="register3.html";
+		}else{
+			window.close();
+		}
 	}
 	
+	var name = cuser.name==null?cuser.name:cuser.loginId;
+	var account = accountDao.find(cuser.accountId);
+	
+	var usable = account.usable;
+	var cashoutAmount = (parseFloat(usable.value)+0.09).toFixed(0);
+	$('#amount').html(cashoutAmount);
+	$('#username').html(name);
 	
 	
 	$('#txtAccount').keyup(function(e){
@@ -160,29 +132,8 @@ $(document).ready(function() {
 			document.getElementById('msg').innerHTML='金额必须大于0且为整数或小数，小数点后不超过两位';
 			$('#txtAccount').val('');
 			}else{
-				document.getElementById('msg').innerHTML='';
-				$('#myModal').modal({
-					  keyboard: false,
-					  backdrop: false
-				});
-				window.open("/account/cash/request?amount="+value, "", "toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes, fullscreen = yes"); 
+				window.location.href = "/account/cash/request?amount="+value; 
 				};
-	});
-	
-	$('#success').click(function(e){
-		window.location.href="myaccount.html?fid=cash&sid=cash-withdraw";
-	});
-	
-	$('#fail').click(function(e){
-		window.location.href="myaccount.html?fid=cash&sid=cash-withdraw";
-	});
-	
-	$('#success2').click(function(e){
-		window.location.reload();
-	});
-	
-	$('#fail2').click(function(e){
-		window.location.href = "myaccount.html?fid=mycenter";
 	});
 })
 </script>

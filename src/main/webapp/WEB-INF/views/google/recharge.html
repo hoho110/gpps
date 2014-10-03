@@ -181,15 +181,15 @@ $(document).ready(function() {
 		if(confirm("您尚未实名认证，马上认证?")){
 			window.location.href="register2.html";
 		}else{
-			window.location.href="myaccount.html?fid=mycenter";
+			window.close();
   		}
 	}
 	else if(thirdPartyAccount==null || thirdPartyAccount==''){
-			$('#myModal2').modal({
-				  keyboard: false,
-				  backdrop: false
-			});
-			window.open("/account/thirdPartyRegist/request"); 
+		if(confirm("您尚未在第三方注册，马上注册？")){
+			window.location.href="register3.html";
+		}else{
+			window.close();
+		}
 	}
 	
 	
@@ -214,13 +214,14 @@ $(document).ready(function() {
 			document.getElementById('msg').innerHTML='金额必须大于0且为整数或小数，小数点后不超过两位';
 			$('#txtAccount').val('');
 			}else{
-				document.getElementById('msg').innerHTML='';
+			//	document.getElementById('msg').innerHTML='';
 				
-				$('#myModal').modal({
-					  keyboard: false,
-					  backdrop: false
-				});
-				window.open("/account/recharge/request?amount="+value, "", "toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes, fullscreen = yes"); 
+			//	$('#myModal').modal({
+			//		  keyboard: false,
+			//		  backdrop: false
+			//	});
+			//	window.open("/account/recharge/request?amount="+value, "", "toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes, fullscreen = yes");
+				window.location.href="/account/recharge/request?amount="+value;
 				};
 	});
 	

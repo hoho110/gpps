@@ -104,10 +104,10 @@ a.accordion-toggle {
 								<div class="btn-group btn-group-lg  btn-group-justified"
 									style="padding-bottom: 5px; margin-top: 10px;">
 									<div class="btn-group">
-										<a class="btn btn-success btn-lg" id="recharge">充值</a>
+										<a class="btn btn-success btn-lg" href="recharge.html" target="_blank" id="recharge">充值</a>
 									</div>
 									<div class="btn-group">
-										<a class="btn btn-default btn-lg" id="cashout">提现</a>
+										<a class="btn btn-default btn-lg" href="cashout.html" target="_blank" id="cashout">提现</a>
 									</div>
 								</div>
 							</div>
@@ -313,16 +313,6 @@ a.accordion-toggle {
 											});
 							}
 
-							$('#recharge').click(function(e) {
-								window.location.href = "recharge.html";
-							});
-
-							$('#cashout')
-									.click(
-											function(e) {
-												window.location.href = "cashout.html";
-											});
-
 							$('button.nav-first').click(function(e) {
 												$('button.nav-first').removeClass(
 														'active');
@@ -468,6 +458,20 @@ a.accordion-toggle {
 																					resize : true
 																				});
 																	}
+																	
+																	
+																	
+																	
+																	$('a.submittoafford').click(function(e){
+																		$('#myModal').modal({
+																			  keyboard: false,
+																			  backdrop: false
+																		});
+																		window.open("/account/buy/request?submitId="+$(this).attr('id'));
+																	});
+																	
+																	
+																	
 																});
 													$('ul.nav-second li a').first().trigger('click');
 											});
@@ -477,12 +481,14 @@ a.accordion-toggle {
 									$('ul.nav-second li a[data-sk="'+sid+'"]').trigger('click');
 								else
 									$('ul.nav-second li a').first().trigger('click');
+								
 							}else{
 								$('#submit').trigger('click');
 							}
 							
 							
 							$('a.submittoafford').click(function(e){
+								alert(123);
 								$('#myModal').modal({
 									  keyboard: false,
 									  backdrop: false

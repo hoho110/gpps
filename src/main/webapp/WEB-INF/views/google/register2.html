@@ -11,6 +11,7 @@
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link href="css/index/justified-nav.css" rel="stylesheet">
 <link href="css/plist/a.css" rel="stylesheet">
+<link href="css/rtd_files/css2.css" rel="stylesheet">
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script type="text/javascript"
@@ -28,7 +29,10 @@
 	<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
       
       </div>
-	
+	<div class="row" style="height:100px; text-align:center">
+	<img style="width:600px; height:80px;" src="mall/step2.png"></img>
+	<div style="clear:both;"></div>
+	</div>
 	<div class="form-horizontal" role="form" style="width:400px; margin: 0 auto;">
 		<div class="form-group">
     		<label class="col-sm-3 control-label">第二步</label>
@@ -99,24 +103,6 @@
 		</div>
 		
 	</div>
-	
-	    <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">第三方认证</h4>
-      </div>
-      <div class="modal-body">
-       认证完成前请不要关闭该对话框，在认证完毕后点击相应的操作以完成认证。
-      </div>
-      <div class="modal-footer">
-        <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">认证成功</button>
-        <button id="false" type="button" class="btn btn-default">认证失败</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 </body>
 <script src="js/head.js"></script>
@@ -138,6 +124,11 @@ function removeMessage(){
 }
  
 $(document).ready(function() {
+	
+	
+	if(cuser==null){
+		window.location.href="login.html";
+	}
 	
 	header('register2');
 	
@@ -204,23 +195,11 @@ $(document).ready(function() {
     	   
     	   if(thirdPartyAccount==null || thirdPartyAccount=="")
     		   {
-    		   $('#myModal').modal({
-					  keyboard: false,
-					  backdrop: false
-				});
-    	  		 window.open("/account/thirdPartyRegist/request"); 
+    		   window.location.href="register3.html";
     		   }
     	   else
     		   window.location.href="myaccount.html";
        });
-       
-       $('#success').click(function(e){
-    	   window.location.href="myaccount.html";
-   		});
-   	
-   		$('#fail').click(function(e){
-   			window.location.href="myaccount.html";
-   		});
 	
 })
 </script>

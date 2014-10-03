@@ -81,7 +81,7 @@
 	<select id="findAllByProductAndStateWithPaged"
         resultType="gpps.model.Submit">
         select *
-        from Submit where productId=#{productId} and state=#{state}
+        from Submit where productId=#{productId} and state=#{state} order by createtime desc 
         LIMIT #{offset}, #{recnum}
     </select>
     <select id="countByProductAndStateWithPaged" resultType="int">

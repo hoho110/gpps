@@ -76,7 +76,7 @@ public class AccountServlet {
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
-		writeThirdParty(resp, "说明：该步骤跳转到第三方平台进行用户账户注册.<p><a href='/account/thirdPartyRegist/response'>完成第三方认证</a><p><a href='javascript:window.close()'>未在第三方认证</a>");
+		writeThirdParty(resp, "说明：该步骤跳转到第三方平台进行用户账户注册.<p><a href='/account/thirdPartyRegist/response'>完成第三方认证</a></p>");
 //		log.debug("第三方注册完毕，跳转回本地");
 	}
 	@RequestMapping(value={"/account/thirdPartyRegist/response"})
@@ -86,7 +86,7 @@ public class AccountServlet {
 		String thirdPartyAccount="thirdPartyAccount";
 		lenderService.registerThirdPartyAccount(thirdPartyAccount);
 		//TODO 重定向到指定页面
-		writeLocal(resp, "第三方注册成功，界面5秒后自动关闭<a href='javascript:window.close()'>关闭</a>");
+		writeLocal(resp, "第三方注册成功，界面5秒后自动返回我的帐户界面<a href='http://localhost:8080/views/google/myaccount.html?fid=mycenter'>返回</a>");
 	}
 	@RequestMapping(value={"/account/recharge/request"})
 	public void recharge(HttpServletRequest req, HttpServletResponse resp)
@@ -129,7 +129,7 @@ public class AccountServlet {
 			log.error(e.getMessage(),e);
 		}
 		//TODO 重定向到指定页面
-		writeLocal(resp, "充值成功，5秒后自动关闭<a href='javascript:window.close()'>关闭</a>");
+		writeLocal(resp, "充值成功，5秒后自动跳转到我的帐户<a href='/views/google/myaccount.html?fid=cash&sid=cash-recharge'>我的帐户</a>");
 	}
 	@RequestMapping(value={"/account/cash/request"})
 	public void cash(HttpServletRequest req, HttpServletResponse resp)
@@ -184,11 +184,12 @@ public class AccountServlet {
 			log.error(e.getMessage(),e);
 		}
 		//TODO 重定向到指定页面
-		writeLocal(resp, "取现成功，5秒后关闭<a href='javascript:window.close()'>关闭</a>");
+		writeLocal(resp, "取现成功，5秒后自动跳转到我的帐户<a href='/views/google/myaccount.html?fid=cash&sid=cash-withdraw'>我的帐户</a>");
 	}
 	@RequestMapping(value={"/account/buy/request"})
 	public void buy(HttpServletRequest req, HttpServletResponse resp)
 	{
+		String pid = req.getParameter("pid");
 		HttpSession session=req.getSession();
 		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
 		if(user==null)
@@ -222,13 +223,21 @@ public class AccountServlet {
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
-		String html="说明：该步骤跳转到第三方平台,用户输入第三方平台账户密码完成购买<p>.<a href='/account/buy/response?cashStreamId="+cashStreamId+"&success=true'>购买成功</a><p>"
-				+"<a href='javascript:window.close()'>购买失败</a>";
+		String html="";
+		if(pid!=null)
+		{
+			html="说明：该步骤跳转到第三方平台,用户输入第三方平台账户密码完成购买.<p><a href='/account/buy/response?cashStreamId="+cashStreamId+"&success=true&pid="+pid+"'>购买成功</a></p>"
+				+"<a href='/account/buy/response?cashStreamId="+cashStreamId+"&success=false&pid="+pid+"'>购买失败</a>";
+		}else{
+			html="说明：该步骤跳转到第三方平台,用户输入第三方平台账户密码完成购买.<p><a href='/account/buy/response?cashStreamId="+cashStreamId+"&success=true'>购买成功</a></p>"
+					+"<a href='/account/buy/response?cashStreamId="+cashStreamId+"&success=false'>购买失败</a>";
+		}
 		writeThirdParty(resp, html);
 	}
 	@RequestMapping(value={"/account/buy/response"})
 	public void completeBuy(HttpServletRequest req, HttpServletResponse resp)
 	{
+		String pid = req.getParameter("pid");
 		Integer cashStreamId=Integer.parseInt(StringUtil.checkNullAndTrim(CASHSTREAMID, req.getParameter(CASHSTREAMID)));
 		boolean success=Boolean.parseBoolean(StringUtil.checkNullAndTrim(CASHSTREAMID, req.getParameter("success")));
 		if(success)
@@ -242,7 +251,11 @@ public class AccountServlet {
 				log.error(e.getMessage(),e);
 			}
 			//TODO 重定向到指定页面
-			writeLocal(resp, "购买成功，5秒后关闭<a href='javascript:window.close()'>关闭</a>");
+			if(pid!=null)
+				writeLocal(resp, "购买成功，<p><a href='/views/google/productdetail.html?pid="+pid+"'>继续购买</a></p><a href='/views/google/myaccount.html'>返回我的帐户</a>");
+			else{
+				writeLocal(resp, "购买成功，<p><a href='/views/google/myaccount.html'>返回我的帐户</a></p>");
+			}
 		}
 		else
 		{
@@ -252,7 +265,7 @@ public class AccountServlet {
 			} catch (IllegalConvertException e) {
 				e.printStackTrace();
 			}
-			writeLocal(resp, "购买失败，5秒后关闭<a href='javascript:window.close()'>关闭</a>");
+			writeLocal(resp, "购买失败，5秒后返回我的帐户<a href='/views/google/myaccount.html?fid=submit&sid=submit-toafford'>我的帐户</a>");
 		}
 		
 	}

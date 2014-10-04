@@ -75,12 +75,39 @@
 添加项目进程:<br>
 <div id="action" class="col-sm-12 col-md-12">
 项目ID<input type="text" id="productid" size=40></input><br>
+进程状态<select id="actiontype">
+	<option value=1>正常</option>
+	<option value=2>顺利</option>
+	<option value=3>有风险</option>
+	<option value=4>严重问题</option>
+	</select><br>
 进程名<input type="text" id="title" size=40></input><br>
 进程说明<textarea id="detail" cols=50 rows=10></textarea><br>
 <button id="add">添加</button>
 </div>
 </div>
 
+
+
+<div class="row" style="border : #eee solid 1px;">
+上传附件:<br>
+<form id="form1" runat="server" method="post" enctype="multipart/form-data"> 
+	
+	<select id="typ">
+	<option value="order">订单</option>
+	<option value="borrower">融资方</option>
+	</select>
+	
+	<input id="oid" type="text" size=10></input>
+	
+	<select id="category">
+	<option value=1>中标文件</option>
+	</select>
+	
+	<input type=file id="_f" name="_f"></input>
+	<input id="upload" type=button value="上载"></input>
+</form>
+</div>
 </div>
 </body>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -265,8 +292,9 @@ $('button.earlier').click(function(e){
 
 
 $('button#add').click(function(e){
+	
 	try{
-	var action = {'_t_': 'gpps.model.ProductAction','title': $('#title').val(), 'detail': $('#detail').val(), 'productId':parseInt($('#productid').val()), 'type':parseInt(1), 'createtime':(new java.util.Date()).getTime()};
+	var action = {'_t_': 'gpps.model.ProductAction','title': $('#title').val(), 'detail': $('#detail').val(), 'productId':parseInt($('#productid').val()), 'type':parseInt($('select#actiontype').val()), 'createtime':(new java.util.Date()).getTime()};
 	actionService.create(action);
 	alert('添加成功！');
 	$('#title').val('');
@@ -275,6 +303,26 @@ $('button#add').click(function(e){
 	}catch(e){
 		alert(e.message);
 	}
+})
+
+var type_category = {
+	order : ["中标文件"],
+	borrower : ["营业执照","政采资质", "法人证件", "办公环境"]
+}
+
+$('select#typ').change(function(e){
+	var type = $(this).val();
+	var cats = type_category[type];
+	$('select#category').find('option').remove();
+	for(var i=0; i<cats.length; i++){
+		$('select#category').append('<option value='+i+'>'+cats[i]+'</option>');
+	}
+});
+
+$('#upload').click(function(e){
+	var path = '/upload/'+$('select#typ').val()+'/1/'+$('select#category').val();
+	 $('#form1').attr('action', path)
+	$('#form1').submit();
 })
 
 

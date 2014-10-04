@@ -133,7 +133,7 @@ public class AccessoryTransferServlet {
 				System.out.println("文件" + fileName + "上传成功");
 			}
 			response.setStatus(200);
-			ServletUtils.write(response, "上传成功");
+			ServletUtils.write(response, "上传成功<a href='/views/google/admin.html'>返回</a>");
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			response.sendError(403, e.getMessage());

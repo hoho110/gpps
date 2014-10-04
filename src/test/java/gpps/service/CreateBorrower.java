@@ -21,10 +21,10 @@ public class CreateBorrower {
 		borrower.setEmail("test@calis.edu.cn");
 		borrower.setIdentityCard("231550215402021533");
 		borrower.setLoginId("test");
-		borrower.setCompanyName("河北政采有限公司");
+		borrower.setCompanyName("河北政府采购有限公司");
 		borrower.setName("张三");
-		borrower.setPassword("123123");
-		borrower.setTel("1333333");
+		borrower.setPassword("111111");
+		borrower.setTel("13011155555");
 		borrower.setCreditValue(10000);
 		borrower.setPrivilege(12);
 		borrower.setAccountId(account.getId());

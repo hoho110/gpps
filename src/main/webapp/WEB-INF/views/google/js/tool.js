@@ -38,6 +38,22 @@ _$fd = function(longt) {
 	};
 	
 	
+	greet = function(){
+		var now = new Date();
+		var hour = now.getHours(); 
+		var greeting = '';
+		if(hour < 6){greeting = "凌晨好！";} 
+		else if (hour < 9){greeting = "早上好！";} 
+		else if (hour < 12){greeting = "上午好！";} 
+		else if (hour < 14){greeting = "中午好！";} 
+		else if (hour < 17){greeting = "下午好！";} 
+		else if (hour < 19){greeting = "傍晚好！";} 
+		else if (hour < 22){greeting = "晚上好！";} 
+		else {greeting = "夜里好！";} 
+		return greeting;
+	}
+	
+	
 	function getQueryString(name) { 
 		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
 		var r = window.location.search.substr(1).match(reg); 

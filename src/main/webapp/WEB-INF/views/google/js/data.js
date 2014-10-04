@@ -42,7 +42,7 @@ var createProductLine = function(cont, id, title, label1, des1, label2, des2, de
 	row2_col2.html('<div class="row"><div class="col-xs-12 col-sm-12 col-md-12">'+description+'</div></div>');
 	
 	var row2_col3 = $('<div></div>').addClass('col-xs-12 col-sm-12 col-md-12');
-	row2_col3.html('<p class="itemTextStyle">投标门槛：<span class="orangeStyle">'+menkan+'</span>万元</p>');
+	row2_col3.html('<p class="itemTextStyle">投标门槛：<span class="orangeStyle">'+menkan+'</span></p>');
 	
 	var row2_col4 = $('<div></div>').addClass('col-xs-12 col-sm-12 col-md-12');
 	row2_col4.html('<p class="itemTextStyle">融资期限：<span class="orangeStyle">'+qixian+'</span></p>');

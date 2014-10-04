@@ -22,7 +22,7 @@ function header(title){
 	if(cuser==null){
 		divusercontent.html('<a href="login.html">登陆</a><span>&nbsp;|&nbsp;</span><a href="register.html">注册</a>');
 	}else{
-		divusercontent.html('下午好：'+cuser.loginId+'&nbsp;|&nbsp;会员级别:<a href="myaccount.html?fid=mycenter">level'+cuser.level+'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="myaccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
+		divusercontent.html(greet()+cuser.loginId+'&nbsp;|&nbsp;会员级别:<a href="myaccount.html?fid=mycenter">level'+cuser.level+'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="myaccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
 	}
 		}
 	divtitle.append(divusercontent);

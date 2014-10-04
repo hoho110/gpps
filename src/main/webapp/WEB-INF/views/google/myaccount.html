@@ -252,7 +252,7 @@ a.accordion-toggle {
 							} else {
 								var name = cuser.name == null ? cuser.loginId
 										: cuser.name;
-								$('#welcome').html('晚上好：' + name);
+								$('#welcome').html(greet() + name);
 
 							}
 
@@ -485,16 +485,6 @@ a.accordion-toggle {
 							}else{
 								$('#submit').trigger('click');
 							}
-							
-							
-							$('a.submittoafford').click(function(e){
-								alert(123);
-								$('#myModal').modal({
-									  keyboard: false,
-									  backdrop: false
-								});
-								window.open("/account/buy/request?submitId="+$(this).attr('id'));
-							});
 							
 							$('#success').click(function(e){
 									window.location.href = "myaccount.html?fid=submit&sid=submit-toafford";

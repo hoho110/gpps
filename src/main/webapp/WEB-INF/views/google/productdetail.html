@@ -142,6 +142,14 @@
  
                         <a class="btns btn_xlarge investBtn" href="javascript:void(0);" id="invest">立即投资</a>
                     </div>
+           
+           			<div id="dt_div" class="markUpInfo">
+                        <p class="mark-up-info">
+                            <span id="detailDate"></span>
+                        </p>
+                    </div>
+           
+           
             <div class="showStatus">
 
             <div class="balanceAmount">
@@ -302,7 +310,7 @@
  <script>
  
  var paybackState={0: '待还款', 1 : '正在还款', 2: '已还款', 3: '延期'};
- 
+ var actionState={1:'正常', 2:'顺利', 3:'有风险', 4:'严重问题'};
  
   $(document).ready(function () {
 	  header('productdetail');
@@ -385,28 +393,45 @@
  	
  	if(order.state==2){
  		var time = order.financingStarttime - (new Date()).getTime();
- 		var day = parseInt(time/(24*3600*1000));
- 		var hour = parseInt((time- day*(24*3600*1000))/(3600*1000));
- 		var min = parseInt((time - day*(24*3600*1000) - hour*(3600*1000))/(60*1000));
- 		var sec = parseInt((time - day*(24*3600*1000) - hour*(3600*1000) - min*(60*1000))/1000);
+ 		var day = 0;
+ 		var hour = 0;
+ 		var min = 0;
+ 		var sec = 0;
+ 		if(time>0)
+ 		{
+ 		day = parseInt(time/(24*3600*1000));
+ 		hour = parseInt((time- day*(24*3600*1000))/(3600*1000));
+ 		min = parseInt((time - day*(24*3600*1000) - hour*(3600*1000))/(60*1000));
+ 		sec = parseInt((time - day*(24*3600*1000) - hour*(3600*1000) - min*(60*1000))/1000);
+ 		}
  		$('#remainamount').html('开始融资时间：'+formatDateToDay(order.financingStarttime));
  		$('p#product-published-date').html('距离融资开始还有： '+day+'天'+hour+'小时'+min+'分'+sec+'秒');
  		$('#stateMessage').html('剩余可投金额：'+parseInt(product.expectAmount.value)+'元');
  		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('预发布');
  		$('#inputAmount').css('display', 'none');
+ 		$('#dt_div').css('display', 'none');
  	}
  	else if(product.state==1 && (parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))==0){
  		$('#remainamount').html('产品已售罄');
  		$('#stateMessage').html('共融资金'+product.realAmount.value+'元');
  		$('a#invest').addClass('disabled').attr('disabled',"disabled");
  		$('p#product-published-date').html('计息开始时间： '+formatDateToDay(order.incomeStarttime));
+ 		$('#detailDate').html('融资结束时间:'+formatDateToDay(order.financingEndtime));
  	}else if(product.state==1){
  		var time = order.financingEndtime - (new Date()).getTime();
- 		var day = parseInt(time/(24*3600*1000));
- 		var hour = parseInt((time- day*(24*3600*1000))/(3600*1000));
- 		var min = parseInt((time - day*(24*3600*1000) - hour*(3600*1000))/(60*1000));
- 		var sec = parseInt((time - day*(24*3600*1000) - hour*(3600*1000) - min*(60*1000))/1000);
+ 		var day = 0;
+ 		var hour = 0;
+ 		var min = 0;
+ 		var sec = 0;
+ 		if(time>0)
+ 		{
+ 		day = parseInt(time/(24*3600*1000));
+ 		hour = parseInt((time- day*(24*3600*1000))/(3600*1000));
+ 		min = parseInt((time - day*(24*3600*1000) - hour*(3600*1000))/(60*1000));
+ 		sec = parseInt((time - day*(24*3600*1000) - hour*(3600*1000) - min*(60*1000))/1000);
+ 		}
  		$('p#product-published-date').html('距离融资结束还有： '+day+'天'+hour+'小时'+min+'分'+sec+'秒');
+ 		$('#detailDate').html('融资结束时间:'+formatDateToDay(order.financingEndtime));
  	}
  	else if(product.state==2){
  		$('#remainamount').html('融资完成，正在还款');
@@ -415,6 +440,7 @@
  		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('还款中');
  		$('#inputAmount').css('display', 'none');
  		$('#init-add').css('display', 'none');
+ 		$('#detailDate').html('计息起始时间:'+formatDateToDay(order.incomeStarttime));
  	}else if(product.state==4){
  		$('p#product-published-date').html('流标时间： '+formatDateToDay(order.lastModifytime));
  		$('#remainamount').html('融资失败，流标');
@@ -422,6 +448,7 @@
  		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('流标');
  		$('#inputAmount').css('display', 'none');
  		$('#init-add').css('display', 'none');
+ 		$('#dt_div').css('display', 'none');
  	}else if(product.state==8){
  		$('#remainamount').html('还款完成');
  		$('p#product-published-date').html('还款完成时间： '+formatDateToDay(order.lastModifytime));
@@ -429,6 +456,7 @@
  		$('a#invest').addClass('disabled').attr('disabled',"disabled").text('还款完成');
  		$('#inputAmount').css('display', 'none');
  		$('#init-add').css('display', 'none');
+ 		$('#dt_div').css('display', 'none');
  	}
  	
  	var subs = submits.get('result');
@@ -441,7 +469,7 @@
  	
  	
  	$('a#invest').click(function(e){
- 		if(product.state==1 && (parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))>0)
+ 		if(order.state==1 && (parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))>0)
  		{
  		var cuser = lenderService.getCurrentUser();  
  		if(cuser==null){
@@ -499,12 +527,73 @@
         			var table = $('<table width=100%></table>');
         			table.append('<tr><td>序号</td><td>时间</td><td>名称</td><td>详细信息</td><td>状态</td></tr>');
         			for(var t=0; t<actions.size(); t++){
-        				table.append('<tr style="height:50px;"><td>'+(t+1)+'</td><td>'+formatDateToDay(actions.get(t).createtime)+'</td><td>'+actions.get(t).title+'</td><td>'+actions.get(t).detail+'</td><td>'+actions.get(t).type+'</td></tr>');
+        				table.append('<tr style="height:50px;"><td>'+(t+1)+'</td><td>'+formatDateToDay(actions.get(t).createtime)+'</td><td>'+actions.get(t).title+'</td><td>'+actions.get(t).detail+'</td><td>'+actionState[actions.get(t).type]+'</td></tr>');
         			}
         			$('.detail-content-body').html('');
         			$('.detail-content-body').append(table);
         		}else if($(this).attr('data-sk')=='resource'){
-        			$('.detail-content-body').html('相关资料展示');
+        			$('.detail-content-body').html('');
+        			
+        			var bitems0 = borrowerService.findMimeItems(order.borrowerId,0);
+        			$('.detail-content-body').append('<h5>营业执照</h5>');
+        			var pp0 = $('<p></p>');
+        			for(var i=0; i<bitems0.size(); i++){
+        				var img = $('<img class="accessory" title="点击看大图" src="/download/borrower/'+order.borrowerId+'/0/'+bitems0.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				pp0.append(img);
+        			}
+        			$('.detail-content-body').append(pp0);
+        			$('.detail-content-body').append('<br>');
+        			
+        			
+        			var bitems1 = borrowerService.findMimeItems(order.borrowerId,1);
+        			$('.detail-content-body').append('<h5>政采资质</h5>');
+        			var pp1 = $('<p></p>');
+        			for(var i=0; i<bitems1.size(); i++){
+        				var img = $('<img class="accessory" src="/download/borrower/'+order.borrowerId+'/1/'+bitems1.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				pp1.append(img);
+        			}
+        			$('.detail-content-body').append(pp1);
+        			$('.detail-content-body').append('<br>');
+        			
+        			
+        			var bitems2 = borrowerService.findMimeItems(order.borrowerId,2);
+        			$('.detail-content-body').append('<h5>法人证件</h5>');
+        			var pp2 = $('<p></p>');
+        			for(var i=0; i<bitems2.size(); i++){
+        				var img = $('<img class="accessory" src="/download/borrower/'+order.borrowerId+'/2/'+bitems2.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				pp2.append(img);
+        			}
+        			$('.detail-content-body').append(pp2);
+        			$('.detail-content-body').append('<br>');
+        			
+        			
+        			var bitems3 = borrowerService.findMimeItems(order.borrowerId,3);
+        			$('.detail-content-body').append('<h5>办公环境</h5>');
+        			var pp3 = $('<p></p>');
+        			for(var i=0; i<bitems3.size(); i++){
+        				var img = $('<img class="accessory" src="/download/borrower/'+order.borrowerId+'/3/'+bitems3.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				pp3.append(img);
+        			}
+        			$('.detail-content-body').append(pp3);
+        			$('.detail-content-body').append('<br>');
+        			
+        			
+        			
+        			var items = orderService.findMimeItems(order.id, 1);
+        			$('.detail-content-body').append('<h5>中标文件</h5>');
+        			var pp = $('<p></p>');
+        			for(var i=0; i<items.size(); i++){
+        				var img = $('<img class="accessory" src="/download/order/'+order.id+'/1/'+items.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				pp.append(img);
+        			}
+        			$('.detail-content-body').append(pp);
+        			
+        			
+        			$('img.accessory').click(function(e){
+    					var source = $(this).attr('src');
+    					window.open(source);
+    				});
+        			
         		}else if($(this).attr('data-sk')=='video'){
         			$('.detail-content-body').html('视频展示');
         		}

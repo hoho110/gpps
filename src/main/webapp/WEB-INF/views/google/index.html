@@ -221,10 +221,10 @@ $(document).ready(function () {
 	if(cuser==null){
 		$('#sider-content').html('<h4>数据中心</h4>');
 		var str = '<p>';
-		str += '<span class="glyphicon glyphicon-pencil"></span>总募集资金50,000,000元<br>';
-		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>投资人次25,471次<br>';
-		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>获得收益6,000,000元<br>';
-		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已注册人数10548人<br>';
+		str += '<div><span class="glyphicon glyphicon-pencil"></span>总募集资金50,000,000元</div>';
+		str += '<div><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>投资人次25,471次</div>';
+		str += '<div><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>获得收益6,000,000元</div>';
+		str += '<div><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已注册人数10548人</div>';
 		str += '</p>';
 		$('#sider-content').append(str);
 		var usercontent = $('<div id="user_content" style="width:100%; margin-top:30px;"></div>');
@@ -246,19 +246,23 @@ $(document).ready(function () {
 
 		var used = account.used;
 		uu = (parseFloat(used.value)+0.09).toFixed(0);
+		
+		var freeze = account.freeze;
+		fre = (parseFloat(freeze.value)+0.09).toFixed(0);
 
 		var totalincome = account.totalincome;
 		income = (parseFloat(totalincome.value)+0.09).toFixed(0);
 		
 		$('#sider-content').html('<h4>您好:'+name+'</h4>');
 		var str = '<p>';
-		str += '<span class="glyphicon glyphicon-pencil"></span>总资产'+tot+'元<br>';
-		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>可用资金'+usa+'元<br>';
-		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已投金额'+uu+'元<br>';
-		str += '<span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已获利息'+income+'元<br>';
+		str += '<div><span class="glyphicon glyphicon-play"></span>总资产<span class="green">'+tot+'</span>元</div>';
+		str += '<div style="margin-top:7px;"><span class="glyphicon glyphicon-play"></span>可用资金<span class="green">'+usa+'</span>元</div>';
+		str += '<div style="margin-top:7px;"><span class="glyphicon glyphicon-play"></span>冻结资金<span class="freeze">'+fre+'</span>元</div>';
+		str += '<div style="margin-top:7px;"><span class="glyphicon glyphicon-play"></span>已投金额<span class="orange">'+uu+'</span>元</div>';
+		str += '<div style="margin-top:7px;"><span class="glyphicon glyphicon-play"></span>已获利息<span class="orange">'+income+'</span>元</div>';
 		str += '</p>';
 		$('#sider-content').append(str);
-		var usercontent = $('<div id="user_content" style="width:100%; margin-top:30px;"></div>');
+		var usercontent = $('<div id="user_content" style="width:100%; margin-top:20px;"></div>');
 		usercontent.html('<a href="recharge.html" class="btn btn-warning" style="width:100%;" target="_blank">充值</a>');
 		$('#sider-content').append(usercontent);
 	}
@@ -279,10 +283,10 @@ $(document).ready(function () {
 					var label12 = tagCol1.items.get(1).title;
 					var des12 = tagCol1.items.get(1).description;
 					var description1 = series.get(0).description;
-					var menkan1 = '5.00-10.00';
+					var menkan1 = '100元';
 					var qixian1 = '3-6个月';
 					var rate1 = '6％-10%';
-					var style1 = '每日还本息';
+					var style1 = '每月均摊本息';
 					var pl = createProductLine('#projectList1', id1, title1, label11, des11, label12, des12, description1, menkan1, qixian1, rate1, style1);
 					
 					
@@ -300,10 +304,10 @@ $(document).ready(function () {
 					var label22 = tagCol2.items.get(1).title;
 					var des22 = tagCol2.items.get(1).description;
 					var description2 = series.get(1).description;
-					var menkan2 = '1.00-5.00';
+					var menkan2 = '1000元';
 					var qixian2 = '3-9个月';
 					var rate2 = '8％-12%';
-					var style2 = '每月还本息';
+					var style2 = '每月还息到期还本';
 					var p2 = createProductLine('#projectList2', id2, title2, label21, des21, label22, des22, description2, menkan2, qixian2, rate2, style2);
 					
 					
@@ -320,10 +324,10 @@ $(document).ready(function () {
 					var label32 = tagCol3.items.get(1).title;
 					var des32 = tagCol3.items.get(1).description;
 					var description3 = series.get(2).description;
-					var menkan3 = '1.00-5.00';
+					var menkan3 = '10000元';
 					var qixian3 = '6-12个月';
 					var rate3 = '12％-18%';
-					var style3 = '到期还本付息';
+					var style3 = '每月还息到期还本';
 					var p3 = createProductLine('#projectList3', id3, title3, label31, des31, label32, des32, description3, menkan3, qixian3, rate3, style3);
 					
 					

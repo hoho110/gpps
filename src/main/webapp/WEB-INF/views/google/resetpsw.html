@@ -60,6 +60,7 @@
 				<input type="text" class="form-control" id="validate">
 			</div>
 			<button type="submit" class="btn btn-default" id="sendValCode">发送验证码</button>
+			<a href="/messageValidateCode" target="_blank">察看验证码</a>
 			</div>
 		
 		
@@ -178,7 +179,7 @@ $(document).ready(function() {
        
        $('button#sendValCode').click(function(e){
      		  service.sendMessageValidateCode();
-     		 	var t = 60;
+     		 	var t = 300;
   	    		$('button#sendValCode').attr('disabled', true);
   				setInterval(count,1000);  
   				//显示当前的秒数

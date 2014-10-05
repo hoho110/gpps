@@ -348,9 +348,9 @@ var createSingleProduct = function(order, index){
 		str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-IN_PROGRESS" href="productdetail.html?pid='+pro.id+'" target="_blank">';
 	else if(state==8)
 		str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-OVER_DUE" href="productdetail.html?pid='+pro.id+'" target="_blank">';
-	else if(state==16)
-		str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-CLOSED" href="productdetail.html?pid='+pro.id+'" target="_blank">';
 	else if(state==32)
+		str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-CLOSED" href="productdetail.html?pid='+pro.id+'" target="_blank">';
+	else if(state==16)
 		str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-BAD_DEBT" href="productdetail.html?pid='+pro.id+'" target="_blank">';
 	str += '<span class="OPEN">投标中</span>';
 	str += '<span class="READY FIRST_READY">已满标</span>';

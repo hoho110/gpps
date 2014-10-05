@@ -812,7 +812,7 @@ var paybackto = function(container){
 		                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 		                    data.chiefAmount.value,
 		                    data.interest.value,
-		                    formatDate(data.deadline)]);
+		                    formatDateToDay(data.deadline)]);
 	}
 	var mySettings = $.extend({}, defaultSettings_noCallBack, {
 		"aoColumns" : columns,

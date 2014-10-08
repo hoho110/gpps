@@ -224,7 +224,7 @@
         		 var orders = orderService.findByStatesByPage(-1,0,10);
         		 refreshList(orders);
         		 
-        		 $('#intro').html('<p>预期年化利率 ：<span style="color:#ff0000;">6.0%~7.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 1000 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 3-12个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：一次性还本付息 &nbsp; &nbsp; &nbsp;<a href="intro/intro.html" target="_blank">了解详情</a></p>');
+        		 $('#intro').html('<p>预期年化利率 ：<span style="color:#ff0000;">6.0%~18.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 100 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 3-12个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：------ &nbsp; &nbsp; &nbsp;<a href="intro/intro.html" target="_blank">了解详情</a></p>');
         		 
         		 $('a.constructure, a.stat').click(function(e){
               	   var info = $(this).parents('li').find('div.productinfo');
@@ -257,7 +257,13 @@
             		 $(this).parent().addClass('selected');
             		 $('li#nav_name').html($(this).text());
         			
-        			 $('#intro').html('<p>预期年化利率 ：<span style="color:#ff0000;">6.0%~7.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 1000 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 3-12个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：一次性还本付息 &nbsp; &nbsp; &nbsp;<a href="intro/intro.html?sid='+$(this).attr('id')+'" target="_blank">了解详情</a></p>');
+            		 if($(this).attr('id')=='1')
+        			 	$('#intro').html('<p>预期年化利率 ：<span style="color:#ff0000;">6.0%~10.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 100 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 3-6个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：每月均摊本息  &nbsp; &nbsp; &nbsp;<a href="intro/intro.html?sid='+$(this).attr('id')+'" target="_blank">了解详情</a></p>');
+            		 else if($(this).attr('id')=='2')
+            			 $('#intro').html('<p>预期年化利率 ：<span style="color:#ff0000;">8.0%~12.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 1000 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 3-9个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：每月还息到期还本  &nbsp; &nbsp; &nbsp;<a href="intro/intro.html?sid='+$(this).attr('id')+'" target="_blank">了解详情</a></p>');
+            		 else if($(this).attr('id')=='3')
+            			 $('#intro').html('<p>预期年化利率 ：<span style="color:#ff0000;">12.0%~18.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 10000 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限：6-12个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：每月还息到期还本  &nbsp; &nbsp; &nbsp;<a href="intro/intro.html?sid='+$(this).attr('id')+'" target="_blank">了解详情</a></p>');
+            		 
             		 
             		 var orders = orderService.findGovermentOrderByProductSeries(parseInt($(this).attr('id')),-1,0,10);
         			 refreshList(orders);

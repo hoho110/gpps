@@ -16,10 +16,8 @@
 <script src="js/bootstrap.min.js"></script>
 <script type="text/javascript"
 				src="/resources/EasyServiceClientFullZ.js"></script>
-<script type="text/javascript"
+		<script type="text/javascript"
 				src="/easyservice/gpps.service.ILenderService?json"></script>
-<script type="text/javascript"
-				src="/easyservice/gpps.service.IBorrowerService?json"></script>
 <!--[if lt IE 9]>
       <script src="js/cdn/html5shiv.min.js"></script>
       <script src="js/cdn/respond.min.js"></script>
@@ -31,76 +29,63 @@
 	<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
       
       </div>
-	<div class="row" style="height:100px; text-align:center;">
-	<img style="width:600px; height:80px;" src="mall/step1.png"></img>
-	<div style="clear:both;"></div>
-	</div>
-	<div class="form-horizontal" role="form" style="width:400px; margin: 0 auto;">
+	<div class="form-horizontal" role="form" style="width:400px; margin: 10px auto;">
 		<div class="form-group">
-    		<label class="col-sm-3 control-label">第一步</label>
-    		<div class="col-sm-6">
-      			<p class="form-control-static">平台注册</p>
-    		</div>
-    		<div class="col-sm-3">
-      			<p class="form-control-static"><a href="login.html">登录</a>&nbsp;|&nbsp;<a href="index.html">取消</a></p>
+    		<label class="col-sm-4 control-label"></label>
+    		<div class="col-sm-8">
+      			<p class="form-control-static">我已经是企业用户?&nbsp;<a href="login.html">登录</a>&nbsp;|&nbsp;<a href="index.html">取消</a></p>
     		</div>
   		</div>
   		<div style="width:100%" id="message"></div>
 		
 	
 		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-3" for="inputSuccess3">用户名</label>
-			<div class="col-sm-9">
+			<label class="control-label col-sm-4" for="inputSuccess3">用户名</label>
+			<div class="col-sm-8">
 				<input type="text" class="form-control" id="username">
 			</div>
 		</div>
 		
 		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-3" for="inputSuccess3">密码</label>
-			<div class="col-sm-9">
+			<label class="control-label col-sm-4" for="inputSuccess3">密码</label>
+			<div class="col-sm-8">
 				<input type="password" class="form-control" id="password">
 			</div>
 		</div>
 		
 		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-3" for="inputSuccess3">确认密码</label>
-			<div class="col-sm-9">
+			<label class="control-label col-sm-4" for="inputSuccess3">确认密码</label>
+			<div class="col-sm-8">
 				<input type="password" class="form-control" id="password_r">
 			</div>
 		</div>
 		
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-4" for="inputSuccess3">企业名称</label>
+			<div class="col-sm-8">
+				<input type="password" class="form-control" id="companyname">
+			</div>
+		</div>
 		
-		<div class="form-group has-success">
-			<label class="control-label col-sm-3" for="addr"></label>
-			<div class="col-sm-9">
-			<label class="radio-inline">
-  				<input type="radio" name="usertype"  checked="checked" value="1"> 我要投资
-			</label>
-			<label class="radio-inline">
-  				<input type="radio" name="usertype" value="0"> 我要融资
-			</label>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-4" for="inputSuccess3">营业执照号码</label>
+			<div class="col-sm-8">
+				<input type="password" class="form-control" id="license">
 			</div>
+		</div>
+		
+		
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-4" for="inputSuccess3">申请融资额度</label>
+			<div class="col-sm-8">
+				<input type="password" class="form-control" id="ammount">
 			</div>
-			
-			
-			<div class="form-group has-success has-feedback" id="cname" style="display:none;">
-			<label class="control-label col-sm-3" for="inputSuccess3">企业名称</label>
-			<div class="col-sm-9">
-				<input type="text" class="form-control" id="companyname">
-			</div>
-			</div>
-			
-			<div class="form-group has-success has-feedback" id="lice" style="display:none;">
-			<label class="control-label col-sm-3" for="inputSuccess3">营业执照</label>
-			<div class="col-sm-9">
-				<input type="text" class="form-control" id="license">
-			</div>
-			</div>
+		</div>
 
 			
 			<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-3" for="inputError2">手机</label>
-			<div class="col-sm-6">
+			<label class="control-label col-sm-4" for="inputError2">联系人手机</label>
+			<div class="col-sm-5">
 				<input type="text" class="form-control" id="phone">
 			</div>
 			<button type="submit" class="btn btn-default" id="sendValCode" style="width:90px;">发送验证码</button>
@@ -109,13 +94,13 @@
 			
 			
 			<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-3" for="inputSuccess3">验证码</label>
-			<div class="col-sm-9">
+			<label class="control-label col-sm-4" for="inputSuccess3">验证码</label>
+			<div class="col-sm-8">
 				<input type="text" class="form-control" id="validate">
 			</div>
 			</div>
 			
-			<button id="login" class="btn btn-lg btn-success btn-block">注册</button>
+			<button id="login" class="btn btn-lg btn-success btn-block">申请融资</button>
 			
 
 		</div>
@@ -148,8 +133,6 @@ $(document).ready(function() {
 	
 	header('login');
 	
-	
-	var usertype = '1';
 	
 	$('#username').focus();
     $('#login').click(function(e){
@@ -216,8 +199,7 @@ $(document).ready(function() {
 					removeMessage();
 				}
 
-			if(usertype=='1')
-			{
+
 			try{
 				var lender = {"_t_":"gpps.model.Lender", "loginId":username, "password" : password, "tel" : phone};
 				service.register(lender, validate);
@@ -228,50 +210,6 @@ $(document).ready(function() {
 				$('input#password_r').val('');
 				$('input#validate').val('');
 			}
-			}else{
-				var companyname = $('input#companyname').val();
-				var license = $('input#license').val();
-				
-				if(companyname==null||companyname==''){
-					$('input#companyname').parent().find('span').remove();
-					$('input#companyname').parent().append(error);
-					$('input#companyname').parent().parent().removeClass('has-success').addClass('has-error');
-					addMessage('*请输入企业名称');
-					return;
-					}else{
-						$('input#companyname').parent().find('span').remove();
-						$('input#companyname').parent().append(ok);
-						$('input#companyname').parent().parent().removeClass('has-error').addClass('has-success');
-						removeMessage();
-					}
-				
-				
-				if(license==null||license==''){
-					$('input#license').parent().find('span').remove();
-					$('input#license').parent().append(error);
-					$('input#license').parent().parent().removeClass('has-success').addClass('has-error');
-					addMessage('*请输入企业营业执照号');
-					return;
-					}else{
-						$('input#license').parent().find('span').remove();
-						$('input#license').parent().append(ok);
-						$('input#license').parent().parent().removeClass('has-error').addClass('has-success');
-						removeMessage();
-					}
-				
-				
-				try{
-					var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname, "identityCard" : license};
-					bservice.register(borrower, validate);
-					window.location.href="index.html";
-				}catch(ee){
-					alert(ee.message);
-					$('input#password').val('');
-					$('input#password_r').val('');
-					$('input#validate').val('');
-				}
-				
-			}
 			
 			
         });
@@ -279,10 +217,10 @@ $(document).ready(function() {
     $('input#username').blur(function(e){
         var username = $(this).val();
         if(username==null||username==''){
-        	//$('input#username').parent().find('span').remove();
-			//$('input#username').parent().append(error);
-			//$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
-			//addMessage('*请输入用户名');
+        	$('input#username').parent().find('span').remove();
+			$('input#username').parent().append(error);
+			$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
+			addMessage('*请输入用户名');
         }else if(service.isLoginIdExist(username)){
         	$('input#username').parent().find('span').remove();
 			$('input#username').parent().append(error);
@@ -359,10 +297,10 @@ $(document).ready(function() {
     $('input#password').blur(function(e){
  	   var password = $(this).val();
  	   if(password==null||password==''){
- 		 // $('input#password').parent().find('span').remove();
-		//	$('input#password').parent().append(error);
-		//	$('input#password').parent().parent().removeClass('has-success').addClass('has-error');
-		//	addMessage('*请输入密码');
+ 		  $('input#password').parent().find('span').remove();
+			$('input#password').parent().append(error);
+			$('input#password').parent().parent().removeClass('has-success').addClass('has-error');
+			addMessage('*请输入密码');
 			}else{
 				$('input#password').parent().find('span').remove();
 				$('input#password').parent().append(ok);
@@ -375,10 +313,10 @@ $(document).ready(function() {
  	   var password_r = $(this).val();
  	   var password = $('input#password').val();
  	   if(password_r==null||password_r==''){
- 		  //$('input#password_r').parent().find('span').remove();
-		//	$('input#password_r').parent().append(error);
-			//$('input#password_r').parent().parent().removeClass('has-success').addClass('has-error');
-			//addMessage('*请再次输入密码');
+ 		  $('input#password_r').parent().find('span').remove();
+			$('input#password_r').parent().append(error);
+			$('input#password_r').parent().parent().removeClass('has-success').addClass('has-error');
+			addMessage('*请再次输入密码');
 			}else if(password_r!=password){
 				$('input#password_r').parent().find('span').remove();
 				$('input#password_r').parent().append(error);
@@ -400,20 +338,6 @@ $(document).ready(function() {
 				$('#login').click();
 			}
     });
-    
-    
-    $("input[name=usertype]").click(function(){ 
-			usertype = $("input[name=usertype]:checked").attr("value");
-			
-			if(usertype=='0')
-				{
-					$('#cname').css('display', 'block');
-					$('#lice').css('display', 'block');
-				}else{
-					$('#cname').css('display', 'none');
-					$('#lice').css('display', 'none');
-				}
-    	 });
 	
 })
 </script>

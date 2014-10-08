@@ -77,9 +77,9 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	public Borrower register(Borrower borrower, String messageValidateCode) throws ValidateCodeException, IllegalArgumentException, LoginException {
 		checkMessageValidateCode(messageValidateCode);
 		borrower.setLoginId(checkNullAndTrim("loginId", borrower.getLoginId()));
-		borrower.setEmail(checkNullAndTrim("email", borrower.getEmail()));
+//		borrower.setEmail(checkNullAndTrim("email", borrower.getEmail()));
 		borrower.setIdentityCard(checkNullAndTrim("identityCard", borrower.getIdentityCard()));
-		borrower.setName(checkNullAndTrim("name", borrower.getName()));
+//		borrower.setName(checkNullAndTrim("name", borrower.getName()));
 		borrower.setPassword(getProcessedPassword(checkNullAndTrim("password", borrower.getPassword()) + PASSWORDSEED));
 		borrower.setCreatetime(System.currentTimeMillis());
 		borrower.setPrivilege(borrower.PRIVILEGE_VIEW);

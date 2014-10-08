@@ -1,5 +1,23 @@
 var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
-var cuser = service.getCurrentUser();
+var bservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
+
+var cuser = null;
+try{
+cuser = service.getCurrentUser();
+}catch(e){
+	
+}
+
+var buser = null;
+
+if(cuser==null){
+try{
+buser = bservice.getCurrentUser();
+}catch(e){
+	
+}
+}
+
 function header(title){
 	var divtitle = $('<div style="display:inline;"></div>');
 	divtitle.append('<h2 style="float:left;" class="text-muted">政采贷<small>&nbsp;&nbsp;信用创造价值</small></h2>');
@@ -9,6 +27,8 @@ function header(title){
 		if(cuser!=null)
 		{
 			window.location.href="myaccount.html";
+		}else if(buser!=null){
+			window.location.href="index.html";
 		}
 		else
 			{
@@ -18,11 +38,12 @@ function header(title){
 		divusercontent.html('');
 	}
 	else{
-	
-	if(cuser==null){
-		divusercontent.html('<a href="login.html">登陆</a><span>&nbsp;|&nbsp;</span><a href="register.html">注册</a>');
-	}else{
+	if(cuser!=null){
 		divusercontent.html(greet()+cuser.loginId+'&nbsp;|&nbsp;会员级别:<a href="myaccount.html?fid=mycenter">level'+cuser.level+'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="myaccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
+	}else if(buser!=null){
+		divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;|&nbsp;信用级别:<a href="#">level'+buser.creditValue+'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
+	}else{
+		divusercontent.html('<a href="login.html">登陆</a><span>&nbsp;|&nbsp;</span><a href="register.html">注册</a>');
 	}
 		}
 	divtitle.append(divusercontent);

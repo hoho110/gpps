@@ -39,7 +39,7 @@
         <input type="password" id="password_input" class="form-control" placeholder="请输入密码" required>
         <div class="checkbox">
           <label>
-            <input type="checkbox" value="remember-me"> 自动登陆
+            <input type="checkbox" id="iscompany" value="remember-me"> 企业用户
           </label>
           <a href="resetpsw.html" style="float:right;">忘记密码?</a>
           <span style="float:right;">&nbsp;|&nbsp;</span>
@@ -68,6 +68,8 @@
 				src="/resources/EasyServiceClientFullZ.js"></script>
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.ILenderService?json"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.IBorrowerService?json"></script>
 		<script src="js/tool.js"></script>
   </body>
   
@@ -108,7 +110,9 @@ $(document).ready(function() {
 			var username = $('input#J-input-user').val();
 			var password = $('input#password_input').val();
 			var validate = $('input#J-input-checkcode').val();
-
+			
+			var iscompany = document.getElementById("iscompany").checked;
+			
 			if(username==null||username==''){
 				addMessage('*请输入用户名');
 					return;
@@ -124,6 +128,10 @@ $(document).ready(function() {
 				addMessage('*验证码错误！');
 				return; 
 			}
+			
+			
+			if(iscompany==false)
+			{
 			try{
 			service.login(username, password, validate);
 			if(rb!=null)
@@ -135,6 +143,18 @@ $(document).ready(function() {
 				$('input#password_input').val('');
 				$('input#J-input-checkcode').val('');
 				$('img#J-checkcode-img').trigger('click');
+			}
+			}else{
+				try{
+					bservice.login(username, password, validate);
+					window.location.href="index.html";
+				}catch(e){
+					alert(e.message);
+					$('input#password_input').val('');
+					$('input#J-input-checkcode').val('');
+					$('img#J-checkcode-img').trigger('click');
+				}
+			
 			}
 			
            });

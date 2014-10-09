@@ -15,13 +15,17 @@
 	<select id="findByLoginIdAndPassword" resultType="gpps.model.Lender">
 		select *
 		from
-		Lender where loginId=#{loginId} and password=#{password}
+		Lender where (loginId=#{loginId} or tel=#{loginId}) and password=#{password}
 	</select>
 	<select id="findByTel" parameterType="String" resultType="gpps.model.Lender">
 		select
 		*
 		from Lender where tel=#{tel}
 	</select>
+	<select id="findByIdentityCard" parameterType="String" resultType="gpps.model.Lender">
+        select *
+        from Lender where identityCard=#{identityCard}
+    </select>
 	<insert id="create" parameterType="gpps.model.Lender"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into

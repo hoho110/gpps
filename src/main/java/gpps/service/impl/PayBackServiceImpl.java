@@ -263,4 +263,18 @@ public class PayBackServiceImpl implements IPayBackService {
 			return starttime.getActualMaximum(Calendar.DAY_OF_YEAR)-starttime.get(Calendar.DAY_OF_YEAR)+endtime.get(Calendar.DAY_OF_YEAR);
 		}
 	}
+
+	@Override
+	public List<PayBack> generatePayBacks(Integer productId, int amount) {
+		Product product=productDao.find(productId);
+		List<PayBack> payBacks=payBackDao.findAllByProduct(productId);
+		if(payBacks==null||payBacks.size()==0)
+			return new ArrayList<PayBack>(0);
+		for(PayBack payBack:payBacks)
+		{
+			payBack.setChiefAmount(payBack.getChiefAmount().multiply(new BigDecimal(amount)).divide(PayBack.BASELINE,2,BigDecimal.ROUND_DOWN));
+			payBack.setInterest(payBack.getInterest().multiply(new BigDecimal(amount)).divide(PayBack.BASELINE,2,BigDecimal.ROUND_DOWN));
+		}
+		return payBacks;
+	}
 }

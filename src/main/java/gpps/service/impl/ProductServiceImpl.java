@@ -166,7 +166,14 @@ public class ProductServiceImpl implements IProductService {
 			if(list.isEmpty())
 				return new ArrayList<Product>(0);
 		}
-		return productDao.findByState(list, offset, recnum);
+		List<Product> products=productDao.findByState(list, offset, recnum);
+		if(products==null||products.size()==0)
+			return new ArrayList<Product>(0);
+		for(Product product:products)
+		{
+			product.setGovermentOrder(govermentOrderDao.find(product.getGovermentorderId()));
+		}
+		return products; 
 	}
 
 	@Override

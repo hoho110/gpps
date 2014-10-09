@@ -6,6 +6,7 @@ import gpps.dao.ICashStreamDao;
 import gpps.dao.IGovermentOrderDao;
 import gpps.dao.ILenderAccountDao;
 import gpps.dao.ILenderDao;
+import gpps.dao.IPayBackDao;
 import gpps.dao.IProductDao;
 import gpps.dao.IStateLogDao;
 import gpps.dao.ISubmitDao;
@@ -13,6 +14,7 @@ import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.Lender;
 import gpps.model.LenderAccount;
+import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.StateLog;
 import gpps.model.Submit;
@@ -20,6 +22,7 @@ import gpps.model.Task;
 import gpps.service.IAccountService;
 import gpps.service.IGovermentOrderService;
 import gpps.service.ILenderService;
+import gpps.service.IPayBackService;
 import gpps.service.IProductService;
 import gpps.service.ISubmitService;
 import gpps.service.exception.IllegalConvertException;
@@ -65,6 +68,8 @@ public class SubmitServiceImpl implements ISubmitService {
 	ILenderDao lenderDao;
 	@Autowired
 	IStateLogDao stateLogDao;
+	@Autowired
+	IPayBackService payBackService;
 	Logger logger=Logger.getLogger(this.getClass());
 	@PostConstruct
 	public void init() {
@@ -307,6 +312,14 @@ public class SubmitServiceImpl implements ISubmitService {
 				{
 					submit.setRepayedAmount(submit.getRepayedAmount().add(cashStream.getChiefamount()));
 				}
+			}
+			//计算待回款
+			List<PayBack> payBacks=payBackService.generatePayBacks(submit.getProductId(), submit.getAmount().intValue());
+			for(PayBack payBack:payBacks)
+			{
+				if(payBack.getState()!=PayBack.STATE_WAITFORREPAY)
+					continue;
+				submit.setWaitforRepayAmount(submit.getWaitforRepayAmount().add(payBack.getChiefAmount()).add(payBack.getInterest()));
 			}
 		}
 		return Pagination.buildResult(submits,count,offset, recnum);

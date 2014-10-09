@@ -37,4 +37,6 @@ public interface IPayBackService {
 	public List<PayBack> generatePayBacks(int amount,double rate,int payBackModel,
 			long from, long to);
 	
+	public List<PayBack> generatePayBacks(Integer productId,int amount);
+	
 }

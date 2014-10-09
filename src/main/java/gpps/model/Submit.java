@@ -70,7 +70,8 @@ public class Submit {
 	
 	//辅助对象
 	private Product product;
-	private BigDecimal repayedAmount=new BigDecimal(0);
+	private BigDecimal repayedAmount=new BigDecimal(0);//已还款
+	private BigDecimal waitforRepayAmount=new BigDecimal(0);//待回款
 	private long payExpiredTime;
 	private String lenderName;
 	public Product getProduct() {
@@ -96,5 +97,11 @@ public class Submit {
 	}
 	public void setLenderName(String lenderName) {
 		this.lenderName = lenderName;
+	}
+	public BigDecimal getWaitforRepayAmount() {
+		return waitforRepayAmount;
+	}
+	public void setWaitforRepayAmount(BigDecimal waitforRepayAmount) {
+		this.waitforRepayAmount = waitforRepayAmount;
 	}
 }

@@ -132,7 +132,10 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	public void registerSecondStep(String name, String identityCard, int sex, String address,String annualIncome) throws IllegalArgumentException {
 		name=checkNullAndTrim("name", name);
 		identityCard=checkNullAndTrim("identityCard", identityCard);
-		Lender lender=getCurrentUser();
+		Lender lender=lenderDao.findByIdentityCard(identityCard);
+		if(lender!=null)
+			throw new IllegalArgumentException("身份证号已经存在");
+		lender=getCurrentUser();
 		lenderDao.registerSecondStep(lender.getId(), name, identityCard, sex, address,annualIncome);
 		lender.setName(name);
 		lender.setIdentityCard(identityCard);

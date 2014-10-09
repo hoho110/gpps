@@ -10,6 +10,7 @@ public interface ILenderDao {
 	public Lender findByLoginId(String loginId);
 	public Lender findByLoginIdAndPassword(@Param("loginId") String loginId,@Param("password") String password);
 	public Lender findByTel(String tel);
+	public Lender findByIdentityCard(String identityCard);
 	public void create(Lender lender);
 //	public void update(Lender lender);
 	public void changePrivilege(@Param("id") Integer id,@Param("privilege") int privilege);

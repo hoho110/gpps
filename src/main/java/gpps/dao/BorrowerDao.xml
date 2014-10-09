@@ -15,7 +15,7 @@
 	<select id="findByLoginIdAndPassword" resultType="gpps.model.Borrower">
 		select *
 		from
-		Borrower where loginId=#{loginId} and password=#{password}
+		Borrower where (loginId=#{loginId} or tel=#{loginId}) and password=#{password}
 	</select>
 	<select id="findByTel" parameterType="String" resultType="gpps.model.Borrower">
 		select

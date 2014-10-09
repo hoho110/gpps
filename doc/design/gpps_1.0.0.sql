@@ -8,7 +8,7 @@ drop table if exists Borrower;
 
 drop table if exists BorrowerAccount;
 
-drop table if exists Govermentorder;
+drop table if exists GovermentOrder;
 
 drop table if exists Lender;
 
@@ -26,19 +26,19 @@ drop table if exists Submit;
 
 drop table if exists Task;
 
-drop table if exists admin;
+drop table if exists Admin;
 
-drop table if exists adminGroup;
+drop table if exists AdminGroup;
 
-drop table if exists cashstream;
+drop table if exists CashStream;
 
 drop table if exists groupmember;
 
 drop table if exists handlelog;
 
-drop table if exists payback;
+drop table if exists PayBack;
 
-drop table if exists productseries;
+drop table if exists ProductSeries;
 
 /*==============================================================*/
 /* Table: Borrower                                              */
@@ -77,9 +77,9 @@ create table BorrowerAccount
 );
 
 /*==============================================================*/
-/* Table: Govermentorder                                        */
+/* Table: GovermentOrder                                        */
 /*==============================================================*/
-create table Govermentorder
+create table GovermentOrder
 (
    ID                   integer not null auto_increment,
    borrowerId           integer not null,
@@ -279,9 +279,9 @@ create table Task
 );
 
 /*==============================================================*/
-/* Table: admin                                                 */
+/* Table: Admin                                                 */
 /*==============================================================*/
-create table admin
+create table Admin
 (
    id                   integer not null,
    name                 varchar(50),
@@ -295,18 +295,18 @@ create table admin
 );
 
 /*==============================================================*/
-/* Table: adminGroup                                            */
+/* Table: AdminGroup                                            */
 /*==============================================================*/
-create table adminGroup
+create table AdminGroup
 (
    id                   integer not null,
    primary key (id)
 );
 
 /*==============================================================*/
-/* Table: cashstream                                            */
+/* Table: CashStream                                            */
 /*==============================================================*/
-create table cashstream
+create table CashStream
 (
    id                   integer not null auto_increment,
    action               int not null comment '0:向账户充值
@@ -353,9 +353,9 @@ create table handlelog
 );
 
 /*==============================================================*/
-/* Table: payback                                               */
+/* Table: PayBack                                               */
 /*==============================================================*/
-create table payback
+create table PayBack
 (
    ID                   integer not null auto_increment,
    borroweraccountid    integer not null,
@@ -374,7 +374,7 @@ create table payback
 /*==============================================================*/
 /* Table: productseries                                         */
 /*==============================================================*/
-create table productseries
+create table ProductSeries
 (
    ID                   integer not null auto_increment,
    title                varchar(100) not null,
@@ -388,17 +388,17 @@ create table productseries
 alter table Borrower add constraint FK_Ref_borrower_account foreign key (accountid)
       references BorrowerAccount (id) on delete restrict on update restrict;
 
-alter table Govermentorder add constraint FK_Ref_Govermentorder_borrower foreign key (borrowerId)
+alter table GovermentOrder add constraint FK_Ref_GovermentOrder_borrower foreign key (borrowerId)
       references Borrower (id) on delete restrict on update restrict;
 
 alter table Lender add constraint FK_Ref_lender_account foreign key (accountid)
       references LenderAccount (id) on delete restrict on update restrict;
 
-alter table Product add constraint FK_Ref_Product_Govermentorder foreign key (GovermentorderId)
-      references Govermentorder (ID) on delete restrict on update restrict;
+alter table Product add constraint FK_Ref_Product_GovermentOrder foreign key (GovermentorderId)
+      references GovermentOrder (ID) on delete restrict on update restrict;
 
 alter table Product add constraint FK_Ref_product_series foreign key (productseriesId)
-      references productseries (ID) on delete restrict on update restrict;
+      references ProductSeries (ID) on delete restrict on update restrict;
 
 alter table ProductAction add constraint FK_Ref_ProductAction_Product foreign key (productId)
       references Product (ID) on delete restrict on update restrict;
@@ -409,20 +409,20 @@ alter table Submit add constraint FK_Ref_submit_lender foreign key (lenderId)
 alter table Submit add constraint FK_Ref_submit_product foreign key (productId)
       references Product (ID) on delete restrict on update restrict;
 
-alter table cashstream add constraint FK_Ref_cashstream_borroweraccount foreign key (BorrowerAccountId)
+alter table CashStream add constraint FK_Ref_CashStream_borroweraccount foreign key (BorrowerAccountId)
       references BorrowerAccount (id) on delete restrict on update restrict;
 
-alter table cashstream add constraint FK_Ref_cashstream_lenderaccount foreign key (LenderAccountId)
+alter table CashStream add constraint FK_Ref_CashStream_lenderaccount foreign key (LenderAccountId)
       references LenderAccount (id) on delete restrict on update restrict;
 
-alter table cashstream add constraint FK_Ref_cashstream_payback foreign key (paybackId)
-      references payback (ID) on delete restrict on update restrict;
+alter table CashStream add constraint FK_Ref_CashStream_PayBack foreign key (paybackId)
+      references PayBack (ID) on delete restrict on update restrict;
 
-alter table cashstream add constraint FK_Ref_cashstream_submit foreign key (submitid)
+alter table CashStream add constraint FK_Ref_CashStream_submit foreign key (submitid)
       references Submit (Id) on delete restrict on update restrict;
 
-alter table payback add constraint FK_Ref_payback_borroweraccount foreign key (borroweraccountid)
+alter table PayBack add constraint FK_Ref_PayBack_borroweraccount foreign key (borroweraccountid)
       references BorrowerAccount (id) on delete restrict on update restrict;
 
-alter table payback add constraint FK_Ref_payback_product foreign key (productId)
+alter table PayBack add constraint FK_Ref_PayBack_product foreign key (productId)
       references Product (ID) on delete restrict on update restrict;

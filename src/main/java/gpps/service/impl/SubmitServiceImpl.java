@@ -195,7 +195,10 @@ public class SubmitServiceImpl implements ISubmitService {
 
 	@Override
 	public Submit find(Integer id) {
-		return submitDao.find(id);
+		Submit submit=submitDao.find(id);
+		if(submit!=null)
+			submit.setProduct(productDao.find(submit.getProductId()));
+		return submit;
 	}
 
 	@Override

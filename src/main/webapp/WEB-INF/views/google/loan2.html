@@ -18,6 +18,8 @@
 				src="/resources/EasyServiceClientFullZ.js"></script>
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.ILenderService?json"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.IBorrowerService?json"></script>
 <!--[if lt IE 9]>
       <script src="js/cdn/html5shiv.min.js"></script>
       <script src="js/cdn/respond.min.js"></script>
@@ -199,11 +201,43 @@ $(document).ready(function() {
 					removeMessage();
 				}
 
+			
+			var companyname = $('input#companyname').val();
+			var license = $('input#license').val();
+			
+			if(companyname==null||companyname==''){
+				$('input#companyname').parent().find('span').remove();
+				$('input#companyname').parent().append(error);
+				$('input#companyname').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*请输入企业名称');
+				return;
+				}else{
+					$('input#companyname').parent().find('span').remove();
+					$('input#companyname').parent().append(ok);
+					$('input#companyname').parent().parent().removeClass('has-error').addClass('has-success');
+					removeMessage();
+				}
+			
+			
+			if(license==null||license==''){
+				$('input#license').parent().find('span').remove();
+				$('input#license').parent().append(error);
+				$('input#license').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*请输入企业营业执照号');
+				return;
+				}else{
+					$('input#license').parent().find('span').remove();
+					$('input#license').parent().append(ok);
+					$('input#license').parent().parent().removeClass('has-error').addClass('has-success');
+					removeMessage();
+				}
+			
+			
 
 			try{
-				var lender = {"_t_":"gpps.model.Lender", "loginId":username, "password" : password, "tel" : phone};
-				service.register(lender, validate);
-				window.location.href="register2.html";
+				var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname, "identityCard" : license};
+				bservice.register(borrower, validate);
+				window.location.href="index.html";
 			}catch(ee){
 				alert(ee.message);
 				$('input#password').val('');
@@ -217,10 +251,10 @@ $(document).ready(function() {
     $('input#username').blur(function(e){
         var username = $(this).val();
         if(username==null||username==''){
-        	$('input#username').parent().find('span').remove();
-			$('input#username').parent().append(error);
-			$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
-			addMessage('*请输入用户名');
+        	//$('input#username').parent().find('span').remove();
+			//$('input#username').parent().append(error);
+			//$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
+			//addMessage('*请输入用户名');
         }else if(service.isLoginIdExist(username)){
         	$('input#username').parent().find('span').remove();
 			$('input#username').parent().append(error);
@@ -297,10 +331,10 @@ $(document).ready(function() {
     $('input#password').blur(function(e){
  	   var password = $(this).val();
  	   if(password==null||password==''){
- 		  $('input#password').parent().find('span').remove();
-			$('input#password').parent().append(error);
-			$('input#password').parent().parent().removeClass('has-success').addClass('has-error');
-			addMessage('*请输入密码');
+ 		 // $('input#password').parent().find('span').remove();
+		//	$('input#password').parent().append(error);
+		//	$('input#password').parent().parent().removeClass('has-success').addClass('has-error');
+		//	addMessage('*请输入密码');
 			}else{
 				$('input#password').parent().find('span').remove();
 				$('input#password').parent().append(ok);
@@ -313,10 +347,10 @@ $(document).ready(function() {
  	   var password_r = $(this).val();
  	   var password = $('input#password').val();
  	   if(password_r==null||password_r==''){
- 		  $('input#password_r').parent().find('span').remove();
-			$('input#password_r').parent().append(error);
-			$('input#password_r').parent().parent().removeClass('has-success').addClass('has-error');
-			addMessage('*请再次输入密码');
+ 		 // $('input#password_r').parent().find('span').remove();
+		//	$('input#password_r').parent().append(error);
+		//	$('input#password_r').parent().parent().removeClass('has-success').addClass('has-error');
+		//	addMessage('*请再次输入密码');
 			}else if(password_r!=password){
 				$('input#password_r').parent().find('span').remove();
 				$('input#password_r').parent().append(error);

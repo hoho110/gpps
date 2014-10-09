@@ -471,11 +471,13 @@
  	$('a#invest').click(function(e){
  		if(order.state==1 && (parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))>0)
  		{
- 		var cuser = lenderService.getCurrentUser();  
- 		if(cuser==null){
+ 		if(cuser==null && buser==null){
  			if(confirm('登录后才能购买产品，现在登录？')){
  				window.location.href = "login.html?rb=productdetail.html%3Fpid="+pid;
  			}
+ 			return;
+ 		}else if(cuser==null){
+ 			alert('企业用户无法投资产品，请登陆个人用户投资！');
  			return;
  		}
  		
@@ -602,10 +604,12 @@
         	 $('ul.list-detail-wrap li.selected a').trigger('click');
         	 
         	 
-     var cuser = lenderService.getCurrentUser();  
-     if(cuser==null){
+     if(cuser==null && buser==null){
     	 $('p#loginstatus').html('<a href="login.html?rb=productdetail.html%3Fpid='+pid+'" style="margin-right:20px;">登录</a>您尚未登录');
-     }else{
+     }else if(cuser==null){
+    	 $('p#loginstatus').html('<a href="quit.html?rb=productdetail.html%3Fpid='+pid+'" style="margin-right:20px;">退出</a>企业用户无法投资');
+     }
+     else{
     	 var account = accountDao.find(cuser.accountId);
     	 $('p#loginstatus').html('<a href="recharge.html" target="_blank" style="margin-right:20px;">充值</a>账户可用余额：<span class="amountFormat">'+account.usable.value+'</span> 元');
      }

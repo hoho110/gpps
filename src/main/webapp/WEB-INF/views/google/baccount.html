@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-cn">
 <head>
 <meta charset="utf-8">
@@ -77,8 +77,18 @@ a.accordion-toggle {
 										style="margin-left: 50px;" href="resetpsw.html">修改密码</a> <a
 										style="margin-left: 20px;" href="quit.html">退出</a>
 								</div>
-
+								
 								<div style="margin-top: 25px;">
+									<span class="grey">企业名称：<span class="orange" id="companyname">河北佑森塑料型材有限公司</span>
+									</span>
+								</div>
+								
+								<div style="margin-top: 5px;">
+									<span class="grey">营业执照：<span class="orange" id="license">123123123</span>
+									</span>
+								</div>
+
+								<div style="margin-top: 7px;">
 									<span class="grey">总资产 ： <span class="green" id="total"></span>元
 									</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span class="grey">可用余额：<span
 										class="green" id="usable"></span>元
@@ -88,15 +98,6 @@ a.accordion-toggle {
 
 								<div style="margin-top: 5px;">
 									<span class="grey">冻结金额：<span class="freeze" id="freeze"></span>元
-									</span>&nbsp;&nbsp;|&nbsp;&nbsp; <span class="grey">已投金额：<span
-										class="orange" id="used"></span>元
-									</span>
-								</div>
-
-
-								<div style="margin-top: 5px;">
-									<span class="grey">已获利息：<span class="orange"
-										id="totalincome"></span>元
 									</span>
 								</div>
 							</div>
@@ -244,7 +245,7 @@ a.accordion-toggle {
 	<script type="text/javascript"
 		src="/easyservice/gpps.service.ILenderService?json"></script>
 	<script type="text/javascript"
-		src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
+		src="/easyservice/gpps.dao.IBorrowerAccountDao?json"></script>
 	<script type="text/javascript"
 				src="/easyservice/gpps.service.IBorrowerService?json"></script>
 	<script type="text/javascript"
@@ -264,22 +265,22 @@ a.accordion-toggle {
 							var sid = getQueryString('sid');
 
 							var accountDao = EasyServiceClient
-									.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
+									.getRemoteProxy("/easyservice/gpps.dao.IBorrowerAccountDao");
 
 							if (cuser == null && buser == null) {
 								window.location.href = "login.html";
 								return;
-							}else if(cuser==null){
-								window.location.href="baccount.html";
+							}else if(buser==null){
+								window.location.href="myaccount.html";
 							}
 							else {
-								var name = cuser.name == null ? cuser.loginId
-										: cuser.name;
+								var name = buser.name == null ? buser.loginId
+										: buser.name;
 								$('#welcome').html(greet() + name);
 
 							}
 
-							var account = accountDao.find(cuser.accountId);
+							var account = accountDao.find(buser.accountId);
 							var total = account.total;
 							$('#total').html((parseFloat(total.value)+0.09).toFixed(0));
 
@@ -289,24 +290,24 @@ a.accordion-toggle {
 							var freeze = account.freeze;
 							$('#freeze').html((parseFloat(freeze.value)+0.09).toFixed(0));
 
-							var used = account.used;
-							$('#used').html((parseFloat(used.value)+0.09).toFixed(0));
+							var used = 0;
+							$('#used').html(used);
 
-							var totalincome = account.totalincome;
-							$('#totalincome').html((parseFloat(totalincome.value)+0.09).toFixed(0));
+							var totalincome = 0;
+							$('#totalincome').html(totalincome);
 
 
-							var identity = cuser.identityCard;
+							var identity = buser.identityCard;
 							if (identity != null && identity != "") {
-								$('img#identity').attr('src', 'img/people.jpg').attr('title', '身份证已绑定').attr('disabled', 'disabled');
+								$('img#identity').attr('src', 'img/people.jpg').attr('title', '实地考察已完成').attr('disabled', 'disabled');
 								$('a#identity').attr('href', '#');
 								$('div#identity')
 										.css('color', 'green')
 										.html(
-												'<span class="glyphicon glyphicon-ok"></span>身份证已绑定')
+												'<span class="glyphicon glyphicon-ok"></span>实地考察已完成')
 							}
 
-							var spsw = cuser.thirdPartyAccount;
+							var spsw = "wd";
 							if (spsw != null && spsw != "") {
 								$('img#spsw').attr('src', 'img/sanfang.jpg').attr('title', '第三方账户已开通').attr('disabled', 'disabled');
 								$('a#spsw').attr('href', '#').attr('data-sk',

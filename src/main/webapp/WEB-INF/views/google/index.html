@@ -43,6 +43,8 @@
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
 		<script type="text/javascript"
+				src="/easyservice/gpps.service.IProductService?json"></script>
+		<script type="text/javascript"
 				src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
 
 
@@ -218,6 +220,7 @@ $(document).ready(function () {
 	header('index');
 	
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
 	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
 	if(cuser==null){
@@ -392,25 +395,12 @@ $(document).ready(function () {
                    
                    
                    
-                   var orders = orderService.findByStatesByPage(-1,0,10);
-                   var total = orders.get('total');
-               	   var rst = orders.get('result');
+               	   var products = productService.findByStates(-1, 0, 5);
                	   
-               	   var count=0;
-               	   for(var i=0; i<rst.size(); i++){
-               		   var order = rst.get(i);
-               			for(var t=0; t<order.products.size(); t++)
-               				{
-               		   		$('table#products').append(createSingleProduct(rst.get(i), t));
-               		   		count++;
-               		   		if(count>=5)
-               		   			{
-               		   			break;
-               		   			}
-               				}
-               			if(count>=5){
-               				break;
-               			}
+               	   
+               	   for(var i=0; i<products.size(); i++){
+               		   var product = products.get(i);
+               		   $('table#products').append(createSingleProduct(product));
                	   }
                	   
                	   var strmore = '<tr class="ui-list-more">';

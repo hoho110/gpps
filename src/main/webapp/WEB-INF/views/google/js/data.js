@@ -300,8 +300,8 @@ var createStructureProduct2 = function(order){
 	
 
 
-var createSingleProduct = function(order, index){
-	var pro = order.products.get(index);
+var createSingleProduct = function(pro){
+	var order = pro.govermentOrder;
 	var state = order.state;
 	var days = parseInt((pro.incomeEndtime-order.incomeStarttime+23*3600*1000)/(24*3600*1000)+'');
 	

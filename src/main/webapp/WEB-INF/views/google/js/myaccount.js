@@ -306,7 +306,7 @@ var submitall = function(container){
 				                    formatDate(item.createtime),
 				                    item.amount.value,
 				                    item.repayedAmount.value,
-				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)).toFixed(2),
+				                    item.waitforRepayAmount.value,
 				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
 			}
 		}
@@ -408,6 +408,7 @@ var submitpayback = function(container){
 //	content.append(str);
 //	return content;
 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
+	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
 	var columns = [ {
 		"sTitle" : "项目信息",
 			"code" : "info"
@@ -427,9 +428,14 @@ var submitpayback = function(container){
 		"sTitle" : "待回款",
 		"code" : "willBeRepayed"
 	}, {
+		"sTitle" : "回款明细",
+		"code" : "repaydetail"
+	}, {
 		"sTitle" : "合同",
 		"code" : "contract"
 	}];
+	
+	var paybackState={0: '待还款', 1 : '正在还款', 2: '已还款', 3: '延期'};
 	
 	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
 		var sEcho = "";
@@ -460,12 +466,32 @@ var submitpayback = function(container){
 				                    formatDate(item.product.govermentOrder.financingEndtime),
 				                    item.amount.value,
 				                    item.repayedAmount.value,
-				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)).toFixed(2),
+				                    item.waitforRepayAmount.value,
+				                    "<a class='repaydetail' href='javascript:void(0);' id="+item.id+">查看</a>",
 				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
 			}
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
+		
+		$('a.repaydetail').click(function(e){
+			var itemid = $(this).attr('id');
+			var submititem = submitService.find(parseInt(itemid));
+			var pays = paybackService.generatePayBacks(submititem.product.id, parseInt(submititem.amount.value));
+			var str = "<table style='width:95%;'>";
+			str+="<tr><td colspan=5>本笔投资总金额为："+submititem.amount.value+"元, 预期还款明细如下：</td></tr>";
+			str+="<tr><td>序号</td><td>还款日期</td><td>总额</td><td>本金</td><td>利息</td><td>状态</td></tr>";
+			for(var i=0; i<pays.size(); i++){
+				var pay = pays.get(i);
+				str+="<tr><td>"+(i+1)+"</td><td>"+formatDateToDay(pay.deadline)+"</td><td>"+(parseFloat(pay.chiefAmount.value)+parseFloat(pay.interest.value)).toFixed(2)+"</td><td>"+pay.chiefAmount.value+"</td><td>"+pay.interest.value+"</td><td>"+paybackState[pay.state]+"</td></tr>";
+			}
+			str+="</table>";
+			$('#rdetail').html(str);
+			$('#repaydetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
 
 		return res;
 	}

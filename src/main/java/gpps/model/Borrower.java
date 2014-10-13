@@ -8,7 +8,7 @@ public class Borrower {
 	private String email;//email
 	private String loginId;//登录名
 	private String password;//md5加密密码
-	private String identityCard;//身份证
+	private String identityCard;//法人身份证
 	private Integer accountId;//账户ID
 	private String material;//附件
 	private String request;

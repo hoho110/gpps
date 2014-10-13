@@ -1,12 +1,14 @@
 package gpps.service;
 
 import gpps.model.Borrower;
+import gpps.model.FinancingRequest;
 import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
 
 import java.util.List;
+import java.util.Map;
 
 import com.easyservice.xml.XMLParseException;
 
@@ -84,4 +86,23 @@ public interface IBorrowerService extends ILoginService {
 	public void addAccessory(Integer borrowerId,int category,MimeItem item) throws XMLParseException;
 	public void delAccessory(Integer borrowerId,int category,String path) throws XMLParseException;
 	public List<MimeItem> findMimeItems(Integer borrowerId,int category)throws XMLParseException;
+	
+	public void applyFinancing(FinancingRequest financingRequest);
+	public void passFinancingRequest(Integer financingRequestId);
+	
+	public FinancingRequest findFinancingRequest(Integer id);
+	/**
+	 * 找到borrower的所有申请
+	 * @param state -1为不限
+	 * @return
+	 */
+	public List<FinancingRequest> findMyFinancingRequests(int state);
+	/**
+	 * 找到所有申请
+	 * @param state -1为不限
+	 * @param offset
+	 * @param recnum
+	 * @return
+	 */
+	public Map<String, Object> findAllFinancingRequests(int state,int offset, int recnum);
 }

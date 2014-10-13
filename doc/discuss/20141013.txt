@@ -1,5 +1,5 @@
-1. borrower注册后加入session
-2. 增加融资请求实体及相关服务
+1. borrower注册后加入session yes
+2. 增加融资请求实体及相关服务  yes
       字段
 	 政府订单名称
    	 订单详细说明
@@ -13,13 +13,13 @@
 	创建
 	查找
 	修改状态
-    关联订单（非持久化）
-3. 身份证提供查重校验功能，类似于手机号码
-4. Borrower添加字段：
+    关联订单（非持久化）no
+3. 身份证提供查重校验功能，类似于手机号码 yes
+4. Borrower添加字段： yes
 	license 企业营业执照
-	boss_phone   法人电话
-	boss_name    法人姓名
-	boss_addr    法人联系地址
+	Corporationphone   法人电话
+	Corporationname    法人姓名
+	Corporationaddr    法人联系地址
 	thirdPartyAccount 第三方账户
 	level  信用等级
 

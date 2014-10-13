@@ -18,6 +18,12 @@ public class Borrower {
 	public static final int PRIVILEGE_FINANCING=12;//有融资权限的企业用户
 	private int privilege=PRIVILEGE_VIEW;//用户角色
 	private int creditValue=0;//信用值
+	private String license;// 企业营业执照
+	private String corporationPhone;//法人电话
+	private String corporationName;//法人姓名
+	private String corporationAddr;//法人联系地址
+	private String thirdPartyAccount;//第三方账户
+	private int level=0;//信用等级
 	public Integer getId() {
 		return id;
 	}
@@ -101,5 +107,41 @@ public class Borrower {
 	}
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
+	}
+	public String getLicense() {
+		return license;
+	}
+	public void setLicense(String license) {
+		this.license = license;
+	}
+	public String getCorporationPhone() {
+		return corporationPhone;
+	}
+	public void setCorporationPhone(String corporationPhone) {
+		this.corporationPhone = corporationPhone;
+	}
+	public String getCorporationName() {
+		return corporationName;
+	}
+	public void setCorporationName(String corporationName) {
+		this.corporationName = corporationName;
+	}
+	public String getCorporationAddr() {
+		return corporationAddr;
+	}
+	public void setCorporationAddr(String corporationAddr) {
+		this.corporationAddr = corporationAddr;
+	}
+	public String getThirdPartyAccount() {
+		return thirdPartyAccount;
+	}
+	public void setThirdPartyAccount(String thirdPartyAccount) {
+		this.thirdPartyAccount = thirdPartyAccount;
+	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }

@@ -163,4 +163,9 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		Lender lender=getCurrentUser();
 		return StringUtil.isEmpty(lender.getThirdPartyAccount())?false:true;
 	}
+
+	@Override
+	public boolean isIdentityCardExist(String identityCard) {
+		return lenderDao.findByIdentityCard(identityCard)==null?false:true;
+	}
 }

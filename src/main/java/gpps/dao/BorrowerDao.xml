@@ -22,6 +22,11 @@
 		*
 		from Borrower where tel=#{tel}
 	</select>
+	<select id="findByIdentityCard" parameterType="String" resultType="gpps.model.Borrower">
+		select
+		*
+		from Borrower where identityCard=#{identityCard}
+	</select>
 	<select id="findByState" resultType="gpps.model.Borrower">
 		select *
 		from
@@ -31,8 +36,8 @@
 	<insert id="create" parameterType="gpps.model.Borrower"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
-		Borrower(name,tel,email,loginId,password,identityCard,accountId,createtime,privilege,material,request,creditValue,companyName)
-		values(#{name},#{tel},#{email},#{loginId},#{password},#{identityCard},#{accountId},#{createtime},#{privilege},#{material},#{request},#{creditValue},#{companyName})
+		Borrower(name,tel,email,loginId,password,identityCard,accountId,createtime,privilege,material,request,creditValue,companyName,license,corporationPhone,corporationName,corporationAddr,thirdPartyAccount,level)
+		values(#{name},#{tel},#{email},#{loginId},#{password},#{identityCard},#{accountId},#{createtime},#{privilege},#{material},#{request},#{creditValue},#{companyName},#{license},#{corporationPhone},#{corporationName},#{corporationAddr},#{thirdPartyAccount},#{level})
 	</insert>
 	<update id="changePrivilege">
 		update Borrower set

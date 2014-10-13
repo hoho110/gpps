@@ -1,10 +1,13 @@
 package gpps.service.impl;
 
 import static gpps.tools.StringUtil.checkNullAndTrim;
+import gpps.constant.Pagination;
 import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.IBorrowerDao;
+import gpps.dao.IFinancingRequestDao;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
+import gpps.model.FinancingRequest;
 import gpps.model.ref.Accessory;
 import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
@@ -12,15 +15,18 @@ import gpps.service.IBorrowerService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
+import gpps.tools.ObjectUtil;
 import gpps.tools.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.easyservice.xml.EasyObjectXMLTransformerImpl;
 import com.easyservice.xml.IEasyObjectXMLTransformer;
@@ -32,6 +38,8 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	IBorrowerDao borrowerDao;
 	@Autowired
 	IBorrowerAccountDao borrowerAccountDao;
+	@Autowired
+	IFinancingRequestDao financingRequestDao;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	@Override
 	public void login(String loginId, String password, String graphValidateCode) throws LoginException, ValidateCodeException {
@@ -94,6 +102,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		borrower.setAccountId(account.getId());
 		borrowerDao.create(borrower);
 		borrower.setPassword(null);
+		getCurrentSession().setAttribute(SESSION_ATTRIBUTENAME_USER, borrower);
 		return borrower;
 	}
 
@@ -228,5 +237,50 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		if(col==null)
 			return new ArrayList<Accessory.MimeItem>(0);
 		return col.getItems();
+	}
+
+	@Override
+	@Transactional
+	public void applyFinancing(FinancingRequest financingRequest) {
+		Borrower borrower=getCurrentUser();
+		ObjectUtil.checkNullObject(Borrower.class, borrower);
+		financingRequest.setBorrowerID(borrower.getId());
+		financingRequest.setState(FinancingRequest.STATE_INIT);
+		financingRequestDao.create(financingRequest);
+		if(borrower.getPrivilege()!=Borrower.PRIVILEGE_FINANCING)
+		{
+			borrowerDao.changePrivilege(borrower.getId(), Borrower.PRIVILEGE_APPLY);
+		}
+	}
+
+	@Override
+	public FinancingRequest findFinancingRequest(Integer id) {
+		return financingRequestDao.find(id);
+	}
+
+	@Override
+	public List<FinancingRequest> findMyFinancingRequests(int state) {
+		Borrower borrower=getCurrentUser();
+		ObjectUtil.checkNullObject(Borrower.class, borrower);
+		return financingRequestDao.findByBorrowerAndState(borrower.getId(), state);
+	}
+
+	@Override
+	public Map<String, Object> findAllFinancingRequests(int state, int offset, int recnum) {
+		int count=financingRequestDao.countByState(state);
+		if(count==0)
+			return Pagination.buildResult(new ArrayList<FinancingRequest>(0), count, offset, recnum);
+		List<FinancingRequest> financingRequests=financingRequestDao.findByState(state, offset, recnum);
+		return Pagination.buildResult(financingRequests, count, offset, recnum);
+	}
+
+	@Override
+	public void passFinancingRequest(Integer financingRequestId) {
+		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_PROCESSED);
+	}
+
+	@Override
+	public boolean isIdentityCardExist(String identityCard) {
+		return borrowerDao.findByIdentityCard(identityCard)==null?false:true;
 	}
 }

@@ -40,6 +40,8 @@ drop table if exists PayBack;
 
 drop table if exists ProductSeries;
 
+drop table if exists FinancingRequest;
+
 /*==============================================================*/
 /* Table: Borrower                                              */
 /*==============================================================*/
@@ -61,8 +63,15 @@ create table Borrower
             12：有融资权限的企业用户',
    creditValue          int not null default 0,
    companyName          varchar(255),
+   license              varchar(255),
+   corporationPhone     varchar(255),
+   corporationName      varchar(255),
+   corporationAddr      varchar(255),
+   thirdPartyAccount    varchar(255),
+   level                int not null default 0,
    primary key (id)
 );
+
 
 /*==============================================================*/
 /* Table: BorrowerAccount                                       */
@@ -100,6 +109,7 @@ create table GovermentOrder
    incomeStarttime      bigint not null,
    lastModifytime       bigint not null,
    description          varchar(2000),
+   FinancingRequestId   integer,
    primary key (ID)
 );
 
@@ -384,6 +394,25 @@ create table ProductSeries
    typedetail           varchar(255),
    primary key (ID)
 );
+/*==============================================================*/
+/* Table: FinancingRequest                                      */
+/*==============================================================*/
+create table FinancingRequest
+(
+   id                   integer not null,
+   govermentOrderName   varchar(255),
+   govermentOrderDetail varchar(255),
+   applyFinancingAmount int not null default 0,
+   rate                 varchar(50),
+   state                int not null default 0,
+   createtime           bigint not null default 0,
+   lastModifyTime       bigint not null default 0,
+   borrowerID           integer not null,
+   primary key (id)
+);
+
+alter table FinancingRequest add constraint FK_Reference_FinancingRequest_Borrower foreign key (borrowerID)
+      references Borrower (id) on delete restrict on update restrict;
 
 alter table Borrower add constraint FK_Ref_borrower_account foreign key (accountid)
       references BorrowerAccount (id) on delete restrict on update restrict;
@@ -426,3 +455,7 @@ alter table PayBack add constraint FK_Ref_PayBack_borroweraccount foreign key (b
 
 alter table PayBack add constraint FK_Ref_PayBack_product foreign key (productId)
       references Product (ID) on delete restrict on update restrict;
+      
+alter table Govermentorder add constraint FK_Reference_GovermentOrder_FinancingRequest foreign key (FinancingRequestId)
+      references FinancingRequest (id) on delete restrict on update restrict;
+

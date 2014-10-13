@@ -57,6 +57,8 @@ public interface ILoginService {
 	public boolean isLoginIdExist(String loginId);
 	
 	public boolean isPhoneNumberExist(String phoneNumber);
+	
+	public boolean isIdentityCardExist(String identityCard);
 	/**
 	 * 用户密码找回
 	 * @param loginId 登录ID

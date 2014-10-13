@@ -1,10 +1,10 @@
 package gpps.dao;
 
+import gpps.model.Borrower;
+
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-
-import gpps.model.Borrower;
 
 public interface IBorrowerDao {
 	public int countAll();
@@ -13,6 +13,7 @@ public interface IBorrowerDao {
 	public Borrower findByLoginIdAndPassword(@Param("loginId") String loginId,@Param("password") String password);
 	public List<Borrower> findByPrivilege(int privilege);
 	public Borrower findByTel(String tel);
+	public Borrower findByIdentityCard(String identityCard);
 	public List<Borrower> findByState(int state);
 	public void create(Borrower borrower);
 //	public void update(Borrower borrower);

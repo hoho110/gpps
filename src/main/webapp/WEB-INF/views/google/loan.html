@@ -110,6 +110,7 @@
 	</div>
 
 </body>
+<script src="js/tool.js"></script>
 <script src="js/head.js"></script>
  <script>
  
@@ -133,7 +134,7 @@ function removeMessage(){
  
 $(document).ready(function() {
 	
-	header('login');
+	header('loan');
 	
 	
 	$('#username').focus();
@@ -150,7 +151,7 @@ $(document).ready(function() {
 					$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 					addMessage('*请输入用户名');
 					return;
-					}else if(service.isLoginIdExist(username)){
+					}else if(bservice.isLoginIdExist(username)){
 						$('input#username').parent().find('span').remove();
 						$('input#username').parent().append(error);
 						$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
@@ -236,7 +237,11 @@ $(document).ready(function() {
 
 			try{
 				var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname, "identityCard" : license};
-				bservice.register(borrower, validate);
+				var bor = bservice.register(borrower, validate);
+				
+				var financingrequest = {"_t_":"gpps.model.FinancingRequest", "govermentOrderName":"XXXXXXX政府订单", "govermentOrderDetail":"asdfadfadsfasdf", "applyFinancingAmount":100000, "rate":"12%", "createtime":(new Date()).getTime(), "lastModifyTime":(new Date()).getTime(), "borrowerID": bor.id};
+				bservice.applyFinancing(financingrequest);
+				
 				window.location.href="baccount.html";
 			}catch(ee){
 				alert(ee.message);
@@ -255,7 +260,7 @@ $(document).ready(function() {
 			//$('input#username').parent().append(error);
 			//$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 			//addMessage('*请输入用户名');
-        }else if(service.isLoginIdExist(username)){
+        }else if(bservice.isLoginIdExist(username)){
         	$('input#username').parent().find('span').remove();
 			$('input#username').parent().append(error);
 			$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
@@ -295,7 +300,7 @@ $(document).ready(function() {
 			addMessage('*手机号码格式不对');
 			return;
  	  }
- 	  else if(service.isPhoneNumberExist(phone)){
+ 	  else if(bservice.isPhoneNumberExist(phone)){
  		 $('input#phone').parent().find('span').remove();
 			$('input#phone').parent().append(error);
 			$('input#phone').parent().parent().removeClass('has-success').addClass('has-error');
@@ -311,7 +316,7 @@ $(document).ready(function() {
  		 	
  		 	var t = 300;
  	    	$('button#sendValCode').attr('disabled', true);
- 			setInterval(count,1000);  
+ 			
  			//显示当前的秒数
  		    function count(){
  		    	t --;
@@ -325,6 +330,8 @@ $(document).ready(function() {
  		    			clearInterval();
  		    			}
  		    }
+ 			
+ 		   setInterval(count,1000);  
  	  }
     });
     

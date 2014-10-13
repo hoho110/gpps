@@ -339,7 +339,7 @@ $(document).ready(function() {
  		 	
  		 	var t = 300;
  	    	$('button#sendValCode').attr('disabled', true);
- 			setInterval(count,1000);  
+ 			
  			//显示当前的秒数
  		    function count(){
  		    	t --;
@@ -353,6 +353,8 @@ $(document).ready(function() {
  		    			clearInterval();
  		    			}
  		    }
+ 			
+ 		   setInterval(count,1000);  
  	  }
     });
     

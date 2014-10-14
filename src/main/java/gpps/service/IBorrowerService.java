@@ -105,4 +105,7 @@ public interface IBorrowerService extends ILoginService {
 	 * @return
 	 */
 	public Map<String, Object> findAllFinancingRequests(int state,int offset, int recnum);
+	
+	public void registerThirdPartyAccount(String thirdPartyAccount);
+	public boolean isThirdPartyAuthentication();
 }

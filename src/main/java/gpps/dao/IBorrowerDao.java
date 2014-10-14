@@ -26,4 +26,6 @@ public interface IBorrowerDao {
 	
 	public String findAccessory(Integer borrowerId);
 	public void updateAccessory(@Param("borrowerId")Integer borrowerId,@Param("material")String material);
+	
+	public void registerThirdPartyAccount(@Param("id")Integer id,@Param("thirdPartyAccount")String thirdPartyAccount);
 }

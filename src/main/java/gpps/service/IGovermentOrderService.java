@@ -44,7 +44,7 @@ public interface IGovermentOrderService {
 //	public void refuseApplying(Integer orderId)throws IllegalConvertException;//拒绝申请
 //	public void reviseApplying(Integer orderId)throws IllegalConvertException;//修订申请
 //	public void reApply(Integer orderId)throws IllegalConvertException;//重新申请
-	public void startFinancing(Integer orderId)throws IllegalConvertException;//启动融资
+	public void startFinancing(Integer orderId)throws IllegalConvertException, IllegalOperationException;//启动融资
 	/**
 	 * 启动还款
 	 * @param orderId

@@ -74,4 +74,9 @@
         where
         id=#{borrowerId}
     </update>
+    <update id="registerThirdPartyAccount">
+        update Borrower set
+        thirdPartyAccount=#{thirdPartyAccount}
+        where id=#{id}
+    </update>
 </mapper>

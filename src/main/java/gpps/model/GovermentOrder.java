@@ -33,6 +33,7 @@ public class GovermentOrder {
 //	private long incomeEndtime;
 	private long lastModifytime=System.currentTimeMillis();
 	private String description;
+	private Integer financingRequestId;
 	public Integer getId() {
 		return id;
 	}
@@ -106,6 +107,16 @@ public class GovermentOrder {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	public Integer getFinancingRequestId() {
+		return financingRequestId;
+	}
+	public void setFinancingRequestId(Integer financingRequestId) {
+		this.financingRequestId = financingRequestId;
+	}
+	
+	
+	
+	
 	//辅助
 	public List<Product> getProducts() {
 		return products;
@@ -113,11 +124,7 @@ public class GovermentOrder {
 	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
-	
-	
-	
-	
-	
+
 	public Product findProductById(Integer productId)
 	{
 		if(products==null||products.size()==0)

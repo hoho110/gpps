@@ -176,9 +176,14 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 //	}
 	@Override
 	@Transactional
-	public void startFinancing(Integer orderId) throws IllegalConvertException {
+	public void startFinancing(Integer orderId) throws IllegalConvertException,IllegalOperationException {
 		checkNullObject("orderId", orderId);
 		GovermentOrder order=checkNullObject(GovermentOrder.class, govermentOrderDao.find(orderId));
+		//校验borrower是否已开通第三方
+		Borrower borrower=borrowerDao.find(order.getBorrowerId());
+		if(StringUtil.isEmpty(borrower.getThirdPartyAccount()))
+			throw new IllegalOperationException("借款方尚未开通第三方账户");
+		
 		changeState(orderId, GovermentOrder.STATE_FINANCING);
 		order.setState(GovermentOrder.STATE_FINANCING);
 		insertGovermentOrderToFinancing(order);

@@ -8,6 +8,7 @@ import gpps.dao.IFinancingRequestDao;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
 import gpps.model.FinancingRequest;
+import gpps.model.Lender;
 import gpps.model.ref.Accessory;
 import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
@@ -276,11 +277,28 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 
 	@Override
 	public void passFinancingRequest(Integer financingRequestId) {
+		FinancingRequest financingRequest=financingRequestDao.find(financingRequestId);
+		ObjectUtil.checkNullObject(FinancingRequest.class, financingRequest);
 		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_PROCESSED);
+		borrowerDao.changePrivilege(financingRequest.getBorrowerID(), Borrower.PRIVILEGE_FINANCING);
 	}
 
 	@Override
 	public boolean isIdentityCardExist(String identityCard) {
 		return borrowerDao.findByIdentityCard(identityCard)==null?false:true;
+	}
+
+	@Override
+	public void registerThirdPartyAccount(String thirdPartyAccount) {
+		Borrower borrower=getCurrentUser();
+		thirdPartyAccount=checkNullAndTrim("thirdPartyAccount", thirdPartyAccount);
+		borrowerDao.registerThirdPartyAccount(borrower.getId(), thirdPartyAccount);
+		borrower.setThirdPartyAccount(thirdPartyAccount);
+	}
+
+	@Override
+	public boolean isThirdPartyAuthentication() {
+		Borrower borrower=getCurrentUser();
+		return StringUtil.isEmpty(borrower.getThirdPartyAccount())?false:true;
 	}
 }

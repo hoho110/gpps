@@ -157,7 +157,14 @@ $(document).ready(function() {
 						$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 						addMessage('*用户名已被注册');
 						return;
-					}else{
+					}else if(/^[0-9]*$/.test(username)){
+						$('input#username').parent().find('span').remove();
+						$('input#username').parent().append(error);
+						$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
+						addMessage('*用户名不能是纯数字');
+						return;
+					}
+					else{
 						$('input#username').parent().find('span').remove();
 						$('input#username').parent().append(ok);
 						$('input#username').parent().parent().removeClass('has-error').addClass('has-success');
@@ -236,7 +243,7 @@ $(document).ready(function() {
 			
 
 			try{
-				var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname, "identityCard" : license};
+				var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname, "identityCard" : license, "privilege" : 11};
 				var bor = bservice.register(borrower, validate);
 				
 				var financingrequest = {"_t_":"gpps.model.FinancingRequest", "govermentOrderName":"XXXXXXX政府订单", "govermentOrderDetail":"asdfadfadsfasdf", "applyFinancingAmount":100000, "rate":"12%", "createtime":(new Date()).getTime(), "lastModifyTime":(new Date()).getTime(), "borrowerID": bor.id};
@@ -265,6 +272,11 @@ $(document).ready(function() {
 			$('input#username').parent().append(error);
 			$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 			addMessage('*用户名已被注册');
+			}else if(/^[0-9]*$/.test(username)){
+				$('input#username').parent().find('span').remove();
+				$('input#username').parent().append(error);
+				$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*用户名不能是纯数字');
 			}
         else{
         	$('input#username').parent().find('span').remove();

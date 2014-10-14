@@ -31,7 +31,7 @@
 		select *
 		from
 		Borrower where
-		state=#{state}
+		privilege=#{state}
 	</select>
 	<insert id="create" parameterType="gpps.model.Borrower"
 		useGeneratedKeys="true" keyProperty="id">

@@ -75,6 +75,8 @@
 				src="/easyservice/gpps.service.IBorrowerService?json"></script>
 <script type="text/javascript"
 		src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
+<script type="text/javascript"
+		src="/easyservice/gpps.dao.IBorrowerAccountDao?json"></script>
 	<script src="js/head.js"></script>
 <script>
 $(document).ready(function() {
@@ -83,34 +85,71 @@ $(document).ready(function() {
 	
 	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
-	var cuser = service.getCurrentUser();
-	if(cuser==null){
+	var bservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
+	var baccountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IBorrowerAccountDao");
+	if(cuser==null && buser==null){
 		window.location.href="login.html"; 
 		return;
 	}
 	
-	var thirdPartyAccount = cuser.thirdPartyAccount;
-	var identityCard = cuser.identityCard;
-	if(identityCard==null || identityCard==''){
-		if(confirm("您尚未实名认证，马上认证?")){
-			window.location.href="register2.html";
-		}else{
-			window.close();
+	
+	
+	if(cuser!=null){
+		var thirdPartyAccount = cuser.thirdPartyAccount;
+		var identityCard = cuser.identityCard;
+		
+		if(identityCard==null || identityCard==''){
+			if(confirm("您尚未实名认证，马上认证?")){
+				window.location.href="register2.html";
+			}else{
+				window.close();
+	  		}
 		}
-	}
-	else if(thirdPartyAccount==null || thirdPartyAccount==''){
-		if(confirm("您尚未在第三方注册，马上注册？")){
-			window.location.href="register3.html";
-		}else{
-			window.close();
+		else if(thirdPartyAccount==null || thirdPartyAccount==''){
+			if(confirm("您尚未在第三方注册，马上注册？")){
+				window.location.href="register3.html";
+			}else{
+				window.close();
+			}
+		}
+	}else if(buser!=null){
+		var privilege = buser.privilege;
+		if(privilege==10 || privilege==11){
+			if(confirm("您尚未实地净调，马上申请?")){
+				window.location.href="baccount.html";
+			}else{
+				window.close();
+	  		}
+		}
+		
+		var thirdPartyAccount = buser.thirdPartyAccount;
+		if(thirdPartyAccount==null || thirdPartyAccount==''){
+			if(confirm("您尚未在第三方注册，马上注册？")){
+				window.location.href="register3.html";
+			}else{
+				window.close();
+			}
 		}
 	}
 	
-	var name = cuser.name==null?cuser.name:cuser.loginId;
-	var account = accountDao.find(cuser.accountId);
+	var name="";
+	var cashoutAmount = 0;
 	
-	var usable = account.usable;
-	var cashoutAmount = (parseFloat(usable.value)+0.09).toFixed(0);
+	if(cuser!=null){
+		name = cuser.name==null?cuser.loginId:cuser.name;
+		var account = accountDao.find(cuser.accountId);
+		
+		var usable = account.usable;
+		cashoutAmount = (parseFloat(usable.value)+0.09).toFixed(0);
+	}else if(buser!=null){
+		name = buser.name==null?buser.loginId:buser.name;
+		var baccount = baccountDao.find(buser.accountId);
+		
+		var usable = baccount.usable;
+		cashoutAmount = (parseFloat(usable.value)+0.09).toFixed(0);
+	}
+	
+	
 	$('#amount').html(cashoutAmount);
 	$('#username').html(name);
 	

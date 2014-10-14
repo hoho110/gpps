@@ -465,7 +465,63 @@ var createSingleProduct2 = function(order){
 	return str;
 }
 
-
+var createBorrowerNavLevel2 = function(nav){
+	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
+	if(nav=='bcenter'){
+		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
+		
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-note">系统通知</a></li>');
+		
+		ul.append(li2);
+		ul.append(li3);
+		ul.append(li5);
+	}else if(nav=='request'){
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="request-all">全部</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="request-tohandle">待处理</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="request-handled">已处理</a></li>');
+		ul.append(li1);
+		ul.append(li2);
+		ul.append(li4);
+	}else if(nav=='payback'){
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="payback-all">总览</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-emergency">紧急</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-to">待回款</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-have">已回款</a></li>');
+		ul.append(li1);
+		ul.append(li4);
+		ul.append(li2);
+		ul.append(li3);
+	}else if(nav=='cash'){
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="cash-all">全部</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="cash-recharge">充值</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="cash-withdraw">提现</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="cash-financing">融资</a></li>');
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="cash-payback">还款</a></li>');
+		ul.append(li1);
+		ul.append(li2);
+		ul.append(li3);
+		ul.append(li4);
+		ul.append(li5);
+	}else if(nav=='order'){
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="order-all">全部</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-preview">预览</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-financing">融资中</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-paying">还款中</a></li>');
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-toclose">待关闭</a></li>');
+		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-closed">已关闭</a></li>');
+		var li7 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-quit">流标</a></li>');
+		ul.append(li1);
+		ul.append(li2);
+		ul.append(li3);
+		ul.append(li4);
+		ul.append(li5);
+		ul.append(li6);
+		ul.append(li7);
+	}
+	
+	return ul;
+}
 var createNavLevel2 = function(nav){
 	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
 	if(nav=='mycenter'){

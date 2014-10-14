@@ -170,27 +170,48 @@ $(document).ready(function() {
 	
 	var rb = getQueryString('rb');
 	
-	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
-	var cuser = service.getCurrentUser();
-	if(cuser==null){
+
+	if(cuser==null && buser==null){
 		window.location.href="login.html"; 
 		return;
 	}
 	
-	var thirdPartyAccount = cuser.thirdPartyAccount;
-	var identityCard = cuser.identityCard;
-	if(identityCard==null || identityCard==''){
-		if(confirm("您尚未实名认证，马上认证?")){
-			window.location.href="register2.html";
-		}else{
-			window.close();
-  		}
-	}
-	else if(thirdPartyAccount==null || thirdPartyAccount==''){
-		if(confirm("您尚未在第三方注册，马上注册？")){
-			window.location.href="register3.html";
-		}else{
-			window.close();
+	
+	if(cuser!=null){
+		var thirdPartyAccount = cuser.thirdPartyAccount;
+		var identityCard = cuser.identityCard;
+		
+		if(identityCard==null || identityCard==''){
+			if(confirm("您尚未实名认证，马上认证?")){
+				window.location.href="register2.html";
+			}else{
+				window.close();
+	  		}
+		}
+		else if(thirdPartyAccount==null || thirdPartyAccount==''){
+			if(confirm("您尚未在第三方注册，马上注册？")){
+				window.location.href="register3.html";
+			}else{
+				window.close();
+			}
+		}
+	}else if(buser!=null){
+		var privilege = buser.privilege;
+		if(privilege==10 || privilege==11){
+			if(confirm("您尚未实地净调，马上申请?")){
+				window.location.href="baccount.html";
+			}else{
+				window.close();
+	  		}
+		}
+		
+		var thirdPartyAccount = buser.thirdPartyAccount;
+		if(thirdPartyAccount==null || thirdPartyAccount==''){
+			if(confirm("您尚未在第三方注册，马上注册？")){
+				window.location.href="register3.html";
+			}else{
+				window.close();
+			}
 		}
 	}
 	
@@ -229,14 +250,14 @@ $(document).ready(function() {
 	
 	$('#success').click(function(e){
 		if(rb==null)
-			window.location.href = "myaccount.html?fid=cash";
+			window.location.href = "baccount.html?fid=cash";
 		else
 			window.location.href = rb;
 	});
 	
 	$('#fail').click(function(e){
 		if(rb==null)
-			window.location.href = "myaccount.html?fid=cash";
+			window.location.href = "baccount.html?fid=cash";
 		else
 			window.location.href = rb;
 	});
@@ -247,7 +268,7 @@ $(document).ready(function() {
 	});
 	
 	$('#fail2').click(function(e){
-			window.location.href = "myaccount.html?fid=mycenter";
+			window.location.href = "baccount.html?fid=mycenter";
 	});
 })
 </script>

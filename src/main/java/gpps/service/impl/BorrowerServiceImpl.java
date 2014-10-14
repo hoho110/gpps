@@ -138,8 +138,13 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	}
 
 	@Override
-	public List<Borrower> findFinancingBorrower() {
-		return borrowerDao.findByState(Borrower.PRIVILEGE_FINANCING);
+	public List<Borrower> findFinancingBorrower(int privilege) {
+		return borrowerDao.findByState(privilege);
+	}
+	
+	@Override
+	public List<Borrower> findRequestBorrower() {
+		return borrowerDao.findByState(Borrower.PRIVILEGE_APPLY);
 	}
 
 	@Override

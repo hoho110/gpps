@@ -159,17 +159,31 @@ $(document).ready(function() {
 			var phone = $('input#phone').val();
 			var validate = $('input#validate').val();
 			
+			
+			
 			if(username==null||username==''){
 					$('input#username').parent().find('span').remove();
 					$('input#username').parent().append(error);
 					$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 					addMessage('*请输入用户名');
 					return;
-					}else if(service.isLoginIdExist(username)){
-						$('input#username').parent().find('span').remove();
+					}else if(usertype=='1' && service.isLoginIdExist(username)){
+			        	$('input#username').parent().find('span').remove();
 						$('input#username').parent().append(error);
 						$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 						addMessage('*用户名已被注册');
+						return;
+					}else if(usertype=='0' && bservice.isLoginIdExist(username)){
+						$('input#username').parent().find('span').remove();
+						$('input#username').parent().append(error);
+						$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
+						addMessage('*企业用户名已被注册');
+						return;
+					}else if(/^[0-9]*$/.test(username)){
+						$('input#username').parent().find('span').remove();
+						$('input#username').parent().append(error);
+						$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
+						addMessage('*用户名不能是纯数字');
 						return;
 					}else{
 						$('input#username').parent().find('span').remove();
@@ -283,11 +297,22 @@ $(document).ready(function() {
 			//$('input#username').parent().append(error);
 			//$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 			//addMessage('*请输入用户名');
-        }else if(service.isLoginIdExist(username)){
+        }else if(usertype=='1' && service.isLoginIdExist(username)){
         	$('input#username').parent().find('span').remove();
 			$('input#username').parent().append(error);
 			$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
 			addMessage('*用户名已被注册');
+		}else if(usertype=='0' && bservice.isLoginIdExist(username)){
+			$('input#username').parent().find('span').remove();
+			$('input#username').parent().append(error);
+			$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
+			addMessage('*企业用户名已被注册');
+		}
+        else if(/^[0-9]*$/.test(username)){
+				$('input#username').parent().find('span').remove();
+				$('input#username').parent().append(error);
+				$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*用户名不能是纯数字');
 			}
         else{
         	$('input#username').parent().find('span').remove();

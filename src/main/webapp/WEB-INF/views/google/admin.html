@@ -108,6 +108,16 @@
 	<input id="upload" type=button value="上载"></input>
 </form>
 </div>
+
+
+<div class="row" style="border : #eee solid 1px; height:50px;">
+<div id="request" class="col-sm-12 col-md-12">
+</div>
+<div id="t112" class="col-sm-12 col-md-12">
+<input type="text" id="requestinput" size=10></input><button id="accept">审核通过</button><button id="refuse">拒绝</button>
+</div>
+</div>
+
 </div>
 </body>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -124,11 +134,14 @@
 				src="/easyservice/gpps.service.IPayBackService?json"></script>
 <script type="text/javascript"
 				src="/easyservice/gpps.service.IProductActionService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IBorrowerService?json"></script>
 <script>
 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
 var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
 var actionService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductActionService");
+var borrowerService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
 function refreshPreviewOrder(){
 	var pores = orderService.findByStatesByPage(2, 0, 100);
 	var pos = pores.get('result');
@@ -213,6 +226,24 @@ function refreshFailOrder(){
 	}
 }
 
+
+
+function refreshRequestBorrower(){
+	var borrowers = borrowerService.findFinancingBorrower(11);
+	$('#request').html('申请融资的企业为: ');
+	for(var i=0; i<borrowers.size(); i++){
+		$('#request').append('&nbsp;&nbsp;'+borrowers.get(i).id+'&nbsp;&nbsp;');
+	}
+}
+
+
+
+
+
+
+
+
+
 $(document).ready(function () {
 	
 refreshPreviewOrder();
@@ -221,6 +252,7 @@ refreshRepayingOrder();
 refreshPayDoneOrder();
 refreshCloseDoneOrder();
 refreshFailOrder();
+refreshRequestBorrower();
 $('button#startFinance').click(function(e){
 	var id = $('#preOrder').val();
 	$('#preOrder').val('');
@@ -303,7 +335,31 @@ $('button#add').click(function(e){
 	}catch(e){
 		alert(e.message);
 	}
-})
+});
+
+$('button#accept').click(function(e){
+	var id = $('input#requestinput').val();
+	$('#requestinput').val('');
+	try{
+		var idint = parseInt(id);
+		borrowerService.passFundingApplying(idint);
+		refreshRequestBorrower();
+	}catch(e){
+		alert(e.message);
+	}
+});
+
+$('button#refuse').click(function(e){
+	var id = $('input#requestinput').val();
+	$('#requestinput').val('');
+	try{
+		var idint = parseInt(id);
+		borrowerService.refuseFundingApplying(idint);
+		refreshRequestBorrower();
+	}catch(e){
+		alert(e.message);
+	}
+});
 
 var type_category = {
 	order : ["中标文件"],

@@ -57,7 +57,14 @@ public interface IBorrowerService extends ILoginService {
 	 * 
 	 * @return
 	 */
-	public List<Borrower> findFinancingBorrower();
+	public List<Borrower> findFinancingBorrower(int privilege);
+	
+	/**
+	 * 查找申请融资的借款方
+	 * 
+	 * @return
+	 * */
+	public List<Borrower> findRequestBorrower();
 
 	public void addAccessory(Integer borrowerId, String path);
 

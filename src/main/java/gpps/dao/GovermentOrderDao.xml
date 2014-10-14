@@ -81,4 +81,8 @@
         where
         id=#{orderId}
     </update>
+    <select id="findByFinancingRequest" parameterType="Integer" resultType="gpps.model.GovermentOrder">
+        select *
+        from GovermentOrder where financingRequestId=#{financingRequestId}
+    </select>
 </mapper>

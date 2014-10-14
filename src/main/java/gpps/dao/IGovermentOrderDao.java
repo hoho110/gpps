@@ -18,4 +18,6 @@ public interface IGovermentOrderDao {
 	public GovermentOrder find(Integer id);
 	public String findAccessory(Integer orderId);
 	public void updateAccessory(@Param("orderId")Integer orderId,@Param("material")String material);
+	
+	public GovermentOrder findByFinancingRequest(Integer financingRequestId);
 }

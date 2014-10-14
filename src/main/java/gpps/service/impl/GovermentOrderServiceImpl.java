@@ -481,9 +481,9 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			return requests;
 		for(FinancingRequest request:requests)
 		{
-//			if(request.getState()==FinancingRequest.STATE_PROCESSED)
-//				request.setGovermentOrder(govermentOrderDao.find(request.getgo));
+			if(request.getState()==FinancingRequest.STATE_PROCESSED)
+				request.setGovermentOrder(govermentOrderDao.findByFinancingRequest(request.getId()));
 		}
-		return null;
+		return requests;
 	}
 }

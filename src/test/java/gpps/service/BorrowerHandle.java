@@ -112,6 +112,8 @@ public class BorrowerHandle {
 			orderService.startFinancing(orderId);
 		} catch (IllegalConvertException e1) {
 			e1.printStackTrace();
+		} catch (IllegalOperationException e) {
+			e.printStackTrace();
 		}
 	}
 	//一次还款

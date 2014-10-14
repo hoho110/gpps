@@ -1,5 +1,6 @@
 package gpps.service;
 
+import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.model.ref.Accessory.MimeItem;
@@ -101,4 +102,16 @@ public interface IGovermentOrderService {
 	public void addAccessory(Integer orderId,int category,MimeItem item) throws XMLParseException;
 	public void delAccessory(Integer orderId,int category,String path) throws XMLParseException;
 	public List<MimeItem> findMimeItems(Integer orderId,int category)throws XMLParseException;
+	/**
+	 * 返回当前借款人的订单
+	 * @param states 一个或几个状态并集，-1表示不限
+	 * @return
+	 */
+	public List<GovermentOrder> findBorrowerOrderByStates(int states);
+	/**
+	 * 返回当前借款人的融资请求，待关联的订单
+	 * @param state -1表示不限
+	 * @return
+	 */
+	public List<FinancingRequest> findBorrowerFinancingRequest(int state);
 }

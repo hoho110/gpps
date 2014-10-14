@@ -24,6 +24,7 @@ import gpps.model.Product;
 import gpps.model.Submit;
 import gpps.model.Task;
 import gpps.service.IAccountService;
+import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
 import gpps.service.ILenderService;
 import gpps.service.ILoginService;
@@ -61,6 +62,8 @@ public class AccountServlet {
 	IGovermentOrderService orderService;
 	@Autowired
 	IProductSeriesDao productSeriesDao;
+	@Autowired
+	IBorrowerService borrowerService;
 	Logger log=Logger.getLogger(AccountServlet.class);
 	public static final String AMOUNT="amount";
 	public static final String CASHSTREAMID="cashStreamId";
@@ -84,7 +87,25 @@ public class AccountServlet {
 	{
 		//TODO 第三方注册回调
 		String thirdPartyAccount="thirdPartyAccount";
-		lenderService.registerThirdPartyAccount(thirdPartyAccount);
+		HttpSession session=req.getSession();
+		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+		if(user==null)
+		{
+			try {
+				resp.sendError(403,"未找到用户信息，请重新登录");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+		if(user instanceof Lender)
+		{
+			lenderService.registerThirdPartyAccount(thirdPartyAccount);
+		}
+		else if(user instanceof Borrower)
+		{
+			borrowerService.registerThirdPartyAccount(thirdPartyAccount);
+		}
 		//TODO 重定向到指定页面
 		write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=mycenter'</script></head>");
 	}
@@ -112,7 +133,7 @@ public class AccountServlet {
 		else if(user instanceof Borrower)
 		{
 			Borrower borrower=(Borrower)user;
-			cashStreamId=accountService.rechargeLenderAccount(borrower.getAccountId(),BigDecimal.valueOf(Double.valueOf(amount)), "充值");
+			cashStreamId=accountService.rechargeBorrowerAccount(borrower.getAccountId(),BigDecimal.valueOf(Double.valueOf(amount)), "充值");
 		}
 		log.debug("充值：amount="+amount+",cashStreamId="+cashStreamId);
 		log.debug("跳转到第三方进行充值");

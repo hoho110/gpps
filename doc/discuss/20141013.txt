@@ -35,7 +35,7 @@
 
 6. 企业中心 信用积分和信用等级 企业相关资料
    我的融资申请（如为通过，则关联相应的订单）
-   我的订单（关联应的产品）【预览，融资中，还款中，待关闭，已关闭，流标】
+   我的订单（关联应的产品）【预览，融资中，还款中，待关闭，已关闭，流标】yes   IGovermentOrderService  public List<GovermentOrder> findBorrowerOrderByStates(int states);
 	融资产品详情：每一笔购买情况，还款日程表
    我的还款（总览，已还款，待还款，还款提醒）
    资金查看

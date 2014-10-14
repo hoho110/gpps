@@ -136,6 +136,8 @@ public class BuyProductProcessTest extends TestSupport{
 			orderService.startFinancing(order.getId());
 		} catch (IllegalConvertException e) {
 			Assert.fail(e.getMessage());
+		} catch (IllegalOperationException e) {
+			e.printStackTrace();
 		}
 		//测试购买异常情况
 		for(int i=0;i<3;i++)

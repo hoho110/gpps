@@ -66,4 +66,13 @@ public class FinancingRequest {
 	public void setBorrowerID(Integer borrowerID) {
 		this.borrowerID = borrowerID;
 	}
+	
+	//辅助
+	private GovermentOrder govermentOrder;
+	public GovermentOrder getGovermentOrder() {
+		return govermentOrder;
+	}
+	public void setGovermentOrder(GovermentOrder govermentOrder) {
+		this.govermentOrder = govermentOrder;
+	}
 }

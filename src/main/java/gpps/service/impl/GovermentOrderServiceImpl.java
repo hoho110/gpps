@@ -5,16 +5,19 @@ package gpps.service.impl;
 
 import gpps.constant.Pagination;
 import gpps.dao.IBorrowerDao;
+import gpps.dao.IFinancingRequestDao;
 import gpps.dao.IGovermentOrderDao;
 import gpps.dao.IProductDao;
 import gpps.dao.IStateLogDao;
 import gpps.model.Borrower;
+import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.model.StateLog;
 import gpps.model.ref.Accessory;
 import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
+import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
 import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
@@ -57,6 +60,10 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	ITaskService taskService;
 	@Autowired
 	IStateLogDao stateLogDao;
+	@Autowired
+	IBorrowerService borrowerService;
+	@Autowired
+	IFinancingRequestDao financingRequestDao;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	static int[] orderStates={
 		GovermentOrder.STATE_PREPUBLISH,
@@ -126,7 +133,14 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			if(list.isEmpty())
 				return new ArrayList<GovermentOrder>(0);
 		}
-		return govermentOrderDao.findByBorrowerIdAndState(borrowerId, list);
+		List<GovermentOrder> govermentOrders=govermentOrderDao.findByBorrowerIdAndState(borrowerId, list);
+		if(govermentOrders==null||govermentOrders.size()==0)
+			return govermentOrders;
+		for(GovermentOrder govermentOrder:govermentOrders)
+		{
+			govermentOrder.setProducts(productDao.findByGovermentOrder(govermentOrder.getId()));
+		}
+		return govermentOrders;
 	}
 
 	static int[][] validConverts={
@@ -453,5 +467,23 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		if(col==null)
 			return new ArrayList<Accessory.MimeItem>(0);
 		return col.getItems();
+	}
+	@Override
+	public List<GovermentOrder> findBorrowerOrderByStates(int states) {
+		Borrower borrower=borrowerService.getCurrentUser();
+		return findByBorrowerIdAndStates(borrower.getId(), states);
+	}
+	@Override
+	public List<FinancingRequest> findBorrowerFinancingRequest(int state) {
+		Borrower borrower=borrowerService.getCurrentUser();
+		List<FinancingRequest> requests=financingRequestDao.findByBorrowerAndState(borrower.getId(), state);
+		if(requests==null||requests.size()==0)
+			return requests;
+		for(FinancingRequest request:requests)
+		{
+//			if(request.getState()==FinancingRequest.STATE_PROCESSED)
+//				request.setGovermentOrder(govermentOrderDao.find(request.getgo));
+		}
+		return null;
 	}
 }

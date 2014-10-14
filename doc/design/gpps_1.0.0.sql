@@ -399,7 +399,7 @@ create table ProductSeries
 /*==============================================================*/
 create table FinancingRequest
 (
-   id                   integer not null,
+   id                   integer not null auto_increment,
    govermentOrderName   varchar(255),
    govermentOrderDetail varchar(255),
    applyFinancingAmount int not null default 0,

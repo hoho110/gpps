@@ -41,10 +41,10 @@
 	融资产品详情：
 	每一笔购买情况 yes ISubmitService public Map<String, Object> findPayedSubmitsByProduct(Integer productId,int offset, int recnum);
 	还款日程表  yes IPayBackService public List<PayBack> findAll(Integer productId);
-   我的还款（总览，已还款，待还款，还款提醒） 排序？
+   我的还款（总览，已还款，待还款，还款提醒） 排序？ yes IPayBackService public Map<String, Object> findBorrowerPayBacks(int state,long starttime,long endtime,int offset,int recnum);
    资金查看
 
 
 
 
-3. 界面注册时校验用户名不能为全数字，为了避免跟手机号码冲突
+3. 界面注册时校验用户名不能为全数字，为了避免跟手机号码冲突 yes

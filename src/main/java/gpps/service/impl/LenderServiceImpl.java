@@ -72,6 +72,8 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 			throws ValidateCodeException, IllegalArgumentException, LoginException {
 		checkMessageValidateCode(messageValidateCode);
 		lender.setLoginId(checkNullAndTrim("loginId", lender.getLoginId()));
+		if(StringUtil.isDigit(lender.getLoginId()))
+			throw new IllegalArgumentException("登录名不能全部为数字");
 		lender.setPassword(getProcessedPassword(checkNullAndTrim("password", lender.getPassword())+PASSWORDSEED));
 		lender.setCreatetime(System.currentTimeMillis());
 		lender.setPrivilege(Lender.PRIVILEGE_UNOFFICIAL);

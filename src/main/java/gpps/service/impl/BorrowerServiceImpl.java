@@ -86,6 +86,8 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	public Borrower register(Borrower borrower, String messageValidateCode) throws ValidateCodeException, IllegalArgumentException, LoginException {
 		checkMessageValidateCode(messageValidateCode);
 		borrower.setLoginId(checkNullAndTrim("loginId", borrower.getLoginId()));
+		if(StringUtil.isDigit(borrower.getLoginId()))
+			throw new IllegalArgumentException("登录名不能全部为数字");
 //		borrower.setEmail(checkNullAndTrim("email", borrower.getEmail()));
 		borrower.setIdentityCard(checkNullAndTrim("identityCard", borrower.getIdentityCard()));
 //		borrower.setName(checkNullAndTrim("name", borrower.getName()));

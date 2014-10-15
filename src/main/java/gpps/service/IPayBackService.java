@@ -46,5 +46,5 @@ public interface IPayBackService {
 	 * @param endtime 截止时间，-1为不限
 	 * @return
 	 */
-	public Map<String, Object> findBorrowerPayBacks(int state,long starttime,long endtime);
+	public Map<String, Object> findBorrowerPayBacks(int state,long starttime,long endtime,int offset,int recnum);
 }

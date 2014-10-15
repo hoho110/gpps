@@ -1,5 +1,6 @@
 package gpps.service.impl;
 
+import gpps.constant.Pagination;
 import gpps.dao.ICashStreamDao;
 import gpps.dao.IPayBackDao;
 import gpps.dao.IProductDao;
@@ -281,8 +282,32 @@ public class PayBackServiceImpl implements IPayBackService {
 
 	@Override
 	public Map<String, Object> findBorrowerPayBacks(int state, long starttime,
-			long endtime) {
-		// TODO Auto-generated method stub
-		return null;
+			long endtime,int offset,int recnum) {
+		List<Integer> states = null;
+		if(state!=-1)
+		{
+			states=new ArrayList<Integer>();
+			states.add(state);
+		}
+		if(state==PayBack.STATE_FINISHREPAY)
+			states.add(PayBack.STATE_REPAYING);
+		int count=payBackDao.countByState(states, starttime, endtime);
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		List<PayBack> payBacks=payBackDao.findByState(states, starttime, endtime, offset, recnum);
+		for(PayBack payBack:payBacks)
+		{
+			Product product=productDao.find(payBack.getProductId());
+			if(product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
+			{
+				payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+				payBack.setInterest(payBack.getInterest().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+			}else
+			{
+				payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+				payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+			}
+		}
+		return Pagination.buildResult(payBacks, count, offset, recnum);
 	}
 }

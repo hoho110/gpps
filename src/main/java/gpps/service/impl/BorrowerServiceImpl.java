@@ -162,12 +162,14 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	public void applyForFunding() throws IllegalConvertException {
 		Borrower borrower=getCurrentUser();
 		changePrivilege(borrower.getId(),Borrower.PRIVILEGE_APPLY);
+		borrower.setPrivilege(Borrower.PRIVILEGE_APPLY);
 	}
 
 	@Override
 	public void passFundingApplying(Integer borrowerId) throws IllegalConvertException {
+		Borrower borrower=borrowerDao.find(borrowerId);
 		changePrivilege(borrowerId,Borrower.PRIVILEGE_FINANCING);
-
+		borrower.setPrivilege(Borrower.PRIVILEGE_FINANCING);
 	}
 
 	@Override
@@ -283,12 +285,10 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 
 	@Override
 	public void passFinancingRequest(Integer financingRequestId) {
-		Borrower borrower=getCurrentUser();
 		FinancingRequest financingRequest=financingRequestDao.find(financingRequestId);
 		ObjectUtil.checkNullObject(FinancingRequest.class, financingRequest);
 		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_PROCESSED);
 		borrowerDao.changePrivilege(financingRequest.getBorrowerID(), Borrower.PRIVILEGE_FINANCING);
-		borrower.setPrivilege(Borrower.PRIVILEGE_FINANCING);
 	}
 
 	@Override
@@ -312,14 +312,8 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 
 	@Override
 	public void refuseFinancingRequest(Integer financingRequestId) {
-		Borrower borrower=getCurrentUser();
 		FinancingRequest financingRequest=financingRequestDao.find(financingRequestId);
 		ObjectUtil.checkNullObject(FinancingRequest.class, financingRequest);
 		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_REFUSE);
-		if(borrower.getPrivilege()!=Borrower.PRIVILEGE_FINANCING)
-		{
-			borrowerDao.changePrivilege(financingRequest.getBorrowerID(), Borrower.PRIVILEGE_VIEW);
-			borrower.setPrivilege(Borrower.PRIVILEGE_VIEW);
-		}
 	}
 }

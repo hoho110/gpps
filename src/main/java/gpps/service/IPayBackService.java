@@ -5,6 +5,7 @@ import gpps.model.ProductSeries;
 import gpps.service.exception.UnSupportRepayInAdvanceException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IPayBackService {
 	public void create(PayBack payback);
@@ -38,5 +39,12 @@ public interface IPayBackService {
 			long from, long to);
 	
 	public List<PayBack> generatePayBacks(Integer productId,int amount);
-	
+	/**
+	 * 获取当前借款人的还款
+	 * @param state 还款状态，-1为不限
+	 * @param starttime 开始时间，-1为不限
+	 * @param endtime 截止时间，-1为不限
+	 * @return
+	 */
+	public Map<String, Object> findBorrowerPayBacks(int state,long starttime,long endtime);
 }

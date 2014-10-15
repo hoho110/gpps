@@ -56,4 +56,44 @@
 		PayBack set borrowerAccountId=#{borrowerAccountId},productId=#{productId},state=#{state},chiefAmount=#{chiefAmount},interest=#{interest},deadline=#{deadline},realtime=#{realtime},type=#{type}
 		where id=#{id}
 	</update>
+	<select id="findByState" resultType="gpps.model.PayBack">
+	   <![CDATA[
+        select *
+        from PayBack where 1=1 
+        <if test="states != null">
+            and state in
+            <foreach item="item" index="index" collection="states" open="("
+                separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="starttime != -1">
+            and deadline >= #{starttime}
+         </if>
+         <if test="endtime != -1">
+            and deadline <= #{endtime}
+         </if>
+        order by state asc,deadline asc
+        LIMIT #{offset}, #{recnum}
+         ]]>
+    </select>
+    <select id="countByState" resultType="int">
+        <![CDATA[
+        select count(*)
+        from PayBack where 1=1 
+        <if test="states != null">
+            and state in
+            <foreach item="item" index="index" collection="states" open="("
+                separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="starttime != -1">
+            and deadline >= #{starttime}
+         </if>
+         <if test="endtime != -1">
+            and deadline <= #{endtime}
+         </if>
+         ]]>
+    </select>
 </mapper>

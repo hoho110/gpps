@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -276,5 +277,12 @@ public class PayBackServiceImpl implements IPayBackService {
 			payBack.setInterest(payBack.getInterest().multiply(new BigDecimal(amount)).divide(PayBack.BASELINE,2,BigDecimal.ROUND_DOWN));
 		}
 		return payBacks;
+	}
+
+	@Override
+	public Map<String, Object> findBorrowerPayBacks(int state, long starttime,
+			long endtime) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

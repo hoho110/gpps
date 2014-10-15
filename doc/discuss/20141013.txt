@@ -13,7 +13,7 @@
 	创建
 	查找
 	修改状态
-    关联订单（非持久化）no
+    关联订单（非持久化）yes 注：每个申请仅限创建一个订单
 3. 身份证提供查重校验功能，类似于手机号码 yes
 4. Borrower添加字段： yes
 	license 企业营业执照
@@ -33,13 +33,15 @@
    g. 当管理员将状态为“预览”的订单改为“融资中”时，需要先检查borrower的第三方账户是否开通，只允许开通了第三方账户的borrower的融资订单变为“融资中” yes
 
 
-6. 企业中心 信用积分和信用等级 企业相关资料
+6. 企业中心 
+信用积分和信用等级 
+企业相关资料 yes 同订单/产品上传下载附件
    我的融资申请（如为通过，则关联相应的订单） yes IGovermentOrderService public List<FinancingRequest> findBorrowerFinancingRequest(int state)
    我的订单（关联应的产品）【预览，融资中，还款中，待关闭，已关闭，流标】yes   IGovermentOrderService  public List<GovermentOrder> findBorrowerOrderByStates(int states);
 	融资产品详情：
 	每一笔购买情况 yes ISubmitService public Map<String, Object> findPayedSubmitsByProduct(Integer productId,int offset, int recnum);
-	还款日程表
-   我的还款（总览，已还款，待还款，还款提醒）
+	还款日程表  yes IPayBackService public List<PayBack> findAll(Integer productId);
+   我的还款（总览，已还款，待还款，还款提醒） 排序？
    资金查看
 
 

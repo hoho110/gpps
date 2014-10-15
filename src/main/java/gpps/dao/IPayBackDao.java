@@ -25,4 +25,7 @@ public interface IPayBackDao {
 	public void update(PayBack payBack);
 	
 	public PayBack findLastest(Integer productId);
+	
+	public List<PayBack> findByState(@Param("states")List<Integer> states,@Param("starttime")long starttime,@Param("endtime")long endtime,@Param("offset")int offset,@Param("recnum")int recnum);
+	public List<PayBack> countByState(@Param("states")List<Integer> states,@Param("starttime")long starttime,@Param("endtime")long endtime);
 }

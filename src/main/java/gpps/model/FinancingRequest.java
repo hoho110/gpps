@@ -8,6 +8,7 @@ public class FinancingRequest {
 	private String rate;
 	public static final int STATE_INIT=0;//初始
 	public static final int STATE_PROCESSED=1;//已处理
+	public static final int STATE_REFUSE=2;//拒绝
 	private int state=STATE_INIT;
 	private long createtime=System.currentTimeMillis();
 	private long lastModifyTime=System.currentTimeMillis();

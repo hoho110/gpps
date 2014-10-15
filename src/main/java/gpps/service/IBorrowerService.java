@@ -96,6 +96,7 @@ public interface IBorrowerService extends ILoginService {
 	
 	public void applyFinancing(FinancingRequest financingRequest);
 	public void passFinancingRequest(Integer financingRequestId);
+	public void refuseFinancingRequest(Integer financingRequestId);
 	
 	public FinancingRequest findFinancingRequest(Integer id);
 	/**

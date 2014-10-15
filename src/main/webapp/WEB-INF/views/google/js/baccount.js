@@ -316,6 +316,284 @@ var requesthandled = function(container){
 	table.dataTable(mySettings);
 }
 
+var orderall = function(container){
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orders = orderService.findBorrowerOrderByStates(-1);
+	
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "描述",
+		"code" : "amount"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}];
+	var aaData = new Array();
+	for(var i=0; i<orders.size(); i++){
+		var data=orders.get(i);
+		aaData.push([data.title,
+		             formatDate(data.financingStarttime),
+		             formatDate(data.financingEndtime),
+		                    data.description,
+		                    data.state]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+var orderpreview = function(container){
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orders = orderService.findBorrowerOrderByStates(2);
+	
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "描述",
+		"code" : "amount"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}];
+	var aaData = new Array();
+	for(var i=0; i<orders.size(); i++){
+		var data=orders.get(i);
+		aaData.push([data.title,
+		             formatDate(data.financingStarttime),
+		             formatDate(data.financingEndtime),
+		                    data.description,
+		                    data.state]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+
+var orderfinancing = function(container){
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orders = orderService.findBorrowerOrderByStates(1);
+	
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "描述",
+		"code" : "amount"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}];
+	var aaData = new Array();
+	for(var i=0; i<orders.size(); i++){
+		var data=orders.get(i);
+		aaData.push([data.title,
+		             formatDate(data.financingStarttime),
+		             formatDate(data.financingEndtime),
+		                    data.description,
+		                    data.state]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+var orderpaying = function(container){
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orders = orderService.findBorrowerOrderByStates(4);
+	
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "描述",
+		"code" : "amount"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}];
+	var aaData = new Array();
+	for(var i=0; i<orders.size(); i++){
+		var data=orders.get(i);
+		aaData.push([data.title,
+		             formatDate(data.financingStarttime),
+		             formatDate(data.financingEndtime),
+		                    data.description,
+		                    data.state]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+var ordertoclose = function(container){
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orders = orderService.findBorrowerOrderByStates(8);
+	
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "描述",
+		"code" : "amount"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}];
+	var aaData = new Array();
+	for(var i=0; i<orders.size(); i++){
+		var data=orders.get(i);
+		aaData.push([data.title,
+		             formatDate(data.financingStarttime),
+		             formatDate(data.financingEndtime),
+		                    data.description,
+		                    data.state]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+
+var orderquit = function(container){
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orders = orderService.findBorrowerOrderByStates(16);
+	
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "描述",
+		"code" : "amount"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}];
+	var aaData = new Array();
+	for(var i=0; i<orders.size(); i++){
+		var data=orders.get(i);
+		aaData.push([data.title,
+		             formatDate(data.financingStarttime),
+		             formatDate(data.financingEndtime),
+		                    data.description,
+		                    data.state]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+
+var orderclosed = function(container){
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orders = orderService.findBorrowerOrderByStates(32);
+	
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "描述",
+		"code" : "amount"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}];
+	var aaData = new Array();
+	for(var i=0; i<orders.size(); i++){
+		var data=orders.get(i);
+		aaData.push([data.title,
+		             formatDate(data.financingStarttime),
+		             formatDate(data.financingEndtime),
+		                    data.description,
+		                    data.state]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+
+
 var submitall = function(container){
 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
 	var columns = [ {
@@ -389,295 +667,8 @@ var submitall = function(container){
 	table.dataTable(mySettings);
 }
 
-var submittoafford = function(container){
-	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
-	var columns = [ {
-		"sTitle" : "项目信息",
-			"code" : "info"
-	}, {
-		"sTitle" : "状态",
-		"code" : "state"
-	}, {
-		"sTitle" : "购买时间",
-		"code" : "financingEndtime"
-	}, {
-		"sTitle" : "金额",
-		"code" : "amount"
-	}, {
-		"sTitle" : "最迟支付时间",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "操作",
-		"code" : "contract"
-	}];
-	var datas = null;
-	datas = submitService.findMyAllWaitforPayingSubmits();
-	var aaData = new Array();
-	for(var i=0; i<datas.size(); i++){
-		var data=datas.get(i);
-		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"'>"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
-		                    "待支付",
-		                    formatDate(data.createtime),
-		                    data.amount.value,
-		                    formatDate(data.payExpiredTime),
-		                    "<a id="+data.id+" class='submittoafford' href='javascript:void(0);'>立即支付</a>"]);
-	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
-}
 
-var submittoaudit = function(){
-	var content = $('<div></div>');
-	var str = "";
-	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-	str += '<thead>';	
-	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">状态</td><td style="min-width:100px;">投标完成时间</td><td style="min-width:50px;">金额</td><td style="min-width:50px;">最迟审核时间</td></tr>';
-	str += '</thead>';
-	str += '<tbody>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>待审核</td><td>2014-8-5</td><td>500</td><td>2014-8-7</td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>待审核</td><td>2014-8-6</td><td>200</td><td>2014-8-7</td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>待审核</td><td>2014-8-5</td><td>500</td><td>2014-8-7</td></tr>';
-	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>待审核</td><td>2014-8-6</td><td>200</td><td>2014-8-7</td></tr>';
-	str += '</tbody>';
-	str += '</table>';
-	content.append(str);
-	return content;
-}
 
-var submitpayback = function(container){
-//	var content = $('<div></div>');
-//	var str = "";
-//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-//	str += '<thead>';	
-//	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">状态</td><td style="min-width:100px;">投标完成时间</td><td style="min-width:50px;">金额</td><td style="min-width:50px;">已回款</td><td style="min-width:50px;">待回款</td><td style="min-width:50px;">合同</td></tr>';
-//	str += '</thead>';
-//	str += '<tbody>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>回款中</td><td>2014-8-5</td><td>500</td><td>0</td><td>23</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>回款中</td><td>2014-7-31</td><td>200</td><td>0</td><td>9.87</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款3</a></td><td>回款中</td><td>2014-7-16</td><td>300</td><td>0.57</td><td>13</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款4</a></td><td>回款中</td><td>2014-7-3</td><td>1500</td><td>15</td><td>150</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款5</a></td><td>回款中</td><td>2014-6-18</td><td>1000</td><td>20</td><td>123</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款7</a></td><td>回款中</td><td>2014-7-31</td><td>200</td><td>0</td><td>9.87</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款8</a></td><td>回款中</td><td>2014-7-16</td><td>300</td><td>0.57</td><td>13</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款9</a></td><td>回款中</td><td>2014-7-3</td><td>1500</td><td>15</td><td>150</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款10</a></td><td>回款中</td><td>2014-6-18</td><td>1000</td><td>20</td><td>123</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '</tbody>';
-//	str += '</table>';
-//	content.append(str);
-//	return content;
-	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
-	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
-	var columns = [ {
-		"sTitle" : "项目信息",
-			"code" : "info"
-	}, {
-		"sTitle" : "状态",
-		"code" : "state"
-	}, {
-		"sTitle" : "投标完成时间",
-		"code" : "financingEndtime"
-	}, {
-		"sTitle" : "金额",
-		"code" : "amount"
-	}, {
-		"sTitle" : "已回款",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "待回款",
-		"code" : "willBeRepayed"
-	}, {
-		"sTitle" : "回款明细",
-		"code" : "repaydetail"
-	}, {
-		"sTitle" : "合同",
-		"code" : "contract"
-	}];
-	
-	var paybackState={0: '待还款', 1 : '正在还款', 2: '已还款', 3: '延期'};
-	
-	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
-		var sEcho = "";
-		var iDisplayStart = 0;
-		var iDisplayLength = 0;
-		for ( var i = 0; i < aoData.length; i++) {
-			var data = aoData[i];
-			if (data.name == "sEcho")
-				sEcho = data.value;
-			if (data.name == "iDisplayStart")
-				iDisplayStart = data.value;
-			if (data.name == "iDisplayLength")
-				iDisplayLength = data.value;
-		}
-		var res = null;
-		res = submitService.findMyAllSubmitsByProductStates((2+16),iDisplayStart, iDisplayLength);
-		var result = {};
-		result.iTotalRecords = res.get('total');
-		result.iTotalDisplayRecords = res.get('total');
-		result.aaData = new Array();
-		var items = res.get('result');
-		if(items)
-		{
-			for(var i=0; i<items.size(); i++){
-				var item=items.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
-				                    "还款中",
-				                    formatDate(item.product.govermentOrder.financingEndtime),
-				                    item.amount.value,
-				                    item.repayedAmount.value,
-				                    item.waitforRepayAmount.value,
-				                    "<a class='repaydetail' href='javascript:void(0);' id="+item.id+">查看</a>",
-				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
-			}
-		}
-		result.sEcho = sEcho;
-		fnCallback(result);
-		
-		$('a.repaydetail').click(function(e){
-			var itemid = $(this).attr('id');
-			var submititem = submitService.find(parseInt(itemid));
-			var pays = paybackService.generatePayBacks(submititem.product.id, parseInt(submititem.amount.value));
-			var str = "<table style='width:95%;'>";
-			str+="<tr><td colspan=5>本笔投资总金额为："+submititem.amount.value+"元, 预期还款明细如下：</td></tr>";
-			str+="<tr><td>序号</td><td>还款日期</td><td>总额</td><td>本金</td><td>利息</td><td>状态</td></tr>";
-			for(var i=0; i<pays.size(); i++){
-				var pay = pays.get(i);
-				str+="<tr><td>"+(i+1)+"</td><td>"+formatDateToDay(pay.deadline)+"</td><td>"+(parseFloat(pay.chiefAmount.value)+parseFloat(pay.interest.value)).toFixed(2)+"</td><td>"+pay.chiefAmount.value+"</td><td>"+pay.interest.value+"</td><td>"+paybackState[pay.state]+"</td></tr>";
-			}
-			str+="</table>";
-			$('#rdetail').html(str);
-			$('#repaydetail').modal({
-				  keyboard: false,
-				  backdrop: true
-			});
-		})
-
-		return res;
-	}
-	var mySettings = $.extend({}, defaultSettings, {
-		"aoColumns" : columns,
-		"fnServerData" : fnServerData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
-}
-var submitretreat = function(container){
-	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
-	var columns = [ {
-		"sTitle" : "项目信息",
-			"code" : "info"
-	}, {
-		"sTitle" : "状态",
-		"code" : "state"
-	}, {
-		"sTitle" : "退订时间",
-		"code" : "lastmodifytime"
-	}, {
-		"sTitle" : "金额",
-		"code" : "amount"
-	}, {
-		"sTitle" : "备注",
-		"code" : "contract"
-	}];
-	var datas = null;
-	datas = submitService.findMyAllRetreatSubmits();
-	var aaData = new Array();
-	for(var i=0; i<datas.size(); i++){
-		var data=datas.get(i);
-		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"'>"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
-		                    "已退订",
-		                    formatDate(data.lastmodifytime),
-		                    data.amount.value,
-		                    "支付失败"]);
-	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
-}
-var submitdone = function(container){
-	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
-	var columns = [ {
-		"sTitle" : "项目信息",
-			"code" : "info"
-	}, {
-		"sTitle" : "状态",
-		"code" : "state"
-	}, {
-		"sTitle" : "购买时间",
-		"code" : "financingEndtime"
-	}, {
-		"sTitle" : "金额",
-		"code" : "amount"
-	}, {
-		"sTitle" : "已回款",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "待回款",
-		"code" : "willBeRepayed"
-	}, {
-		"sTitle" : "合同",
-		"code" : "contract"
-	}];
-	
-	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
-		var sEcho = "";
-		var iDisplayStart = 0;
-		var iDisplayLength = 0;
-		for ( var i = 0; i < aoData.length; i++) {
-			var data = aoData[i];
-			if (data.name == "sEcho")
-				sEcho = data.value;
-			if (data.name == "iDisplayStart")
-				iDisplayStart = data.value;
-			if (data.name == "iDisplayLength")
-				iDisplayLength = data.value;
-		}
-		var res = null;
-		res = submitService.findMyAllSubmitsByProductStates((8+32+64),iDisplayStart, iDisplayLength);
-		var result = {};
-		result.iTotalRecords = res.get('total');
-		result.iTotalDisplayRecords = res.get('total');
-		result.aaData = new Array();
-		var items = res.get('result');
-		if(items)
-		{
-			for(var i=0; i<items.size(); i++){
-				var item=items.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
-				                    "还款完毕",
-				                    formatDate(item.createtime),
-				                    item.amount.value,
-				                    item.repayedAmount.value,
-				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)).toFixed(2),
-				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
-			}
-		}
-		result.sEcho = sEcho;
-		fnCallback(result);
-
-		return res;
-	}
-	var mySettings = $.extend({}, defaultSettings, {
-		"aoColumns" : columns,
-		"fnServerData" : fnServerData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
-}
 
 var paybackall = function(container){
 	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
@@ -986,11 +977,11 @@ var bnav2funtion = {
 		"cash-withdraw" : cashwithdraw,
 		"cash-financing" : cashfinancing,
 		"cash-payback" : cashpayback,
-		"order-all" : null,
-		"order-preview" : null,
-		"order-financing" : null,
-		"order-paying" : null,
-		"order-toclose" : null,
-		"order-closed" : null,
-		"order-quit" : null
+		"order-all" : orderall,
+		"order-preview" : orderpreview,
+		"order-financing" : orderfinancing,
+		"order-paying" : orderpaying,
+		"order-toclose" : ordertoclose,
+		"order-closed" : orderclosed,
+		"order-quit" : orderquit
 }

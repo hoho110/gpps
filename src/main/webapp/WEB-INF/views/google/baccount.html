@@ -74,7 +74,7 @@ a.accordion-toggle {
 							<div class="col-xs-9 col-md-9">
 								<div>
 									<strong id="welcome"></strong> <a
-										style="margin-left: 50px;" href="resetpsw.html">修改密码</a> <a
+										style="margin-left: 50px;" href="resetbpsw.html">修改密码</a> <a
 										style="margin-left: 20px;" href="quit.html">退出</a>
 								</div>
 								
@@ -254,6 +254,8 @@ a.accordion-toggle {
         src="/easyservice/gpps.service.ISubmitService?json"></script>
     <script type="text/javascript"
         src="/easyservice/gpps.service.IPayBackService?json"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
         <script src="js/head.js"></script>
 		<script src="js/foot.js"></script>
 	<script>
@@ -266,7 +268,9 @@ a.accordion-toggle {
 
 							var accountDao = EasyServiceClient
 									.getRemoteProxy("/easyservice/gpps.dao.IBorrowerAccountDao");
-
+							
+							
+							
 							if (cuser == null && buser == null) {
 								window.location.href = "login.html";
 								return;
@@ -392,17 +396,17 @@ a.accordion-toggle {
 																	
 																	
 																});
-													//$('ul.nav-second li a').first().trigger('click');
+													$('ul.nav-second li a').first().trigger('click');
 											});
 							if(fid!=null){
 								$('#'+fid).trigger('click');
-							//	if(sid!=null)
-							//		$('ul.nav-second li a[data-sk="'+sid+'"]').trigger('click');
-							//	else
-							//		$('ul.nav-second li a').first().trigger('click');
+								if(sid!=null)
+									$('ul.nav-second li a[data-sk="'+sid+'"]').trigger('click');
+								else
+									$('ul.nav-second li a').first().trigger('click');
 								
 							}else{
-								$('#submit').trigger('click');
+								$('#bcenter').trigger('click');
 							}
 							
 							$('#success').click(function(e){

@@ -103,6 +103,7 @@ public class HttpTransport {
 					try {
 						clz = protocolBinding.getInterfaceClass(parse.getInterfaceName());
 					} catch (ClassNotFoundException e) {
+						logger.debug(e.getMessage(),e);
 						resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 						return;
 					}
@@ -147,9 +148,11 @@ public class HttpTransport {
 				serviceResponse = innerInvoke(serviceRequest, serviceResponse);
 				
 			} catch (ProtocolParseException e) {
+				logger.debug(e.getMessage(), e);
 				serviceResponse.setException(e);
 				serviceResponse.setExceptionType(e.getType());
 			} catch (Throwable e) {
+				logger.debug(e.getMessage(), e);
 				serviceResponse.setException(e);
 				serviceResponse.setExceptionType(ExceptionType.UNKNOWN);
 			}
@@ -200,6 +203,7 @@ public class HttpTransport {
 				tmplist.toArray(rt);
 				caches.put(requiredType.getName(), rt);
 			} catch (ClassNotFoundException e) {
+				logger.debug(e.getMessage(),e);
 				return null;
 			}
 		}
@@ -221,6 +225,7 @@ public class HttpTransport {
 				rt.setResult((R) req.getMethod().invoke(service, req.getArgs()));
 			}
 		} catch (Throwable e) {
+			logger.debug(e.getMessage(),e);
 			if (e instanceof InvocationTargetException) {
 				e = ((InvocationTargetException) e).getTargetException();
 				rt.setExceptionType(ExceptionType.ET_SE_METHOD_NORMAL_EXCEPTION);

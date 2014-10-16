@@ -16,6 +16,7 @@ public class Borrower {
 	public static final int PRIVILEGE_VIEW=10;//有查看权限的企业用户
 	public static final int PRIVILEGE_APPLY=11;//申请融资权限的企业用户
 	public static final int PRIVILEGE_FINANCING=12;//有融资权限的企业用户
+	public static final int PRIVILEGE_REFUSE=14;//审核未通过
 	private int privilege=PRIVILEGE_VIEW;//用户角色
 	private int creditValue=0;//信用值
 	private String license;// 企业营业执照

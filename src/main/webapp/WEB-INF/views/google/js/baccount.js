@@ -774,7 +774,7 @@ var paybackhave = function(container){
 		{
 			for(var i=0; i<datas.size(); i++){
 				var data=datas.get(i);
-				aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+				result.aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
 			                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 			                    data.chiefAmount.value,
 			                    data.interest.value,
@@ -841,7 +841,7 @@ var paybackto = function(container){
 		{
 			for(var i=0; i<datas.size(); i++){
 				var data=datas.get(i);
-				aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+				result.aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
 			                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 			                    data.chiefAmount.value,
 			                    data.interest.value,

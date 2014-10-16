@@ -2,15 +2,19 @@ package gpps.service.impl;
 
 import gpps.constant.Pagination;
 import gpps.dao.ICashStreamDao;
+import gpps.dao.IGovermentOrderDao;
 import gpps.dao.IPayBackDao;
 import gpps.dao.IProductDao;
 import gpps.dao.IProductSeriesDao;
 import gpps.dao.IStateLogDao;
+import gpps.model.Borrower;
+import gpps.model.BorrowerAccount;
 import gpps.model.GovermentOrder;
 import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.ProductSeries;
 import gpps.model.StateLog;
+import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IPayBackService;
 import gpps.service.exception.IllegalConvertException;
@@ -39,6 +43,10 @@ public class PayBackServiceImpl implements IPayBackService {
 	IGovermentOrderService orderSerivce;
 	@Autowired
 	IStateLogDao stateLogDao;
+	@Autowired
+	IBorrowerService borrowerService;
+	@Autowired
+	IGovermentOrderDao govermentOrderDao;
 	@Override
 	public void create(PayBack payback) {
 		payBackDao.create(payback);
@@ -291,10 +299,11 @@ public class PayBackServiceImpl implements IPayBackService {
 		}
 		if(state==PayBack.STATE_FINISHREPAY)
 			states.add(PayBack.STATE_REPAYING);
-		int count=payBackDao.countByState(states, starttime, endtime);
+		Borrower borrower=borrowerService.getCurrentUser();
+		int count=payBackDao.countByBorrowerAndState(borrower.getAccountId(),states, starttime, endtime);
 		if(count==0)
 			return Pagination.buildResult(null, count, offset, recnum);
-		List<PayBack> payBacks=payBackDao.findByState(states, starttime, endtime, offset, recnum);
+		List<PayBack> payBacks=payBackDao.findByBorrowerAndState(borrower.getAccountId(),states, starttime, endtime, offset, recnum);
 		for(PayBack payBack:payBacks)
 		{
 			Product product=productDao.find(payBack.getProductId());
@@ -307,6 +316,9 @@ public class PayBackServiceImpl implements IPayBackService {
 				payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
 				payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
 			}
+			payBack.setProduct(product);
+			product.setGovermentOrder(govermentOrderDao.find(product.getGovermentorderId()));
+			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
 		}
 		return Pagination.buildResult(payBacks, count, offset, recnum);
 	}

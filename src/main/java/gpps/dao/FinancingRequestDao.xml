@@ -19,9 +19,9 @@
 	</select>
 	<select id="findByBorrowerAndState" resultType="gpps.model.FinancingRequest">
 		select  *
-		from FinancingRequest
+		from FinancingRequest where borrowerId=#{borrowerId}
 		<if test="state != -1">
-			where state=#{state}
+			 and state=#{state}
 		</if>
 	</select>
 	<select id="countByState" resultType="int">

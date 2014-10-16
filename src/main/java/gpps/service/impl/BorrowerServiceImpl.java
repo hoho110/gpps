@@ -60,7 +60,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		Borrower borrower = borrowerDao.findByLoginId(loginId);
 		if (borrower == null)
 			throw new LoginException("LoginId is not existed");
-		borrowerDao.changePassword(borrower.getId(), password);
+		borrowerDao.changePassword(borrower.getId(), getProcessedPassword(checkNullAndTrim("password", password) + PASSWORDSEED));
 	}
 
 	@Override
@@ -183,7 +183,10 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		HttpSession session=getCurrentSession();
 		if(session==null)
 			return null;
-		return (Borrower)session.getAttribute(SESSION_ATTRIBUTENAME_USER);
+		Object user=(Borrower)session.getAttribute(SESSION_ATTRIBUTENAME_USER);
+		if(user instanceof Borrower)
+			return (Borrower)session.getAttribute(SESSION_ATTRIBUTENAME_USER);
+		return null;
 	}
 
 	public void addAccessory(Integer borrowerId,int category,MimeItem item) throws XMLParseException

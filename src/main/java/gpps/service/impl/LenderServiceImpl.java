@@ -121,7 +121,10 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		HttpSession session=getCurrentSession();
 		if(session==null)
 			return null;
-		return (Lender)session.getAttribute(SESSION_ATTRIBUTENAME_USER);
+		Object user=session.getAttribute(SESSION_ATTRIBUTENAME_USER);
+		if(user instanceof Lender)
+			return (Lender)session.getAttribute(SESSION_ATTRIBUTENAME_USER);
+		return null;
 	}
 
 	@Override

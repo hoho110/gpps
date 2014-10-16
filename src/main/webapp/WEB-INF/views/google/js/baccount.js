@@ -732,26 +732,7 @@ var paybackall = function(container){
 
 
 var paybackhave = function(container){
-//	var content = $('<div></div>');
-//	var str = "";
-//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-//	str += '<thead>';	
-//	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">还款额</td><td>本金</td><td>利息</td><td style="min-width:100px;">还款时间</td></tr>';
-//	str += '</thead>';
-//	str += '<tbody>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>300</td><td>250</td><td>50</td><td>2014-8-5</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>500</td><td>400</td><td>100</td><td>2014-7-31</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款3</a></td><td>2000</td><td>2000</td><td>0</td><td>2014-7-16</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款4</a></td><td>12000</td><td>11900</td><td>100</td><td>2014-7-3</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款5</a></td><td>20</td><td>0</td><td>20</td><td>2014-6-18</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款7</a></td><td>17</td><td>0</td><td>17</td><td>2014-7-31</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款8</a></td><td>700</td><td>700</td><td>0</td><td>2014-7-16</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款9</a></td><td>90</td><td>0</td><td>90</td><td>2014-7-3</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款10</a></td><td>12</td><td>0</td><td>12</td><td>2014-6-18</td></tr>';
-//	str += '</tbody>';
-//	str += '</table>';
-//	content.append(str);
-	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
+	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
 	var columns = [ {
 		"sTitle" : "项目信息",
 			"code" : "product"
@@ -783,7 +764,7 @@ var paybackhave = function(container){
 				iDisplayLength = data.value;
 		}
 		var res = null;
-		res = account.findLenderRepayCashStream(iDisplayStart, iDisplayLength);
+		res = paybackService.findBorrowerPayBacks(2, -1, -1, iDisplayStart, iDisplayLength);
 		var result = {};
 		result.iTotalRecords = res.get('total');
 		result.iTotalDisplayRecords = res.get('total');
@@ -793,11 +774,11 @@ var paybackhave = function(container){
 		{
 			for(var i=0; i<datas.size(); i++){
 				var data=datas.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+data.submit.product.id+"' >"+data.submit.product.govermentOrder.title+"("+data.submit.product.productSeries.title+")</a>",
-				                    (parseFloat(data.chiefamount.value)+parseFloat(data.interest.value)).toFixed(2),
-				                    data.chiefamount.value,
-				                    data.interest.value,
-				                    formatDate(data.createtime)]);
+				aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+			                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
+			                    data.chiefAmount.value,
+			                    data.interest.value,
+			                    formatDateToDay(data.deadline)]);
 			}
 		}
 		result.sEcho = sEcho;
@@ -817,7 +798,8 @@ var paybackhave = function(container){
 
 
 var paybackto = function(container){
-	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
+
+	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
 	var columns = [ {
 		"sTitle" : "项目信息",
 			"code" : "product"
@@ -831,23 +813,49 @@ var paybackto = function(container){
 		"sTitle" : "利息",
 		"code" : "lx"
 	}, {
-		"sTitle" : "预计还款时间",
+		"sTitle" : "还款时间",
 		"code" : "time"
 	}];
-	var datas = null;
-	datas = account.findLenderWaitforRepay();
-	var aaData = new Array();
-	for(var i=0; i<datas.size(); i++){
-		var data=datas.get(i);
-		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
-		                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
-		                    data.chiefAmount.value,
-		                    data.interest.value,
-		                    formatDateToDay(data.deadline)]);
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = paybackService.findBorrowerPayBacks(0, -1, -1, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var datas = res.get('result');
+		if(datas)
+		{
+			for(var i=0; i<datas.size(); i++){
+				var data=datas.get(i);
+				aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+			                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
+			                    data.chiefAmount.value,
+			                    data.interest.value,
+			                    formatDateToDay(data.deadline)]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+
+		return res;
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+	var mySettings = $.extend({}, defaultSettings, {
 		"aoColumns" : columns,
-		"aaData" : aaData
+		"fnServerData" : fnServerData
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
@@ -970,8 +978,8 @@ var bnav2funtion = {
 		"request-handled" : requesthandled,
 		"payback-all" : null,
 		"payback-emergency" : null,
-		"payback-to" : null,
-		"payback-have" : null,
+		"payback-to" : paybackto,
+		"payback-have" : paybackhave,
 		"cash-all" : cashall,
 		"cash-recharge" : cashrecharge,
 		"cash-withdraw" : cashwithdraw,

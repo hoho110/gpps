@@ -197,16 +197,18 @@ $(document).ready(function() {
 		}
 	}else if(buser!=null){
 		var privilege = buser.privilege;
-		if(privilege==10 || privilege==11){
-			if(confirm("您尚未实地净调，马上申请?")){
+		var thirdPartyAccount = buser.thirdPartyAccount;
+		if(privilege==10){
+			if(confirm("您尚未申请实地净调，马上申请?")){
 				window.location.href="baccount.html";
 			}else{
 				window.close();
 	  		}
+		}else if(privilege==11){
+			alert("等待实地净调中，目前暂不能充值！");
+			window.close();
 		}
-		
-		var thirdPartyAccount = buser.thirdPartyAccount;
-		if(thirdPartyAccount==null || thirdPartyAccount==''){
+		else if(thirdPartyAccount==null || thirdPartyAccount==''){
 			if(confirm("您尚未在第三方注册，马上注册？")){
 				window.location.href="register3.html";
 			}else{

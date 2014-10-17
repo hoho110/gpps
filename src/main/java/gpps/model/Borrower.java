@@ -145,4 +145,19 @@ public class Borrower {
 	public void setLevel(int level) {
 		this.level = level;
 	}
+	public static int creditValueToLevel(int creditValue)
+	{
+		//TODO borrower级别修改
+		if(creditValue>10000000)
+			return 5;//钻石VIP用户
+		if(creditValue>1000000)
+			return 4;//白金VIP用户
+		if(creditValue>200000)
+			return 3;//黄金VIP用户
+		if(creditValue>50000)
+			return 2;//白银VIP用户
+		if(creditValue>10000)
+			return 1;//VIP用户
+		return 0;//普通用户
+	}
 }

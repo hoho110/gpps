@@ -403,7 +403,10 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			creditValue+=product.getRealAmount().intValue();
 		}
 		if(creditValue>0)
-			borrowerDao.addCreditValue(order.getBorrowerId(), creditValue);
+		{
+			Borrower borrower=borrowerDao.find(order.getBorrowerId());
+			borrowerDao.changeCreditValueAndLevel(borrower.getId(), borrower.getCreditValue()+creditValue, Borrower.creditValueToLevel(borrower.getCreditValue()+creditValue));
+		}
 	}
 	
 	public void addAccessory(Integer orderId,int category,MimeItem item) throws XMLParseException

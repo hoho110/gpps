@@ -19,10 +19,10 @@ public interface IBorrowerDao {
 //	public void update(Borrower borrower);
 	public void changePrivilege(@Param("id") Integer id,@Param("privilege") int privilege);
 	public void changePassword(@Param("id") Integer id,@Param("password") String password);
-	public void changeCreditValue(@Param("id")Integer id,@Param("creditValue")int creditValue);
+//	public void changeCreditValue(@Param("id")Integer id,@Param("creditValue")int creditValue);
 	public void delete(Integer id);
-	public void addCreditValue(@Param("id")Integer id,@Param("creditValue")int creditValue);
-	
+//	public void addCreditValue(@Param("id")Integer id,@Param("creditValue")int creditValue);
+	public void changeCreditValueAndLevel(@Param("id")Integer id,@Param("creditValue")int creditValue,@Param("level")int level);
 	
 	public String findAccessory(Integer borrowerId);
 	public void updateAccessory(@Param("borrowerId")Integer borrowerId,@Param("material")String material);

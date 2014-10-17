@@ -352,7 +352,7 @@ public class AccountServlet {
 		
 		Integer cashStreamId=null;
 		try {
-			cashStreamId = accountService.freezeBorrowerAccount(payBack.getBorrowerAccountId(), payBack.getChiefAmount().add(payBack.getInterest()), payBack.getId(), "还款");
+			cashStreamId = accountService.freezeBorrowerAccount(payBack.getBorrowerAccountId(), payBack.getChiefAmount().add(payBack.getInterest()), payBack.getId(), "冻结");
 		} catch (InsufficientBalanceException e) {
 			try {
 				resp.sendError(400,"余额不足");
@@ -383,6 +383,7 @@ public class AccountServlet {
 			task.setType(Task.TYPE_REPAY);
 			taskService.submit(task);
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			accountService.unfreezeBorrowerAccount(cashStream.getBorrowerAccountId(), cashStream.getChiefamount(), cashStream.getPaybackId(), "解冻");
 			payBackService.changeState(cashStream.getPaybackId(), PayBack.STATE_FINISHREPAY);
 			if(payBack.getType()==PayBack.TYPE_LASTPAY)
 			{

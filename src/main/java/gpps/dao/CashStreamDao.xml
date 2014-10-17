@@ -26,6 +26,9 @@
 		<if test="action != -1">
 			and action=#{action}
 		</if>
+		<if test="action == -1 and borrowerAccountId != null">
+            <![CDATA[and action<>1 and action <>2]]>
+        </if>
 		<if test="state != -1">
 			and state=#{state}
 		</if>
@@ -44,6 +47,9 @@
 		<if test="action != -1">
 			and action=#{action}
 		</if>
+		<if test="action == -1 and borrowerAccountId != null">
+            <![CDATA[and action<>1 and action <>2]]>
+        </if>
 		<if test="state != -1">
 			and state=#{state}
 		</if>

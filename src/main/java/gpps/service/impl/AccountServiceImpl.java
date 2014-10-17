@@ -139,7 +139,22 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setAction(CashStream.ACTION_UNFREEZE);
 		cashStreamDao.create(cashStream);
 		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
-		//TODO 调用第三方接口冻结,如不成功则事务回滚?看看是否为批量解冻
+		return cashStream.getId();
+	}
+	@Override
+	@Transactional
+	public Integer unfreezeBorrowerAccount(Integer borrowerAccountId,
+			BigDecimal amount, Integer paybackId, String description)
+			throws IllegalConvertException {
+		checkNullObject(BorrowerAccount.class, borrowerAccountDao.find(borrowerAccountId));
+		CashStream cashStream=new CashStream();
+		cashStream.setBorrowerAccountId(borrowerAccountId);
+		cashStream.setChiefamount(amount);
+		cashStream.setPaybackId(paybackId);
+		cashStream.setAction(CashStream.ACTION_UNFREEZE);
+		cashStream.setDescription(description);
+		cashStream.setState(CashStream.STATE_SUCCESS);
+		cashStreamDao.create(cashStream);
 		return cashStream.getId();
 	}
 	@Override
@@ -256,6 +271,8 @@ public class AccountServiceImpl implements IAccountService {
 				case CashStream.ACTION_UNFREEZE:
 					if(cashStream.getLenderAccountId()!=null&&cashStream.getBorrowerAccountId()==null)
 						lenderAccountDao.unfreeze(cashStream.getLenderAccountId(), cashStream.getChiefamount());
+					else if(cashStream.getBorrowerAccountId()!=null&&cashStream.getLenderAccountId()==null)
+						borrowerAccountDao.unfreeze(cashStream.getBorrowerAccountId(), cashStream.getChiefamount());
 					else 
 						throw new RuntimeException();
 					break;
@@ -308,7 +325,18 @@ public class AccountServiceImpl implements IAccountService {
 			int action, int state, int offset, int recnum) {
 		Borrower borrower =borrowerService.getCurrentUser();
 		int count=cashStreamDao.countByActionAndState(null, borrower.getAccountId(), action, state);
-		return Pagination.buildResult(cashStreamDao.findByActionAndState(null, borrower.getAccountId(), action, state, offset, recnum), count, offset, recnum);
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		List<CashStream> cashStreams=cashStreamDao.findByActionAndState(null, borrower.getAccountId(), action, state, offset, recnum);
+		for(CashStream cashStream:cashStreams)
+		{
+			if(cashStream.getAction()==CashStream.ACTION_PAY||cashStream.getAction()==CashStream.ACTION_REPAY)
+			{
+				cashStream.setChiefamount(cashStream.getChiefamount().negate());
+				cashStream.setInterest(cashStream.getInterest().negate());
+			}
+		}
+		return Pagination.buildResult(cashStreams, count, offset, recnum);
 	}
 
 	@Override
@@ -493,5 +521,4 @@ public class AccountServiceImpl implements IAccountService {
 		}
 		return map;
 	}
-
 }

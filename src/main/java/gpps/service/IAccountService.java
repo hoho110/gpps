@@ -51,6 +51,16 @@ public interface IAccountService {
 	 */
 	public Integer freezeBorrowerAccount(Integer borrowerAccountId,BigDecimal amount,Integer paybackId,String description) throws InsufficientBalanceException;
 	/**
+	 * 借款人账户解冻
+	 * @param borrowerAccountId
+	 * @param amount
+	 * @param paybackId
+	 * @param description
+	 * @return
+	 * @throws IllegalConvertException
+	 */
+	public Integer unfreezeBorrowerAccount(Integer borrowerAccountId,BigDecimal amount,Integer paybackId,String description) throws IllegalConvertException;
+	/**
 	 * 贷款人将冻结资金支付给借款人
 	 * @param amount
 	 * @throws IllegalConvertException 

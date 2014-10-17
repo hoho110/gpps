@@ -485,13 +485,15 @@ var createBorrowerNavLevel2 = function(nav){
 		ul.append(li4);
 	}else if(nav=='payback'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="payback-all">总览</a></li>');
-		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-emergency">紧急</a></li>');
-		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-to">待回款</a></li>');
-		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-have">已回款</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-to">待还款</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-have">已还款</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-canpay">可执行还款</a></li>');
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-canapply">可申请提现</a></li>');
 		ul.append(li1);
-		ul.append(li4);
 		ul.append(li2);
 		ul.append(li3);
+		ul.append(li4);
+		ul.append(li5);
 	}else if(nav=='cash'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="cash-all">全部</a></li>');
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="cash-recharge">充值</a></li>');

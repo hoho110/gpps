@@ -324,4 +324,38 @@ public class PayBackServiceImpl implements IPayBackService {
 		}
 		return Pagination.buildResult(payBacks, count, offset, recnum);
 	}
+
+	@Override
+	public List<PayBack> findBorrowerCanBeRepayedPayBacks() {
+		Borrower borrower=borrowerService.getCurrentUser();
+		List<Integer> states=new ArrayList<Integer>();
+		states.add(GovermentOrder.STATE_REPAYING);
+		List<GovermentOrder> orders=govermentOrderDao.findByBorrowerIdAndState(borrower.getId(), states);
+		if(orders==null||orders.size()==0)
+			return new ArrayList<PayBack>(0);
+		List<Integer> productIds=new ArrayList<Integer>();
+		for(GovermentOrder order:orders)
+		{
+			List<Product> products=productDao.findByGovermentOrder(order.getId());
+			if(products==null||products.size()==0)
+				continue;
+			for(Product product:products)
+			{
+				if(product.getState()==Product.STATE_REPAYING)
+					productIds.add(product.getId());
+			}
+		}
+		if(productIds.size()==0)
+			return new ArrayList<PayBack>(0);
+		List<PayBack> payBacks=payBackDao.findByProductsAndState(productIds, PayBack.STATE_WAITFORREPAY);
+		if(payBacks==null||payBacks.size()==0)
+			return new ArrayList<PayBack>(0);
+		List<PayBack> canBeRepayedPayBacks=new ArrayList<PayBack>();
+//		Map<String,PayBack[]> 
+		for(PayBack payBack:payBacks)
+		{
+			
+		}
+		return null;
+	}
 }

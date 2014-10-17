@@ -22,9 +22,9 @@
 		update
 		PayBack set state=#{state}
 		<if test="state == 2">
-		,realtime=#{datetime}
+			,realtime=#{datetime}
 		</if>
-		 where id=#{id}
+		where id=#{id}
 	</update>
 	<delete id="delete">
 		delete from PayBack
@@ -36,8 +36,8 @@
 		where state=#{state}
 		<if test="productIds != null">
 			and productId in
-			<foreach item="item" index="index" collection="productIds" open="("
-				separator="," close=")">
+			<foreach item="item" index="index" collection="productIds"
+				open="(" separator="," close=")">
 				#{item}
 			</foreach>
 		</if>
@@ -50,15 +50,67 @@
         order by deadline desc
         LIMIT 1, 1
         ]]>
-    </select>
-    <update id="update" parameterType="gpps.model.PayBack">
+	</select>
+	<update id="update" parameterType="gpps.model.PayBack">
 		update
-		PayBack set borrowerAccountId=#{borrowerAccountId},productId=#{productId},state=#{state},chiefAmount=#{chiefAmount},interest=#{interest},deadline=#{deadline},realtime=#{realtime},type=#{type}
+		PayBack set
+		borrowerAccountId=#{borrowerAccountId},productId=#{productId},state=#{state},chiefAmount=#{chiefAmount},interest=#{interest},deadline=#{deadline},realtime=#{realtime},type=#{type}
 		where id=#{id}
 	</update>
 	<select id="findByBorrowerAndState" resultType="gpps.model.PayBack">
-        select *
-        from PayBack where borrowerAccountId=#{borrowerAccountId}  
+		select *
+		from PayBack where borrowerAccountId=#{borrowerAccountId}
+		<if test="states != null">
+			and state in
+			<foreach item="item" index="index" collection="states" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="starttime != -1">
+            <![CDATA[and deadline >= #{starttime}]]>
+		</if>
+		<if test="endtime != -1">
+            <![CDATA[and deadline <= #{endtime}]]>
+		</if>
+		order by deadline asc
+		LIMIT #{offset}, #{recnum}
+	</select>
+	<select id="countByBorrowerAndState" resultType="int">
+		select count(*)
+		from PayBack where
+		borrowerAccountId=#{borrowerAccountId}
+		<if test="states != null">
+			and state in
+			<foreach item="item" index="index" collection="states" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="starttime != -1">
+            <![CDATA[and deadline >= #{starttime}]]>
+		</if>
+		<if test="endtime != -1">
+            <![CDATA[and deadline <= #{endtime}]]>
+		</if>
+	</select>
+	<select id="sumBorrowerWillBeRepayedPayBacks" resultType="gpps.service.PayBackDetail">
+		select sum(chiefamount) chiefAmount,sum(interest) interest from
+		PayBack
+		where borrowerAccountId=#{borrowerAccountId}
+		<if test="states != null">
+			and state in
+			<foreach item="item" index="index" collection="states" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+        <![CDATA[and deadline <= #{endtime} ]]>
+	</select>
+	<select id="sumBorrowerRepayedPayBacks" resultType="gpps.service.PayBackDetail">
+        select sum(chiefamount) chiefAmount,sum(interest) interest from
+        PayBack
+        where borrowerAccountId=#{borrowerAccountId}
         <if test="states != null">
             and state in
             <foreach item="item" index="index" collection="states" open="("
@@ -66,30 +118,6 @@
                 #{item}
             </foreach>
         </if>
-        <if test="starttime != -1">
-            <![CDATA[and deadline >= #{starttime}]]>
-         </if>
-         <if test="endtime != -1">
-            <![CDATA[and deadline <= #{endtime}]]>
-         </if>
-         order by deadline asc
-         LIMIT #{offset}, #{recnum}
-    </select>
-    <select id="countByBorrowerAndState" resultType="int">
-        select count(*) 
-        from PayBack where borrowerAccountId=#{borrowerAccountId} 
-        <if test="states != null">
-            and state in
-            <foreach item="item" index="index" collection="states" open="("
-                separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-        <if test="starttime != -1">
-            <![CDATA[and deadline >= #{starttime}]]>
-         </if>
-         <if test="endtime != -1">
-            <![CDATA[and deadline <= #{endtime}]]>
-         </if>
+        <![CDATA[and realtime >= #{starttime} ]]>
     </select>
 </mapper>

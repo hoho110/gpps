@@ -314,6 +314,11 @@ public class AccountServlet {
 		Integer payBackId=Integer.parseInt(StringUtil.checkNullAndTrim(PAYBACKID, req.getParameter(PAYBACKID)));
 		PayBack payBack=payBackService.find(payBackId);
 		Product currentProduct=productService.find(payBack.getProductId());
+		if(currentProduct.getState()!=Product.STATE_REPAYING)
+		{
+			write(resp, "该产品尚未进入还款阶段");
+			return;
+		}
 		//验证还款顺序
 		List<Product> products=productService.findByGovermentOrder(currentProduct.getGovermentorderId());
 		for(Product product:products)

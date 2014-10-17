@@ -521,4 +521,58 @@ public class AccountServiceImpl implements IAccountService {
 		}
 		return map;
 	}
+
+	@Override
+	public Map<String, PayBackDetail> getBorrowerRepayedDetail() {
+		Borrower borrower=borrowerService.getCurrentUser();
+		List<Integer> states=new ArrayList<Integer>();
+		states.add(PayBack.STATE_REPAYING);
+		states.add(PayBack.STATE_FINISHREPAY);
+		Map<String, PayBackDetail> map=new HashMap<String, PayBackDetail>();
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
+		Calendar cal=Calendar.getInstance();
+//		long endtime=cal.getTimeInMillis();
+		cal.add(Calendar.YEAR, -1);
+		PayBackDetail detail=payBackDao.sumBorrowerRepayedPayBacks(borrower.getAccountId(), states, cal.getTimeInMillis());
+		map.put(PayBackDetail.ONEYEAR, detail==null?new PayBackDetail():detail);
+		cal.add(Calendar.MONTH, 6);
+		detail=payBackDao.sumBorrowerRepayedPayBacks(borrower.getAccountId(), states, cal.getTimeInMillis());
+		map.put(PayBackDetail.HALFYEAR, detail==null?new PayBackDetail():detail);
+		cal.add(Calendar.MONTH, 3);
+		detail=payBackDao.sumBorrowerRepayedPayBacks(borrower.getAccountId(), states, cal.getTimeInMillis());
+		map.put(PayBackDetail.THREEMONTH, detail==null?new PayBackDetail():detail);
+		cal.add(Calendar.MONTH, 1);
+		detail=payBackDao.sumBorrowerRepayedPayBacks(borrower.getAccountId(), states, cal.getTimeInMillis());
+		map.put(PayBackDetail.TWOMONTH, detail==null?new PayBackDetail():detail);
+		cal.add(Calendar.MONTH, 1);
+		detail=payBackDao.sumBorrowerRepayedPayBacks(borrower.getAccountId(), states, cal.getTimeInMillis());
+		map.put(PayBackDetail.ONEMONTH, detail==null?new PayBackDetail():detail);
+		return map;
+	}
+
+	@Override
+	public Map<String, PayBackDetail> getBorrowerWillBeRepayedDetail() {
+		Borrower borrower=borrowerService.getCurrentUser();
+		List<Integer> states=new ArrayList<Integer>();
+		states.add(PayBack.STATE_WAITFORREPAY);
+		Map<String, PayBackDetail> map=new HashMap<String, PayBackDetail>();
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
+		Calendar cal=Calendar.getInstance();
+		cal.add(Calendar.YEAR, 1);
+		PayBackDetail detail=payBackDao.sumBorrowerWillBeRepayedPayBacks(borrower.getAccountId(), states, cal.getTimeInMillis());
+		map.put(PayBackDetail.ONEYEAR, detail==null?new PayBackDetail():detail);
+		cal.add(Calendar.MONTH, -6);
+		detail=payBackDao.sumBorrowerWillBeRepayedPayBacks(borrower.getAccountId(), states, cal.getTimeInMillis());
+		map.put(PayBackDetail.HALFYEAR, detail==null?new PayBackDetail():detail);
+		cal.add(Calendar.MONTH, -3);
+		detail=payBackDao.sumBorrowerWillBeRepayedPayBacks(borrower.getAccountId(), states, cal.getTimeInMillis());
+		map.put(PayBackDetail.THREEMONTH, detail==null?new PayBackDetail():detail);
+		cal.add(Calendar.MONTH, -1);
+		detail=payBackDao.sumBorrowerWillBeRepayedPayBacks(borrower.getAccountId(), states, cal.getTimeInMillis());
+		map.put(PayBackDetail.TWOMONTH, detail==null?new PayBackDetail():detail);
+		cal.add(Calendar.MONTH, -1);
+		detail=payBackDao.sumBorrowerWillBeRepayedPayBacks(borrower.getAccountId(), states, cal.getTimeInMillis());
+		map.put(PayBackDetail.ONEMONTH, detail==null?new PayBackDetail():detail);
+		return map;
+	}
 }

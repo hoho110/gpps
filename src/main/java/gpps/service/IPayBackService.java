@@ -47,4 +47,6 @@ public interface IPayBackService {
 	 * @return
 	 */
 	public Map<String, Object> findBorrowerPayBacks(int state,long starttime,long endtime,int offset,int recnum);
+	
+	public List<PayBack> findBorrowerCanBeRepayedPayBacks();
 }

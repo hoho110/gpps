@@ -123,4 +123,7 @@ public interface IAccountService {
 	
 	public Map<String,PayBackDetail> getLenderRepayedDetail();
 	public Map<String,PayBackDetail> getLenderWillBeRepayedDetail();
+	
+	public Map<String,PayBackDetail> getBorrowerRepayedDetail();
+	public Map<String,PayBackDetail> getBorrowerWillBeRepayedDetail();
 }

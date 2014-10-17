@@ -183,7 +183,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		HttpSession session=getCurrentSession();
 		if(session==null)
 			return null;
-		Object user=(Borrower)session.getAttribute(SESSION_ATTRIBUTENAME_USER);
+		Object user=session.getAttribute(SESSION_ATTRIBUTENAME_USER);
 		if(user instanceof Borrower)
 			return (Borrower)session.getAttribute(SESSION_ATTRIBUTENAME_USER);
 		return null;

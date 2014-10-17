@@ -358,4 +358,22 @@ public class PayBackServiceImpl implements IPayBackService {
 		}
 		return null;
 	}
+
+	@Override
+	public boolean canRepay(Integer payBackId) {
+		PayBack payBack=find(payBackId);
+		if(payBack.getState()!=PayBack.STATE_WAITFORREPAY)
+			return false;
+		return false;
+	}
+
+	@Override
+	public boolean canRepayInAdvance(Integer payBackId) {
+		PayBack payBack=find(payBackId);
+		if(payBack.getState()!=PayBack.STATE_WAITFORREPAY)
+			return false;
+		if(payBack.getType()!=PayBack.TYPE_LASTPAY)
+			return false;
+		return false;
+	}
 }

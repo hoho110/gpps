@@ -21,12 +21,21 @@
       <script src="js/cdn/html5shiv.min.js"></script>
       <script src="js/cdn/respond.min.js"></script>
     <![endif]-->
-</head>
-<body>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/jquery.min.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+	src="/easyservice/gpps.service.ILenderService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IBorrowerService?json"></script>
+<script src="js/tool.js"></script>
+<script src="js/getuser.js"></script>
+</head>
+<body>
+
 
 <div class="container-fluid">
 <div class="row" id="header" style="margin-left:0px; margin-right:0px;">
@@ -150,16 +159,7 @@
   </div>
 </div>
 
-
-
-<script type="text/javascript"
-	src="/resources/EasyServiceClientFullZ.js"></script>
-<script type="text/javascript"
-	src="/easyservice/gpps.service.ILenderService?json"></script>
-<script type="text/javascript"
-				src="/easyservice/gpps.service.IBorrowerService?json"></script>
-	<script src="js/tool.js"></script>
-	<script src="js/head.js"></script>
+<script src="js/head.js"></script>
 <script>
 
 function getbank(bank){

@@ -24,8 +24,48 @@
       <script src="js/cdn/html5shiv.min.js"></script>
       <script src="js/cdn/respond.min.js"></script>
     <![endif]-->
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
 
-
+<script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+	<script src="js/plugins/morris/morris.js"></script>
+	<script src="js/jquery.dataTables.js"></script>
+	<script src="js/tool.js"></script>
+	<script src="js/data.js"></script>
+	
+	<script type="text/javascript"
+		src="/resources/EasyServiceClientFullZ.js"></script>
+	<script type="text/javascript"
+		src="/easyservice/gpps.service.ILenderService?json"></script>
+	<script type="text/javascript"
+		src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
+	<script type="text/javascript"
+				src="/easyservice/gpps.service.IBorrowerService?json"></script>
+	<script type="text/javascript"
+		src="/easyservice/gpps.service.IAccountService?json"></script>
+	<script type="text/javascript"
+        src="/easyservice/gpps.service.ISubmitService?json"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.IPayBackService?json"></script>
+    <script src="js/myaccount.js"></script>
+    <script src="js/getuser.js"></script>
+    
+    
+    <script>
+    var name = "";
+    if (cuser == null && buser == null) {
+		window.location.href = "login.html";
+	}else if(cuser==null){
+		window.location.href="baccount.html";
+	}
+	else {
+		name = cuser.name == null ? cuser.loginId
+				: cuser.name;
+	}
+    
+    </script>
 
 <style type="text/css">
 a.accordion-toggle {
@@ -49,10 +89,7 @@ a.accordion-toggle {
 
 </head>
 <body>
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="js/jquery.min.js"></script>
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="js/bootstrap.min.js"></script>
+	
 	<div id="whole" class="container-fluid">
 	
 	<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
@@ -227,32 +264,6 @@ a.accordion-toggle {
   </div>
 </div>
 
-
-
-
-
-
-	<script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
-	<script src="js/plugins/morris/morris.js"></script>
-	<script src="js/jquery.dataTables.js"></script>
-	<script src="js/mine.js"></script>
-	<script src="js/tool.js"></script>
-	<script src="js/data.js"></script>
-	<script src="js/myaccount.js"></script>
-	<script type="text/javascript"
-		src="/resources/EasyServiceClientFullZ.js"></script>
-	<script type="text/javascript"
-		src="/easyservice/gpps.service.ILenderService?json"></script>
-	<script type="text/javascript"
-		src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
-	<script type="text/javascript"
-				src="/easyservice/gpps.service.IBorrowerService?json"></script>
-	<script type="text/javascript"
-		src="/easyservice/gpps.service.IAccountService?json"></script>
-	<script type="text/javascript"
-        src="/easyservice/gpps.service.ISubmitService?json"></script>
-    <script type="text/javascript"
-        src="/easyservice/gpps.service.IPayBackService?json"></script>
         <script src="js/head.js"></script>
 		<script src="js/foot.js"></script>
 	<script>
@@ -266,18 +277,10 @@ a.accordion-toggle {
 							var accountDao = EasyServiceClient
 									.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
 
-							if (cuser == null && buser == null) {
-								window.location.href = "login.html";
-								return;
-							}else if(cuser==null){
-								window.location.href="baccount.html";
-							}
-							else {
-								var name = cuser.name == null ? cuser.loginId
-										: cuser.name;
-								$('#welcome').html(greet() + name);
-
-							}
+							
+							
+							$('#welcome').html(greet() + name);
+							
 
 							var account = accountDao.find(cuser.accountId);
 							var total = account.total;

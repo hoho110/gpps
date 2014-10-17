@@ -24,7 +24,49 @@
       <script src="js/cdn/html5shiv.min.js"></script>
       <script src="js/cdn/respond.min.js"></script>
     <![endif]-->
+    
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="js/jquery.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="js/bootstrap.min.js"></script>
+	
+	
+	<script src="js/jquery.dataTables.js"></script>
+	<script src="js/tool.js"></script>
+	<script src="js/data.js"></script>
+	
+	<script type="text/javascript"
+		src="/resources/EasyServiceClientFullZ.js"></script>
+	<script type="text/javascript"
+		src="/easyservice/gpps.service.ILenderService?json"></script>
+	<script type="text/javascript"
+		src="/easyservice/gpps.dao.IBorrowerAccountDao?json"></script>
+	<script type="text/javascript"
+				src="/easyservice/gpps.service.IBorrowerService?json"></script>
+	<script type="text/javascript"
+		src="/easyservice/gpps.service.IAccountService?json"></script>
+	<script type="text/javascript"
+        src="/easyservice/gpps.service.ISubmitService?json"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.IPayBackService?json"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
 
+	<script src="js/baccount.js"></script>
+	<script src="js/getuser.js"></script>
+	
+	<script>
+	var name = "";
+	if (cuser == null && buser == null) {
+		window.location.href = "login.html";
+	}else if(buser==null){
+		window.location.href="myaccount.html";
+	}
+	else {
+		name = buser.name == null ? buser.loginId
+				: buser.name;
+	}
+	</script>
 
 
 <style type="text/css">
@@ -49,10 +91,7 @@ a.accordion-toggle {
 
 </head>
 <body>
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="js/jquery.min.js"></script>
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-	<script src="js/bootstrap.min.js"></script>
+	
 	<div id="whole" class="container-fluid">
 	
 	<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
@@ -233,29 +272,7 @@ a.accordion-toggle {
 
 
 
-	<script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
-	<script src="js/plugins/morris/morris.js"></script>
-	<script src="js/jquery.dataTables.js"></script>
-	<script src="js/mine.js"></script>
-	<script src="js/tool.js"></script>
-	<script src="js/data.js"></script>
-	<script src="js/baccount.js"></script>
-	<script type="text/javascript"
-		src="/resources/EasyServiceClientFullZ.js"></script>
-	<script type="text/javascript"
-		src="/easyservice/gpps.service.ILenderService?json"></script>
-	<script type="text/javascript"
-		src="/easyservice/gpps.dao.IBorrowerAccountDao?json"></script>
-	<script type="text/javascript"
-				src="/easyservice/gpps.service.IBorrowerService?json"></script>
-	<script type="text/javascript"
-		src="/easyservice/gpps.service.IAccountService?json"></script>
-	<script type="text/javascript"
-        src="/easyservice/gpps.service.ISubmitService?json"></script>
-    <script type="text/javascript"
-        src="/easyservice/gpps.service.IPayBackService?json"></script>
-    <script type="text/javascript"
-        src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
+	
         <script src="js/head.js"></script>
 		<script src="js/foot.js"></script>
 	<script>
@@ -270,19 +287,7 @@ a.accordion-toggle {
 									.getRemoteProxy("/easyservice/gpps.dao.IBorrowerAccountDao");
 							
 							
-							
-							if (cuser == null && buser == null) {
-								window.location.href = "login.html";
-								return;
-							}else if(buser==null){
-								window.location.href="myaccount.html";
-							}
-							else {
-								var name = buser.name == null ? buser.loginId
-										: buser.name;
-								$('#welcome').html(greet() + name);
-
-							}
+							$('#welcome').html(greet() + name);
 
 							var account = accountDao.find(buser.accountId);
 							var total = account.total;
@@ -316,7 +321,21 @@ a.accordion-toggle {
 									.html('<span class="glyphicon glyphicon-remove"></span>待实地考察');
 									}
 								})
-							}else if(privilege==11){
+							}else if(privilege==14){
+
+								$('img#identity').attr('src', 'img/people.png').attr('title', '点击申请').attr('disabled', 'disabled');
+								$('a#identity').attr('href', '#');
+								$('div#identity').css('color', 'red')
+										.html('<span class="glyphicon glyphicon-remove"></span>审核未通过');
+								$('a#identity').click(function(e){
+									if(confirm('马上申请实地考察?')){
+									bservice.applyForFunding();
+									$('div#identity').css('color', 'red')
+									.html('<span class="glyphicon glyphicon-remove"></span>待实地考察');
+									}
+								})
+							}
+							else if(privilege==11){
 								$('img#identity').attr('src', 'img/people.png').attr('title', '待实地考察').attr('disabled', 'disabled');
 								$('a#identity').attr('href', '#');
 								$('div#identity').css('color', 'red')

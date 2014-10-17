@@ -25,6 +25,14 @@
       <script src="js/cdn/html5shiv.min.js"></script>
       <script src="js/cdn/respond.min.js"></script>
 <![endif]-->
+<script src="js/getuser.js"></script>
+<script>
+if(cuser==null && buser==null){
+	window.location.href="login.html";
+}else if(buser!=null){
+	window.location.href="baccount.html";
+}
+</script>
 </head>
 <body>
 	<div class="container">
@@ -129,9 +137,7 @@ function removeMessage(){
 $(document).ready(function() {
 	
 	
-	if(cuser==null){
-		window.location.href="login.html";
-	}
+	
 	
 	header('register2');
 	

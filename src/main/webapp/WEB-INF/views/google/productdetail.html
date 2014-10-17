@@ -43,16 +43,15 @@
 		src="/easyservice/gpps.service.IBorrowerService?json"></script>	
 <script type="text/javascript"
 		src="/easyservice/gpps.service.IProductActionService?json"></script>
+<script src="js/getuser.js"></script>
     
     <script>
     var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
 	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
-	var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
-	var borrowerService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
 	var productActionService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductActionService");
 	var pid = getQueryString('pid');
 	
@@ -68,7 +67,6 @@
 	
 	order = orderService.findGovermentOrderByProduct(parseInt(pid));
 	
-	var buser = borrowerService.getCurrentUser();
  	if(buser!=null && buser.id==order.borrowerId){
  		window.location.href="productdetailfb.html?pid="+pid;
  	}
@@ -79,7 +77,7 @@
 			break;
 		}
 	}
-	borrower = borrowerService.find(order.borrowerId);
+	borrower = bservice.find(order.borrowerId);
 	series = seriesService.find(product.productseriesId);
 	
 	submits = submitService.findPayedSubmitsByProduct(product.id, 0, 10);
@@ -546,7 +544,7 @@
         		}else if($(this).attr('data-sk')=='resource'){
         			$('.detail-content-body').html('');
         			
-        			var bitems0 = borrowerService.findMimeItems(order.borrowerId,0);
+        			var bitems0 = bservice.findMimeItems(order.borrowerId,0);
         			$('.detail-content-body').append('<h5>营业执照</h5>');
         			var pp0 = $('<p></p>');
         			for(var i=0; i<bitems0.size(); i++){
@@ -557,7 +555,7 @@
         			$('.detail-content-body').append('<br>');
         			
         			
-        			var bitems1 = borrowerService.findMimeItems(order.borrowerId,1);
+        			var bitems1 = bservice.findMimeItems(order.borrowerId,1);
         			$('.detail-content-body').append('<h5>政采资质</h5>');
         			var pp1 = $('<p></p>');
         			for(var i=0; i<bitems1.size(); i++){
@@ -568,7 +566,7 @@
         			$('.detail-content-body').append('<br>');
         			
         			
-        			var bitems2 = borrowerService.findMimeItems(order.borrowerId,2);
+        			var bitems2 = bservice.findMimeItems(order.borrowerId,2);
         			$('.detail-content-body').append('<h5>法人证件</h5>');
         			var pp2 = $('<p></p>');
         			for(var i=0; i<bitems2.size(); i++){
@@ -579,7 +577,7 @@
         			$('.detail-content-body').append('<br>');
         			
         			
-        			var bitems3 = borrowerService.findMimeItems(order.borrowerId,3);
+        			var bitems3 = bservice.findMimeItems(order.borrowerId,3);
         			$('.detail-content-body').append('<h5>办公环境</h5>');
         			var pp3 = $('<p></p>');
         			for(var i=0; i<bitems3.size(); i++){

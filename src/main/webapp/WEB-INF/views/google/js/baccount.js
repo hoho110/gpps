@@ -672,8 +672,8 @@ var submitall = function(container){
 
 var paybackall = function(container){
 	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
-	var repayedDetail=account.getLenderRepayedDetail();
-	var willBeRepayedDetail=account.getLenderWillBeRepayedDetail();
+	var repayedDetail=account.getBorrowerRepayedDetail();
+	var willBeRepayedDetail=account.getBorrowerWillBeRepayedDetail();
 	var content = $('<div></div>');
 	var str = "";
 	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
@@ -976,7 +976,7 @@ var bnav2funtion = {
 		"request-all" : requestall,
 		"request-tohandle" : requesttohandle,
 		"request-handled" : requesthandled,
-		"payback-all" : null,
+		"payback-all" : paybackall,
 		"payback-canpay" : null,
 		"payback-canapply" : null,
 		"payback-to" : paybackto,

@@ -364,6 +364,19 @@ public class PayBackServiceImpl implements IPayBackService {
 		PayBack payBack=find(payBackId);
 		if(payBack.getState()!=PayBack.STATE_WAITFORREPAY)
 			return false;
+		//本产品是否为最后一次还款
+		List<PayBack> payBacks=findAll(payBack.getProductId());
+		for(PayBack pb:payBacks)
+		{
+			if(pb.getId()==(int)(payBack.getId()))
+				continue;
+			if(pb.getState()==PayBack.STATE_FINISHREPAY||pb.getState()==PayBack.STATE_REPAYING)
+				continue;
+			if(pb.getState()==PayBack.STATE_DELAY||pb.getDeadline()<payBack.getDeadline())
+				return false;
+		}
+		Product product=productDao.find(payBack.getProductId());
+		ProductSeries productSeries=productSeriesDao.find(product.getProductseriesId());
 		return false;
 	}
 
@@ -374,6 +387,38 @@ public class PayBackServiceImpl implements IPayBackService {
 			return false;
 		if(payBack.getType()!=PayBack.TYPE_LASTPAY)
 			return false;
-		return false;
+		Product product=productDao.find(payBack.getProductId());
+		ProductSeries productSeries=productSeriesDao.find(product.getProductseriesId());
+		if(productSeries.getType()==ProductSeries.TYPE_AVERAGECAPITALPLUSINTEREST)
+			return false;
+		Calendar cal=Calendar.getInstance();
+		cal.setTimeInMillis(System.currentTimeMillis());
+		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 0, 0, 0);
+		if(cal.getTimeInMillis()>payBack.getDeadline())
+			return false;
+		GovermentOrder order=orderSerivce.findGovermentOrderByProduct(payBack.getProductId());
+		List<Product> products=order.getProducts();
+		//验证先还完稳健型或平衡型
+		for(Product pro:products)
+		{
+			if(pro.getId()==(int)(product.getId()))
+					continue;
+			ProductSeries proSeries=productSeriesDao.find(pro.getProductseriesId());
+			if(proSeries.getType()==ProductSeries.TYPE_AVERAGECAPITALPLUSINTEREST&&(pro.getState()==Product.STATE_REPAYING||pro.getState()==Product.STATE_POSTPONE))
+				return false;
+			else if(proSeries.getType()==ProductSeries.TYPE_FIRSTINTERESTENDCAPITAL&&(pro.getState()==Product.STATE_REPAYING||pro.getState()==Product.STATE_POSTPONE))
+				return false;
+		}
+		List<PayBack> payBacks=findAll(product.getId());
+		for(PayBack pb:payBacks)
+		{
+			if(pb.getId()==(int)(payBack.getId()))
+				continue;
+			if(pb.getState()==PayBack.STATE_FINISHREPAY||pb.getState()==PayBack.STATE_REPAYING)
+				continue;
+			if(pb.getState()==PayBack.STATE_DELAY||pb.getDeadline()<=cal.getTimeInMillis())
+				return false;
+		}
+		return true;
 	}
 }

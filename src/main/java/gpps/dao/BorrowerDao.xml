@@ -50,20 +50,15 @@
 		password=#{password}
 		where id=#{id}
 	</update>
-	<update id="changeCreditValue">
+	<update id="changeCreditValueAndLevel">
 		update Borrower set
-		creditValue=#{creditValue}
+		creditValue=#{creditValue},level=#{level}
 		where id=#{id}
 	</update>
 	<delete id="delete">
 		delete from Borrower
 		where id=#{id}
 	</delete>
-	<update id="addCreditValue">
-		update Borrower set
-		creditValue=creditValue+#{creditValue}
-		where id=#{id}
-	</update>
 	<select id="findAccessory" parameterType="Integer" resultType="String">
         select material
         from Borrower where id=#{id}

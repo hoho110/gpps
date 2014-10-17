@@ -21,6 +21,81 @@
       <script src="js/cdn/html5shiv.min.js"></script>
       <script src="js/cdn/respond.min.js"></script>
     <![endif]-->
+    
+    <script src="js/tool.js"></script>
+ <script type="text/javascript"
+				src="/resources/EasyServiceClientFullZ.js"></script>
+ <script type="text/javascript"
+				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IProductSeriesService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IProductService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.ILenderService?json"></script>
+<script type="text/javascript"
+		src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
+<script type="text/javascript"
+		src="/easyservice/gpps.service.ISubmitService?json"></script>
+<script type="text/javascript"
+		src="/easyservice/gpps.service.IPayBackService?json"></script>
+<script type="text/javascript"
+		src="/easyservice/gpps.service.IBorrowerService?json"></script>	
+<script type="text/javascript"
+		src="/easyservice/gpps.service.IProductActionService?json"></script>
+    
+    <script>
+    var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
+	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
+	var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
+	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
+	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
+	var borrowerService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
+	var productActionService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductActionService");
+	var pid = getQueryString('pid');
+	
+	var order = null;
+	var borrower = null;
+	var series = null;
+	var product = null;
+	var paybacks = null;
+	var submits = null;
+	var seriesname = {};
+	
+	try{
+	
+	order = orderService.findGovermentOrderByProduct(parseInt(pid));
+	
+	var buser = borrowerService.getCurrentUser();
+ 	if(buser!=null && buser.id==order.borrowerId){
+ 		window.location.href="productdetailfb.html?pid="+pid;
+ 	}
+	
+	for(var i=0; i<order.products.size(); i++){
+		if(order.products.get(i).id==parseInt(pid)){
+			product = order.products.get(i);
+			break;
+		}
+	}
+	borrower = borrowerService.find(order.borrowerId);
+	series = seriesService.find(product.productseriesId);
+	
+	submits = submitService.findPayedSubmitsByProduct(product.id, 0, 10);
+	
+	var allseries = seriesService.findAll();
+	for(var i=0; i<allseries.size(); i++){
+		seriesname[allseries.get(i).id] = allseries.get(i);
+	}
+	
+	paybacks = paybackService.findAll(product.id);
+	
+	}catch(e){
+		alert(e.message);
+	}
+    </script>
+    
     </head>
  
 <body>
@@ -283,27 +358,6 @@
   </div>
 </div>
  
- <script src="js/tool.js"></script>
- <script type="text/javascript"
-				src="/resources/EasyServiceClientFullZ.js"></script>
- <script type="text/javascript"
-				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
-<script type="text/javascript"
-				src="/easyservice/gpps.service.IProductSeriesService?json"></script>
-<script type="text/javascript"
-				src="/easyservice/gpps.service.IProductService?json"></script>
-<script type="text/javascript"
-				src="/easyservice/gpps.service.ILenderService?json"></script>
-<script type="text/javascript"
-		src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
-<script type="text/javascript"
-		src="/easyservice/gpps.service.ISubmitService?json"></script>
-<script type="text/javascript"
-		src="/easyservice/gpps.service.IPayBackService?json"></script>
-<script type="text/javascript"
-		src="/easyservice/gpps.service.IBorrowerService?json"></script>	
-<script type="text/javascript"
-		src="/easyservice/gpps.service.IProductActionService?json"></script>				
 
 <script src="js/head.js"></script>
 <script src="js/foot.js"></script>
@@ -315,51 +369,7 @@
   $(document).ready(function () {
 	  header('productdetail');
 	  
-	  var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
- 	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
- 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
- 	var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
- 	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
- 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
- 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
- 	var borrowerService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
- 	var productActionService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductActionService");
- 	var pid = getQueryString('pid');
- 	
- 	var order = null;
- 	var borrower = null;
- 	var series = null;
- 	var product = null;
- 	var paybacks = null;
- 	var submits = null;
- 	var seriesname = {};
- 	
- 	try{
- 	
- 	order = orderService.findGovermentOrderByProduct(parseInt(pid));
- 	for(var i=0; i<order.products.size(); i++){
- 		if(order.products.get(i).id==parseInt(pid)){
- 			product = order.products.get(i);
- 			break;
- 		}
- 	}
- 	borrower = borrowerService.find(order.borrowerId);
- 	series = seriesService.find(product.productseriesId);
- 	
- 	submits = submitService.findPayedSubmitsByProduct(product.id, 0, 10);
- 	
- 	var allseries = seriesService.findAll();
- 	for(var i=0; i<allseries.size(); i++){
- 		seriesname[allseries.get(i).id] = allseries.get(i);
- 	}
- 	
-	paybacks = paybackService.findAll(product.id);
- 	
- 	}catch(e){
- 		alert(e);
- 		$('body').html('获取产品信息出错！');
- 		return;
- 	}
+	  
  	
  	$('li#productseries').html('<a href="productlist.html?sid='+product.productseriesId+'">'+seriesname[product.productseriesId].title+'</a> <span class="divider">&gt;</span>');
  	$('span#product-title').html(order.title+'['+seriesname[product.productseriesId].title+']');

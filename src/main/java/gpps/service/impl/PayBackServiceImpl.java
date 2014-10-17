@@ -162,7 +162,7 @@ public class PayBackServiceImpl implements IPayBackService {
 		if(days<0)
 			days=0;
 		payBack.setInterest(PayBack.BASELINE.multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
-		payBack.setDeadline(cal.getTimeInMillis());
+		payBack.setRealtime(cal.getTimeInMillis());
 		payBack.setChiefAmount(PayBack.BASELINE);
 		payBackDao.update(payBack);
 	}
@@ -267,6 +267,8 @@ public class PayBackServiceImpl implements IPayBackService {
 
 	private int getDays(Calendar starttime,Calendar endtime)
 	{
+		if(starttime.get(Calendar.YEAR)>endtime.get(Calendar.YEAR))
+			return 0;
 		if(starttime.get(Calendar.YEAR)==endtime.get(Calendar.YEAR))
 			return endtime.get(Calendar.DAY_OF_YEAR)-starttime.get(Calendar.DAY_OF_YEAR);
 		else {

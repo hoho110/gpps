@@ -66,7 +66,7 @@ public interface IBorrowerService extends ILoginService {
 	 * */
 	public List<Borrower> findRequestBorrower();
 
-	public void addAccessory(Integer borrowerId, String path);
+//	public void addAccessory(Integer borrowerId, String path);
 
 	public boolean isPhoneNumberExist(String phoneNumber);
 	/**

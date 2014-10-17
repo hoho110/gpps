@@ -115,9 +115,10 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	// return borrower;
 	// }
 	static int[][] validConverts = { 
-		{ Borrower.PRIVILEGE_VIEW, Borrower.PRIVILEGE_APPLY }, 
+		{ Borrower.PRIVILEGE_VIEW, Borrower.PRIVILEGE_APPLY },
+		{ Borrower.PRIVILEGE_REFUSE, Borrower.PRIVILEGE_APPLY },
 		{ Borrower.PRIVILEGE_APPLY, Borrower.PRIVILEGE_FINANCING }, 
-		{ Borrower.PRIVILEGE_APPLY, Borrower.PRIVILEGE_VIEW } };
+		{ Borrower.PRIVILEGE_APPLY, Borrower.PRIVILEGE_REFUSE } };
 
 	private void changePrivilege(int id, int privilege) throws IllegalConvertException {
 		Borrower borrower = borrowerDao.find(id);
@@ -150,12 +151,6 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	}
 
 	@Override
-	public void addAccessory(Integer borrowerId, String path) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public boolean isPhoneNumberExist(String phoneNumber) {
 		return borrowerDao.findByTel(phoneNumber) == null ? false : true;
 	}
@@ -169,14 +164,12 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 
 	@Override
 	public void passFundingApplying(Integer borrowerId) throws IllegalConvertException {
-		Borrower borrower=borrowerDao.find(borrowerId);
 		changePrivilege(borrowerId,Borrower.PRIVILEGE_FINANCING);
-		borrower.setPrivilege(Borrower.PRIVILEGE_FINANCING);
 	}
 
 	@Override
 	public void refuseFundingApplying(Integer borrowerId) throws IllegalConvertException {
-		changePrivilege(borrowerId,Borrower.PRIVILEGE_VIEW);
+		changePrivilege(borrowerId,Borrower.PRIVILEGE_REFUSE);
 	}
 	@Override
 	public Borrower getCurrentUser() {

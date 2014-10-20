@@ -46,7 +46,7 @@ public class CreateMain {
 		long iend23 = (new Date(2015-1900, 10, 6)).getTime();
 		CreateProduct.createSingle(context, order2, series_wj, 0, 160000, 0.1, 1000, 100, iend21);
 		CreateProduct.createSingle(context, order2, series_jh, 0, 100000, 0.15, 2000, 200, iend22);
-		CreateProduct.createSingle(context, order2, series_jq, 1, 8000, 0.26, 10000, 1000, iend23);
+		CreateProduct.createSingle(context, order2, series_jq, 1, 80000, 0.26, 10000, 1000, iend23);
 		
 		
 		long iend31 = (new Date(2015-1900, 1, 9)).getTime();

@@ -34,7 +34,7 @@
       
       </div>
 	<div class="form-horizontal" role="form" style="width:400px; margin: 10px auto;">
-		<div class="form-group">
+		<div class="form-group" id="message">
     		<label class="col-sm-4 control-label"></label>
     		<div class="col-sm-8">
       			<p class="form-control-static">我已经是企业用户?&nbsp;<a href="login.html">登录</a>&nbsp;|&nbsp;<a href="index.html">取消</a></p>
@@ -78,14 +78,20 @@
 			</div>
 		</div>
 		
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-4" for="inputSuccess3">中标订单名称</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="ordertitle">
+			</div>
+		</div>
 		
 		<div class="form-group has-success has-feedback">
 			<label class="control-label col-sm-4" for="inputSuccess3">申请融资额度</label>
 			<div class="col-sm-8">
-				<input type="text" class="form-control" id="ammount">
+				<input type="text" class="form-control" id="amount">
 			</div>
 		</div>
-
+		
 			
 			<div class="form-group has-success has-feedback">
 			<label class="control-label col-sm-4" for="inputError2">联系人手机</label>
@@ -138,7 +144,57 @@ $(document).ready(function() {
 	
 	header('loan');
 	
-	
+	if(buser!=null){
+		$('div#message').css('display', 'none');
+		$('input#username').val(buser.loginId).attr('disabled', 'disabled');
+		$('input#password').parent().parent().css('display', 'none');
+		$('input#password_r').parent().parent().css('display', 'none');
+		$('input#companyname').val(buser.companyName).attr('disabled', 'disabled');
+		$('input#license').val(buser.license).attr('disabled', 'disabled');
+		$('input#phone').parent().parent().css('display', 'none');
+		$('input#validate').parent().parent().css('display', 'none');
+		
+		
+		$('#login').click(function(e){
+			var amount = $('input#amount').val();
+			var ordertitle = $('input#ordertitle').val();
+			
+			if(ordertitle==null||ordertitle==''){
+				$('input#ordertitle').parent().find('span').remove();
+				$('input#ordertitle').parent().append(error);
+				$('input#ordertitle').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*请输入中标订单的名称');
+				return;
+			}else{
+				$('input#ordertitle').parent().find('span').remove();
+				$('input#ordertitle').parent().append(ok);
+				$('input#ordertitle').parent().parent().removeClass('has-error').addClass('has-success');
+				removeMessage();
+			}
+			
+			var myreg=/^[+]?(([1-9]\d*[.]?)|(0.))(\d{0,2})?$/;
+			if(amount==null || amount=='' || !myreg.test(amount))
+			{
+				$('input#amount').parent().find('span').remove();
+				$('input#amount').parent().append(error);
+				$('input#amount').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('金额必须大于0且为整数或小数，小数点后不超过两位');
+				return;
+			}else{
+				$('input#amount').parent().find('span').remove();
+				$('input#amount').parent().append(ok);
+				$('input#amount').parent().parent().removeClass('has-error').addClass('has-success');
+				removeMessage();
+			}
+			try{
+				var financingrequest = {"_t_":"gpps.model.FinancingRequest", "govermentOrderName":ordertitle, "govermentOrderDetail":"asdfadfadsfasdf", "applyFinancingAmount":parseFloat(amount), "rate":"12%", "createtime":(new Date()).getTime(), "lastModifyTime":(new Date()).getTime(), "borrowerID": buser.id};
+				bservice.applyFinancing(financingrequest);
+				window.location.href="baccount.html?fid=request&sid=request-tohandle";
+			}catch(ee){
+				alert(ee.message);
+			}
+		});
+	}else{
 	$('#username').focus();
     $('#login').click(function(e){
 			var username = $('input#username').val();
@@ -214,6 +270,36 @@ $(document).ready(function() {
 			
 			var companyname = $('input#companyname').val();
 			var license = $('input#license').val();
+			var amount = $('input#amount').val();
+			var ordertitle = $('input#ordertitle').val();
+			
+			var myreg=/^[+]?(([1-9]\d*[.]?)|(0.))(\d{0,2})?$/;
+			if(amount==null || amount=='' || !myreg.test(amount))
+			{
+				$('input#amount').parent().find('span').remove();
+				$('input#amount').parent().append(error);
+				$('input#amount').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('金额必须大于0且为整数或小数，小数点后不超过两位');
+				return;
+			}else{
+				$('input#amount').parent().find('span').remove();
+				$('input#amount').parent().append(ok);
+				$('input#amount').parent().parent().removeClass('has-error').addClass('has-success');
+				removeMessage();
+			}
+			
+			if(ordertitle==null||ordertitle==''){
+				$('input#ordertitle').parent().find('span').remove();
+				$('input#ordertitle').parent().append(error);
+				$('input#ordertitle').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*请输入中标订单的名称');
+				return;
+			}else{
+				$('input#ordertitle').parent().find('span').remove();
+				$('input#ordertitle').parent().append(ok);
+				$('input#ordertitle').parent().parent().removeClass('has-error').addClass('has-success');
+				removeMessage();
+			}
 			
 			if(companyname==null||companyname==''){
 				$('input#companyname').parent().find('span').remove();
@@ -245,13 +331,13 @@ $(document).ready(function() {
 			
 
 			try{
-				var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname, "identityCard" : license, "privilege" : 11};
+				var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname,"identityCard":"123", "license" : license, "privilege" : 11};
 				var bor = bservice.register(borrower, validate);
 				
-				var financingrequest = {"_t_":"gpps.model.FinancingRequest", "govermentOrderName":"XXXXXXX政府订单", "govermentOrderDetail":"asdfadfadsfasdf", "applyFinancingAmount":100000, "rate":"12%", "createtime":(new Date()).getTime(), "lastModifyTime":(new Date()).getTime(), "borrowerID": bor.id};
+				var financingrequest = {"_t_":"gpps.model.FinancingRequest", "govermentOrderName":ordertitle, "govermentOrderDetail":"asdfadfadsfasdf", "applyFinancingAmount":parseFloat(amount), "rate":"12%", "createtime":(new Date()).getTime(), "lastModifyTime":(new Date()).getTime(), "borrowerID": bor.id};
 				bservice.applyFinancing(financingrequest);
 				
-				window.location.href="baccount.html";
+				window.location.href="baccount.html?fid=request&sid=request-tohandle";
 			}catch(ee){
 				alert(ee.message);
 				$('input#password').val('');
@@ -321,14 +407,16 @@ $(document).ready(function() {
 			addMessage('*该手机号码已被注册');
 			return;
  	  }else{
- 		 $('input#phone').parent().find('span').remove();
+ 		  
+ 		  try{
+ 		 	service.sendMessageValidateCode();
+ 		 	$('input#phone').parent().find('span').remove();
 			$('input#phone').parent().append(ok);
 			$('input#phone').parent().parent().removeClass('has-error').addClass('has-success');
- 		  	service.sendMessageValidateCode();
  		 	removeMessage();
  		 	
  		 	
- 		 	var t = 300;
+ 		 	var t = 60;
  	    	$('button#sendValCode').attr('disabled', true);
  			
  			//显示当前的秒数
@@ -346,6 +434,9 @@ $(document).ready(function() {
  		    }
  			
  		   setInterval(count,1000);  
+ 		  }catch(e){
+ 			  alert(e.message);
+ 		  }
  	  }
     });
     
@@ -393,6 +484,7 @@ $(document).ready(function() {
 				$('#login').click();
 			}
     });
+	}
 	
 })
 </script>

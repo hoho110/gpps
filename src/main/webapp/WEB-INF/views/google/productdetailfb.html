@@ -453,7 +453,7 @@
         			for(var t=0; t<paybacks.size(); t++){
         				var paybackTime = (paybacks.get(t).state==2)?formatDateToDay(paybacks.get(t).realtime) : '-';
         				var statehandle = paybackState[paybacks.get(t).state];
-        				if(paybacks.get(t).state==0){
+        				if(paybacks.get(t).state==0 && product.state==2){
         					statehandle = "<button class='repay' id='"+paybacks.get(t).id+"'>"+paybackState[paybacks.get(t).state]+"</button>";
         				}
         				table.append('<tr style="height:50px;"><td>'+(t+1)+'</td><td>'+paybacks.get(t).chiefAmount.value+'</td><td>'+paybacks.get(t).interest.value+'</td><td>'+formatDateToDay(paybacks.get(t).deadline)+'</td><td>'+paybackTime+'</td><td>'+statehandle+'</td></tr>');
@@ -464,7 +464,14 @@
         			$('.detail-content-body').append('<div class="comments"><p class="asterisk">说明：</p><p class="item">每期实际收款日期、金额以最终到账为准，本项目最终解释权归春蕾投资管理有限公司所有。</p></div>');
         			
         			$('button.repay').click(function(e){
+        				var id = $(this).attr('id');
+        				var flag =paybackService.canRepay(parseInt(id));
+        				if(flag==false){
+        					alert('请按顺序还款');
+        					return;
+        				}else{
         		 		window.location.href = '/account/repay/request?paybackId='+$(this).attr('id');
+        				}
         		 	});
         		}else if($(this).attr('data-sk')=='basic'){
         			var table = $('<table class="product-description"></table>');

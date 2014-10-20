@@ -32,7 +32,7 @@ public abstract class AbstractLoginServiceImpl implements ILoginService {
 		if(session.getAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODESENDTIME)!=null)
 		{
 			if((Long)(session.getAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODESENDTIME))+MESSAGEVALIDATECODEINTERVAL>System.currentTimeMillis())
-				throw new FrozenException();
+				throw new FrozenException("一分钟内不可重复发送");
 		}
 			
 		String validateCode=getRandomValidateCode(5);

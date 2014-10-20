@@ -357,14 +357,16 @@ $(document).ready(function() {
 			addMessage('*该手机号码已被注册');
 			return;
  	  }else{
- 		 $('input#phone').parent().find('span').remove();
+ 		 
+			try{
+ 		  	service.sendMessageValidateCode();
+ 		  	$('input#phone').parent().find('span').remove();
 			$('input#phone').parent().append(ok);
 			$('input#phone').parent().parent().removeClass('has-error').addClass('has-success');
- 		  	service.sendMessageValidateCode();
  		 	removeMessage();
  		 	
  		 	
- 		 	var t = 300;
+ 		 	var t = 60;
  	    	$('button#sendValCode').attr('disabled', true);
  			
  			//显示当前的秒数
@@ -382,6 +384,9 @@ $(document).ready(function() {
  		    }
  			
  		   setInterval(count,1000);  
+			}catch(e){
+				alert(e.message);
+			}
  	  }
     });
     

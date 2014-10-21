@@ -30,5 +30,8 @@
         <property name="officalDir" value="file:d:/test/officalDir"></property>
         <property name="tempDir" value="file:d:/test/tempDir"></property>
     </bean>
+    <bean id="chinanprSupportService" class="gpps.service.impl.ChinanprSupportServiceImpl">
+        <property name="url" value="${chinanpr.url}"></property>
+    </bean>
 	<import resource="classpath:spring-dao.xml"/>
 </beans>

@@ -328,37 +328,31 @@ public class PayBackServiceImpl implements IPayBackService {
 	@Override
 	public List<PayBack> findBorrowerCanBeRepayedPayBacks() {
 		Borrower borrower=borrowerService.getCurrentUser();
-		List<Integer> states=new ArrayList<Integer>();
-		states.add(GovermentOrder.STATE_REPAYING);
-		List<GovermentOrder> orders=govermentOrderDao.findByBorrowerIdAndState(borrower.getId(), states);
-		if(orders==null||orders.size()==0)
-			return new ArrayList<PayBack>(0);
-		List<Integer> productIds=new ArrayList<Integer>();
-		for(GovermentOrder order:orders)
-		{
-			List<Product> products=productDao.findByGovermentOrder(order.getId());
-			if(products==null||products.size()==0)
-				continue;
-			for(Product product:products)
-			{
-				if(product.getState()==Product.STATE_REPAYING)
-					productIds.add(product.getId());
-			}
-		}
-		if(productIds.size()==0)
-			return new ArrayList<PayBack>(0);
-		List<PayBack> payBacks=payBackDao.findByProductsAndState(productIds, PayBack.STATE_WAITFORREPAY);
+		List<PayBack> payBacks=payBackDao.findBorrowerWaitForRepayed(borrower.getAccountId());
 		if(payBacks==null||payBacks.size()==0)
 			return new ArrayList<PayBack>(0);
 		List<PayBack> canBeRepayedPayBacks=new ArrayList<PayBack>();
-//		Map<String,PayBack[]> 
 		for(PayBack payBack:payBacks)
 		{
-			
+			if(canRepay(payBack.getId()))
+				canBeRepayedPayBacks.add(payBack);
 		}
-		return null;
+		return canBeRepayedPayBacks;
 	}
-
+	@Override
+	public List<PayBack> findBorrowerCanBeRepayedInAdvancePayBacks() {
+		Borrower borrower=borrowerService.getCurrentUser();
+		List<PayBack> payBacks=payBackDao.findBorrowerWaitForRepayed(borrower.getAccountId());
+		if(payBacks==null||payBacks.size()==0)
+			return new ArrayList<PayBack>(0);
+		List<PayBack> canBeRepayedInAdvancePayBacks=new ArrayList<PayBack>();
+		for(PayBack payBack:payBacks)
+		{
+			if(canRepayInAdvance(payBack.getId()))
+				canBeRepayedInAdvancePayBacks.add(payBack);
+		}
+		return canBeRepayedInAdvancePayBacks;
+	}
 	@Override
 	public boolean canRepay(Integer payBackId) {
 		PayBack payBack=find(payBackId);
@@ -377,7 +371,26 @@ public class PayBackServiceImpl implements IPayBackService {
 		}
 		Product product=productDao.find(payBack.getProductId());
 		ProductSeries productSeries=productSeriesDao.find(product.getProductseriesId());
-		return false;
+		if(productSeries.getType()==ProductSeries.TYPE_AVERAGECAPITALPLUSINTEREST)
+			return true;
+		List<Product> products=productDao.findByGovermentOrder(product.getGovermentorderId());
+		for(Product pro:products)
+		{
+			if((int)(pro.getId())==(int)(product.getId()))
+				continue;
+			ProductSeries proSeries=productSeriesDao.find(pro.getProductseriesId());
+			if(proSeries.getType()>=productSeries.getType())
+				continue;
+			payBacks=findAll(pro.getId());
+			for(PayBack pb:payBacks)
+			{
+				if(pb.getState()==PayBack.STATE_FINISHREPAY||pb.getState()==PayBack.STATE_REPAYING)
+					continue;
+				if(pb.getState()==PayBack.STATE_DELAY||pb.getDeadline()<payBack.getDeadline())
+					return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -421,4 +434,5 @@ public class PayBackServiceImpl implements IPayBackService {
 		}
 		return true;
 	}
+
 }

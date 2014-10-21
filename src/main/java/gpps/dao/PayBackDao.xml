@@ -118,4 +118,9 @@
         </if>
         <![CDATA[and a.realtime >= #{starttime} ]]>
     </select>
+    <select id="findBorrowerWaitForRepayed" resultType="gpps.model.PayBack">
+        select *
+        from PayBack where borrowerAccountId=#{borrowerAccountId} and state=0
+        order by deadline asc
+    </select>
 </mapper>

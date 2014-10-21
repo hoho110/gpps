@@ -730,6 +730,82 @@ var paybackall = function(container){
 	container.append(content);
 }
 
+var paybackcanpay = function(container){
+
+	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
+	var paybacks = paybackService.findBorrowerCanBeRepayedPayBacks();
+	var columns = [ {
+		"sTitle" : "项目信息",
+			"code" : "product"
+	}, {
+		"sTitle" : "还款额",
+		"code" : "total"
+	}, {
+		"sTitle" : "本金",
+		"code" : "bj"
+	}, {
+		"sTitle" : "利息",
+		"code" : "lx"
+	}, {
+		"sTitle" : "还款时间",
+		"code" : "time"
+	}];
+	var aaData = new Array();
+	for(var i=0; i<paybacks.size(); i++){
+		var data=paybacks.get(i);
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+	                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
+	                    data.chiefAmount.value,
+	                    data.interest.value,
+	                    formatDateToDay(data.deadline)]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+var paybackcanapply = function(container){
+	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
+	var paybacks = paybackService.findBorrowerCanBeRepayedInAdvancePayBacks();
+	var columns = [ {
+		"sTitle" : "项目信息",
+			"code" : "product"
+	}, {
+		"sTitle" : "还款额",
+		"code" : "total"
+	}, {
+		"sTitle" : "本金",
+		"code" : "bj"
+	}, {
+		"sTitle" : "利息",
+		"code" : "lx"
+	}, {
+		"sTitle" : "还款时间",
+		"code" : "time"
+	}];
+	var aaData = new Array();
+	for(var i=0; i<paybacks.size(); i++){
+		var data=paybacks.get(i);
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+	                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
+	                    data.chiefAmount.value,
+	                    data.interest.value,
+	                    formatDateToDay(data.deadline)]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
 
 var paybackhave = function(container){
 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
@@ -977,8 +1053,8 @@ var bnav2funtion = {
 		"request-tohandle" : requesttohandle,
 		"request-handled" : requesthandled,
 		"payback-all" : paybackall,
-		"payback-canpay" : null,
-		"payback-canapply" : null,
+		"payback-canpay" : paybackcanpay,
+		"payback-canapply" : paybackcanapply,
 		"payback-to" : paybackto,
 		"payback-have" : paybackhave,
 		"cash-all" : cashall,

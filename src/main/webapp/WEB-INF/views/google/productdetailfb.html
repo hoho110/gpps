@@ -49,6 +49,10 @@
 
     
      <script>
+     
+     
+     
+     
      var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
  	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
  	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
@@ -68,13 +72,16 @@
  	var seriesname = {};
  	
  	try{
- 	
- 	order = orderService.findGovermentOrderByProduct(parseInt(pid));
- 	
- 	if(buser==null || buser.id!=order.borrowerId){
- 		window.location.href="productdetail.html?pid="+pid;
+ 		order = orderService.findGovermentOrderByProduct(parseInt(pid));
+ 	}catch(e){
+ 		
  	}
  	
+ 	if(buser==null || buser.id!=order.borrowerId){
+  		window.location.href="productdetail.html?pid="+pid;
+  	}
+ 	
+ 	try{
  	for(var i=0; i<order.products.size(); i++){
  		if(order.products.get(i).id==parseInt(pid)){
  			product = order.products.get(i);
@@ -95,7 +102,7 @@
 	paybacks = paybackService.findAll(product.id);
  	
  	}catch(e){
- 		alert(e);
+ 		
  	}
  	
      

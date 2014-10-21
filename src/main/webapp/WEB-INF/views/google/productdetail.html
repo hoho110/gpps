@@ -63,14 +63,18 @@
 	var submits = null;
 	var seriesname = {};
 	
+	
 	try{
-	
-	order = orderService.findGovermentOrderByProduct(parseInt(pid));
-	
+ 		order = orderService.findGovermentOrderByProduct(parseInt(pid));
+ 	}catch(e){
+ 		
+ 	}
+ 	
  	if(buser!=null && buser.id==order.borrowerId){
  		window.location.href="productdetailfb.html?pid="+pid;
- 	}
+  	}
 	
+	try{
 	for(var i=0; i<order.products.size(); i++){
 		if(order.products.get(i).id==parseInt(pid)){
 			product = order.products.get(i);
@@ -90,7 +94,7 @@
 	paybacks = paybackService.findAll(product.id);
 	
 	}catch(e){
-		alert(e.message);
+		
 	}
     </script>
     

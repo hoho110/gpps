@@ -386,7 +386,7 @@ public class PayBackServiceImpl implements IPayBackService {
 			{
 				if(pb.getState()==PayBack.STATE_FINISHREPAY||pb.getState()==PayBack.STATE_REPAYING)
 					continue;
-				if(pb.getState()==PayBack.STATE_DELAY||pb.getDeadline()<payBack.getDeadline())
+				if(pb.getState()==PayBack.STATE_DELAY||pb.getDeadline()<=payBack.getDeadline())
 					return false;
 			}
 		}

@@ -335,7 +335,11 @@ public class PayBackServiceImpl implements IPayBackService {
 		for(PayBack payBack:payBacks)
 		{
 			if(canRepay(payBack.getId()))
+			{
+				payBack.setProduct(productDao.find(payBack.getProductId()));
+				payBack.getProduct().setGovermentOrder(govermentOrderDao.find(payBack.getProduct().getGovermentorderId()));
 				canBeRepayedPayBacks.add(payBack);
+			}
 		}
 		return canBeRepayedPayBacks;
 	}
@@ -349,7 +353,11 @@ public class PayBackServiceImpl implements IPayBackService {
 		for(PayBack payBack:payBacks)
 		{
 			if(canRepayInAdvance(payBack.getId()))
+			{
+				payBack.setProduct(productDao.find(payBack.getProductId()));
+				payBack.getProduct().setGovermentOrder(govermentOrderDao.find(payBack.getProduct().getGovermentorderId()));
 				canBeRepayedInAdvancePayBacks.add(payBack);
+			}
 		}
 		return canBeRepayedInAdvancePayBacks;
 	}

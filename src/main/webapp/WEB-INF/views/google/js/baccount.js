@@ -220,11 +220,17 @@ var requestall = function(container){
 	var aaData = new Array();
 	for(var i=0; i<requests.size(); i++){
 		var data=requests.get(i);
+		var str = '待审核';
+		if(data.state==1){
+			str = '审核通过';
+		}else if(data.state==2){
+			str = '审核未通过';
+		}
 		aaData.push([data.govermentOrderName,
 		                    data.applyFinancingAmount,
 		                    data.rate,
 		                    formatDate(data.createtime),
-		                    data.state]);
+		                    str]);
 	}
 	var mySettings = $.extend({}, defaultSettings_noCallBack, {
 		"aoColumns" : columns,
@@ -264,7 +270,7 @@ var requesttohandle = function(container){
 		                    data.applyFinancingAmount,
 		                    data.rate,
 		                    formatDate(data.createtime),
-		                    data.state]);
+		                    '待审核']);
 	}
 	var mySettings = $.extend({}, defaultSettings_noCallBack, {
 		"aoColumns" : columns,
@@ -277,9 +283,50 @@ var requesttohandle = function(container){
 }
 
 
-var requesthandled = function(container){
+var requestpass = function(container){
 	var bService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
 	var requests = bService.findMyFinancingRequests(1);
+	
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "申请额度",
+		"code" : "state"
+	}, {
+		"sTitle" : "预期利率",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "申请时间",
+		"code" : "amount"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}];
+	var aaData = new Array();
+	for(var i=0; i<requests.size(); i++){
+		var data=requests.get(i);
+		
+		aaData.push([data.govermentOrderName,
+		                    data.applyFinancingAmount,
+		                    data.rate,
+		                    formatDate(data.createtime),
+		                    '审核通过']);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+
+var requestrefuse = function(container){
+	var bService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
+	var requests = bService.findMyFinancingRequests(2);
 	
 	var columns = [ {
 		"sTitle" : "订单名称",
@@ -304,7 +351,7 @@ var requesthandled = function(container){
 		                    data.applyFinancingAmount,
 		                    data.rate,
 		                    formatDate(data.createtime),
-		                    data.state]);
+		                    '审核未通过']);
 	}
 	var mySettings = $.extend({}, defaultSettings_noCallBack, {
 		"aoColumns" : columns,
@@ -1051,7 +1098,8 @@ var bnav2funtion = {
 		"my-note" : mynote,
 		"request-all" : requestall,
 		"request-tohandle" : requesttohandle,
-		"request-handled" : requesthandled,
+		"request-pass" : requestpass,
+		"request-refuse" : requestrefuse,
 		"payback-all" : paybackall,
 		"payback-canpay" : paybackcanpay,
 		"payback-canapply" : paybackcanapply,

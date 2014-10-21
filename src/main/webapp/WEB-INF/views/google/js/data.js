@@ -479,9 +479,11 @@ var createBorrowerNavLevel2 = function(nav){
 	}else if(nav=='request'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="request-all">全部</a></li>');
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="request-tohandle">待处理</a></li>');
-		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="request-handled">已处理</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="request-pass">审核通过</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="request-refuse">拒绝</a></li>');
 		ul.append(li1);
 		ul.append(li2);
+		ul.append(li3);
 		ul.append(li4);
 	}else if(nav=='payback'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="payback-all">总览</a></li>');

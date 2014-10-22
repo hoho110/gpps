@@ -235,14 +235,14 @@ a.accordion-toggle {
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">投资标的支付</h4>
+        <h4 class="modal-title" id="myModalLabel">还款</h4>
       </div>
       <div class="modal-body">
-      			投资标的支付完成前请不要关闭该对话框，在支付完毕后点击相应的操作以完成支付。
+      			还款完成前请不要关闭该对话框，在支付完毕后点击相应的操作以完成还款。
       </div>
       <div class="modal-footer">
-        <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">支付成功</button>
-        <button id="fail" type="button" class="btn btn-default">支付失败</button>
+        <button id="paysuccess" type="button" class="btn btn-primary" data-dismiss="modal">还款成功</button>
+        <button id="payfail" type="button" class="btn btn-default">还款失败</button>
       </div>
     </div>
   </div>
@@ -402,18 +402,6 @@ a.accordion-toggle {
 																	}
 																	
 																	
-																	
-																	
-																	$('a.submittoafford').click(function(e){
-																		$('#myModal').modal({
-																			  keyboard: false,
-																			  backdrop: false
-																		});
-																		window.open("/account/buy/request?submitId="+$(this).attr('id'));
-																	});
-																	
-																	
-																	
 																});
 													$('ul.nav-second li a').first().trigger('click');
 											});
@@ -428,12 +416,12 @@ a.accordion-toggle {
 								$('#bcenter').trigger('click');
 							}
 							
-							$('#success').click(function(e){
-									window.location.href = "myaccount.html?fid=submit&sid=submit-toafford";
+							$('#paysuccess').click(function(e){
+									window.location.href = "baccount.html?fid=payback&sid=payback-have";
 							});
 							
-							$('#fail').click(function(e){
-									window.location.href = "myaccount.html?fid=submit&sid=submit-toafford";
+							$('#payfail').click(function(e){
+									window.location.href = "baccount.html?fid=payback&sid=payback-canpay";
 							});
 						});
 	</script>

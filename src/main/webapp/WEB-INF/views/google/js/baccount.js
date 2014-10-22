@@ -794,8 +794,11 @@ var paybackcanpay = function(container){
 		"sTitle" : "利息",
 		"code" : "lx"
 	}, {
-		"sTitle" : "还款时间",
+		"sTitle" : "最迟还款时间",
 		"code" : "time"
+	}, {
+		"sTitle" : "操作",
+		"code" : "operate"
 	}];
 	var aaData = new Array();
 	for(var i=0; i<paybacks.size(); i++){
@@ -804,7 +807,9 @@ var paybackcanpay = function(container){
 	                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 	                    data.chiefAmount.value,
 	                    data.interest.value,
-	                    formatDateToDay(data.deadline)]);
+	                    formatDateToDay(data.deadline),
+	                    "<button class='pay' id="+data.id+">还款</button>"
+	                    ]);
 	}
 	var mySettings = $.extend({}, defaultSettings_noCallBack, {
 		"aoColumns" : columns,
@@ -814,6 +819,15 @@ var paybackcanpay = function(container){
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
 	container.append(content);
 	table.dataTable(mySettings);
+	
+	$('button.pay').click(function(e){
+		var paybackid = $(this).attr('id');
+		$('#myModal').modal({
+			  keyboard: false,
+			  backdrop: false
+		});
+		window.open('/account/repay/request?paybackId='+paybackid);
+	});
 }
 
 var paybackcanapply = function(container){

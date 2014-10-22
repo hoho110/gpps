@@ -365,6 +365,8 @@ var requestrefuse = function(container){
 
 var orderall = function(container){
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
+	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(-1);
 	
 	var columns = [ {
@@ -377,20 +379,35 @@ var orderall = function(container){
 		"sTitle" : "融资截止时间",
 		"code" : "financingEndtime"
 	}, {
-		"sTitle" : "描述",
-		"code" : "amount"
+		"sTitle" : "预期金额",
+		"code" : "expect"
+	}, {
+		"sTitle" : "已融金额",
+		"code" : "real"
 	}, {
 		"sTitle" : "状态",
 		"code" : "repayed"
+	}, {
+		"sTitle" : "详情",
+		"code" : "view"
 	}];
 	var aaData = new Array();
 	for(var i=0; i<orders.size(); i++){
 		var data=orders.get(i);
+		var products = data.products;
+		var totalamount = 0;
+		var real = 0;
+		for(var j=0; j<products.size(); j++){
+			totalamount += parseInt(products.get(j).expectAmount.value);
+			real += parseInt(products.get(j).realAmount.value);
+		}
 		aaData.push([data.title,
 		             formatDate(data.financingStarttime),
 		             formatDate(data.financingEndtime),
-		                    data.description,
-		                    data.state]);
+		                    totalamount,
+		                    real,
+		                    data.state,
+		                    "<button class='vieworder' id='"+data.id+"'>查看</button>"]);
 	}
 	var mySettings = $.extend({}, defaultSettings_noCallBack, {
 		"aoColumns" : columns,
@@ -400,6 +417,47 @@ var orderall = function(container){
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
 	container.append(content);
 	table.dataTable(mySettings);
+	
+	$('button.vieworder').click(function(e){
+		var ntr = $(this).parents('tr').next('tr');
+		if(ntr.prop("className")=='information'){
+			ntr.remove();
+			return;
+		}
+		
+		var orderid = parseInt($(this).attr('id'));
+		var order = orderDao.find(orderid);
+		var products = productService.findByGovermentOrder(orderid);
+		
+	
+		var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
+		var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
+		tr.append('<td class="color-gray-text text-center">产品类型</td>');
+		tr.append('<td class="color-gray-text text-center">年利率</td>');
+		tr.append('<td class="color-gray-text text-center">预期金额</td>');
+		tr.append('<td class="color-gray-text text-center">已融金额</td>');
+		tr.append('<td class="color-gray-text text-center">期限</td>');
+		tr.append('<td class="color-gray-text text-center">进度</td>');
+		tr.append('<td class="color-gray-text text-center"></td>');
+		table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
+		table.append(tr);
+		
+    	   for(var i=0; i<products.size(); i++){
+    		   var product = products.get(i);
+    		   product.govermentOrder = order;
+    		   table.append(createSingleSubProduct(product));
+    	   }
+		
+		
+		var ftr = $('<tr class="information"></tr>');
+		var ftd = $('<td colspan=7 align=center></td>');
+		ftr.append(ftd);
+		ftd.append(table);
+		
+		
+		$(this).parents('tr').after(ftr);
+		
+	});
 }
 
 var orderpreview = function(container){
@@ -846,9 +904,13 @@ var paybackcanapply = function(container){
 		"sTitle" : "利息",
 		"code" : "lx"
 	}, {
-		"sTitle" : "还款时间",
+		"sTitle" : "最迟还款时间",
 		"code" : "time"
-	}];
+	}, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}
+	];
 	var aaData = new Array();
 	for(var i=0; i<paybacks.size(); i++){
 		var data=paybacks.get(i);
@@ -856,7 +918,9 @@ var paybackcanapply = function(container){
 	                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 	                    data.chiefAmount.value,
 	                    data.interest.value,
-	                    formatDateToDay(data.deadline)]);
+	                    formatDateToDay(data.deadline),
+	                    "<button class='apply' id="+data.id+">申请提前</button>"
+	                    ]);
 	}
 	var mySettings = $.extend({}, defaultSettings_noCallBack, {
 		"aoColumns" : columns,
@@ -866,6 +930,11 @@ var paybackcanapply = function(container){
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
 	container.append(content);
 	table.dataTable(mySettings);
+	
+	$('button.apply').click(function(e){
+		paybackService.applyRepayInAdvance(parseInt($(this).attr('id')));
+		window.location.href="baccount.html?fid=payback&sid=payback-canpay";
+	});
 }
 
 var paybackhave = function(container){

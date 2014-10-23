@@ -66,6 +66,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	IFinancingRequestDao financingRequestDao;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	static int[] orderStates={
+		GovermentOrder.STATE_UNPUBLISH,
 		GovermentOrder.STATE_PREPUBLISH,
 		GovermentOrder.STATE_FINANCING,
 		GovermentOrder.STATE_QUITFINANCING,
@@ -93,10 +94,13 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	public GovermentOrder create(GovermentOrder govermentOrder) {
 		checkNullObject("borrowerId", govermentOrder.getBorrowerId());
 		checkNullObject(Borrower.class, borrowerDao.find(govermentOrder.getBorrowerId()));
-		govermentOrder.setState(GovermentOrder.STATE_PREPUBLISH);
-		
-		
-		
+		govermentOrder.setState(GovermentOrder.STATE_UNPUBLISH);
+		if(govermentOrder.getFinancingRequestId()!=null)
+		{
+			FinancingRequest request=checkNullObject(FinancingRequest.class, financingRequestDao.find(govermentOrder.getFinancingRequestId()));
+			if(request.getState()!=FinancingRequest.STATE_INIT)
+				throw new IllegalArgumentException("创建订单必须选择非处理的融资申请");
+		}
 //		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
 //		Calendar starttime=Calendar.getInstance();
 //		starttime.setTimeInMillis(govermentOrder.getIncomeStarttime());
@@ -146,6 +150,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	}
 
 	static int[][] validConverts={
+		{GovermentOrder.STATE_UNPUBLISH,GovermentOrder.STATE_PREPUBLISH},
 		{GovermentOrder.STATE_PREPUBLISH,GovermentOrder.STATE_FINANCING},
 		{GovermentOrder.STATE_FINANCING,GovermentOrder.STATE_QUITFINANCING},
 		{GovermentOrder.STATE_FINANCING,GovermentOrder.STATE_REPAYING},
@@ -490,5 +495,16 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 				request.setGovermentOrder(govermentOrderDao.findByFinancingRequest(request.getId()));
 		}
 		return requests;
+	}
+	@Override
+	@Transactional
+	public void publish(Integer orderId) throws IllegalConvertException {
+		checkNullObject("orderId", orderId);
+		GovermentOrder order=checkNullObject(GovermentOrder.class, govermentOrderDao.find(orderId));
+		changeState(orderId, GovermentOrder.STATE_PREPUBLISH);
+		if(order.getFinancingRequestId()!=null)
+		{
+			borrowerService.passFinancingRequest(order.getFinancingRequestId());
+		}
 	}
 }

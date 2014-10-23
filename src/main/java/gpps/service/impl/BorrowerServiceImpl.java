@@ -286,7 +286,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		FinancingRequest financingRequest=financingRequestDao.find(financingRequestId);
 		ObjectUtil.checkNullObject(FinancingRequest.class, financingRequest);
 		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_PROCESSED);
-		borrowerDao.changePrivilege(financingRequest.getBorrowerID(), Borrower.PRIVILEGE_FINANCING);
+//		borrowerDao.changePrivilege(financingRequest.getBorrowerID(), Borrower.PRIVILEGE_FINANCING);
 	}
 
 	@Override

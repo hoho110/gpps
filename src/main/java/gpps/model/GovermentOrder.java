@@ -16,6 +16,7 @@ public class GovermentOrder {
 //	public static final int STATE_MODIFY=1<<1;
 //	public static final int STATE_REAPPLY=1<<2;
 //	public static final int STATE_REFUSE=1<<3;
+	public static final int STATE_UNPUBLISH=1<<6;
 	public static final int STATE_PREPUBLISH=1<<1;
 	public static final int STATE_FINANCING=1;
 	public static final int STATE_QUITFINANCING=1<<4;

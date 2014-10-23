@@ -95,9 +95,12 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		checkNullObject("borrowerId", govermentOrder.getBorrowerId());
 		checkNullObject(Borrower.class, borrowerDao.find(govermentOrder.getBorrowerId()));
 		govermentOrder.setState(GovermentOrder.STATE_UNPUBLISH);
-		
-		
-		
+		if(govermentOrder.getFinancingRequestId()!=null)
+		{
+			FinancingRequest request=checkNullObject(FinancingRequest.class, financingRequestDao.find(govermentOrder.getFinancingRequestId()));
+			if(request.getState()!=FinancingRequest.STATE_INIT)
+				throw new IllegalArgumentException("创建订单必须选择非处理的融资申请");
+		}
 //		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
 //		Calendar starttime=Calendar.getInstance();
 //		starttime.setTimeInMillis(govermentOrder.getIncomeStarttime());

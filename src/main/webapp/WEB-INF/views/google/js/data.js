@@ -299,7 +299,7 @@ var createStructureProduct2 = function(order){
 		
 	
 
-
+//首页用
 var createSingleProduct = function(pro){
 	var order = pro.govermentOrder;
 	var state = order.state;
@@ -328,6 +328,69 @@ var createSingleProduct = function(pro){
 	str += '<td class="ui-list-field num text-right pr10"><em class="value">'+parseInt(parseFloat(pro.rate.value)*100)+'</em>%</td>';
 	str += '<td class="ui-list-field num text-right pr10"><em class="value">'+parseInt(pro.expectAmount.value)+'</em>元</td>';
 	str += '<td class="ui-list-field num text-right pr10"><em class="value">'+days+'</em>天</td>';
+	str += '<td class="ui-list-field">';
+	
+	var percent = parseInt(parseInt(pro.realAmount.value)*100/parseInt(pro.expectAmount.value));
+	
+	str += '<strong class="ui-progressbar-mid ui-progressbar-mid-'+percent+'"><em>'+percent+'</em>%</strong>';
+	str += '</td>';
+	str += '<td class="ui-list-field text-right">';
+	if(state==1)
+		{
+		if(parseInt(pro.expectAmount.value)==parseInt(pro.realAmount.value))
+		str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-FIRST_READY" href="productdetail.html?pid='+pro.id+'" target="_blank">';
+		else
+			str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-OPEN" href="productdetail.html?pid='+pro.id+'" target="_blank">';
+		}
+	else if(state==2)
+		str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-FIRST_APPLY" href="productdetail.html?pid='+pro.id+'" target="_blank">';
+	else if(state==4)
+		str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-IN_PROGRESS" href="productdetail.html?pid='+pro.id+'" target="_blank">';
+	else if(state==8)
+		str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-OVER_DUE" href="productdetail.html?pid='+pro.id+'" target="_blank">';
+	else if(state==32)
+		str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-CLOSED" href="productdetail.html?pid='+pro.id+'" target="_blank">';
+	else if(state==16)
+		str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-BAD_DEBT" href="productdetail.html?pid='+pro.id+'" target="_blank">';
+	str += '<span class="OPEN">投标中</span>';
+	str += '<span class="READY FIRST_READY">已满标</span>';
+	str += '<span class="IN_PROGRESS">还款中</span>';
+	str += '<span class="FIRST_APPLY">预发布</span>';
+	str += '<span class="OVER_DUE">待关闭</span>';
+	str += '<span class="CLOSED">已关闭</span>';
+	str += '<span class="BAD_DEBT">流标</span>'
+	str += '</a>';
+	str += '</td>';
+	str += '</tr>';
+	
+	return str;
+}
+
+//供融资方在我的账户中浏览用
+var createSingleSubProduct = function(pro){
+	var order = pro.govermentOrder;
+	var state = order.state;
+	var days = parseInt((pro.incomeEndtime-order.incomeStarttime+23*3600*1000)/(24*3600*1000)+'');
+	
+	var str = '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
+	
+	var cla = 'A';
+	var sname = '';
+	if(pro.productseriesId==1){
+		cla='A';
+		sname='稳健';
+	}else if(pro.productseriesId==2){
+		cla='C';
+		sname='均衡';
+	}else if(pro.productseriesId==3){
+		cla='D';
+		sname='进取';
+	}
+	str += '<td class="ui-list-field text-center"><a class="ui-creditlevel '+cla+' snow">'+sname+'</a></td>';
+	str += '<td class="text-right pr10">'+parseInt(parseFloat(pro.rate.value)*100)+'%</td>';
+	str += '<td class="text-right pr10">'+parseInt(pro.expectAmount.value)+'元</td>';
+	str += '<td class="text-right pr10">'+parseInt(pro.realAmount.value)+'元</td>';
+	str += '<td class="text-right pr10">'+days+'天</td>';
 	str += '<td class="ui-list-field">';
 	
 	var percent = parseInt(parseInt(pro.realAmount.value)*100/parseInt(pro.expectAmount.value));

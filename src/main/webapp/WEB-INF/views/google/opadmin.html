@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+<title>政采贷</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+      <script src="js/cdn/html5shiv.min.js"></script>
+      <script src="js/cdn/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<div class="container-fluid">
+<div class="row" style="border : #eee solid 1px; height:50px;">
+<div id="previewOrder" class="col-sm-12 col-md-12">
+
+</div>
+<div id="previewOrderHandler" class="col-sm-12 col-md-12">
+<input type="text" id="preOrder" size=10></input><button id="startFinance">启动融资</button>
+</div>
+</div>
+
+<div class="row" style="border : #eee solid 1px; height:50px;">
+<div id="financingOrder" class="col-sm-12 col-md-12">
+
+</div>
+<div id="financingOrderHandler" class="col-sm-12 col-md-12">
+<input type="text" id="finOrder" size=10></input><button id="quitFinancing">流标</button><button id="startPayback">启动还款</button>
+</div>
+</div>
+
+<div class="row" style="border : #eee solid 1px;">
+<div id="repayingOrder" class="col-sm-12 col-md-12">
+
+</div>
+
+</div>
+
+<div class="row" style="border : #eee solid 1px; height:50px;">
+<div id="paydoneOrder" class="col-sm-12 col-md-12">
+
+</div>
+<div id="t111" class="col-sm-12 col-md-12">
+<input type="text" id="paydone" size=10></input><button id="closedone">关闭</button>
+</div>
+</div>
+
+
+<div class="row" style="border : #eee solid 1px; height:50px;">
+<div id="closedoneOrder" class="col-sm-12 col-md-12">
+
+</div>
+</div>
+
+
+<div class="row" style="border : #eee solid 1px; height:50px;">
+<div id="failOrder" class="col-sm-12 col-md-12">
+
+</div>
+</div>
+
+
+<div class="row" style="border : #eee solid 1px;">
+添加项目进程:<br>
+<div id="action" class="col-sm-12 col-md-12">
+项目ID<input type="text" id="productid" size=40></input><br>
+进程状态<select id="actiontype">
+	<option value=1>正常</option>
+	<option value=2>顺利</option>
+	<option value=3>有风险</option>
+	<option value=4>严重问题</option>
+	</select><br>
+进程名<input type="text" id="title" size=40></input><br>
+进程说明<textarea id="detail" cols=50 rows=10></textarea><br>
+<button id="add">添加</button>
+</div>
+</div>
+
+
+
+<div class="row" style="border : #eee solid 1px;">
+上传附件:<br>
+<form id="form1" runat="server" method="post" enctype="multipart/form-data"> 
+	
+	<select id="typ">
+	<option value="order">订单</option>
+	<option value="borrower">融资方</option>
+	</select>
+	
+	<input id="oid" type="text" size=10></input>
+	
+	<select id="category">
+	<option value=1>中标文件</option>
+	</select>
+	
+	<input type=file id="_f" name="_f"></input>
+	<input id="upload" type=button value="上载"></input>
+</form>
+</div>
+
+
+<div class="row" style="border : #eee solid 1px; height:50px;">
+<div id="request" class="col-sm-12 col-md-12">
+</div>
+<div id="t112" class="col-sm-12 col-md-12">
+<input type="text" id="requestinput" size=10></input><button id="accept">审核通过</button><button id="refuse">拒绝</button>
+</div>
+</div>
+
+</div>
+</body>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript"
+				src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IProductService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IPayBackService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IProductActionService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IBorrowerService?json"></script>
+<script>
+var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
+var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
+var actionService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductActionService");
+var borrowerService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
+function refreshPreviewOrder(){
+	var pores = orderService.findByStatesByPage(2, 0, 100);
+	var pos = pores.get('result');
+	$('#previewOrder').html('状态为预发布的订单为：');
+	if(pos!=null)
+	for(var i=0; i<pos.size(); i++){
+		$('#previewOrder').append('&nbsp;&nbsp;'+pos.get(i).id+'&nbsp;&nbsp;');
+	}
+}
+
+function refreshFinancingOrder(){
+	var pores = orderService.findByStatesByPage(1, 0, 100);
+	var pos = pores.get('result');
+	$('#financingOrder').html('状态为融资中的订单为：');
+	if(pos!=null)
+	for(var i=0; i<pos.size(); i++){
+		$('#financingOrder').append('&nbsp;&nbsp;'+pos.get(i).id+'&nbsp;&nbsp;');
+	}
+}
+
+function refreshRepayingOrder(){
+	var pores = orderService.findByStatesByPage(4, 0, 100);
+	var pos = pores.get('result');
+	$('#repayingOrder').html('状态为还款中的订单为：<br>');
+	if(pos!=null)
+	for(var i=0; i<pos.size(); i++){
+		$('#repayingOrder').append('&nbsp;&nbsp;订单('+pos.get(i).id+')&nbsp;&nbsp;<br>');
+		var products = productService.findByGovermentOrder(pos.get(i).id);
+		for(var t=0; t<products.size(); t++){
+			$('#repayingOrder').append('&nbsp;&nbsp;----产品('+products.get(t).id+')<br>');
+			var pbs = paybackService.findAll(products.get(t).id);
+			for(var l=0; l<pbs.size(); l++){
+				var state = "";
+				var button = "";
+				if(pbs.get(l).state==0)
+					{
+					state="待还款";
+					if(pbs.get(l).type==1)
+						button = "<button class='earlier' id='"+pbs.get(l).id+"'>申请提前</button><button class='repay' id='"+pbs.get(l).id+"'>还款</button>";
+						else
+						button = "<button class='repay' id='"+pbs.get(l).id+"'>还款</button>";
+					}
+				else if(pbs.get(l).state==2)
+					{
+					state="已还款";
+					button = "";
+					}
+				$('#repayingOrder').append('&nbsp;&nbsp;--------还款('+pbs.get(l).id+')['+state+']'+button+'<br>');
+			}
+		}
+		
+	}
+}
+
+function refreshPayDoneOrder(){
+	var pores = orderService.findByStatesByPage(8, 0, 100);
+	var pos = pores.get('result');
+	$('#paydoneOrder').html('状态为还款完成的订单为：');
+	if(pos!=null)
+	for(var i=0; i<pos.size(); i++){
+		$('#paydoneOrder').append('&nbsp;&nbsp;'+pos.get(i).id+'&nbsp;&nbsp;');
+	}
+}
+
+function refreshCloseDoneOrder(){
+	var pores = orderService.findByStatesByPage(32, 0, 100);
+	var pos = pores.get('result');
+	$('#closedoneOrder').html('状态为已关闭的订单为：');
+	if(pos!=null)
+	for(var i=0; i<pos.size(); i++){
+		$('#closedoneOrder').append('&nbsp;&nbsp;'+pos.get(i).id+'&nbsp;&nbsp;');
+	}
+}
+
+function refreshFailOrder(){
+	var pores = orderService.findByStatesByPage(16, 0, 100);
+	var pos = pores.get('result');
+	$('#failOrder').html('状态为流标的订单为：');
+	if(pos!=null)
+	for(var i=0; i<pos.size(); i++){
+		$('#failOrder').append('&nbsp;&nbsp;'+pos.get(i).id+'&nbsp;&nbsp;');
+	}
+}
+
+
+
+function refreshRequestBorrower(){
+	var borrowers = borrowerService.findFinancingBorrower(11);
+	$('#request').html('申请融资的企业为: ');
+	for(var i=0; i<borrowers.size(); i++){
+		$('#request').append('&nbsp;&nbsp;'+borrowers.get(i).id+'&nbsp;&nbsp;');
+	}
+}
+
+
+
+
+
+
+
+
+
+$(document).ready(function () {
+	
+refreshPreviewOrder();
+refreshFinancingOrder();
+refreshRepayingOrder();
+refreshPayDoneOrder();
+refreshCloseDoneOrder();
+refreshFailOrder();
+refreshRequestBorrower();
+$('button#startFinance').click(function(e){
+	var id = $('#preOrder').val();
+	$('#preOrder').val('');
+	try{
+		var idint = parseInt(id);
+		orderService.startFinancing(idint);
+		refreshPreviewOrder();
+		refreshFinancingOrder();
+	}catch(e){
+		alert(e.message);
+	}
+});
+
+$('button#quitFinancing').click(function(e){
+	var id = $('#finOrder').val();
+	$('#finOrder').val('');
+	try{
+		var idint = parseInt(id);
+		var products = productService.findByGovermentOrder(idint);
+		for(var i=0; i<products.size(); i++){
+			productService.quitFinancing(products.get(i).id);
+		}
+		orderService.quitFinancing(idint);
+		refreshFinancingOrder();
+		refreshFailOrder();
+	}catch(e){
+		alert(e.message);
+	}
+});
+
+$('button#startPayback').click(function(e){
+	var id = $('#finOrder').val();
+	$('#finOrder').val('');
+	try{
+		var idint = parseInt(id);
+		var products = productService.findByGovermentOrder(idint);
+		for(var i=0; i<products.size(); i++){
+			productService.startRepaying(products.get(i).id);
+		}
+		orderService.startRepaying(idint);
+		refreshFinancingOrder();
+		refreshRepayingOrder();
+	}catch(e){
+		alert(e.message);
+	}
+});
+
+$('button#closedone').click(function(e){
+	var id = $('#paydone').val();
+	$('#paydone').val('');
+	try{
+		var idint = parseInt(id);
+		orderService.closeComplete(idint);
+		refreshPayDoneOrder();
+		refreshCloseDoneOrder();
+	}catch(e){
+		alert(e.message);
+	}
+});
+
+
+$('button.repay').click(function(e){
+	window.location.href = '/account/repay/request?paybackId='+$(this).attr('id');
+});
+$('button.earlier').click(function(e){
+	paybackService.applyRepayInAdvance(parseInt($(this).attr('id')));
+	refreshFinancingOrder();
+});
+
+
+$('button#add').click(function(e){
+	
+	try{
+	var action = {'_t_': 'gpps.model.ProductAction','title': $('#title').val(), 'detail': $('#detail').val(), 'productId':parseInt($('#productid').val()), 'type':parseInt($('select#actiontype').val()), 'createtime':(new java.util.Date()).getTime()};
+	actionService.create(action);
+	alert('添加成功！');
+	$('#title').val('');
+	$('#detail').val('');
+	$('#productid').val('');
+	}catch(e){
+		alert(e.message);
+	}
+});
+
+$('button#accept').click(function(e){
+	var id = $('input#requestinput').val();
+	$('#requestinput').val('');
+	try{
+		var idint = parseInt(id);
+		borrowerService.passFundingApplying(idint);
+		refreshRequestBorrower();
+	}catch(e){
+		alert(e.message);
+	}
+});
+
+$('button#refuse').click(function(e){
+	var id = $('input#requestinput').val();
+	$('#requestinput').val('');
+	try{
+		var idint = parseInt(id);
+		borrowerService.refuseFundingApplying(idint);
+		refreshRequestBorrower();
+	}catch(e){
+		alert(e.message);
+	}
+});
+
+var type_category = {
+	order : ["中标文件"],
+	borrower : ["营业执照","政采资质", "法人证件", "办公环境"]
+}
+
+$('select#typ').change(function(e){
+	var type = $(this).val();
+	var cats = type_category[type];
+	$('select#category').find('option').remove();
+	for(var i=0; i<cats.length; i++){
+		$('select#category').append('<option value='+i+'>'+cats[i]+'</option>');
+	}
+});
+
+$('#upload').click(function(e){
+	var path = '/upload/'+$('select#typ').val()+'/1/'+$('select#category').val();
+	 $('#form1').attr('action', path)
+	$('#form1').submit();
+})
+
+
+});
+</script>
+</html>

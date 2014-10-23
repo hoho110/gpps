@@ -461,7 +461,12 @@
         				var paybackTime = (paybacks.get(t).state==2)?formatDateToDay(paybacks.get(t).realtime) : '-';
         				var statehandle = paybackState[paybacks.get(t).state];
         				if(paybacks.get(t).state==0 && product.state==2){
+        					var id = paybacks.get(t).id;
+        					var flag =paybackService.canRepay(id);
+        					if(flag)
         					statehandle = "<button class='repay' id='"+paybacks.get(t).id+"'>"+paybackState[paybacks.get(t).state]+"</button>";
+        					else
+        					statehandle = "<button class='repay' disabled=true id='"+paybacks.get(t).id+"'>"+paybackState[paybacks.get(t).state]+"</button>";
         				}
         				table.append('<tr style="height:50px;"><td>'+(t+1)+'</td><td>'+paybacks.get(t).chiefAmount.value+'</td><td>'+paybacks.get(t).interest.value+'</td><td>'+formatDateToDay(paybacks.get(t).deadline)+'</td><td>'+paybackTime+'</td><td>'+statehandle+'</td></tr>');
         			}

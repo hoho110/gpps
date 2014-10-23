@@ -96,11 +96,13 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		checkNullObject(Borrower.class, borrowerDao.find(govermentOrder.getBorrowerId()));
 		govermentOrder.setState(GovermentOrder.STATE_UNPUBLISH);
 		
-		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
-		Calendar starttime=Calendar.getInstance();
-		starttime.setTimeInMillis(govermentOrder.getIncomeStarttime());
-		starttime.set(starttime.get(Calendar.YEAR), starttime.get(Calendar.MONTH), starttime.get(Calendar.DATE), 0, 0, 0);
-		govermentOrder.setFinancingStarttime(starttime.getTimeInMillis());
+		
+		
+//		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
+//		Calendar starttime=Calendar.getInstance();
+//		starttime.setTimeInMillis(govermentOrder.getIncomeStarttime());
+//		starttime.set(starttime.get(Calendar.YEAR), starttime.get(Calendar.MONTH), starttime.get(Calendar.DATE), 0, 0, 0);
+//		govermentOrder.setFinancingStarttime(starttime.getTimeInMillis());
 		govermentOrderDao.create(govermentOrder);
 		return govermentOrder;
 	}

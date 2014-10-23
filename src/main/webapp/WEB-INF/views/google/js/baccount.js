@@ -87,6 +87,14 @@ var defaultSettings_noCallBack = {
 			32:'还款完成',
 			64:'还款完成'
 	}
+	var orderstate = {
+			1: "融资中",
+			2:"预发布",
+			4:"还款中",
+			8:"待关闭",
+			16:"流标",
+			32:"已关闭"
+	}
 
 
 var myscore = function(container){
@@ -406,7 +414,7 @@ var orderall = function(container){
 		             formatDate(data.financingEndtime),
 		                    totalamount,
 		                    real,
-		                    data.state,
+		                    orderstate[data.state],
 		                    "<button class='vieworder' id='"+data.id+"'>查看</button>"]);
 	}
 	var mySettings = $.extend({}, defaultSettings_noCallBack, {
@@ -786,16 +794,16 @@ var paybackall = function(container){
 	str += '<tr><td style="min-width:100px;">已回款统计</td><th style="min-width:50px;">最近一年</th><th style="min-width:100px;">最近半年</th><th style="min-width:50px;">最近三个月</th><th style="min-width:50px;">最近两个月</th><th style="min-width:50px;">最近一个月</th></tr>';
 	str += '</thead>';
 	str += '<tbody>';
-	str += '<tr><td>本金</td><td>'+repayedDetail.get("oneyear").chiefAmount.value+'</td><td>'
-								 +repayedDetail.get("halfyear").chiefAmount.value+'</td><td>'
-								 +repayedDetail.get("threemonth").chiefAmount.value+'</td><td>'
-								 +repayedDetail.get("twomonth").chiefAmount.value+'</td><td>'
-								 +repayedDetail.get("onemonth").chiefAmount.value+'</td></tr>';
-	str += '<tr><td>利息</td><td>'+repayedDetail.get("oneyear").interest.value+'</td><td>'
-	 							 +repayedDetail.get("halfyear").interest.value+'</td><td>'
- 							 	 +repayedDetail.get("threemonth").interest.value+'</td><td>'
- 							 	 +repayedDetail.get("twomonth").interest.value+'</td><td>'
- 							 	 +repayedDetail.get("onemonth").interest.value+'</td></tr>';
+	str += '<tr><td>本金</td><td>'+parseFloat(repayedDetail.get("oneyear").chiefAmount.value).toFixed(2)+'</td><td>'
+								 +parseFloat(repayedDetail.get("halfyear").chiefAmount.value).toFixed(2)+'</td><td>'
+								 +parseFloat(repayedDetail.get("threemonth").chiefAmount.value).toFixed(2)+'</td><td>'
+								 +parseFloat(repayedDetail.get("twomonth").chiefAmount.value).toFixed(2)+'</td><td>'
+								 +parseFloat(repayedDetail.get("onemonth").chiefAmount.value).toFixed(2)+'</td></tr>';
+	str += '<tr><td>利息</td><td>'+parseFloat(repayedDetail.get("oneyear").interest.value).toFixed(2)+'</td><td>'
+	 							 +parseFloat(repayedDetail.get("halfyear").interest.value).toFixed(2)+'</td><td>'
+ 							 	 +parseFloat(repayedDetail.get("threemonth").interest.value).toFixed(2)+'</td><td>'
+ 							 	 +parseFloat(repayedDetail.get("twomonth").interest.value).toFixed(2)+'</td><td>'
+ 							 	 +parseFloat(repayedDetail.get("onemonth").interest.value).toFixed(2)+'</td></tr>';
 	str += '<tr><td>总计</td><td>'+(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("oneyear").interest.value)).toFixed(2)+'</td><td>'
 	 							 +(parseFloat(repayedDetail.get("halfyear").chiefAmount.value)+parseFloat(repayedDetail.get("halfyear").interest.value)).toFixed(2)+'</td><td>'
 	 							 +(parseFloat(repayedDetail.get("threemonth").chiefAmount.value)+parseFloat(repayedDetail.get("threemonth").interest.value)).toFixed(2)+'</td><td>'

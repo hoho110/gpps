@@ -268,7 +268,7 @@
  
  
 <div class="row detail-content-wrap clf">
-    <div class="detail-content">
+    <div class="detail-content" style="width:65%; min-height:400px;">
         <div class="detail-content-head clf">
             
             
@@ -294,9 +294,9 @@
         </div>
     </div>
  
-    <div class="detail-sidebar">
-                    <div class="invest-record" style="min-height:500px;">
-                                    <div class="invest-record-title" style="padding-left:10px;">投资记录</div>
+    <div class="detail-sidebar" style="width:34%;">
+                    <div class="invest-record" style="min-height:400px;">
+                                    <div class="invest-record-title" style="padding-left:10px;">投资记录<a href="javascript:void(0);" id="checkallsubmit" style="float:right; text-decoration:none; margin-right:20px;">查看所有</a></div>
                     <table class="invest-record-list">
                         <tbody id="invest-record">
                         <tr>
@@ -338,10 +338,10 @@
 	  header('productdetail');
 	  
 	 
- 	
+ 	var productname = order.title+'['+seriesname[product.productseriesId].title+']';
  	
  	$('li#productseries').html('<a href="productlist.html?sid='+product.productseriesId+'">'+seriesname[product.productseriesId].title+'</a> <span class="divider">&gt;</span>');
- 	$('span#product-title').html(order.title+'['+seriesname[product.productseriesId].title+']');
+ 	$('span#product-title').html(productname);
  	
  	var str = "";
  	for(var i=0; i<order.products.size(); i++){
@@ -437,6 +437,11 @@
  		$('#init-add').css('display', 'none');
  		$('#dt_div').css('display', 'none');
  	}
+ 	
+ 	
+ 	$("a#checkallsubmit").click(function(e){
+ 		window.open('submitall.html?pid='+pid+'&name='+encodeURI(productname));
+ 	});
  	
  	var subs = submits.get('result');
  	if(subs!=null)

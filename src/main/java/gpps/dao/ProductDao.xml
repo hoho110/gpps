@@ -49,7 +49,7 @@
 			</foreach>
 		</if>
 		<if test="states == null">
-           <![CDATA[ where state <> 0 ]]>
+           <![CDATA[ and state <> 0 ]]>
         </if>
 	</select>
 	<select id="findByProductSeriesAndState" resultType="gpps.model.Product">
@@ -81,7 +81,7 @@
 			</foreach>
 		</if>
 		<if test="states == null">
-           <![CDATA[ where state <> 0 ]]>
+           <![CDATA[ and state <> 0 ]]>
         </if>
 	</select>
 	<update id="changeBuyLevel">

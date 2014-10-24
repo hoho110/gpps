@@ -54,6 +54,8 @@ public class TaskServiceImpl implements ITaskService {
 	IGovermentOrderDao govermentOrderDao;
 	@Autowired
 	IPayBackDao payBackDao;
+	@Autowired
+	IPayBackService payBackService;
 	@PostConstruct
 	public void init() {
 		try {
@@ -220,26 +222,56 @@ public class TaskServiceImpl implements ITaskService {
 		List<Submit> submits=submitDao.findAllByProductAndState(task.getProductId(), Submit.STATE_COMPLETEPAY);
 		if(submits==null||submits.size()==0)
 			return;
-		PayBack payBack=payBackDao.find(task.getPayBackId());
-		loop:for(Submit submit:submits)
+		PayBack payBack=payBackService.find(task.getPayBackId());
+		Product product=productDao.find(payBack.getProductId());
+		BigDecimal totalChiefAmount=payBack.getChiefAmount();
+		BigDecimal totalInterest=payBack.getInterest();
+		loop:for(int i=0;i<submits.size();i++)
 		{
+			Submit submit=submits.get(i);
 			if(interrupted)
 			{
-				List<CashStream> cashStreams=cashStreamDao.findSubmitCashStream(submit.getId());
-				for(CashStream cashStream:cashStreams)
+				List<CashStream> cashStreams=cashStreamDao.findRepayCashStream(submit.getId(), payBack.getId());
+				if(cashStreams!=null&&cashStreams.size()>0)
 				{
-					if(cashStream.getAction()==CashStream.ACTION_REPAY)
-					{
-						logger.debug("流标任务["+task.getId()+"],Submit["+submit.getId()+"]已执行过。");
-						continue loop;
-					}
+					CashStream cashStream=cashStreams.get(0);
+					totalChiefAmount.subtract(cashStream.getChiefamount());
+					totalInterest.subtract(cashStream.getInterest());
+					logger.debug("还款任务["+task.getId()+"],Submit["+submit.getId()+"]已执行过。");
+					continue loop;
 				}
 			}
 			Lender lender=lenderDao.find(submit.getLenderId());
-			BigDecimal lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(PayBack.BASELINE, 2, BigDecimal.ROUND_DOWN);
-			BigDecimal lenderInterest=payBack.getInterest().multiply(submit.getAmount()).divide(PayBack.BASELINE, 2, BigDecimal.ROUND_DOWN);
+			BigDecimal lenderChiefAmount=null;
+			BigDecimal lenderInterest=null;
+			if(i==(submits.size()-1))
+			{
+				lenderChiefAmount=totalChiefAmount;
+				lenderInterest=totalInterest;
+			}
+			else
+			{
+				if(payBack.getType()==PayBack.TYPE_LASTPAY)
+				{
+					List<CashStream> cashStreams=cashStreamDao.findRepayCashStream(submit.getId(), null);
+					BigDecimal repayedChiefAmount=BigDecimal.ZERO;
+					if(cashStreams!=null&&cashStreams.size()>0)
+					{
+						for(CashStream cashStream:cashStreams)
+						{
+							repayedChiefAmount.add(cashStream.getChiefamount());
+						}
+					}
+					lenderChiefAmount=submit.getAmount().subtract(repayedChiefAmount);
+				}
+				else {
+					lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
+				}
+				lenderInterest=payBack.getInterest().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
+				totalChiefAmount.subtract(lenderChiefAmount);
+				totalInterest.subtract(lenderInterest);
+			}
 			try {
-			
 				accountService.repay(lender.getAccountId(), payBack.getBorrowerAccountId(), lenderChiefAmount, lenderInterest, submit.getId(), payBack.getId(), "还款");
 			} catch (IllegalConvertException e) {
 				logger.error(e.getMessage(),e);

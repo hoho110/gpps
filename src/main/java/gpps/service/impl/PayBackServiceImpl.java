@@ -453,7 +453,17 @@ public class PayBackServiceImpl implements IPayBackService {
 	@Override
 	public List<PayBack> findBorrowerWaitForRepayed() {
 		Borrower borrower=borrowerService.getCurrentUser();
-		return payBackDao.findBorrowerWaitForRepayed(borrower.getAccountId());
+		List<PayBack> payBacks=payBackDao.findBorrowerWaitForRepayed(borrower.getAccountId());
+		if(payBacks==null||payBacks.size()==0)
+			return new ArrayList<PayBack>(0);
+		for(PayBack payBack:payBacks)
+		{
+			Product product=productDao.find(payBack.getProductId());
+			payBack.setProduct(product);
+			product.setGovermentOrder(govermentOrderDao.find(product.getGovermentorderId()));
+			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
+		}
+		return payBacks;
 	}
 
 }

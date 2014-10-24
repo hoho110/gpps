@@ -58,7 +58,7 @@ public interface IProductService {
 	public void createProductAction(ProductAction productAction);
 	
 	public List<ProductAction> findByProductId(Integer productId);
-	
+	@Deprecated
 	public void addAccessory(Integer productId,String path);
 	
 	public void changeBuyLevel(Integer productId,int buyLevel);

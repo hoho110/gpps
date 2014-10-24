@@ -13,6 +13,7 @@ public class Product {
 	 * 32：申请关闭(放弃)
 	 * 64：已关闭(放弃)
 	 */
+	public static final int STATE_UNPUBLISH=0;
 	public static final int STATE_FINANCING=1;
 	public static final int STATE_REPAYING=1<<1;
 	public static final int STATE_QUITFINANCING=1<<2;

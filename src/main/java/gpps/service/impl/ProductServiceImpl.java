@@ -78,6 +78,8 @@ public class ProductServiceImpl implements IProductService {
 		checkNullObject("orderId", product.getGovermentorderId());
 		GovermentOrder order=govermentOrderDao.find(product.getGovermentorderId());
 		checkNullObject(GovermentOrder.class, order);
+		if(order.getState()!=GovermentOrder.STATE_UNPUBLISH)
+			throw new IllegalArgumentException("只能为未发布的订单添加产品");
 		product.setState(Product.STATE_FINANCING);
 		product.setCreatetime(System.currentTimeMillis());
 		checkNullObject("productseriesId", product.getProductseriesId());
@@ -109,6 +111,7 @@ public class ProductServiceImpl implements IProductService {
 		}
 	}
 	static int[][] validConverts={
+		{Product.STATE_UNPUBLISH,Product.STATE_FINANCING},
 		{Product.STATE_FINANCING,Product.STATE_REPAYING},
 		{Product.STATE_FINANCING,Product.STATE_QUITFINANCING},
 		{Product.STATE_REPAYING,Product.STATE_FINISHREPAY},
@@ -207,8 +210,7 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	public void addAccessory(Integer productId, String path) {
-		// TODO Auto-generated method stub
-
+		throw new RuntimeException("The method is deprecated");
 	}
 
 	@Override
@@ -316,6 +318,7 @@ public class ProductServiceImpl implements IProductService {
 	@Override
 	public void addAccessory(Integer productId, int category, MimeItem item)
 			throws XMLParseException {
+		checkChangeProduct(productId);
 		String text=productDao.findAccessory(productId);
 		Accessory accessory=null;
 		if(StringUtil.isEmpty(text))
@@ -342,6 +345,7 @@ public class ProductServiceImpl implements IProductService {
 	@Override
 	public void delAccessory(Integer productId, int category, String path)
 			throws XMLParseException {
+		checkChangeProduct(productId);
 		String text=productDao.findAccessory(productId);
 		if(StringUtil.isEmpty(text))
 			return;
@@ -377,5 +381,11 @@ public class ProductServiceImpl implements IProductService {
 		if(col==null)
 			return new ArrayList<Accessory.MimeItem>(0);
 		return col.getItems();
+	}
+	private void checkChangeProduct(Integer productId)
+	{
+		Product product=checkNullObject(Product.class, productDao.find(productId));
+		if(product.getState()!=Product.STATE_UNPUBLISH)
+			throw new RuntimeException("产品已发布，不能再修改");
 	}
 }

@@ -162,7 +162,8 @@ public class PayBackServiceImpl implements IPayBackService {
 		if(days<0)
 			days=0;
 		payBack.setInterest(PayBack.BASELINE.multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
-		payBack.setRealtime(cal.getTimeInMillis());
+//		payBack.setRealtime(cal.getTimeInMillis());
+		payBack.setDeadline(cal.getTimeInMillis());
 		payBack.setChiefAmount(PayBack.BASELINE);
 		payBackDao.update(payBack);
 	}
@@ -412,6 +413,8 @@ public class PayBackServiceImpl implements IPayBackService {
 			return false;
 		if(payBack.getType()!=PayBack.TYPE_LASTPAY)
 			return false;
+		if(payBack.getDeadline()<=System.currentTimeMillis())
+			return false;
 		Product product=productDao.find(payBack.getProductId());
 		ProductSeries productSeries=productSeriesDao.find(product.getProductseriesId());
 		if(productSeries.getType()==ProductSeries.TYPE_AVERAGECAPITALPLUSINTEREST)
@@ -445,6 +448,12 @@ public class PayBackServiceImpl implements IPayBackService {
 				return false;
 		}
 		return true;
+	}
+
+	@Override
+	public List<PayBack> findBorrowerWaitForRepayed() {
+		Borrower borrower=borrowerService.getCurrentUser();
+		return payBackDao.findBorrowerWaitForRepayed(borrower.getAccountId());
 	}
 
 }

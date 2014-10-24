@@ -117,4 +117,6 @@ public interface IGovermentOrderService {
 	 * @return
 	 */
 	public List<FinancingRequest> findBorrowerFinancingRequest(int state);
+	
+	public List<GovermentOrder> findAllUnpublishOrders();
 }

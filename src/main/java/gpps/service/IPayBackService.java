@@ -52,6 +52,8 @@ public interface IPayBackService {
 	
 	public List<PayBack> findBorrowerCanBeRepayedInAdvancePayBacks();
 	
+	public List<PayBack> findBorrowerWaitForRepayed();
+	
 	public boolean canRepay(Integer payBackId);
 	
 	public boolean canRepayInAdvance(Integer payBackId);

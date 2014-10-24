@@ -23,6 +23,9 @@
 				#{item}
 			</foreach>
 		</if>
+		<if test="states == null">
+           <![CDATA[ where state <> 0 ]]>
+        </if>
 		order by state asc,createtime asc 
 		LIMIT #{offset}, #{recnum}
 	</select>
@@ -36,6 +39,9 @@
 				#{item}
 			</foreach>
 		</if>
+		<if test="states == null">
+           <![CDATA[ where state <> 0 ]]>
+        </if>
 		order by state asc,createtime desc 
 	</select>
 	<select id="countByState" resultType="int">
@@ -48,6 +54,9 @@
 				#{item}
 			</foreach>
 		</if>
+		<if test="states == null">
+           <![CDATA[ where state <> 0 ]]>
+        </if>
 	</select>
 	<select id="findByBorrowerIdAndState" resultType="gpps.model.GovermentOrder">
 		select *
@@ -60,6 +69,9 @@
 				#{item}
 			</foreach>
 		</if>
+		<if test="states == null">
+           <![CDATA[ and state <> 0 ]]>
+        </if>
 		order by state asc,createtime desc 
 	</select>
 	<select id="find" parameterType="Integer" resultType="gpps.model.GovermentOrder">
@@ -84,5 +96,10 @@
     <select id="findByFinancingRequest" parameterType="Integer" resultType="gpps.model.GovermentOrder">
         select *
         from GovermentOrder where financingRequestId=#{financingRequestId}
+    </select>
+    <select id="findAllUnpublishOrders" resultType="gpps.model.GovermentOrder">
+        select *
+        from GovermentOrder where state=0
+        order by createtime asc 
     </select>
 </mapper>

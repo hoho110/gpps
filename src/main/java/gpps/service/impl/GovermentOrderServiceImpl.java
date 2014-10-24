@@ -95,12 +95,10 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		checkNullObject("borrowerId", govermentOrder.getBorrowerId());
 		checkNullObject(Borrower.class, borrowerDao.find(govermentOrder.getBorrowerId()));
 		govermentOrder.setState(GovermentOrder.STATE_UNPUBLISH);
-		if(govermentOrder.getFinancingRequestId()!=null)
-		{
-			FinancingRequest request=checkNullObject(FinancingRequest.class, financingRequestDao.find(govermentOrder.getFinancingRequestId()));
-			if(request.getState()!=FinancingRequest.STATE_INIT)
-				throw new IllegalArgumentException("创建订单必须选择非处理的融资申请");
-		}
+		checkNullObject("financingRequestId", govermentOrder.getFinancingRequestId());
+		FinancingRequest request=checkNullObject(FinancingRequest.class, financingRequestDao.find(govermentOrder.getFinancingRequestId()));
+		if(request.getState()!=FinancingRequest.STATE_INIT)
+			throw new IllegalArgumentException("创建订单必须选择非处理的融资申请");
 //		TimeZone.setDefault(TimeZone.getTimeZone("GMT+8"));
 //		Calendar starttime=Calendar.getInstance();
 //		starttime.setTimeInMillis(govermentOrder.getIncomeStarttime());
@@ -418,6 +416,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	
 	public void addAccessory(Integer orderId,int category,MimeItem item) throws XMLParseException
 	{
+		checkChangeGovermentOrder(orderId);
 		String text=govermentOrderDao.findAccessory(orderId);
 		Accessory accessory=null;
 		if(StringUtil.isEmpty(text))
@@ -443,6 +442,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	@Override
 	public void delAccessory(Integer orderId, int category, String path)
 			throws XMLParseException {
+		checkChangeGovermentOrder(orderId);
 		String text=govermentOrderDao.findAccessory(orderId);
 		if(StringUtil.isEmpty(text))
 			return;
@@ -502,9 +502,23 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		checkNullObject("orderId", orderId);
 		GovermentOrder order=checkNullObject(GovermentOrder.class, govermentOrderDao.find(orderId));
 		changeState(orderId, GovermentOrder.STATE_PREPUBLISH);
-		if(order.getFinancingRequestId()!=null)
+		borrowerService.passFinancingRequest(order.getFinancingRequestId());
+		List<Product> products=productDao.findByGovermentOrder(orderId);
+		if(products==null||products.size()==0)
+			return;
+		for(Product product:products)
 		{
-			borrowerService.passFinancingRequest(order.getFinancingRequestId());
+			productDao.changeState(product.getId(), Product.STATE_UNPUBLISH, System.currentTimeMillis());
 		}
+	}
+	private void checkChangeGovermentOrder(Integer orderId)
+	{
+		GovermentOrder order=checkNullObject(GovermentOrder.class, govermentOrderDao.find(orderId));
+		if(order.getState()!=GovermentOrder.STATE_UNPUBLISH)
+			throw new RuntimeException("订单已发布，不能再修改");
+	}
+	@Override
+	public List<GovermentOrder> findAllUnpublishOrders() {
+		return govermentOrderDao.findAllUnpublishOrders();
 	}
 }

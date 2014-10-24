@@ -32,6 +32,9 @@
 				#{item}
 			</foreach>
 		</if>
+		<if test="states == null">
+           <![CDATA[ where state <> 0 ]]>
+        </if>
 		order by state asc,createtime asc
 		LIMIT #{offset}, #{recnum}
 	</select>
@@ -45,6 +48,9 @@
 				#{item}
 			</foreach>
 		</if>
+		<if test="states == null">
+           <![CDATA[ where state <> 0 ]]>
+        </if>
 	</select>
 	<select id="findByProductSeriesAndState" resultType="gpps.model.Product">
 		select id,state,govermentorderId,expectAmount,realAmount,rate,paybackmodel,productseriesId,levelToBuy,createtime,minimum,description,incomeEndtime,miniAdd
@@ -57,6 +63,9 @@
 				#{item}
 			</foreach>
 		</if>
+		<if test="states == null">
+           <![CDATA[ where state <> 0 ]]>
+        </if>
 		order by state asc,createtime asc 
 		LIMIT #{offset}, #{recnum}
 	</select>
@@ -71,6 +80,9 @@
 				#{item}
 			</foreach>
 		</if>
+		<if test="states == null">
+           <![CDATA[ where state <> 0 ]]>
+        </if>
 	</select>
 	<update id="changeBuyLevel">
 		update Product set

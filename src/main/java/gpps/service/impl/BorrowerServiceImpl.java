@@ -89,7 +89,8 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		if(StringUtil.isDigit(borrower.getLoginId()))
 			throw new IllegalArgumentException("登录名不能全部为数字");
 //		borrower.setEmail(checkNullAndTrim("email", borrower.getEmail()));
-		borrower.setIdentityCard(checkNullAndTrim("identityCard", borrower.getIdentityCard()));
+//		borrower.setIdentityCard(checkNullAndTrim("identityCard", borrower.getIdentityCard()));
+		borrower.setLicense(checkNullAndTrim("license", borrower.getLicense()));
 //		borrower.setName(checkNullAndTrim("name", borrower.getName()));
 		borrower.setPassword(getProcessedPassword(checkNullAndTrim("password", borrower.getPassword()) + PASSWORDSEED));
 		borrower.setCreatetime(System.currentTimeMillis());

@@ -25,6 +25,7 @@ public class Borrower {
 	private String corporationAddr;//法人联系地址
 	private String thirdPartyAccount;//第三方账户
 	private int level=0;//信用等级
+	private long lastModifyTime=System.currentTimeMillis();
 	public Integer getId() {
 		return id;
 	}
@@ -144,6 +145,12 @@ public class Borrower {
 	}
 	public void setLevel(int level) {
 		this.level = level;
+	}
+	public long getLastModifyTime() {
+		return lastModifyTime;
+	}
+	public void setLastModifyTime(long lastModifyTime) {
+		this.lastModifyTime = lastModifyTime;
 	}
 	public static int creditValueToLevel(int creditValue)
 	{

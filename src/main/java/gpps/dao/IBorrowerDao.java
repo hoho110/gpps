@@ -5,6 +5,7 @@ import gpps.model.Borrower;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.junit.runners.Parameterized.Parameters;
 
 public interface IBorrowerDao {
 	public int countAll();
@@ -17,7 +18,7 @@ public interface IBorrowerDao {
 	public List<Borrower> findByState(int state);
 	public void create(Borrower borrower);
 //	public void update(Borrower borrower);
-	public void changePrivilege(@Param("id") Integer id,@Param("privilege") int privilege);
+	public void changePrivilege(@Param("id") Integer id,@Param("privilege") int privilege,@Param("lastModifyTime")long lastModifyTime);
 	public void changePassword(@Param("id") Integer id,@Param("password") String password);
 //	public void changeCreditValue(@Param("id")Integer id,@Param("creditValue")int creditValue);
 	public void delete(Integer id);

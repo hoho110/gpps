@@ -129,7 +129,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		{
 			if(borrower.getPrivilege()==validStateConvert[0]&&privilege==validStateConvert[1])
 			{
-				borrowerDao.changePrivilege(id, privilege);
+				borrowerDao.changePrivilege(id, privilege,System.currentTimeMillis());
 				return;
 			}
 		}
@@ -256,7 +256,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		financingRequestDao.create(financingRequest);
 		if(borrower.getPrivilege()!=Borrower.PRIVILEGE_FINANCING)
 		{
-			borrowerDao.changePrivilege(borrower.getId(), Borrower.PRIVILEGE_APPLY);
+			borrowerDao.changePrivilege(borrower.getId(), Borrower.PRIVILEGE_APPLY,System.currentTimeMillis());
 		}
 		borrower.setPrivilege(Borrower.PRIVILEGE_APPLY);
 	}

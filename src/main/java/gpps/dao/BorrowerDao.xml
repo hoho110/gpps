@@ -41,7 +41,7 @@
 	</insert>
 	<update id="changePrivilege">
 		update Borrower set
-		privilege=#{privilege}
+		privilege=#{privilege},lastModifyTime=#{lastModifyTime}
 		where
 		id=#{id}
 	</update>

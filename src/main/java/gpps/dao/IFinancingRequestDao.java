@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 public interface IFinancingRequestDao {
 	public void create(FinancingRequest financingRequest);
-	public void changeState(@Param("id")Integer id,@Param("state")int state);
+	public void changeState(@Param("id")Integer id,@Param("state")int state, @Param("lastmodifytime")long lastmodifytime);
 	/**
 	 * 根据借款人找到所有的融资请求
 	 * @param borrowerId

@@ -22,6 +22,7 @@ public class CreateBorrower {
 		borrower.setIdentityCard("231550215402021533");
 		borrower.setLoginId("test");
 		borrower.setCompanyName("河北政府采购有限公司");
+		borrower.setLicense("13044455555");
 		borrower.setName("张三");
 		borrower.setPassword("111111");
 		borrower.setTel("13011155555");

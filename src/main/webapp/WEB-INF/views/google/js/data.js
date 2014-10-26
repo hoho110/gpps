@@ -430,6 +430,48 @@ var createSingleSubProduct = function(pro){
 }
 
 
+//未发布产品
+var createUnpublishProduct = function(pro){
+	var order = pro.govermentOrder;
+	var state = order.state;
+	var days = parseInt((pro.incomeEndtime-order.incomeStarttime+23*3600*1000)/(24*3600*1000)+'');
+	
+	var str = '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
+	
+	var cla = 'A';
+	var sname = '';
+	if(pro.productseriesId==1){
+		cla='A';
+		sname='稳健';
+	}else if(pro.productseriesId==2){
+		cla='C';
+		sname='均衡';
+	}else if(pro.productseriesId==3){
+		cla='D';
+		sname='进取';
+	}
+	str += '<td class="ui-list-field text-center"><a class="ui-creditlevel '+cla+' snow">'+sname+'</a></td>';
+	str += '<td class="text-right pr10">'+parseInt(parseFloat(pro.rate.value)*100)+'%</td>';
+	str += '<td class="text-right pr10">'+parseInt(pro.expectAmount.value)+'元</td>';
+	str += '<td class="text-right pr10">'+parseInt(pro.realAmount.value)+'元</td>';
+	str += '<td class="text-right pr10">'+days+'天</td>';
+	str += '<td class="ui-list-field">';
+	
+	var percent = parseInt(parseInt(pro.realAmount.value)*100/parseInt(pro.expectAmount.value));
+	
+	str += '<strong class="ui-progressbar-mid ui-progressbar-mid-'+percent+'"><em>'+percent+'</em>%</strong>';
+	str += '</td>';
+	str += '<td class="ui-list-field text-right">';
+	str += '<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button ui-list-invest-button-CLOSED" href="productdetail.html?pid='+pro.id+'" target="_blank">';
+	str += '<span class="CLOSED">未发布</span>';
+	str += '</a>';
+	str += '</td>';
+	str += '</tr>';
+	
+	return str;
+}
+
+
 var createSingleProduct2 = function(order){
 	var pro = order.products.get(0);
 	var state = order.state;

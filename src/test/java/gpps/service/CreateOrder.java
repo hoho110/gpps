@@ -20,6 +20,7 @@ public class CreateOrder {
 		IFinancingRequestDao financingRequestDao=context.getBean(IFinancingRequestDao.class);
 		
 		FinancingRequest financingRequest=new FinancingRequest();
+		financingRequest.setGovermentOrderName(title);
 		financingRequest.setBorrowerID(bid);
 		financingRequest.setApplyFinancingAmount(800000);
 		financingRequest.setRate("10%");

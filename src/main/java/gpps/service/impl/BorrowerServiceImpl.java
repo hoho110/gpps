@@ -8,7 +8,6 @@ import gpps.dao.IFinancingRequestDao;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
 import gpps.model.FinancingRequest;
-import gpps.model.Lender;
 import gpps.model.ref.Accessory;
 import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
@@ -20,6 +19,7 @@ import gpps.tools.ObjectUtil;
 import gpps.tools.StringUtil;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -286,7 +286,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	public void passFinancingRequest(Integer financingRequestId) {
 		FinancingRequest financingRequest=financingRequestDao.find(financingRequestId);
 		ObjectUtil.checkNullObject(FinancingRequest.class, financingRequest);
-		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_PROCESSED);
+		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_PROCESSED, (new Date()).getTime());
 //		borrowerDao.changePrivilege(financingRequest.getBorrowerID(), Borrower.PRIVILEGE_FINANCING);
 	}
 
@@ -313,6 +313,6 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	public void refuseFinancingRequest(Integer financingRequestId) {
 		FinancingRequest financingRequest=financingRequestDao.find(financingRequestId);
 		ObjectUtil.checkNullObject(FinancingRequest.class, financingRequest);
-		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_REFUSE);
+		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_REFUSE, (new Date()).getTime());
 	}
 }

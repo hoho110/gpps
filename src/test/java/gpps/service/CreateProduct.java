@@ -22,7 +22,7 @@ public class CreateProduct {
 		pro.setRate(new BigDecimal(rate));
 		pro.setRealAmount(new BigDecimal(0));
 		pro.setMinimum(min);
-		pro.setState(1);
+		pro.setState(0);
 		pro.setMiniAdd(miniadd);
 		pro.setIncomeEndtime(iend);
 		productService.create(pro);

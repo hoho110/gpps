@@ -80,7 +80,7 @@ public class ProductServiceImpl implements IProductService {
 		checkNullObject(GovermentOrder.class, order);
 		if(order.getState()!=GovermentOrder.STATE_UNPUBLISH)
 			throw new IllegalArgumentException("只能为未发布的订单添加产品");
-		product.setState(Product.STATE_FINANCING);
+		product.setState(Product.STATE_UNPUBLISH);
 		product.setCreatetime(System.currentTimeMillis());
 		checkNullObject("productseriesId", product.getProductseriesId());
 		ProductSeries productSeries=productSeriesDao.find(product.getProductseriesId());

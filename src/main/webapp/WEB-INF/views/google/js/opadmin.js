@@ -76,6 +76,34 @@ var borrowerstate = {
 		12 : '净调通过',
 		14 : '净调拒绝'
 }
+
+var cashstate = {
+		0 : '充值',
+		1 : '冻结',
+		2 : '解冻',
+		3 : '投标',
+		4 : '还款',
+		5 : '提现'
+}
+var productstate = {
+		0:'未发布',
+		1:'融资中',
+		2:'还款中',
+		4:'流标',
+		8:'还款完成',
+		16:'还款中', 
+		32:'还款完成',
+		64:'还款完成'
+}
+var orderstate = {
+		0:'未发布',
+		1: "融资中",
+		2:"预发布",
+		4:"还款中",
+		8:"待关闭",
+		16:"流标",
+		32:"已关闭"
+}
 	
 var createAdminNavLevel2 = function(nav){
 	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
@@ -312,9 +340,402 @@ var borrowerrefuse = function(container){
 		table.dataTable(mySettings);
 }
 
+
+var handlerequest = function(state, container){
+
+	var bService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "申请额度",
+		"code" : "state"
+	}, {
+		"sTitle" : "预期利率",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "申请时间",
+		"code" : "amount"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}];
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = bService.findAllFinancingRequests(state,iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				var str = '待审核';
+				if(data.state==1){
+					str = '审核通过';
+				}else if(data.state==2){
+					str = '审核未通过';
+				}
+				result.aaData.push([data.govermentOrderName,
+				                    data.applyFinancingAmount,
+				                    data.rate,
+				                    formatDate(data.createtime),
+				                    str]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+
+var requestall = function(container){
+	handlerequest(-1, container);
+}
+var requesttohandle = function(container){
+	var bService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "申请额度",
+		"code" : "state"
+	}, {
+		"sTitle" : "预期利率",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "申请时间",
+		"code" : "amount"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}, {
+		"sTitle" : "操作",
+		"code" : "operation"
+	}];
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = bService.findAllFinancingRequests(0,iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				var str = '待审核';
+				if(data.state==1){
+					str = '审核通过';
+				}else if(data.state==2){
+					str = '审核未通过';
+				}
+				result.aaData.push([data.govermentOrderName,
+				                    data.applyFinancingAmount,
+				                    data.rate,
+				                    formatDate(data.createtime),
+				                    str,
+				                    '<button id='+data.id+' class="requestpass">通过</button><button id='+data.id+' class="requestrefuse">拒绝</button>']);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+	
+	$('button.requestpass').click(function(e){
+		var rid = $(this).attr('id');
+		bService.passFinancingRequest(parseInt(rid));
+		window.location.href='opadmin.html?fid=request&sid=request-pass';
+	});
+	
+	$('button.requestrefuse').click(function(e){
+		var rid = $(this).attr('id');
+		bService.refuseFinancingRequest(parseInt(rid));
+		window.location.href='opadmin.html?fid=request&sid=request-refuse';
+	});
+	
+}
+
+var requestpass = function(container){
+	handlerequest(1, container);
+}
+
+var requestrefuse = function(container){
+	handlerequest(2, container);
+}
+
+
+var orderall = function(container){
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
+	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "预期金额",
+		"code" : "expect"
+	}, {
+		"sTitle" : "已融金额",
+		"code" : "real"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}, {
+		"sTitle" : "详情",
+		"code" : "view"
+	}];
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = orderService.findByStatesByPage(-1,iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				var products = data.products;
+				var totalamount = 0;
+				var real = 0;
+				for(var j=0; j<products.size(); j++){
+					totalamount += parseInt(products.get(j).expectAmount.value);
+					real += parseInt(products.get(j).realAmount.value);
+				}
+				result.aaData.push([data.title,
+				             formatDate(data.financingStarttime),
+				             formatDate(data.financingEndtime),
+				                    totalamount,
+				                    real,
+				                    orderstate[data.state],
+				                    "<button class='vieworder' id='"+data.id+"'>查看</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+var orderunpublish = function(container){
+
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
+	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
+	var orders = orderService.findAllUnpublishOrders();
+	
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "预期金额",
+		"code" : "expect"
+	}, {
+		"sTitle" : "已融金额",
+		"code" : "real"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}, {
+		"sTitle" : "详情",
+		"code" : "view"
+	}];
+	var aaData = new Array();
+	for(var i=0; i<orders.size(); i++){
+		var data=orders.get(i);
+		var products = data.products;
+		var totalamount = 0;
+		var real = 0;
+		for(var j=0; j<products.size(); j++){
+			totalamount += parseInt(products.get(j).expectAmount.value);
+			real += parseInt(products.get(j).realAmount.value);
+		}
+		aaData.push([data.title,
+		             formatDate(data.financingStarttime),
+		             formatDate(data.financingEndtime),
+		                    totalamount,
+		                    real,
+		                    orderstate[data.state],
+		                    "<button class='vieworder' id='"+data.id+"'>查看</button>"]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+	
+	$('button.vieworder').click(function(e){
+		var ntr = $(this).parents('tr').next('tr');
+		if(ntr.prop("className")=='information'){
+			$(this).parents('tr').removeAttr("style");
+			ntr.remove();
+			return;
+		}
+		
+		$(this).parents('tr').css('backgroundColor', 'orange');
+		
+		var orderid = parseInt($(this).attr('id'));
+		var order = orderDao.find(orderid);
+		var products = productService.findByGovermentOrder(orderid);
+		
+	
+		var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
+		var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
+		tr.append('<td class="color-gray-text text-center">产品类型</td>');
+		tr.append('<td class="color-gray-text text-center">年利率</td>');
+		tr.append('<td class="color-gray-text text-center">预期金额</td>');
+		tr.append('<td class="color-gray-text text-center">已融金额</td>');
+		tr.append('<td class="color-gray-text text-center">期限</td>');
+		tr.append('<td class="color-gray-text text-center">进度</td>');
+		tr.append('<td class="color-gray-text text-center">状态</td>');
+		table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
+		table.append(tr);
+		
+    	   for(var i=0; i<products.size(); i++){
+    		   var product = products.get(i);
+    		   product.govermentOrder = order;
+    		   table.append(createUnpublishProduct(product));
+    	   }
+		
+		
+		var ftr = $('<tr class="information"></tr>');
+		var ftd = $('<td colspan=7 align=center></td>');
+		ftr.append(ftd);
+		ftd.append(table);
+		
+		
+		$(this).parents('tr').after(ftr);
+		
+	});
+}
+
+var orderpreview = function(container){
+	
+}
+
+var orderfinancing = function(container){
+	
+}
+
+var orderpaying = function(container){
+	
+}
+
+var ordertoclose = function(container){
+	
+}
+
+var orderclosed = function(container){
+	
+}
+
+var orderquit = function(container){
+	
+}
+
+
+
+
 var nav2funtion = {
 		'borrower-request' : borrowerrequest,
 		'borrower-new' : borrowernew,
 		'borrower-pass' : borrowerpass,
-		'borrower-refuse' : borrowerrefuse
+		'borrower-refuse' : borrowerrefuse,
+		'request-all' : requestall,
+		'request-tohandle' : requesttohandle,
+		'request-pass' : requestpass,
+		'request-refuse' : requestrefuse,
+		"order-all" : orderall,
+		"order-unpublish" : orderunpublish,
+		"order-preview" : orderpreview,
+		"order-financing" : orderfinancing,
+		"order-paying" : orderpaying,
+		"order-toclose" : ordertoclose,
+		"order-closed" : orderclosed,
+		"order-quit" : orderquit
 }

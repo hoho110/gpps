@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import gpps.dao.IBorrowerDao;
+import gpps.dao.IFinancingRequestDao;
 import gpps.dao.IGovermentOrderDao;
+import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
 
 import org.springframework.context.ApplicationContext;
@@ -15,6 +17,14 @@ public class CreateOrder {
 	
 	public static Integer createSingleOrder(ApplicationContext context, String title, Integer bid, String description, long fstart, long fend, long istart){
 		IGovermentOrderService orderService = context.getBean(IGovermentOrderService.class);
+		IFinancingRequestDao financingRequestDao=context.getBean(IFinancingRequestDao.class);
+		
+		FinancingRequest financingRequest=new FinancingRequest();
+		financingRequest.setBorrowerID(bid);
+		financingRequest.setApplyFinancingAmount(800000);
+		financingRequest.setRate("10%");
+		financingRequestDao.create(financingRequest);
+		
 		GovermentOrder or = new GovermentOrder();
 		or.setBorrowerId(bid);
 		or.setCreatetime((new Date()).getTime());
@@ -27,6 +37,8 @@ public class CreateOrder {
 		
 		or.setState(GovermentOrder.STATE_PREPUBLISH);
 		or.setDescription(description);
+		
+		or.setFinancingRequestId(financingRequest.getId());
 		or = orderService.create(or);
 		return or.getId();
 	}

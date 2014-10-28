@@ -208,7 +208,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		borrowerDao.updateAccessory(borrowerId, text);
 	}
 	@Override
-	public void delAccessory(Integer borrowerId, int category, String path)
+	public void delAccessory(Integer borrowerId, int category, String itemId)
 			throws XMLParseException {
 		String text=borrowerDao.findAccessory(borrowerId);
 		if(StringUtil.isEmpty(text))
@@ -224,7 +224,7 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 			return;
 		for(int i=0;i<items.size();i++)
 		{
-			if(items.get(i).getPath().equals(path))
+			if(items.get(i).getId().equals(itemId))
 			{
 				items.remove(i);
 				break;

@@ -91,7 +91,7 @@ public interface IBorrowerService extends ILoginService {
 	public void refuseFundingApplying(Integer borrowerId)throws IllegalConvertException;
 	
 	public void addAccessory(Integer borrowerId,int category,MimeItem item) throws XMLParseException;
-	public void delAccessory(Integer borrowerId,int category,String path) throws XMLParseException;
+	public void delAccessory(Integer borrowerId,int category,String itemId) throws XMLParseException;
 	public List<MimeItem> findMimeItems(Integer borrowerId,int category)throws XMLParseException;
 	
 	public void applyFinancing(FinancingRequest financingRequest);

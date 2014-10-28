@@ -90,6 +90,9 @@ public class BorrowerHandle {
 			e.printStackTrace();
 		} catch (IllegalOperationException e) {
 			e.printStackTrace();
+		} catch (ExistWaitforPaySubmitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	//订单开始还款

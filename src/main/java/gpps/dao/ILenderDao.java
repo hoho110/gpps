@@ -1,7 +1,10 @@
 package gpps.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
+import gpps.model.Borrower;
 import gpps.model.Lender;
 
 public interface ILenderDao {
@@ -20,4 +23,15 @@ public interface ILenderDao {
 	public void delete(Integer id);
 	public void registerSecondStep(@Param("id")Integer id,@Param("name")String name,@Param("identityCard")String identityCard,@Param("sex")int sex,@Param("address")String address,@Param("annualIncome")String annualIncome);
 	public void registerThirdPartyAccount(@Param("id")Integer id,@Param("thirdPartyAccount")String thirdPartyAccount);
+	
+	/**
+	 * @param state -1 不限
+	 * @return
+	 */
+	public int countByPrivilege(@Param("privilege")int privilege);
+	/**
+	 * @param state -1 不限
+	 * @return
+	 */
+	public List<Borrower> findByPrivilegeWithPaging(@Param("privilege")int privilege,@Param("offset")int offset,@Param("recnum")int recnum);
 }

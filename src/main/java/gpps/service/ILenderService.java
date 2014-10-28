@@ -1,5 +1,7 @@
 package gpps.service;
 
+import java.util.Map;
+
 import gpps.model.Lender;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
@@ -55,4 +57,12 @@ public interface ILenderService extends ILoginService{
 	
 	public boolean isIdentityAuthentication();
 	public boolean isThirdPartyAuthentication();
+	/**
+	 * 查找贷款人
+	 * @param privilege -1表示不限
+	 * @param offset
+	 * @param recnum
+	 * @return
+	 */
+	public Map<String, Object> findByPrivilegeWithPaging(int privilege,int offset,int recnum);
 }

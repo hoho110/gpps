@@ -5,6 +5,7 @@ import gpps.constant.Pagination;
 import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.IBorrowerDao;
 import gpps.dao.IFinancingRequestDao;
+import gpps.dao.IGovermentOrderDao;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
 import gpps.model.FinancingRequest;
@@ -41,6 +42,8 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	IBorrowerAccountDao borrowerAccountDao;
 	@Autowired
 	IFinancingRequestDao financingRequestDao;
+	@Autowired
+	IGovermentOrderDao govermentOrderDao;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	@Override
 	public void login(String loginId, String password, String graphValidateCode) throws LoginException, ValidateCodeException {
@@ -263,14 +266,26 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 
 	@Override
 	public FinancingRequest findFinancingRequest(Integer id) {
-		return financingRequestDao.find(id);
+		FinancingRequest request= financingRequestDao.find(id);
+		if(request!=null)
+		{
+			request.setGovermentOrder(govermentOrderDao.findByFinancingRequest(request.getId()));
+			request.setBorrower(borrowerDao.find(request.getBorrowerID()));
+		}
+		return request;
 	}
 
 	@Override
 	public List<FinancingRequest> findMyFinancingRequests(int state) {
 		Borrower borrower=getCurrentUser();
 		ObjectUtil.checkNullObject(Borrower.class, borrower);
-		return financingRequestDao.findByBorrowerAndState(borrower.getId(), state);
+		List<FinancingRequest> financingRequests= financingRequestDao.findByBorrowerAndState(borrower.getId(), state);
+		for(FinancingRequest request:financingRequests)
+		{
+			request.setGovermentOrder(govermentOrderDao.findByFinancingRequest(request.getId()));
+			request.setBorrower(borrowerDao.find(request.getBorrowerID()));
+		}
+		return financingRequests;
 	}
 
 	@Override
@@ -279,6 +294,11 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		if(count==0)
 			return Pagination.buildResult(new ArrayList<FinancingRequest>(0), count, offset, recnum);
 		List<FinancingRequest> financingRequests=financingRequestDao.findByState(state, offset, recnum);
+		for(FinancingRequest request:financingRequests)
+		{
+			request.setGovermentOrder(govermentOrderDao.findByFinancingRequest(request.getId()));
+			request.setBorrower(borrowerDao.find(request.getBorrowerID()));
+		}
 		return Pagination.buildResult(financingRequests, count, offset, recnum);
 	}
 
@@ -314,5 +334,14 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		FinancingRequest financingRequest=financingRequestDao.find(financingRequestId);
 		ObjectUtil.checkNullObject(FinancingRequest.class, financingRequest);
 		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_REFUSE, (new Date()).getTime());
+	}
+
+	@Override
+	public Map<String, Object> findByPrivilegeWithPaging(int privilege, int offset,
+			int recnum) {
+		int count =borrowerDao.countByPrivilege(privilege);
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		return Pagination.buildResult(borrowerDao.findByPrivilegeWithPaging(privilege, offset, recnum), count, offset, recnum);
 	}
 }

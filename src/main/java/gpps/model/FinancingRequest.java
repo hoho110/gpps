@@ -70,10 +70,17 @@ public class FinancingRequest {
 	
 	//辅助
 	private GovermentOrder govermentOrder;
+	private Borrower borrower;
 	public GovermentOrder getGovermentOrder() {
 		return govermentOrder;
 	}
 	public void setGovermentOrder(GovermentOrder govermentOrder) {
 		this.govermentOrder = govermentOrder;
+	}
+	public Borrower getBorrower() {
+		return borrower;
+	}
+	public void setBorrower(Borrower borrower) {
+		this.borrower = borrower;
 	}
 }

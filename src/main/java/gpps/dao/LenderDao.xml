@@ -71,4 +71,18 @@
         grade=grade+#{addGrade} 
         where id=#{id}
     </update>
+    <select id="countByPrivilege" resultType="int">  <!-- 查询表中记录总数 -->
+        select count(*) c from Lender
+        <if test="privilege != -1">
+            where privilege =#{privilege}
+        </if>
+    </select>
+    <select id="findByPrivilegeWithPaging" resultType="gpps.model.Lender">
+        select * from Lender 
+         <if test="privilege != -1">
+            where privilege =#{privilege}
+        </if>
+        order by createtime desc
+        LIMIT #{offset}, #{recnum}
+    </select>
 </mapper>

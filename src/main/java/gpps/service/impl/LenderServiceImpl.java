@@ -1,5 +1,7 @@
 package gpps.service.impl;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import gpps.constant.Pagination;
 import gpps.dao.ILenderAccountDao;
 import gpps.dao.ILenderDao;
 import gpps.model.Lender;
@@ -172,5 +175,14 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	@Override
 	public boolean isIdentityCardExist(String identityCard) {
 		return lenderDao.findByIdentityCard(identityCard)==null?false:true;
+	}
+
+	@Override
+	public Map<String, Object> findByPrivilegeWithPaging(int privilege, int offset,
+			int recnum) {
+		int count=lenderDao.countByPrivilege(privilege);
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		return Pagination.buildResult(lenderDao.findByPrivilegeWithPaging(privilege, offset, recnum), count, offset, recnum);
 	}
 }

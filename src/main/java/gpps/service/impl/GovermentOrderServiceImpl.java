@@ -8,6 +8,7 @@ import gpps.dao.IBorrowerDao;
 import gpps.dao.IFinancingRequestDao;
 import gpps.dao.IGovermentOrderDao;
 import gpps.dao.IProductDao;
+import gpps.dao.IProductSeriesDao;
 import gpps.dao.IStateLogDao;
 import gpps.model.Borrower;
 import gpps.model.FinancingRequest;
@@ -19,7 +20,9 @@ import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
+import gpps.service.IProductService;
 import gpps.service.ITaskService;
+import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.tools.StringUtil;
@@ -64,6 +67,8 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	IBorrowerService borrowerService;
 	@Autowired
 	IFinancingRequestDao financingRequestDao;
+	@Autowired
+	IProductService productService;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	static int[] orderStates={
 		GovermentOrder.STATE_UNPUBLISH,
@@ -229,7 +234,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		}
 	}
 	@Override
-	public void quitFinancing(Integer orderId) throws IllegalConvertException, IllegalOperationException {
+	public void quitFinancing(Integer orderId) throws IllegalConvertException, IllegalOperationException, ExistWaitforPaySubmitException {
 		GovermentOrder order=null;
 		try
 		{
@@ -238,7 +243,10 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			{
 				List<Product> products=order.getProducts();
 				if(products!=null&&products.size()>0)
-					throw new IllegalOperationException("还有竞标中的产品，请先修改产品状态");
+				{
+					for(Product product:products)
+						productService.quitFinancing(product.getId());
+				}
 			}
 			changeState(orderId, GovermentOrder.STATE_QUITFINANCING);
 			order=financingOrders.remove(orderId.toString());
@@ -508,7 +516,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			return;
 		for(Product product:products)
 		{
-			productDao.changeState(product.getId(), Product.STATE_UNPUBLISH, System.currentTimeMillis());
+			productDao.changeState(product.getId(), Product.STATE_FINANCING, System.currentTimeMillis());
 		}
 	}
 	private void checkChangeGovermentOrder(Integer orderId)

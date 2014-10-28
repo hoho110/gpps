@@ -29,4 +29,14 @@ public interface IBorrowerDao {
 	public void updateAccessory(@Param("borrowerId")Integer borrowerId,@Param("material")String material);
 	
 	public void registerThirdPartyAccount(@Param("id")Integer id,@Param("thirdPartyAccount")String thirdPartyAccount);
+	/**
+	 * @param state -1 不限
+	 * @return
+	 */
+	public int countByPrivilege(@Param("privilege")int privilege);
+	/**
+	 * @param state -1 不限
+	 * @return
+	 */
+	public List<Borrower> findByPrivilegeWithPaging(@Param("privilege")int privilege,@Param("offset")int offset,@Param("recnum")int recnum);
 }

@@ -10,6 +10,8 @@ import gpps.service.exception.ValidateCodeException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.easyservice.xml.XMLParseException;
 
 public interface IBorrowerService extends ILoginService {
@@ -116,4 +118,12 @@ public interface IBorrowerService extends ILoginService {
 	
 	public void registerThirdPartyAccount(String thirdPartyAccount);
 	public boolean isThirdPartyAuthentication();
+	/**
+	 * 查找借款人
+	 * @param privilege -1表示不限
+	 * @param offset
+	 * @param recnum
+	 * @return
+	 */
+	public Map<String, Object> findByPrivilegeWithPaging(int privilege,int offset,int recnum);
 }

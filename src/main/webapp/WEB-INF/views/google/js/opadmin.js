@@ -133,7 +133,7 @@ var createAdminNavLevel2 = function(nav){
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-unpublish">未发布</a></li>');
 		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-preview">预览</a></li>');
 		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-financing">融资中</a></li>');
-		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-payback">还款中</a></li>');
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-paying">还款中</a></li>');
 		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-toclose">待关闭</a></li>');
 		var li7 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-closed">已关闭</a></li>');
 		var li8 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="order-quit">流标</a></li>');
@@ -340,6 +340,69 @@ var borrowerrefuse = function(container){
 		table.dataTable(mySettings);
 }
 
+var lenderview = function(container){
+	var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	var columns = [ {
+		"sTitle" : "姓名",
+			"code" : "name"
+	}, {
+		"sTitle" : "电话",
+		"code" : "tel"
+	}, {
+		"sTitle" : "身份证",
+		"code" : "identityCard"
+	}, {
+		"sTitle" : "级别",
+		"code" : "level"
+	}, {
+		"sTitle" : "汇付账户",
+		"code" : "thirdPartyAccount"
+	}];
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = lenderService.findByPrivilegeWithPaging(-1,iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				result.aaData.push([data.name,
+				                    data.tel,
+				                    data.identityCard,
+				                    data.level,
+				                    data.thirdPartyAccount]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
 
 var handlerequest = function(state, container){
 
@@ -512,7 +575,7 @@ var requestrefuse = function(container){
 }
 
 
-var orderall = function(container){
+var ordershow = function(state, container){
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
 	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
@@ -552,7 +615,7 @@ var orderall = function(container){
 				iDisplayLength = data.value;
 		}
 		var res = null;
-		res = orderService.findByStatesByPage(-1,iDisplayStart, iDisplayLength);
+		res = orderService.findByStatesByPage(state,iDisplayStart, iDisplayLength);
 		var result = {};
 		result.iTotalRecords = res.get('total');
 		result.iTotalDisplayRecords = res.get('total');
@@ -580,6 +643,56 @@ var orderall = function(container){
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
+		
+		
+		
+		
+		$('button.vieworder').click(function(e){
+			var ntr = $(this).parents('tr').next('tr');
+			if(ntr.prop("className")=='information'){
+				$(this).parents('tr').removeAttr("style");
+				ntr.remove();
+				return;
+			}
+			
+			$(this).parents('tr').css('backgroundColor', 'orange');
+			
+			var orderid = parseInt($(this).attr('id'));
+			var order = orderDao.find(orderid);
+			var products = productService.findByGovermentOrder(orderid);
+			
+		
+			var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
+			var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
+			tr.append('<td class="color-gray-text text-center">产品类型</td>');
+			tr.append('<td class="color-gray-text text-center">年利率</td>');
+			tr.append('<td class="color-gray-text text-center">预期金额</td>');
+			tr.append('<td class="color-gray-text text-center">已融金额</td>');
+			tr.append('<td class="color-gray-text text-center">期限</td>');
+			tr.append('<td class="color-gray-text text-center">进度</td>');
+			tr.append('<td class="color-gray-text text-center">状态</td>');
+			table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
+			table.append(tr);
+			
+	    	   for(var i=0; i<products.size(); i++){
+	    		   var product = products.get(i);
+	    		   product.govermentOrder = order;
+	    		   table.append(createSingleSubProduct(product));
+	    	   }
+			
+			
+			var ftr = $('<tr class="information"></tr>');
+			var ftd = $('<td colspan=7 align=center></td>');
+			ftr.append(ftd);
+			ftd.append(table);
+			
+			
+			$(this).parents('tr').after(ftr);
+			
+		});
+		
+		
+		
 
 		return res;
 	}
@@ -591,6 +704,11 @@ var orderall = function(container){
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
 	container.append(content);
 	table.dataTable(mySettings);
+}
+
+
+var orderall = function(container){
+	ordershow(-1, container)
 }
 
 var orderunpublish = function(container){
@@ -695,33 +813,451 @@ var orderunpublish = function(container){
 }
 
 var orderpreview = function(container){
-	
+
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
+	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "预期金额",
+		"code" : "expect"
+	}, {
+		"sTitle" : "已融金额",
+		"code" : "real"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}, {
+		"sTitle" : "详情",
+		"code" : "view"
+	}, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = orderService.findByStatesByPage(2,iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				var products = data.products;
+				var totalamount = 0;
+				var real = 0;
+				for(var j=0; j<products.size(); j++){
+					totalamount += parseInt(products.get(j).expectAmount.value);
+					real += parseInt(products.get(j).realAmount.value);
+				}
+				result.aaData.push([data.title,
+				             formatDate(data.financingStarttime),
+				             formatDate(data.financingEndtime),
+				                    totalamount,
+				                    real,
+				                    orderstate[data.state],
+				                    "<button class='vieworder' id='"+data.id+"'>查看</button>",
+				                    "<button class='startfinancing' id='"+data.id+"'>开始融资</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		
+		$('button.startfinancing').click(function(e){
+			var orderid = parseInt($(this).attr('id'));
+			orderService.startFinancing(orderid);
+			window.location.href="opadmin.html?fid=order&sid=order-financing";
+		});
+		
+		$('button.vieworder').click(function(e){
+			var ntr = $(this).parents('tr').next('tr');
+			if(ntr.prop("className")=='information'){
+				$(this).parents('tr').removeAttr("style");
+				ntr.remove();
+				return;
+			}
+			
+			$(this).parents('tr').css('backgroundColor', 'orange');
+			
+			var orderid = parseInt($(this).attr('id'));
+			var order = orderDao.find(orderid);
+			var products = productService.findByGovermentOrder(orderid);
+			
+		
+			var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
+			var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
+			tr.append('<td class="color-gray-text text-center">产品类型</td>');
+			tr.append('<td class="color-gray-text text-center">年利率</td>');
+			tr.append('<td class="color-gray-text text-center">预期金额</td>');
+			tr.append('<td class="color-gray-text text-center">已融金额</td>');
+			tr.append('<td class="color-gray-text text-center">期限</td>');
+			tr.append('<td class="color-gray-text text-center">进度</td>');
+			tr.append('<td class="color-gray-text text-center">状态</td>');
+			table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
+			table.append(tr);
+			
+	    	   for(var i=0; i<products.size(); i++){
+	    		   var product = products.get(i);
+	    		   product.govermentOrder = order;
+	    		   table.append(createSingleSubProduct(product));
+	    	   }
+			
+			
+			var ftr = $('<tr class="information"></tr>');
+			var ftd = $('<td colspan=7 align=center></td>');
+			ftr.append(ftd);
+			ftd.append(table);
+			
+			
+			$(this).parents('tr').after(ftr);
+			
+		});
+		
+		
+		
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
 }
 
 var orderfinancing = function(container){
-	
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
+	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "预期金额",
+		"code" : "expect"
+	}, {
+		"sTitle" : "已融金额",
+		"code" : "real"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}, {
+		"sTitle" : "详情",
+		"code" : "view"
+	}, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = orderService.findByStatesByPage(1,iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				var products = data.products;
+				var totalamount = 0;
+				var real = 0;
+				for(var j=0; j<products.size(); j++){
+					totalamount += parseInt(products.get(j).expectAmount.value);
+					real += parseInt(products.get(j).realAmount.value);
+				}
+				result.aaData.push([data.title,
+				             formatDate(data.financingStarttime),
+				             formatDate(data.financingEndtime),
+				                    totalamount,
+				                    real,
+				                    orderstate[data.state],
+				                    "<button class='vieworder' id='"+data.id+"'>查看</button>",
+				                    "<button class='startpay' id='"+data.id+"'>开始还款</button><button class='quit' id='"+data.id+"'>流标</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		
+		$('button.startpay').click(function(e){
+			var orderid = parseInt($(this).attr('id'));
+			var products = productService.findByGovermentOrder(orderid);
+			for(var i=0; i<products.size(); i++){
+				productService.startRepaying(products.get(i).id);
+			}
+			orderService.startRepaying(orderid);
+			window.location.href="opadmin.html?fid=order&sid=order-paying";
+		});
+		
+		$('button.quit').click(function(e){
+			var orderid = parseInt($(this).attr('id'));
+			orderService.quitFinancing(orderid);
+			window.location.href="opadmin.html?fid=order&sid=order-quit";
+		});
+		
+		$('button.vieworder').click(function(e){
+			var ntr = $(this).parents('tr').next('tr');
+			if(ntr.prop("className")=='information'){
+				$(this).parents('tr').removeAttr("style");
+				ntr.remove();
+				return;
+			}
+			
+			$(this).parents('tr').css('backgroundColor', 'orange');
+			
+			var orderid = parseInt($(this).attr('id'));
+			var order = orderDao.find(orderid);
+			var products = productService.findByGovermentOrder(orderid);
+			
+		
+			var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
+			var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
+			tr.append('<td class="color-gray-text text-center">产品类型</td>');
+			tr.append('<td class="color-gray-text text-center">年利率</td>');
+			tr.append('<td class="color-gray-text text-center">预期金额</td>');
+			tr.append('<td class="color-gray-text text-center">已融金额</td>');
+			tr.append('<td class="color-gray-text text-center">期限</td>');
+			tr.append('<td class="color-gray-text text-center">进度</td>');
+			tr.append('<td class="color-gray-text text-center">状态</td>');
+			table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
+			table.append(tr);
+			
+	    	   for(var i=0; i<products.size(); i++){
+	    		   var product = products.get(i);
+	    		   product.govermentOrder = order;
+	    		   table.append(createSingleSubProduct(product));
+	    	   }
+			
+			
+			var ftr = $('<tr class="information"></tr>');
+			var ftd = $('<td colspan=7 align=center></td>');
+			ftr.append(ftd);
+			ftd.append(table);
+			
+			
+			$(this).parents('tr').after(ftr);
+			
+		});
+		
+		
+		
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
 }
 
 var orderpaying = function(container){
-	
+	ordershow(4, container)
 }
 
 var ordertoclose = function(container){
-	
+	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
+	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
+	var columns = [ {
+		"sTitle" : "订单名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "融资起始时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "融资截止时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "预期金额",
+		"code" : "expect"
+	}, {
+		"sTitle" : "已融金额",
+		"code" : "real"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}, {
+		"sTitle" : "详情",
+		"code" : "view"
+	}, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = orderService.findByStatesByPage(8,iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				var products = data.products;
+				var totalamount = 0;
+				var real = 0;
+				for(var j=0; j<products.size(); j++){
+					totalamount += parseInt(products.get(j).expectAmount.value);
+					real += parseInt(products.get(j).realAmount.value);
+				}
+				result.aaData.push([data.title,
+				             formatDate(data.financingStarttime),
+				             formatDate(data.financingEndtime),
+				                    totalamount,
+				                    real,
+				                    orderstate[data.state],
+				                    "<button class='vieworder' id='"+data.id+"'>查看</button>",
+				                    "<button class='closeorder' id='"+data.id+"'>关闭</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		
+		$('button.closeorder').click(function(e){
+			var orderid = parseInt($(this).attr('id'));
+			orderService.closeComplete(orderid);
+			window.location.href="opadmin.html?fid=order&sid=order-closed";
+		});
+		
+		
+		$('button.vieworder').click(function(e){
+			var ntr = $(this).parents('tr').next('tr');
+			if(ntr.prop("className")=='information'){
+				$(this).parents('tr').removeAttr("style");
+				ntr.remove();
+				return;
+			}
+			
+			$(this).parents('tr').css('backgroundColor', 'orange');
+			
+			var orderid = parseInt($(this).attr('id'));
+			var order = orderDao.find(orderid);
+			var products = productService.findByGovermentOrder(orderid);
+			
+		
+			var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
+			var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
+			tr.append('<td class="color-gray-text text-center">产品类型</td>');
+			tr.append('<td class="color-gray-text text-center">年利率</td>');
+			tr.append('<td class="color-gray-text text-center">预期金额</td>');
+			tr.append('<td class="color-gray-text text-center">已融金额</td>');
+			tr.append('<td class="color-gray-text text-center">期限</td>');
+			tr.append('<td class="color-gray-text text-center">进度</td>');
+			tr.append('<td class="color-gray-text text-center">状态</td>');
+			table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
+			table.append(tr);
+			
+	    	   for(var i=0; i<products.size(); i++){
+	    		   var product = products.get(i);
+	    		   product.govermentOrder = order;
+	    		   table.append(createSingleSubProduct(product));
+	    	   }
+			
+			
+			var ftr = $('<tr class="information"></tr>');
+			var ftd = $('<td colspan=7 align=center></td>');
+			ftr.append(ftd);
+			ftd.append(table);
+			
+			
+			$(this).parents('tr').after(ftr);
+			
+		});
+		
+		
+		
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
 }
 
 var orderclosed = function(container){
-	
+	ordershow(32, container)
 }
 
 var orderquit = function(container){
-	
+	ordershow(16, container)
 }
 
 
 
 
 var nav2funtion = {
+		'lender-view' : lenderview,
 		'borrower-request' : borrowerrequest,
 		'borrower-new' : borrowernew,
 		'borrower-pass' : borrowerpass,

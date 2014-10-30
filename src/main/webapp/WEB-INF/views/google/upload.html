@@ -81,7 +81,7 @@ function refreshBorrowerAccessory(){
               var url="/download/borrower/1/0/"+item.id;
               $("#category_0").append("<div>");
               $("#category_0").append("<a class='sit-preview' href='"+url+"'><img src='"+url+"' data-preview-url='"+url+"' height='200' width='200' /></a>");
-              $("#category_0").append("<input type='button' value='删除' onClick='deleteBorrowerAccessory(1,0,"+item.id+");'/>");
+              $("#category_0").append("<input type='button' value='删除' onClick='deleteBorrowerAccessory(1,0,\""+item.id+"\");'/>");
               $("#category_0").append("</div>");
         }
     }

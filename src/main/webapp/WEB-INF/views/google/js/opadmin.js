@@ -230,7 +230,7 @@ var borrowerrequest = function(container){
 			                    data.tel,
 			                    formatDate(data.createtime),
 			                    borrowerstate[data.privilege],
-			                    '<button id='+data.id+' class="borrowerpass">通过</button><button id='+data.id+' class="borrowerrefuse">拒绝</button>']);
+			                    '<button id='+data.id+' class="borroweredit">编辑</button><button id='+data.id+' class="borrowerrefuse">拒绝</button>']);
 		}
 		var mySettings = $.extend({}, defaultSettings_noCallBack, {
 			"aoColumns" : columns,
@@ -240,6 +240,11 @@ var borrowerrequest = function(container){
 		var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
 		container.append(content);
 		table.dataTable(mySettings);
+		
+		$('button.borroweredit').click(function(e){
+			var id = $(this).attr('id');
+			window.location.href="borroweredit.html?id="+id;
+		});
 		
 		$('button.borrowerpass').click(function(e){
 			try{

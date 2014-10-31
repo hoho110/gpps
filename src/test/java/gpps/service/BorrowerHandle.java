@@ -105,6 +105,8 @@ public class BorrowerHandle {
 			e.printStackTrace();
 		} catch (IllegalOperationException e) {
 			e.printStackTrace();
+		} catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 	//订单开始融资

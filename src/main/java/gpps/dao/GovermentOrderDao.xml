@@ -96,7 +96,7 @@
     <select id="findByFinancingRequest" parameterType="Integer" resultType="gpps.model.GovermentOrder">
         select *
         from GovermentOrder where financingRequestId=#{financingRequestId}
-        LIMIT 1,1
+        LIMIT 0,1
     </select>
     <select id="findAllUnpublishOrders" resultType="gpps.model.GovermentOrder">
         select *

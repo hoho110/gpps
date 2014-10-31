@@ -219,6 +219,9 @@ var borrowerrequest = function(container){
 			"sTitle" : "状态",
 			"code" : "repayed"
 		}, {
+			"sTitle" : "编辑",
+			"code" : "编辑"
+		}, {
 			"sTitle" : "操作",
 			"code" : "operate"
 		}];
@@ -230,7 +233,8 @@ var borrowerrequest = function(container){
 			                    data.tel,
 			                    formatDate(data.createtime),
 			                    borrowerstate[data.privilege],
-			                    '<button id='+data.id+' class="borroweredit">编辑</button><button id='+data.id+' class="borrowerrefuse">拒绝</button>']);
+			                    '<button id='+data.id+' class="borroweredit">编辑</button>',
+			                    '<button id='+data.id+' class="borrowerpass">通过</button><button id='+data.id+' class="borrowerrefuse">拒绝</button>']);
 		}
 		var mySettings = $.extend({}, defaultSettings_noCallBack, {
 			"aoColumns" : columns,
@@ -243,7 +247,7 @@ var borrowerrequest = function(container){
 		
 		$('button.borroweredit').click(function(e){
 			var id = $(this).attr('id');
-			window.location.href="borroweredit.html?id="+id;
+			window.open("borroweredit.html?id="+id);
 		});
 		
 		$('button.borrowerpass').click(function(e){
@@ -285,6 +289,9 @@ var borrowerpass = function(container){
 		}, {
 			"sTitle" : "状态",
 			"code" : "repayed"
+		}, {
+			"sTitle" : "编辑",
+			"code" : "编辑"
 		}];
 		var aaData = new Array();
 		for(var i=0; i<borrowers.size(); i++){
@@ -293,7 +300,8 @@ var borrowerpass = function(container){
 			                    data.license,
 			                    data.tel,
 			                    formatDate(data.createtime),
-			                    borrowerstate[data.privilege]]);
+			                    borrowerstate[data.privilege],
+			                    '<button id='+data.id+' class="borroweredit">编辑</button>']);
 		}
 		var mySettings = $.extend({}, defaultSettings_noCallBack, {
 			"aoColumns" : columns,
@@ -303,6 +311,11 @@ var borrowerpass = function(container){
 		var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
 		container.append(content);
 		table.dataTable(mySettings);
+		
+		$('button.borroweredit').click(function(e){
+			var id = $(this).attr('id');
+			window.open("borroweredit.html?id="+id);
+		});
 }
 
 var borrowerrefuse = function(container){
@@ -502,6 +515,9 @@ var requesttohandle = function(container){
 		"sTitle" : "状态",
 		"code" : "repayed"
 	}, {
+		"sTitle" : "编辑",
+		"code" : "edit"
+	}, {
 		"sTitle" : "操作",
 		"code" : "operation"
 	}];
@@ -540,6 +556,7 @@ var requesttohandle = function(container){
 				                    data.rate,
 				                    formatDate(data.createtime),
 				                    str,
+				                    '<button id='+data.id+' class="requestedit">编辑</button>',
 				                    '<button id='+data.id+' class="requestpass">通过</button><button id='+data.id+' class="requestrefuse">拒绝</button>']);
 			}
 		}
@@ -557,6 +574,9 @@ var requesttohandle = function(container){
 	container.append(content);
 	table.dataTable(mySettings);
 	
+	$('button.requestedit').click(function(e){
+		window.open('requestedit.html?id='+$(this).attr('id'));
+	});
 	$('button.requestpass').click(function(e){
 		var rid = $(this).attr('id');
 		bService.passFinancingRequest(parseInt(rid));

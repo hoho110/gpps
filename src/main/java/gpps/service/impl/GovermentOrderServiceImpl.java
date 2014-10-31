@@ -214,7 +214,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	}
 	@Override
 	@Transactional
-	public void startRepaying(Integer orderId) throws IllegalConvertException,IllegalOperationException {
+	public void startRepaying(Integer orderId) throws IllegalConvertException,IllegalOperationException, ExistWaitforPaySubmitException {
 		GovermentOrder order=null;
 		try
 		{
@@ -223,7 +223,13 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			{
 				List<Product> products=order.getProducts();
 				if(products!=null&&products.size()>0)
-					throw new IllegalOperationException("还有竞标中的产品，请先修改产品状态");
+				{
+//					throw new IllegalOperationException("还有竞标中的产品，请先修改产品状态");
+					for(Product product:products)
+					{
+						productService.startRepaying(product.getId());
+					}
+				}
 			}
 			changeState(orderId, GovermentOrder.STATE_REPAYING);
 			order=financingOrders.remove(orderId.toString());

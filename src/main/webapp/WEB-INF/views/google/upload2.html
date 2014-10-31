@@ -78,8 +78,9 @@ function refreshBorrowerAccessory(){
         {
               var item=items.get(i);
               var url="/download/borrower/1/0/"+item.id;
+              var aUrl="/imageview/borrower/1/0/"+item.id;
               $("#category_0").append("<div style='width:200px; float:left;'>");
-              $("#category_0").append("<div><a class='sit-preview' href='"+url+"'><img src='"+url+"' data-preview-url='"+url+"' style='width:200px; height:150px;'/></a></div>");
+              $("#category_0").append("<div><a class='sit-preview' href='"+aUrl+"'><img src='"+url+"' data-preview-url='"+url+"' style='width:200px; height:150px;'/></a></div>");
               $("#category_0").append("<div><input type='button' style='width:200px;' value='删除' onClick='deleteBorrowerAccessory(1,0,\""+item.id+"\");'/></div>");
               $("#category_0").append("</div>");
         }
@@ -114,6 +115,8 @@ $("#uploadify").uploadify({
         'requeueErrors' : true,
         'cancelImg'      : 'js/uploadify2/uploadify-cancel.png',   
         'queueID'        : 'fileQueue',
+        'fileTypeDesc' : '格式：图片',
+        'fileTypeExts' : '*.gif; *.jpg; *.png', 
         'onUploadComplete'  :function(event,queueId,fileObj,response,data){
         	refreshBorrowerAccessory();
         }
@@ -130,6 +133,20 @@ $('select#typ').change(function(e){
 	for(var i=0; i<cats.length; i++){
 		$('select#category').append('<option value='+i+'>'+cats[i]+'</option>');
 	}
+});
+$('select#category').change(function(e){
+    var value = $(this).val();
+    if(value=="0")
+   	{
+    	$('#uploadify').uploadify('settings','fileTypeDesc','格式：图片');
+    	$('#uploadify').uploadify('settings','fileTypeExts','*.gif; *.jpg; *.png');
+   	}else if(value=="1")
+	{
+   		$('#uploadify').uploadify('settings','fileTypeDesc','格式：文档');
+        $('#uploadify').uploadify('settings','fileTypeExts','*.doc; *.docx; *.pdf;*.ppt;*.pptx');
+	}
+    
+    
 });
 
 });

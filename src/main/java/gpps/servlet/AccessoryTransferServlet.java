@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.UUID;
 
@@ -196,7 +197,32 @@ public class AccessoryTransferServlet {
 			}
 		}
 	}
-
+	@RequestMapping(value = { "/imageview/{type}/{id}/{category}/{itemID}" })
+	protected void imageview(HttpServletRequest request,
+			HttpServletResponse response, @PathVariable("type") String type,
+			@PathVariable("id") Integer id,
+			@PathVariable("category") int category,
+			@PathVariable("itemID") String itemID) throws ServletException,
+			IOException {
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append("<html><head><meta name='viewport' content='width=device-width; height=device-height;'>");
+		sBuilder.append("<title>图片："+itemID+"</title></head><body>");
+		sBuilder.append("<img src='"+"/download/"+type+"/"+id+"/"+category+"/"+itemID+"'>");
+		sBuilder.append("</body></html>");
+		response.setHeader("Content-type", "text/html;charset=UTF-8");  
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html");
+	    PrintWriter out = null;
+	    try {
+	    	out=response.getWriter();
+		    out.write(sBuilder.toString());
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}finally{
+			if(out!=null)
+				out.close();
+		}
+	}
 	private MimeItem findItem(List<MimeItem> items, String itemID) {
 		if (items == null || items.size() == 0)
 			return null;

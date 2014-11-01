@@ -557,11 +557,11 @@
         			
         			
         			
-        			var items = orderService.findMimeItems(order.id, 1);
+        			var items = orderService.findMimeItems(order.id, 0);
         			$('.detail-content-body').append('<h5>中标文件</h5>');
         			var pp = $('<p></p>');
         			for(var i=0; i<items.size(); i++){
-        				var img = $('<img class="accessory" src="/download/order/'+order.id+'/1/'+items.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				var img = $('<img class="accessory" src="/download/order/'+order.id+'/0/'+items.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
         				pp.append(img);
         			}
         			$('.detail-content-body').append(pp);

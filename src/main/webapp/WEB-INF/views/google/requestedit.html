@@ -36,7 +36,7 @@
 		<div class="form-group has-success has-feedback">
 			<label class="control-label col-sm-3" for="inputSuccess3">订单名称</label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control" id="title" disabled="disabled"></input>
+				<input type="text" class="form-control" id="title"></input>
 			</div>
 		</div>
 		<div class="form-group has-success has-feedback">
@@ -112,7 +112,7 @@
 						<input type="text" class="form-control" id="level"></input>
 					</div>
 					</div>
-					<button id="create_wj" class="btn btn-lg btn-success btn-block">创建</button>
+					<button id="0" class="btn btn-lg btn-success btn-block productedit">创建/更新</button>
 				</div>
 			</div>
 		</div>
@@ -159,7 +159,7 @@
 						<input type="text" class="form-control" id="level"></input>
 					</div>
 					</div>
-					<button id="create_jh" class="btn btn-lg btn-success btn-block">创建</button>
+					<button id="1" class="btn btn-lg btn-success btn-block productedit">创建/更新</button>
 				</div>
 			</div>
 		</div>
@@ -206,7 +206,7 @@
 						<input type="text" class="form-control" id="level"></input>
 					</div>
 					</div>
-					<button id="create_jq" class="btn btn-lg btn-success btn-block">创建</button>
+					<button id="2" class="btn btn-lg btn-success btn-block productedit">创建/更新</button>
 				</div>
 			</div>
 		</div>
@@ -280,6 +280,7 @@ function refreshproduct(product){
 		$('div#'+st).find('#min').val(product.minimum);
 		$('div#'+st).find('#minadd').val(product.miniAdd);
 		$('div#'+st).find('#level').val(product.levelToBuy);
+		$('div#'+st).attr('data-sk', product.id);
 		
 	}
 }
@@ -355,6 +356,53 @@ $(document).ready(function () {
 	
 	refreshInfo();
 	
+	
+	$('button.productedit').click(function(e){
+		if(oid==null){
+			alert('尚未生成订单，无法创建产品！');
+			return;
+		}
+		
+		
+		
+		var buttonid = parseInt($(this).attr('id'));
+		
+		var proid = $('div#'+buttonid).attr('data-sk');
+		
+		
+		var amount = $('div#'+buttonid).find('#amount').val();
+		var rate = $('div#'+buttonid).find('#rate').val();
+		var incomeendtime = parseInt($('div#'+buttonid).find('#incomeendtime').val());
+		var min = parseInt($('div#'+buttonid).find('#min').val());
+		var minadd = parseInt($('div#'+buttonid).find('#minadd').val());
+		var level = parseInt($('div#'+buttonid).find('#level').val());
+		
+		
+		if(proid){
+			productService.update(parseInt(proid),parseInt(amount),rate,incomeendtime,min,minadd,level);
+			alert('产品更改成功！');
+		}else{
+			var nproduct = {'_t_':"gpps.model.Product",
+				'govermentorderId':oid,
+				'createtime':(new Date()).getTime(),
+				'expectAmount':{'_t_':"java.math.BigDecimal",'value':amount},
+				'levelToBuy':level,
+				'productseriesId':seriestype[buttonid],
+				'rate':{'_t_':"java.math.BigDecimal",'value':rate},
+				'realAmount' : {'_t_':"java.math.BigDecimal",'value':'0'},
+				'minimum' : min,
+				'state' : 0,
+				'miniAdd' : minadd,
+				'incomeEndtime':incomeendtime
+				}
+			productService.create(nproduct);
+			alert('产品创建成功！');
+		}
+		refreshInfo();
+	});
+
+	
+	
 $('#upload').click(function(e){
 	if(oid==null){
 		alert('尚未生成订单，无法上传附件！');
@@ -370,12 +418,40 @@ $('#clearall').click(function(e){
 });
 
 $('#save').click(function(e){
+	var title = $('#title').val();
 	var financingStarttime = parseInt($('#financingStarttime').val());
 	var financingEndtime = parseInt($('#financingEndtime').val());
 	var incomeStarttime = parseInt($('#incomeStarttime').val());
 	var description = $('#description').val();
-	orderService.update(id,financingStarttime,financingEndtime,incomeStarttime,description);
-	alert('保存完成！');
+	if(oid!=null){
+		orderService.update(oid, title,financingStarttime,financingEndtime,incomeStarttime,description);
+		alert('保存完成！');
+	}else{
+		if(title==null || title==''){
+			alert('订单名称不能为空！');
+			return;
+		}
+		
+		
+		var norder = {	'_t_':"gpps.model.GovermentOrder",
+						'borrowerId':financingrequest.borrowerID,
+						'createtime':(new Date()).getTime(),
+						'financingStarttime':financingStarttime,
+						'financingEndtime':financingEndtime,
+						'title':title,
+						'incomeStarttime':incomeStarttime,
+						'lastModifytime' : (new Date()).getTime(),
+						'state' : 0,
+						'description' : description,
+						'financingRequestId' : id
+		}
+		
+		order = orderService.create(norder);
+		alert('订单创建成功！');
+	}
+	
+	refreshInfo();
+	
 });
 
 	

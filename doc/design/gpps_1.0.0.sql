@@ -70,6 +70,7 @@ create table Borrower
    thirdPartyAccount    varchar(255),
    level                int not null default 0,
    lastModifyTime       BIGINT not null default 0,
+   range                varchar(255),
    primary key (id)
 );
 

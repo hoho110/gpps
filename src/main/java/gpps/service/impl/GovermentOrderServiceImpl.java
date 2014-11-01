@@ -516,7 +516,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		checkNullObject("orderId", orderId);
 		GovermentOrder order=checkNullObject(GovermentOrder.class, govermentOrderDao.find(orderId));
 		changeState(orderId, GovermentOrder.STATE_PREPUBLISH);
-		borrowerService.passFinancingRequest(order.getFinancingRequestId());
+		financingRequestDao.changeState(order.getFinancingRequestId(), FinancingRequest.STATE_PROCESSED, System.currentTimeMillis());
 		List<Product> products=productDao.findByGovermentOrder(orderId);
 		if(products==null||products.size()==0)
 			return;

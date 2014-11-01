@@ -4,6 +4,7 @@ import gpps.model.Borrower;
 import gpps.model.FinancingRequest;
 import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
 
@@ -97,7 +98,7 @@ public interface IBorrowerService extends ILoginService {
 	public List<MimeItem> findMimeItems(Integer borrowerId,int category)throws XMLParseException;
 	
 	public void applyFinancing(FinancingRequest financingRequest);
-	public void passFinancingRequest(Integer financingRequestId);
+	public void passFinancingRequest(Integer financingRequestId) throws IllegalOperationException;
 	public void refuseFinancingRequest(Integer financingRequestId);
 	
 	public FinancingRequest findFinancingRequest(Integer id);

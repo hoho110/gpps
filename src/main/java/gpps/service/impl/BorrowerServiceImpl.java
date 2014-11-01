@@ -6,14 +6,18 @@ import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.IBorrowerDao;
 import gpps.dao.IFinancingRequestDao;
 import gpps.dao.IGovermentOrderDao;
+import gpps.dao.IProductDao;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
 import gpps.model.FinancingRequest;
+import gpps.model.GovermentOrder;
+import gpps.model.Product;
 import gpps.model.ref.Accessory;
 import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.IBorrowerService;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
 import gpps.tools.ObjectUtil;
@@ -44,6 +48,8 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	IFinancingRequestDao financingRequestDao;
 	@Autowired
 	IGovermentOrderDao govermentOrderDao;
+	@Autowired
+	IProductDao productDao;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	@Override
 	public void login(String loginId, String password, String graphValidateCode) throws LoginException, ValidateCodeException {
@@ -303,10 +309,23 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	}
 
 	@Override
-	public void passFinancingRequest(Integer financingRequestId) {
+	public void passFinancingRequest(Integer financingRequestId) throws IllegalOperationException{
 		FinancingRequest financingRequest=financingRequestDao.find(financingRequestId);
+		GovermentOrder order=govermentOrderDao.findByFinancingRequest(financingRequest.getId());
+		if(order==null)
+			throw new IllegalOperationException("尚未为该融资申请建立订单");
+		if(order.getState()!=GovermentOrder.STATE_UNPUBLISH)
+			throw new IllegalOperationException("订单状态不为未发布");
+		List<Product> products=productDao.findByGovermentOrder(order.getId());
+		if(products==null||products.size()==0)
+			throw new IllegalOperationException("尚未为该融资申请建立产品");
+		govermentOrderDao.changeState(order.getId(), GovermentOrder.STATE_PREPUBLISH, System.currentTimeMillis());
+		for(Product product:products)
+		{
+			productDao.changeState(product.getId(), Product.STATE_FINANCING, System.currentTimeMillis());
+		}
 		ObjectUtil.checkNullObject(FinancingRequest.class, financingRequest);
-		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_PROCESSED, (new Date()).getTime());
+		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_PROCESSED, System.currentTimeMillis());
 //		borrowerDao.changePrivilege(financingRequest.getBorrowerID(), Borrower.PRIVILEGE_FINANCING);
 	}
 

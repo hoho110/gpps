@@ -29,4 +29,5 @@ public interface IProductDao {
 	public void delete(Integer id);
 	public String findAccessory(Integer productId);
 	public void updateAccessory(@Param("productId")Integer productId,@Param("accessory")String accessory);
+	public void update(@Param("id")Integer id,@Param("expectAmount")BigDecimal expectAmount,@Param("rate")BigDecimal rate,@Param("incomeEndtime")long incomeEndtime,@Param("minimum")int minimum,@Param("miniAdd")int miniAdd,@Param("levelToBuy")int levelToBuy);
 }

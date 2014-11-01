@@ -1,15 +1,14 @@
 package gpps.service;
 
-import java.util.List;
-
-import com.easyservice.xml.XMLParseException;
-
-import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.model.ProductAction;
 import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
+
+import java.util.List;
+
+import com.easyservice.xml.XMLParseException;
 
 public interface IProductService {
 	public static final int[] productStates={
@@ -73,4 +72,5 @@ public interface IProductService {
 	public void addAccessory(Integer productId,int category,MimeItem item) throws XMLParseException;
 	public void delAccessory(Integer productId,int category,String path) throws XMLParseException;
 	public List<MimeItem> findMimeItems(Integer productId,int category)throws XMLParseException;
+	public void update(Integer id,int expectAmount,String rate,long incomeEndtime,int minimum,int miniAdd,int levelToBuy);
 }

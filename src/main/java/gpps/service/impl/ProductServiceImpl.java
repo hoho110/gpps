@@ -388,4 +388,9 @@ public class ProductServiceImpl implements IProductService {
 		if(product.getState()!=Product.STATE_UNPUBLISH)
 			throw new RuntimeException("产品已发布，不能再修改");
 	}
+
+	@Override
+	public void update(Integer id, int expectAmount, String rate, long incomeEndtime, int minimum, int miniAdd, int levelToBuy) {
+		productDao.update(id, new BigDecimal(expectAmount), new BigDecimal(rate), incomeEndtime, minimum, miniAdd, levelToBuy);
+	}
 }

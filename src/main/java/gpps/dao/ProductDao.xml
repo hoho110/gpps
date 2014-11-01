@@ -111,4 +111,9 @@
         where
         id=#{productId}
     </update>
+    <update id="update">
+    	update Product set 
+    	expectAmount=#{expectAmount},rate=#{rate},incomeEndtime=#{incomeEndtime},minimum=#{minimum},miniAdd=#{miniAdd},levelToBuy=#{levelToBuy} 
+    	where id=#{id}
+    </update>
 </mapper>

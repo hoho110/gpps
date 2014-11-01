@@ -122,8 +122,9 @@ function refreshInfo(){
 	$('#companyname').val(borrower.companyName);
 	$('#license').val(borrower.license);
 	$('#tel').val(borrower.tel);
-	$('#addr').val(borrower.addr==null?"":borrower.addr);
+	$('#addr').val(borrower.corporationAddr==null?"":borrower.corporationAddr);
 	$('#frname').val(borrower.corporationName==null?"":borrower.corporationName);
+	$('#range').val(borrower.brange==null?"":borrower.brange);
 }
 
 
@@ -180,8 +181,8 @@ $('#clearall').click(function(e){
 $('#save').click(function(e){
 	var addr = $('#addr').val();
 	var frname = $('#frname').val();
-	borrower.addr = addr;
-	borrower.frname = frname;
+	var brange = $('#range').val();
+	borrowerService.update(id,frname,addr,brange)
 	alert('保存完成！');
 });
 

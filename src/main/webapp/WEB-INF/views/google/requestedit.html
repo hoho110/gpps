@@ -370,10 +370,11 @@ $('#clearall').click(function(e){
 });
 
 $('#save').click(function(e){
-	var addr = $('#addr').val();
-	var frname = $('#frname').val();
-	borrower.addr = addr;
-	borrower.frname = frname;
+	var financingStarttime = parseInt($('#financingStarttime').val());
+	var financingEndtime = parseInt($('#financingEndtime').val());
+	var incomeStarttime = parseInt($('#incomeStarttime').val());
+	var description = $('#description').val();
+	orderService.update(id,financingStarttime,financingEndtime,incomeStarttime,description);
 	alert('保存完成！');
 });
 

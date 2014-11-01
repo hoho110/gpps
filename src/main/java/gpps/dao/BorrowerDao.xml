@@ -90,7 +90,7 @@
     </select>
     <update id="update">
     	update borrower set 
-    	corporationName=#{corporationName},corporationAddr=#{corporationName},brange=#{brange}
+    	corporationName=#{corporationName},corporationAddr=#{corporationAddr},brange=#{brange}
     	where id=#{id}
     </update>
 </mapper>

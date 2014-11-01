@@ -39,4 +39,5 @@ public interface IBorrowerDao {
 	 * @return
 	 */
 	public List<Borrower> findByPrivilegeWithPaging(@Param("privilege")int privilege,@Param("offset")int offset,@Param("recnum")int recnum);
+	public void update(@Param("id")Integer id,@Param("corporationName")String corporationName,@Param("corporationAddr")String corporationAddr,@Param("brange")String brange);
 }

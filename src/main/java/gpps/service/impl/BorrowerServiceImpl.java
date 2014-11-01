@@ -363,4 +363,10 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 			return Pagination.buildResult(null, count, offset, recnum);
 		return Pagination.buildResult(borrowerDao.findByPrivilegeWithPaging(privilege, offset, recnum), count, offset, recnum);
 	}
+
+	@Override
+	public void update(Integer id, String corporationName, String corporationAddr, String brange) {
+		borrowerDao.update(id, corporationName, corporationAddr, brange);
+	}
+	
 }

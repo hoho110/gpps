@@ -127,4 +127,5 @@ public interface IBorrowerService extends ILoginService {
 	 * @return
 	 */
 	public Map<String, Object> findByPrivilegeWithPaging(int privilege,int offset,int recnum);
+	public void update(Integer id,String corporationName,String corporationAddr,String brange);
 }

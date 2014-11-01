@@ -88,4 +88,9 @@
         order by createtime desc
         LIMIT #{offset}, #{recnum}
     </select>
+    <update id="update">
+    	update borrower set 
+    	corporationName=#{corporationName},corporationAddr=#{corporationName},brange=#{brange}
+    	where id=#{id}
+    </update>
 </mapper>

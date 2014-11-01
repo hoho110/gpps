@@ -11,6 +11,8 @@ import gpps.service.exception.IllegalOperationException;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.easyservice.xml.XMLParseException;
 
 public interface IGovermentOrderService {
@@ -121,4 +123,6 @@ public interface IGovermentOrderService {
 	public List<FinancingRequest> findBorrowerFinancingRequest(int state);
 	
 	public List<GovermentOrder> findAllUnpublishOrders();
+	
+	public void update(Integer id,long financingStarttime,long financingEndtime,long incomeStarttime,String description);
 }

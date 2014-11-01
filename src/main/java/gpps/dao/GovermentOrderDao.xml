@@ -103,4 +103,9 @@
         from GovermentOrder where state=0
         order by createtime asc 
     </select>
+    <update id="update">
+    	update GovermentOrder set 
+    	financingStarttime=#{financingStarttime},financingEndtime=#{financingEndtime},incomeStarttime=#{incomeStarttime},description=#{description} 
+    	where id=#{id}
+    </update>
 </mapper>

@@ -536,7 +536,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		return govermentOrderDao.findAllUnpublishOrders();
 	}
 	@Override
-	public void update(Integer id, long financingStarttime, long financingEndtime, long incomeStarttime, String description) {
-		govermentOrderDao.update(id, financingStarttime, financingEndtime, incomeStarttime, description);
+	public void update(Integer id,String title, long financingStarttime, long financingEndtime, long incomeStarttime, String description) {
+		govermentOrderDao.update(id,title, financingStarttime, financingEndtime, incomeStarttime, description);
 	}
 }

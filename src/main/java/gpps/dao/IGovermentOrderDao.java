@@ -22,5 +22,5 @@ public interface IGovermentOrderDao {
 	public GovermentOrder findByFinancingRequest(Integer financingRequestId);
 	
 	public List<GovermentOrder> findAllUnpublishOrders();
-	public void update(@Param("id")Integer id,@Param("financingStarttime")long financingStarttime,@Param("financingEndtime")long financingEndtime,@Param("incomeStarttime")long incomeStarttime,@Param("description")String description);
+	public void update(@Param("id")Integer id,@Param("title")String title,@Param("financingStarttime")long financingStarttime,@Param("financingEndtime")long financingEndtime,@Param("incomeStarttime")long incomeStarttime,@Param("description")String description);
 }

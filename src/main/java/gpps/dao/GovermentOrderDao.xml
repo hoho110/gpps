@@ -105,7 +105,7 @@
     </select>
     <update id="update">
     	update GovermentOrder set 
-    	financingStarttime=#{financingStarttime},financingEndtime=#{financingEndtime},incomeStarttime=#{incomeStarttime},description=#{description} 
+    	title=#{title},financingStarttime=#{financingStarttime},financingEndtime=#{financingEndtime},incomeStarttime=#{incomeStarttime},description=#{description} 
     	where id=#{id}
     </update>
 </mapper>

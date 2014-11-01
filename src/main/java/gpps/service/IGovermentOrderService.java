@@ -124,5 +124,5 @@ public interface IGovermentOrderService {
 	
 	public List<GovermentOrder> findAllUnpublishOrders();
 	
-	public void update(Integer id,long financingStarttime,long financingEndtime,long incomeStarttime,String description);
+	public void update(Integer id,String title,long financingStarttime,long financingEndtime,long incomeStarttime,String description);
 }

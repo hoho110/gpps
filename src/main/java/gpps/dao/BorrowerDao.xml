@@ -36,8 +36,8 @@
 	<insert id="create" parameterType="gpps.model.Borrower"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
-		Borrower(name,tel,email,loginId,password,identityCard,accountId,createtime,privilege,material,request,creditValue,companyName,license,corporationPhone,corporationName,corporationAddr,thirdPartyAccount,level,range)
-		values(#{name},#{tel},#{email},#{loginId},#{password},#{identityCard},#{accountId},#{createtime},#{privilege},#{material},#{request},#{creditValue},#{companyName},#{license},#{corporationPhone},#{corporationName},#{corporationAddr},#{thirdPartyAccount},#{level},#{range})
+		Borrower(name,tel,email,loginId,password,identityCard,accountId,createtime,privilege,material,request,creditValue,companyName,license,corporationPhone,corporationName,corporationAddr,thirdPartyAccount,level,brange)
+		values(#{name},#{tel},#{email},#{loginId},#{password},#{identityCard},#{accountId},#{createtime},#{privilege},#{material},#{request},#{creditValue},#{companyName},#{license},#{corporationPhone},#{corporationName},#{corporationAddr},#{thirdPartyAccount},#{level},#{brange})
 	</insert>
 	<update id="changePrivilege">
 		update Borrower set

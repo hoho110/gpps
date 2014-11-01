@@ -29,6 +29,7 @@ public class CreateBorrower {
 		borrower.setCreditValue(10000);
 		borrower.setPrivilege(12);
 		borrower.setAccountId(account.getId());
+		borrower.setBrange("范围");
 		borrowerDao.create(borrower);
 		return borrower.getId();
 	}

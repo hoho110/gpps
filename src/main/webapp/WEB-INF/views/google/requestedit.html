@@ -25,8 +25,8 @@
 </head>
 <body>
 
-	<div class="container-fluid" style="width:800px;">
-		<div class="row" style="margin-bottom:20px; margin-top:20px;padding-left:20px;">
+	<div class="container-fluid" style="width:1000px;">
+		<div class="row" style="margin-bottom:20px; margin-top:20px;padding:10px 5px 20px 5px; border: solid green 1px;">
 		<div class="row" style="margin-bottom:20px;">
 		<div class="col-md-10" style="text-align:center;">
 			<span style="font-size:24px; font-weight:bold;">融资申请资料编辑
@@ -60,10 +60,159 @@
 		<div class="form-group has-success has-feedback">
 			<label class="control-label col-sm-3" for="inputSuccess3">描述</label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control" id="description">
+				<textarea class="form-control" id="description" style="min-height:100px;"></textarea>
 			</div>
 		</div>
 		</div>
+		
+		<div class="row" style="margin-bottom:20px; margin-top:20px; padding:10px 5px 20px 5px; border: solid green 1px;">
+		<div class="col-md-10" style="text-align:center; margin-bottom:20px;">
+			<span style="font-size:24px; font-weight:bold;">产品编辑
+		</div><div class="col-md-2"></div>
+		<div class="col-md-4">
+			<div class="panel panel-default" style="margin-bottom:5px;">
+				<div class="panel-heading">
+					<span class="glyphicon glyphicon-pencil"></span>稳健型
+					<div style="clear:both;"></div>
+				</div>
+				<div class="panel-body" id="0" style="width:100%; height:80%;">
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">金额</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="amount"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">利率</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="rate"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">还款期限</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="incomeendtime"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">最小金额</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="min"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">最小递增额</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="minadd"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">购买级别</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="level"></input>
+					</div>
+					</div>
+					<button id="create_wj" class="btn btn-lg btn-success btn-block">创建</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default" style="margin-bottom:5px;">
+				<div class="panel-heading">
+					<span class="glyphicon glyphicon-pencil"></span>均衡型
+					<div style="clear:both;"></div>
+				</div>
+				<div class="panel-body" id="1" style="width:100%; height:80%;">
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">金额</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="amount"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">利率</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="rate"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">还款期限</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="incomeendtime"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">最小金额</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="min"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">最小递增额</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="minadd"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">购买级别</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="level"></input>
+					</div>
+					</div>
+					<button id="create_jh" class="btn btn-lg btn-success btn-block">创建</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="panel panel-default" style="margin-bottom:5px;">
+				<div class="panel-heading">
+					<span class="glyphicon glyphicon-pencil"></span>进取型
+					<div style="clear:both;"></div>
+				</div>
+				<div class="panel-body" id="2" style="width:100%; height:80%;">
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">金额</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="amount"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">利率</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="rate"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">还款期限</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="incomeendtime"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">最小金额</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="min"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">最小递增额</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="minadd"></input>
+					</div>
+					</div>
+					<div class="form-group has-success has-feedback">
+						<label class="control-label col-sm-5" for="inputSuccess3">购买级别</label>
+					<div class="col-sm-7">
+						<input type="text" class="form-control" id="level"></input>
+					</div>
+					</div>
+					<button id="create_jq" class="btn btn-lg btn-success btn-block">创建</button>
+				</div>
+			</div>
+		</div>
+		
+		</div>
+		
 		<div class="row" style="border: #eee solid 1px;">
 			<div class="col-md-12">
 				请选择上传附件类型：<select id="category">
@@ -96,22 +245,48 @@
 	src="/easyservice/gpps.service.IBorrowerService?json"></script>
 <script type="text/javascript"
 	src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
+<script type="text/javascript"
+	src="/easyservice/gpps.service.IProductSeriesService?json"></script>c
+<script type="text/javascript"
+	src="/easyservice/gpps.service.IProductService?json"></script>
 <script>
 var id = parseInt(getQueryString('id'));
 var oid = null;
 var categoryname = {0:'订单资料'};
 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
 var borrowerService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
+var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
+var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 var financingrequest = null;
 var order = null;
 
+var seriestype = {};
+var series = seriesService.findAll();
+for(var i=0; i<series.size(); i++){
+	seriestype[series.get(i).type] = series.get(i).id;
+}
 
+function refreshproduct(product){
+	if(product){
+		var st = 0;
+		for(var t in seriestype){
+			if(seriestype[t] == product.productseriesId)
+				st=t;
+		}
+		
+		$('div#'+st).find('#amount').val(product.expectAmount.value);
+		$('div#'+st).find('#rate').val(product.rate.value);
+		$('div#'+st).find('#incomeendtime').val(product.incomeEndtime);
+		$('div#'+st).find('#min').val(product.minimum);
+		$('div#'+st).find('#minadd').val(product.miniAdd);
+		$('div#'+st).find('#level').val(product.levelToBuy);
+		
+	}
+}
 
 function refreshInfo(){
 	financingrequest = borrowerService.findFinancingRequest(id);
 	order = financingrequest.govermentOrder;
-	
-	alert(JSON.stringify(financingrequest));
 	
 	if(order!=null)
 		{
@@ -121,8 +296,21 @@ function refreshInfo(){
 			$('#financingEndtime').val(order.financingEndtime);
 			$('#incomeStarttime').val(order.incomeStarttime);
 			$('#description').val(order.description);
+			
+			var products = productService.findByGovermentOrder(oid);
+			for(var i=0; i<products.size(); i++){
+				var pro = products.get(i);
+				refreshproduct(pro);
+			}
 		}
 }
+
+
+
+
+
+
+
 
 
 function refreshOrderAccessory(){
@@ -209,20 +397,23 @@ $("#uploadify").uploadify({
         	refreshOrderAccessory();
         }
     }); 
+    
+jQuery(".sit-preview").smartImageTooltip({previewTemplate: "simple", imageWidth: "600px"});
+jQuery(".adminbar-quick-backup-run a").click(function(e) {
+    e.preventDefault();
+    var code = jQuery(this).attr("href").substr(11);
+    jQuery.ajax({
+        type: 'post', success: function(json) { alert(json.message); },
+        dataType: 'json', data: { runquick: {id: id, type: code, control: 0} },
+        url: gdpt_ajax_url + '?action=presstools_backup_quick&_ajax_nonce=376ffa5105'
+    });
+});
+
 });
 </script>
 <script type="text/javascript">
     jQuery(document).ready(function() {
-        jQuery(".sit-preview").smartImageTooltip({previewTemplate: "simple", imageWidth: "600px"});
-        jQuery(".adminbar-quick-backup-run a").click(function(e) {
-            e.preventDefault();
-            var code = jQuery(this).attr("href").substr(11);
-            jQuery.ajax({
-                type: 'post', success: function(json) { alert(json.message); },
-                dataType: 'json', data: { runquick: {id: id, type: code, control: 0} },
-                url: gdpt_ajax_url + '?action=presstools_backup_quick&_ajax_nonce=376ffa5105'
-            });
-    });
+        
 });
 </script>
 </html>

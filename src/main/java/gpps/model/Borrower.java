@@ -26,7 +26,7 @@ public class Borrower {
 	private String thirdPartyAccount;//第三方账户
 	private int level=0;//信用等级
 	private long lastModifyTime=System.currentTimeMillis();
-	private String range;//经营范围
+	private String brange;//经营范围
 	public Integer getId() {
 		return id;
 	}
@@ -154,11 +154,11 @@ public class Borrower {
 		this.lastModifyTime = lastModifyTime;
 	}
 	
-	public String getRange() {
-		return range;
+	public String getBrange() {
+		return brange;
 	}
-	public void setRange(String range) {
-		this.range = range;
+	public void setBrange(String brange) {
+		this.brange = brange;
 	}
 	public static int creditValueToLevel(int creditValue)
 	{

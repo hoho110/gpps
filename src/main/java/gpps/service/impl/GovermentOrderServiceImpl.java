@@ -10,11 +10,14 @@ import gpps.dao.IGovermentOrderDao;
 import gpps.dao.IProductDao;
 import gpps.dao.IProductSeriesDao;
 import gpps.dao.IStateLogDao;
+import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
 import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.model.StateLog;
+import gpps.model.Submit;
+import gpps.model.Task;
 import gpps.model.ref.Accessory;
 import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
@@ -69,6 +72,8 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	IFinancingRequestDao financingRequestDao;
 	@Autowired
 	IProductService productService;
+	@Autowired
+	ISubmitDao submitDao;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	static int[] orderStates={
 		GovermentOrder.STATE_UNPUBLISH,
@@ -227,7 +232,20 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 //					throw new IllegalOperationException("还有竞标中的产品，请先修改产品状态");
 					for(Product product:products)
 					{
-						productService.startRepaying(product.getId());
+//						productService.startRepaying(product.getId());
+						// 验证是否有待付款的Submit
+						int count=submitDao.countByProductAndStateWithPaged(product.getId(), Submit.STATE_WAITFORPAY);
+						if(count>0)
+							throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始还款");
+						//从竞标缓存中移除
+						changeState(product.getId(), Product.STATE_REPAYING);
+						product=order.findProductById(product.getId());
+						order.getProducts().remove(product);
+						product.setState(Product.STATE_REPAYING);
+						Task task=new Task();
+						task.setProductId(product.getId());
+						task.setType(Task.TYPE_PAY);
+						taskService.submit(task);
 					}
 				}
 			}

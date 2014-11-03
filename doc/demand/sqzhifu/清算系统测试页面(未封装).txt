@@ -1,33 +1,33 @@
-×¢²á½Ó¿Ú:
+æ³¨å†Œæ¥å£:
 http://218.4.234.150:88/main/loan/testloanregister.action
-¿ª»§½Ó¿Ú:
+å¼€æˆ·æ¥å£:
 http://218.4.234.150:88/main/loan/testloanregisterbind.action
-×ªÕË½Ó¿Ú:
+è½¬è´¦æ¥å£:
 http://218.4.234.150:88/main/loan/testloantransfer.action
-Óà¶î²éÑ¯½Ó¿Ú:
+ä½™é¢æŸ¥è¯¢æ¥å£:
 http://218.4.234.150:88/main/loan/testloanbalancequery.action
-³äÖµ½Ó¿Ú:
+å……å€¼æ¥å£:
 http://218.4.234.150:88/main/loan/testloanrecharge.action
-ÌáÏÖ½Ó¿Ú:
+æç°æ¥å£:
 http://218.4.234.150:88/main/loan/testloanwithdraws.action
-¶ÔÕË½Ó¿Ú:
+å¯¹è´¦æ¥å£:
 http://218.4.234.150:88/main/loan/testloanorderquery.action
-ÊÚÈ¨½Ó¿Ú:
+æˆæƒæ¥å£:
 http://218.4.234.150:88/main/loan/testloanauthorize.action
-×Ê½ğÊÍ·Å½Ó¿Ú:
+èµ„é‡‘é‡Šæ”¾æ¥å£:
 http://218.4.234.150:88/main/loan/testloanrelease.action
-ÉóºË½Ó¿Ú:
+å®¡æ ¸æ¥å£:
 http://218.4.234.150:88/main/loan/testloantransferaudit.action
-ÓÃ»§ÈÏÖ¤¡¢ÌáÏÖÒøĞĞ¿¨°ó¶¨¡¢´ú¿ÛÊÚÈ¨ÈıºÏÒ»½Ó¿Ú:
+ç”¨æˆ·è®¤è¯ã€æç°é“¶è¡Œå¡ç»‘å®šã€ä»£æ‰£æˆæƒä¸‰åˆä¸€æ¥å£:
 http://218.4.234.150:88/main/loan/testloanfastpay.action
 
-²âÊÔÆ½Ì¨±êÊ¶:
+æµ‹è¯•å¹³å°æ ‡è¯†:
 p1
-ÍĞ¹ÜÕË»§:
-ÓÃ»§Ãû:1@B.com µÇÂ¼ÃÜÂë:aaa123 Ö§¸¶ÃÜÂë:aaa456
-ÃÜ±£ÎÊÌâ´ğ°¸:1
+æ‰˜ç®¡è´¦æˆ·:
+ç”¨æˆ·å:1@B.com ç™»å½•å¯†ç :aaa123 æ”¯ä»˜å¯†ç :aaa456
+å¯†ä¿é—®é¢˜ç­”æ¡ˆ:1
 
 
-×ÔÓĞÕË»§:
-ÓÃ»§Ãû:2@B.com µÇÂ¼ÃÜÂë:aaa123 Ö§¸¶ÃÜÂë:aaa456
-ÃÜ±£ÎÊÌâ´ğ°¸:1
+è‡ªæœ‰è´¦æˆ·:
+ç”¨æˆ·å:2@B.com ç™»å½•å¯†ç :aaa123 æ”¯ä»˜å¯†ç :aaa456
+å¯†ä¿é—®é¢˜ç­”æ¡ˆ:1

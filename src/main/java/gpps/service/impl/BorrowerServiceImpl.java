@@ -266,8 +266,8 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		if(borrower.getPrivilege()!=Borrower.PRIVILEGE_FINANCING)
 		{
 			borrowerDao.changePrivilege(borrower.getId(), Borrower.PRIVILEGE_APPLY,System.currentTimeMillis());
+			borrower.setPrivilege(Borrower.PRIVILEGE_APPLY);
 		}
-		borrower.setPrivilege(Borrower.PRIVILEGE_APPLY);
 	}
 
 	@Override

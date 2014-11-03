@@ -107,7 +107,19 @@ var orderstate = {
 	
 var createAdminNavLevel2 = function(nav){
 	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
-	if(nav=='lender'){
+	if(nav=='tohandle'){
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="tohandle-borrower-request">申请净调企业<font color=red>(3)</font></a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-request">待处理融资申请<font color=red>(5)</font></a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-preview">待启动融资订单<font color=red>(2)</font></a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-financing">待审核融资订单</a></li>');
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-toclose">待关闭订单</a></li>');
+		ul.append(li1);
+		ul.append(li2);
+		ul.append(li3);
+		ul.append(li4);
+		ul.append(li5);
+	}
+	else if(nav=='lender'){
 		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="lender-view">用户浏览</a></li>');
 		ul.append(li2);
 	}else if(nav=='borrower'){
@@ -428,6 +440,9 @@ var handlerequest = function(state, container){
 	var columns = [ {
 		"sTitle" : "订单名称",
 			"code" : "name"
+	},{
+		"sTitle" : "融资企业",
+		"code" : "company"
 	}, {
 		"sTitle" : "申请额度",
 		"code" : "state"
@@ -472,6 +487,7 @@ var handlerequest = function(state, container){
 					str = '审核未通过';
 				}
 				result.aaData.push([data.govermentOrderName,
+				                    data.borrower.companyName,
 				                    data.applyFinancingAmount,
 				                    data.rate,
 				                    formatDate(data.createtime),
@@ -502,6 +518,9 @@ var requesttohandle = function(container){
 	var columns = [ {
 		"sTitle" : "订单名称",
 			"code" : "name"
+	}, {
+		"sTitle" : "融资企业",
+		"code" : "company"
 	}, {
 		"sTitle" : "申请额度",
 		"code" : "state"
@@ -552,6 +571,7 @@ var requesttohandle = function(container){
 					str = '审核未通过';
 				}
 				result.aaData.push([data.govermentOrderName,
+				                    data.borrower.companyName,
 				                    data.applyFinancingAmount,
 				                    data.rate,
 				                    formatDate(data.createtime),
@@ -579,14 +599,22 @@ var requesttohandle = function(container){
 	});
 	$('button.requestpass').click(function(e){
 		var rid = $(this).attr('id');
+		try{
 		bService.passFinancingRequest(parseInt(rid));
 		window.location.href='opadmin.html?fid=request&sid=request-pass';
+		}catch(e){
+			alert(e.message);
+		}
 	});
 	
 	$('button.requestrefuse').click(function(e){
 		var rid = $(this).attr('id');
+		try{
 		bService.refuseFinancingRequest(parseInt(rid));
 		window.location.href='opadmin.html?fid=request&sid=request-refuse';
+		}catch(e){
+			alert(e.message);
+		}
 	});
 	
 }
@@ -1053,10 +1081,10 @@ var orderfinancing = function(container){
 		
 		$('button.startpay').click(function(e){
 			var orderid = parseInt($(this).attr('id'));
-			var products = productService.findByGovermentOrder(orderid);
-			for(var i=0; i<products.size(); i++){
-				productService.startRepaying(products.get(i).id);
-			}
+//			var products = productService.findByGovermentOrder(orderid);
+//			for(var i=0; i<products.size(); i++){
+//				productService.startRepaying(products.get(i).id);
+//			}
 			orderService.startRepaying(orderid);
 			window.location.href="opadmin.html?fid=order&sid=order-paying";
 		});
@@ -1284,19 +1312,24 @@ var orderquit = function(container){
 var nav2funtion = {
 		'lender-view' : lenderview,
 		'borrower-request' : borrowerrequest,
+		'tohandle-borrower-request' : borrowerrequest,
 		'borrower-new' : borrowernew,
 		'borrower-pass' : borrowerpass,
 		'borrower-refuse' : borrowerrefuse,
 		'request-all' : requestall,
 		'request-tohandle' : requesttohandle,
+		'tohandle-request' : requesttohandle,
 		'request-pass' : requestpass,
 		'request-refuse' : requestrefuse,
 		"order-all" : orderall,
 		"order-unpublish" : orderunpublish,
 		"order-preview" : orderpreview,
+		'tohandle-order-preview' : orderpreview,
 		"order-financing" : orderfinancing,
+		'tohandle-order-financing' : orderfinancing,
 		"order-paying" : orderpaying,
 		"order-toclose" : ordertoclose,
+		'tohandle-order-toclose' : ordertoclose,
 		"order-closed" : orderclosed,
 		"order-quit" : orderquit
 }

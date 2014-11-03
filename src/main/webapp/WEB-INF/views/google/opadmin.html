@@ -91,6 +91,8 @@ a.accordion-toggle {
 
 						<div class="btn-group-vertical"
 							style="width: 100%; margin-top: 42px;">
+							<button type="button" id="tohandle"
+								class="btn nav-first btn-default btn-lg">待办业务</button>
 							<button type="button" id="lender"
 								class="btn nav-first btn-default btn-lg">个人用户</button>
 							<button type="button" id="borrower"
@@ -183,7 +185,7 @@ a.accordion-toggle {
 									$('ul.nav-second li a').first().trigger('click');
 								
 							}else{
-								$('#lender').trigger('click');
+								$('#tohandle').trigger('click');
 							}
 							
 							$('#success').click(function(e){

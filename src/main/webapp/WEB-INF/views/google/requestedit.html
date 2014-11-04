@@ -92,7 +92,7 @@
 					<div class="form-group has-success has-feedback">
 						<label class="control-label col-sm-5" for="inputSuccess3">还款期限</label>
 					<div class="col-sm-7">
-						<input type="text" class="form-control deadline" id="incomeendtime"></input>
+						<input type="text" class="form-control" id="incomeendtime0"></input>
 					</div>
 					</div>
 					<div class="form-group has-success has-feedback">
@@ -139,7 +139,7 @@
 					<div class="form-group has-success has-feedback">
 						<label class="control-label col-sm-5" for="inputSuccess3">还款期限</label>
 					<div class="col-sm-7">
-						<input type="text" class="form-control deadline" id="incomeendtime"></input>
+						<input type="text" class="form-control" id="incomeendtime1"></input>
 					</div>
 					</div>
 					<div class="form-group has-success has-feedback">
@@ -186,7 +186,7 @@
 					<div class="form-group has-success has-feedback">
 						<label class="control-label col-sm-5" for="inputSuccess3">还款期限</label>
 					<div class="col-sm-7">
-						<input type="text" class="form-control deadline" id="incomeendtime"></input>
+						<input type="text" class="form-control" id="incomeendtime2"></input>
 					</div>
 					</div>
 					<div class="form-group has-success has-feedback">
@@ -281,7 +281,7 @@ function refreshproduct(product){
 		
 		$('div#'+st).find('#amount').val(product.expectAmount.value);
 		$('div#'+st).find('#rate').val(product.rate.value);
-		$('div#'+st).find('#incomeendtime').val(formatForDatePicker(product.incomeEndtime));
+		$('#incomeendtime'+st).val(formatDateToDay(product.incomeEndtime));
 		$('div#'+st).find('#min').val(product.minimum);
 		$('div#'+st).find('#minadd').val(product.miniAdd);
 		$('div#'+st).find('#level').val(product.levelToBuy);
@@ -298,9 +298,9 @@ function refreshInfo(){
 		{
 			oid = order.id;
 			$('#title').val(order.title);
-			$('#financingStarttime').val(formatForDatePicker(order.financingStarttime));
-			$('#financingEndtime').val(formatForDatePicker(order.financingEndtime));
-			$('#incomeStarttime').val(formatForDatePicker(order.incomeStarttime));
+			$('#financingStarttime').val(formatDateToDay(order.financingStarttime));
+			$('#financingEndtime').val(formatDateToDay(order.financingEndtime));
+			$('#incomeStarttime').val(formatDateToDay(order.incomeStarttime));
 			$('#description').val(order.description);
 			
 			var products = productService.findByGovermentOrder(oid);
@@ -336,9 +336,10 @@ function refreshOrderAccessory(){
         {
               var item=items.get(i);
               var url="/download/order/"+oid+"/"+t+"/"+item.id;
+              var viewurl = "/imageview/order/"+oid+"/"+t+"/"+item.id;
               
               var single = $("<div class='col-md-4'></div>");
-              single.append("<div><a class='sit-preview' href='"+url+"'><img src='"+url+"' data-preview-url='"+url+"' style='width:200px; height:150px;'/></a></div>");
+              single.append("<div><a class='sit-preview' href='"+viewurl+"' target='_blank'><img src='"+url+"' data-preview-url='"+url+"' style='width:200px; height:150px;'/></a></div>");
               var div = $('<div></div>');
               var a = $("<a class='btn btn-warning btn-lg' href='#' style='width:200px;' id='"+item.id+"' data-desk='"+t+"'>删除</a>");
               a.click(function(e){
@@ -407,7 +408,9 @@ $(document).ready(function () {
 	$('#financingStarttime').datepicker();
 	$('#financingEndtime').datepicker();
 	$('#incomeStarttime').datepicker();
-	$('.deadline').datepicker();
+	$('#incomeendtime0').datepicker();
+	$('#incomeendtime1').datepicker();
+	$('#incomeendtime2').datepicker();
 	
 	refreshInfo();
 	
@@ -427,7 +430,7 @@ $(document).ready(function () {
 		
 		var amount = $('div#'+buttonid).find('#amount').val();
 		var rate = $('div#'+buttonid).find('#rate').val();
-		var incomeendtime =  new Date(Date.parse($('div#'+buttonid).find('#incomeendtime').val())).getTime();
+		var incomeendtime =  new Date(Date.parse($('#incomeendtime'+buttonid).val())).getTime();
 		var min = parseInt($('div#'+buttonid).find('#min').val());
 		var minadd = parseInt($('div#'+buttonid).find('#minadd').val());
 		var level = parseInt($('div#'+buttonid).find('#level').val());

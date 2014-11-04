@@ -230,7 +230,9 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 				if(products!=null&&products.size()>0)
 				{
 //					throw new IllegalOperationException("还有竞标中的产品，请先修改产品状态");
-					for(Product product:products)
+					List<Product> temp=new ArrayList<Product>();
+					temp.addAll(products);
+					for(Product product:temp)
 					{
 //						productService.startRepaying(product.getId());
 						// 验证是否有待付款的Submit
@@ -268,7 +270,9 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 				List<Product> products=order.getProducts();
 				if(products!=null&&products.size()>0)
 				{
-					for(Product product:products)
+					List<Product> temp=new ArrayList<Product>();
+					temp.addAll(products);
+					for(Product product:temp)
 					{
 						int count=submitDao.countByProductAndStateWithPaged(product.getId(), Submit.STATE_WAITFORPAY);
 						if(count>0)

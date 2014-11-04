@@ -269,7 +269,18 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 				if(products!=null&&products.size()>0)
 				{
 					for(Product product:products)
-						productService.quitFinancing(product.getId());
+					{
+						int count=submitDao.countByProductAndStateWithPaged(product.getId(), Submit.STATE_WAITFORPAY);
+						if(count>0)
+							throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始流标");
+						changeState(product.getId(), Product.STATE_QUITFINANCING);
+						order.getProducts().remove(product);
+						product.setState(Product.STATE_QUITFINANCING);
+						Task task=new Task();
+						task.setProductId(product.getId());
+						task.setType(Task.TYPE_QUITFINANCING);
+						taskService.submit(task);
+					}
 				}
 			}
 			changeState(orderId, GovermentOrder.STATE_QUITFINANCING);

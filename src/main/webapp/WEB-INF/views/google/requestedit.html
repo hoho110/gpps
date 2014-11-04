@@ -16,6 +16,7 @@
 	href="css/image/render.css" type="text/css" media="all" />
 <link rel="stylesheet" type="text/css"
 	href="css/image/default.include.b2676e.css" media="all" />
+	<link type="text/css" href="css/jquery-ui-1.9.2.custom.min.css" rel="stylesheet" />
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 <!--[if lt IE 9]>
@@ -25,7 +26,7 @@
 </head>
 <body>
 
-	<div class="container-fluid" style="width:1000px;">
+	<div class="container-fluid" style="width:1200px;">
 		<div class="row" style="margin-bottom:20px; margin-top:20px;padding:10px 5px 20px 5px; border: solid green 1px;">
 		<div class="row" style="margin-bottom:20px;">
 		<div class="col-md-10" style="text-align:center;">
@@ -42,7 +43,7 @@
 		<div class="form-group has-success has-feedback">
 			<label class="control-label col-sm-3" for="inputSuccess3">融资起始时间</label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control" id="financingStarttime"></input>
+				<input type="text" class="form-control" name='modifyStartTime',readonly='readonly', id="financingStarttime"></input>
 			</div>
 		</div>
 		<div class="form-group has-success has-feedback">
@@ -91,7 +92,7 @@
 					<div class="form-group has-success has-feedback">
 						<label class="control-label col-sm-5" for="inputSuccess3">还款期限</label>
 					<div class="col-sm-7">
-						<input type="text" class="form-control" id="incomeendtime"></input>
+						<input type="text" class="form-control deadline" id="incomeendtime"></input>
 					</div>
 					</div>
 					<div class="form-group has-success has-feedback">
@@ -138,7 +139,7 @@
 					<div class="form-group has-success has-feedback">
 						<label class="control-label col-sm-5" for="inputSuccess3">还款期限</label>
 					<div class="col-sm-7">
-						<input type="text" class="form-control" id="incomeendtime"></input>
+						<input type="text" class="form-control deadline" id="incomeendtime"></input>
 					</div>
 					</div>
 					<div class="form-group has-success has-feedback">
@@ -185,7 +186,7 @@
 					<div class="form-group has-success has-feedback">
 						<label class="control-label col-sm-5" for="inputSuccess3">还款期限</label>
 					<div class="col-sm-7">
-						<input type="text" class="form-control" id="incomeendtime"></input>
+						<input type="text" class="form-control deadline" id="incomeendtime"></input>
 					</div>
 					</div>
 					<div class="form-group has-success has-feedback">
@@ -231,6 +232,7 @@
 </body>
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="js/jquery.min.js"></script>
+<script src="js/jquery-ui-1.9.2.custom.min.js"></script>
 <script src="js/tool.js"></script>
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
@@ -250,6 +252,9 @@
 <script type="text/javascript"
 	src="/easyservice/gpps.service.IProductService?json"></script>
 <script>
+
+
+
 var id = parseInt(getQueryString('id'));
 var oid = null;
 var categoryname = {0:'订单资料'};
@@ -276,7 +281,7 @@ function refreshproduct(product){
 		
 		$('div#'+st).find('#amount').val(product.expectAmount.value);
 		$('div#'+st).find('#rate').val(product.rate.value);
-		$('div#'+st).find('#incomeendtime').val(product.incomeEndtime);
+		$('div#'+st).find('#incomeendtime').val(formatForDatePicker(product.incomeEndtime));
 		$('div#'+st).find('#min').val(product.minimum);
 		$('div#'+st).find('#minadd').val(product.miniAdd);
 		$('div#'+st).find('#level').val(product.levelToBuy);
@@ -293,9 +298,9 @@ function refreshInfo(){
 		{
 			oid = order.id;
 			$('#title').val(order.title);
-			$('#financingStarttime').val(order.financingStarttime);
-			$('#financingEndtime').val(order.financingEndtime);
-			$('#incomeStarttime').val(order.incomeStarttime);
+			$('#financingStarttime').val(formatForDatePicker(order.financingStarttime));
+			$('#financingEndtime').val(formatForDatePicker(order.financingEndtime));
+			$('#incomeStarttime').val(formatForDatePicker(order.incomeStarttime));
 			$('#description').val(order.description);
 			
 			var products = productService.findByGovermentOrder(oid);
@@ -353,6 +358,10 @@ function deleteOrderAccessory(id,category,itemId){
 	refreshOrderAccessory();
 }
 $(document).ready(function () {
+	$('#financingStarttime').datepicker();
+	$('#financingEndtime').datepicker();
+	$('#incomeStarttime').datepicker();
+	$('.deadline').datepicker();
 	
 	refreshInfo();
 	
@@ -372,7 +381,7 @@ $(document).ready(function () {
 		
 		var amount = $('div#'+buttonid).find('#amount').val();
 		var rate = $('div#'+buttonid).find('#rate').val();
-		var incomeendtime = parseInt($('div#'+buttonid).find('#incomeendtime').val());
+		var incomeendtime =  new Date(Date.parse($('div#'+buttonid).find('#incomeendtime').val())).getTime();
 		var min = parseInt($('div#'+buttonid).find('#min').val());
 		var minadd = parseInt($('div#'+buttonid).find('#minadd').val());
 		var level = parseInt($('div#'+buttonid).find('#level').val());
@@ -419,9 +428,9 @@ $('#clearall').click(function(e){
 
 $('#save').click(function(e){
 	var title = $('#title').val();
-	var financingStarttime = parseInt($('#financingStarttime').val());
-	var financingEndtime = parseInt($('#financingEndtime').val());
-	var incomeStarttime = parseInt($('#incomeStarttime').val());
+	var financingStarttime = new Date(Date.parse($('#financingStarttime').val())).getTime();
+	var financingEndtime = new Date(Date.parse($('#financingEndtime').val())).getTime();
+	var incomeStarttime = new Date(Date.parse($('#incomeStarttime').val())).getTime();
 	var description = $('#description').val();
 	if(oid!=null){
 		orderService.update(oid, title,financingStarttime,financingEndtime,incomeStarttime,description);

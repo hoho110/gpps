@@ -30,6 +30,12 @@ _$fd = function(longt) {
 		return ldStr;
 	};
 	
+	formatForDatePicker = function(longt){
+		var r = _$fd(longt);
+		var ldStr = r.MM+'/'+r.dd+'/'+r.yyyy;
+		return ldStr;
+	}
+	
 	formatDate = function(longt) {
 		//yyyy-MM-dd T HH:mm:ss
 		var r = _$fd(longt);

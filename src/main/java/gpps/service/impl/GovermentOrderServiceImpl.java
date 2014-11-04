@@ -240,7 +240,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 						if(count>0)
 							throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始还款");
 						//从竞标缓存中移除
-						changeState(product.getId(), Product.STATE_REPAYING);
+						productDao.changeState(product.getId(), Product.STATE_REPAYING,System.currentTimeMillis());
 						product=order.findProductById(product.getId());
 						order.getProducts().remove(product);
 						product.setState(Product.STATE_REPAYING);
@@ -277,7 +277,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 						int count=submitDao.countByProductAndStateWithPaged(product.getId(), Submit.STATE_WAITFORPAY);
 						if(count>0)
 							throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始流标");
-						changeState(product.getId(), Product.STATE_QUITFINANCING);
+						productDao.changeState(product.getId(), Product.STATE_QUITFINANCING,System.currentTimeMillis());
 						order.getProducts().remove(product);
 						product.setState(Product.STATE_QUITFINANCING);
 						Task task=new Task();

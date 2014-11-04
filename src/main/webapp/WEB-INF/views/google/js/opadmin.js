@@ -107,13 +107,20 @@ var orderstate = {
 	
 var createAdminNavLevel2 = function(nav){
 	var toService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IWaitToDoStatisticsService");
+	
 	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
 	if(nav=='tohandle'){
-		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="tohandle-borrower-request">申请净调企业<font color=red>(3)</font></a></li>');
-		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-request">待处理融资申请<font color=red>(5)</font></a></li>');
-		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-preview">待启动融资订单<font color=red>(2)</font></a></li>');
-		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-financing">待审核融资订单</a></li>');
-		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-toclose">待关闭订单</a></li>');
+		var res = toService.getStatistics();
+		var tbr = res.applyBorrowerCount;
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="tohandle-borrower-request">申请净调企业<font color=red>('+tbr+')</font></a></li>');
+		var frc = res.financingRequestCount;
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-request">待处理融资申请<font color=red>('+frc+')</font></a></li>');
+		var pre = res.prepublishOrderCount;
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-preview">待启动融资订单<font color=red>('+pre+')</font></a></li>');
+		var tof = res.unCheckedOrderCount;
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-financing">待审核融资订单<font color=red>('+tof+')</font></a></li>');
+		var tclo = res.waitingCloseOrderCount;
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-toclose">待关闭订单<font color=red>('+tclo+')</font></a></li>');
 		ul.append(li1);
 		ul.append(li2);
 		ul.append(li3);
@@ -1063,7 +1070,6 @@ var orderfinancing = function(container){
 		{
 			for(var i=0; i<items.size(); i++){
 				var data=items.get(i);
-				alert(data.id);
 				var products = data.products;
 				var totalamount = 0;
 				var real = 0;

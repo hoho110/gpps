@@ -23,4 +23,9 @@ public interface IGovermentOrderDao {
 	
 	public List<GovermentOrder> findAllUnpublishOrders();
 	public void update(@Param("id")Integer id,@Param("title")String title,@Param("financingStarttime")long financingStarttime,@Param("financingEndtime")long financingEndtime,@Param("incomeStarttime")long incomeStarttime,@Param("description")String description);
+	/**
+	 * 计算待审核（状态为融资中且已过融资截止时间）的订单
+	 * @return
+	 */
+	public int countAllUnCheckedOrder(long currentTime);
 }

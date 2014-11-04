@@ -108,4 +108,10 @@
     	title=#{title},financingStarttime=#{financingStarttime},financingEndtime=#{financingEndtime},incomeStarttime=#{incomeStarttime},description=#{description} 
     	where id=#{id}
     </update>
+    <select id="countAllUnCheckedOrder" resultType="int">
+    	<![CDATA[
+    	select count(*) from GovermentOrder 
+    	where state=1 and financingEndtime<=#{currentTime}
+    	]]>
+    </select>
 </mapper>

@@ -106,6 +106,7 @@ var orderstate = {
 }
 	
 var createAdminNavLevel2 = function(nav){
+	var toService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IWaitToDoStatisticsService");
 	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
 	if(nav=='tohandle'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="tohandle-borrower-request">申请净调企业<font color=red>(3)</font></a></li>');
@@ -942,8 +943,12 @@ var orderpreview = function(container){
 		
 		$('button.startfinancing').click(function(e){
 			var orderid = parseInt($(this).attr('id'));
+			try{
 			orderService.startFinancing(orderid);
 			window.location.href="opadmin.html?fid=order&sid=order-financing";
+			}catch(e){
+				alert(e.message);
+			}
 		});
 		
 		$('button.vieworder').click(function(e){
@@ -1058,6 +1063,7 @@ var orderfinancing = function(container){
 		{
 			for(var i=0; i<items.size(); i++){
 				var data=items.get(i);
+				alert(data.id);
 				var products = data.products;
 				var totalamount = 0;
 				var real = 0;

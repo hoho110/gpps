@@ -145,9 +145,10 @@ function refreshBorrowerAccessory(){
         {
               var item=items.get(i);
               var url="/download/borrower/"+id+"/"+t+"/"+item.id;
+              var viewurl="/imageview/borrower/"+id+"/"+t+"/"+item.id;
               
               var single = $("<div class='col-md-4'></div>");
-              single.append("<div><a class='sit-preview' href='"+url+"'><img src='"+url+"' data-preview-url='"+url+"' style='width:200px; height:150px;'/></a></div>");
+              single.append("<div><a class='sit-preview' href='"+viewurl+"' target='_blank'><img src='"+url+"' data-preview-url='"+url+"' style='width:200px; height:150px;'/></a></div>");
               var div = $('<div></div>');
               var a = $("<a class='btn btn-warning btn-lg' href='#' style='width:200px;' id='"+item.id+"' data-desk='"+t+"'>删除</a>");
               a.click(function(e){

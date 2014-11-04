@@ -250,10 +250,10 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 						taskService.submit(task);
 					}
 				}
+				changeState(orderId, GovermentOrder.STATE_REPAYING);
+				order=financingOrders.remove(orderId.toString());
+				order.setState(GovermentOrder.STATE_REPAYING);
 			}
-			changeState(orderId, GovermentOrder.STATE_REPAYING);
-			order=financingOrders.remove(orderId.toString());
-			order.setState(GovermentOrder.STATE_REPAYING);
 		}finally
 		{
 			releaseFinancingOrder(order);
@@ -286,10 +286,10 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 						taskService.submit(task);
 					}
 				}
+				changeState(orderId, GovermentOrder.STATE_QUITFINANCING);
+				order=financingOrders.remove(orderId.toString());
+				order.setState(GovermentOrder.STATE_QUITFINANCING);
 			}
-			changeState(orderId, GovermentOrder.STATE_QUITFINANCING);
-			order=financingOrders.remove(orderId.toString());
-			order.setState(GovermentOrder.STATE_QUITFINANCING);
 		}finally
 		{
 			releaseFinancingOrder(order);

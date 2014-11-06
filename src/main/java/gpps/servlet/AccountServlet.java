@@ -106,6 +106,11 @@ public class AccountServlet {
 		//TODO 重定向到指定页面
 		write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=mycenter'</script></head>");
 	}
+	@RequestMapping(value={"/account/thirdPartyRegist/response/bg"})
+	public void completeThirdPartyRegistBg(HttpServletRequest req, HttpServletResponse resp)
+	{
+		
+	}
 	@RequestMapping(value={"/account/recharge/request"})
 	public void recharge(HttpServletRequest req, HttpServletResponse resp)
 	{

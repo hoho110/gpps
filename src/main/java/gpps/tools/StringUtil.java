@@ -7,7 +7,12 @@ public class StringUtil {
 			throw new IllegalArgumentException(name + "must not be null");
 		return value;
 	}
-
+	public static String strFormat(String value)
+	{
+		if(isEmpty(value))
+			return "";
+		return value.trim();
+	}
 	public static boolean isEmpty(String value) {
 		return (value == null || value.trim().length() == 0);
 	}

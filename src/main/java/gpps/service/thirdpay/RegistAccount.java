@@ -3,6 +3,8 @@ package gpps.service.thirdpay;
 import javax.management.loading.PrivateClassLoader;
 
 public class RegistAccount {
+	private String baseUrl;
+	
 	private int registerType=2;//必填
 	private Integer accountType;//选填,空表示个人账户,1表示企业账户
 	private String mobile;//必填,手机号
@@ -17,6 +19,12 @@ public class RegistAccount {
 	private String returnURL;//	半自动必填,页面返回网址	
 	private String notifyURL;//必填,后台通知网址
 	private String signInfo;//必填,签名信息
+	public String getBaseUrl() {
+		return baseUrl;
+	}
+	public void setBaseUrl(String baseUrl) {
+		this.baseUrl = baseUrl;
+	}
 	public int getRegisterType() {
 		return registerType;
 	}

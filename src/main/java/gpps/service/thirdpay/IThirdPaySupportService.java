@@ -7,4 +7,6 @@ public interface IThirdPaySupportService {
 	 * @return
 	 */
 	public String getBaseUrl(String action);
+	
+	public RegistAccount getRegistAccount();
 }

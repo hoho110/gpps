@@ -51,7 +51,8 @@
         src="/easyservice/gpps.service.IPayBackService?json"></script>
     <script src="js/myaccount.js"></script>
     <script src="js/getuser.js"></script>
-    
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
     
     <script>
     var name = "";
@@ -333,7 +334,21 @@ a.accordion-toggle {
 												if ($(this).attr('data-sk') == 'done') {
 													return;
 												}
-												window.location.href = "/account/thirdPartyRegist/request";
+												//window.location.href = "/account/thirdPartyRegist/request";
+												var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+                                                var registAccount=service.getRegistAccount();
+                                                var content="<form action='"+registAccount.baseUrl+"'method='post'>";
+                                                for(var o in registAccount)
+                                               	{
+                                                    if(o=="baseUrl")
+                                                   	{
+                                                    	continue;
+                                                   	}
+                                                    content+=" ";
+                                               	}
+                                                content+="</form>";
+                                                $('#spswform').html(content);
+                                                $('#spswform').submit();
 											});
 							}
 

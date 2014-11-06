@@ -72,13 +72,10 @@ public class AccountServlet {
 	@RequestMapping(value={"/account/thirdPartyRegist/request"})
 	public void thirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
 	{
-		//TODO 重定向到第三方注册
 		log.debug("第三方注册开始");
-//		try {
-//			resp.sendRedirect("/account/thirdPartyRegist/response");
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		Object user=checkUserSession(req,resp);
+		if(user==null)
+			return;
 		writeThirdParty(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台注册认证</h3>说明：该步骤跳转到第三方平台进行用户账户注册.<p><a href='/account/thirdPartyRegist/response'>完成第三方认证</a></p></div>");
 //		log.debug("第三方注册完毕，跳转回本地");
 	}
@@ -456,6 +453,21 @@ public class AccountServlet {
 			}
 		}
 		
+	}
+	private Object checkUserSession(HttpServletRequest req,HttpServletResponse resp)
+	{
+		HttpSession session=req.getSession();
+		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+		if(user==null)
+		{
+			try {
+				resp.sendError(403,"未找到用户信息，请重新登录");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		return user;
 	}
 	
 }

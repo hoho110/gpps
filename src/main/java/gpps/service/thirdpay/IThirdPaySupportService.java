@@ -9,4 +9,6 @@ public interface IThirdPaySupportService {
 	public String getBaseUrl(String action);
 	
 	public RegistAccount getRegistAccount();
+	
+	public String getPrivateKey();
 }

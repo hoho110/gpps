@@ -5,9 +5,6 @@ import gpps.model.Lender;
 import gpps.service.ILoginService;
 import gpps.service.thirdpay.IThirdPaySupportService;
 import gpps.service.thirdpay.RegistAccount;
-import gpps.tools.MD5;
-import gpps.tools.RsaHelper;
-import gpps.tools.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,7 +43,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	public void setPlatformMoneymoremore(String platformMoneymoremore) {
 		this.platformMoneymoremore = platformMoneymoremore;
 	}
-
+	@Override
 	public String getPrivateKey() {
 		return privateKey;
 	}
@@ -86,24 +83,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		registAccount.setReturnURL(req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + "/account/thirdPartyRegist/response");
 		registAccount.setNotifyURL(registAccount.getReturnURL()+"/bg");
 		registAccount.setPlatformMoneymoremore(platformMoneymoremore);
-		StringBuilder sBuilder=new StringBuilder();
-		//String dataStr = RegisterType + AccountType + Mobile + Email + RealName + IdentificationNo  
-		//+Image1 + Image2 + LoanPlatformAccount + PlatformMoneymoremore + RandomTimeStamp + Remark1 + Remark2 + Remark3 
-		//+ ReturnURL + NotifyURL;
-		// 签名
-		sBuilder.append(registAccount.getRegisterType());
-		sBuilder.append(registAccount.getAccountType()==null?"":String.valueOf(registAccount.getAccountType()));
-		sBuilder.append(StringUtil.strFormat(registAccount.getMobile()));
-		sBuilder.append(StringUtil.strFormat(registAccount.getEmail()));
-		sBuilder.append(StringUtil.strFormat(registAccount.getRealName()));
-		sBuilder.append(StringUtil.strFormat(registAccount.getIdentificationNo()));
-		sBuilder.append(StringUtil.strFormat(registAccount.getLoanPlatformAccount()));
-		sBuilder.append(StringUtil.strFormat(registAccount.getPlatformMoneymoremore()));
-		sBuilder.append(StringUtil.strFormat(registAccount.getRandomTimeStamp()));
-		sBuilder.append(StringUtil.strFormat(registAccount.getReturnURL()));
-		sBuilder.append(StringUtil.strFormat(registAccount.getNotifyURL()));
-		RsaHelper rsa = RsaHelper.getInstance();
-		registAccount.setSignInfo(rsa.signData(sBuilder.toString(), privateKey));
+		registAccount.setSignInfo(registAccount.getSign(privateKey));
 		return registAccount;
 	}
 }

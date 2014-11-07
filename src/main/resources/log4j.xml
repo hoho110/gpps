@@ -12,10 +12,10 @@
 	
 	<!-- Application Loggers -->
 	<logger name="gpps">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 	<logger name="com.easyservice">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
 	
 	<!-- 3rdparty Loggers -->

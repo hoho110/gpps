@@ -1,5 +1,8 @@
 package gpps.service.thirdpay;
 
+import gpps.tools.RsaHelper;
+import gpps.tools.StringUtil;
+
 import javax.management.loading.PrivateClassLoader;
 
 public class RegistAccount {
@@ -108,5 +111,27 @@ public class RegistAccount {
 	}
 	public void setSignInfo(String signInfo) {
 		this.signInfo = signInfo;
+	}
+	
+	public String getSign(String key)
+	{
+		StringBuilder sBuilder=new StringBuilder();
+		//String dataStr = RegisterType + AccountType + Mobile + Email + RealName + IdentificationNo  
+		//+Image1 + Image2 + LoanPlatformAccount + PlatformMoneymoremore + RandomTimeStamp + Remark1 + Remark2 + Remark3 
+		//+ ReturnURL + NotifyURL;
+		// 签名
+		sBuilder.append(registerType);
+		sBuilder.append(accountType==null?"":String.valueOf(accountType));
+		sBuilder.append(StringUtil.strFormat(mobile));
+		sBuilder.append(StringUtil.strFormat(email));
+		sBuilder.append(StringUtil.strFormat(realName));
+		sBuilder.append(StringUtil.strFormat(identificationNo));
+		sBuilder.append(StringUtil.strFormat(loanPlatformAccount));
+		sBuilder.append(StringUtil.strFormat(platformMoneymoremore));
+		sBuilder.append(StringUtil.strFormat(randomTimeStamp));
+		sBuilder.append(StringUtil.strFormat(returnURL));
+		sBuilder.append(StringUtil.strFormat(notifyURL));
+		RsaHelper rsa = RsaHelper.getInstance();
+		return rsa.signData(sBuilder.toString(), key);
 	}
 }

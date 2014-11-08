@@ -4,7 +4,6 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
 import org.springframework.stereotype.Service;
-@Service
 public class MyHttpSessionListener implements HttpSessionListener{
 	@Override
 	public void sessionCreated(HttpSessionEvent se) {

@@ -97,7 +97,7 @@ public class AccountServlet {
 		Map<String,String> params=getAllParams(req);
 		if(params==null)
 		{
-			write(resp, "解析第三方支持错误");
+			write(resp, "解析第三方支付错误");
 			return;
 		}
 		String resultCode=params.get("ResultCode");
@@ -179,17 +179,63 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/recharge/response" })
 	public void completeRecharge(HttpServletRequest req, HttpServletResponse resp) {
-		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", req.getParameter(CASHSTREAMID)));
+		
+		completeRechargeBg(req, resp);
+		write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=cash&sid=cash-recharge'</script></head>");
+	}
+	@RequestMapping(value = { "/account/recharge/response/bg" })
+	public void completeRechargeBg(HttpServletRequest req, HttpServletResponse resp) {
+		log.info("后台回调:"+req.getRequestURI());
+		Map<String,String> params=getAllParams(req);
+		if(params==null)
+		{
+			write(resp, "解析第三方支付错误");
+			return;
+		}
+		String resultCode=params.get("ResultCode");
+		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
+		{
+			write(resp, "第三方支付返回错误,结果代码："+resultCode+",错误信息："+params.get("Message"));
+			return;
+		}
+		//RechargeMoneymoremore + PlatformMoneymoremore + LoanNo + OrderNo + Amount + Fee + FeePlatform 
+		//+ RechargeType + FeeType + CardNoList + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ResultCode
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append(StringUtil.strFormat(params.get("RechargeMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(params.get("LoanNo")));
+		sBuilder.append(StringUtil.strFormat(params.get("OrderNo")));
+		sBuilder.append(StringUtil.strFormat(params.get("Amount")));
+		sBuilder.append(StringUtil.strFormat(params.get("Fee")));
+		sBuilder.append(StringUtil.strFormat(params.get("FeePlatform")));
+		sBuilder.append(StringUtil.strFormat(params.get("RechargeType")));
+		sBuilder.append(StringUtil.strFormat(params.get("FeeType")));
+		sBuilder.append(StringUtil.strFormat(params.get("CardNoList")));
+		sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
+		sBuilder.append(StringUtil.strFormat(params.get("ResultCode")));
+		RsaHelper rsa = RsaHelper.getInstance();
+		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
+		if(!sign.equals(params.get("SignInfo")))
+		{
+			write(resp, "错误的签名");
+			return;
+		}
+		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", StringUtil.strFormat(params.get("OrderNo"))));
 		try {
 			log.debug("充值成功");
+			CashStream cashStream=cashStreamDao.find(cashStreamId);
+			if(cashStream.getChiefamount().compareTo(new BigDecimal(StringUtil.strFormat(params.get("Amount"))))!=0)
+			{
+				write(resp, "充值金额不符，请联系管理员解决.");
+				return;
+			}
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		} catch (IllegalConvertException e) {
 			log.error(e.getMessage(), e);
 		}
-		// TODO 重定向到指定页面
-		write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=cash&sid=cash-recharge'</script></head>");
-		// writeLocal(resp,
-		// "充值成功，5秒后自动跳转到我的帐户<a href='/views/google/myaccount.html?fid=cash&sid=cash-recharge'>我的帐户</a>");
 	}
 
 	@RequestMapping(value = { "/account/cash/request" })

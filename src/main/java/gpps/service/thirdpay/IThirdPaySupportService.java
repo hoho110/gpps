@@ -10,5 +10,7 @@ public interface IThirdPaySupportService {
 	
 	public RegistAccount getRegistAccount();
 	
+	public Recharge getRecharge(String amount);
+	
 	public String getPrivateKey();
 }

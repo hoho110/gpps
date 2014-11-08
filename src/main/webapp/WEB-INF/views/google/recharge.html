@@ -31,6 +31,8 @@
 	src="/easyservice/gpps.service.ILenderService?json"></script>
 <script type="text/javascript"
 				src="/easyservice/gpps.service.IBorrowerService?json"></script>
+<script type="text/javascript"
+        src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
 <script src="js/tool.js"></script>
 <script src="js/getuser.js"></script>
 </head>
@@ -113,6 +115,8 @@
                 <input type="button" name="btnSub" value="确 认" id="rechargeConfirm" class="confirmAndCancelBtn" />
                 <input type="button" class="confirmAndCancelBtn" value="重 置" />
             </div>
+            <div id="rechargeformdiv" style="display:none">
+			</div>
             </div>
                 
                 
@@ -238,7 +242,7 @@ $(document).ready(function() {
 		{
 			document.getElementById('msg').innerHTML='金额必须大于0且为整数或小数，小数点后不超过两位';
 			$('#txtAccount').val('');
-			}else{
+		}else{
 			//	document.getElementById('msg').innerHTML='';
 				
 			//	$('#myModal').modal({
@@ -246,8 +250,24 @@ $(document).ready(function() {
 			//		  backdrop: false
 			//	});
 			//	window.open("/account/recharge/request?amount="+value, "", "toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes, fullscreen = yes");
-				window.location.href="/account/recharge/request?amount="+value;
-				};
+			//window.location.href="/account/recharge/request?amount="+value;
+			var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+            var recharge=service.getRecharge(value);
+            var content="<form id='rechargeform' action='"+recharge.baseUrl+"'method='post' target='_blank'>";
+            for(var o in recharge)
+           	{
+                if(o=="baseUrl")
+               	{
+                	continue;
+               	}
+                var len = o.length;
+                var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
+                content+="<input id='"+name+"' name='"+name+"' value='"+recharge[o]+"'/> ";
+           	}
+            content+="</form>";
+            $('#rechargeformdiv').html(content);
+            $('#rechargeform').submit();
+		};
 	});
 	
 	$('#success').click(function(e){

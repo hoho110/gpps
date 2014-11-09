@@ -20,8 +20,10 @@ import gpps.service.IAccountService;
 import gpps.service.IPayBackService;
 import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.thirdpay.IThirdPaySupportService;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -56,6 +58,8 @@ public class TaskServiceImpl implements ITaskService {
 	IPayBackDao payBackDao;
 	@Autowired
 	IPayBackService payBackService;
+	@Autowired
+	IThirdPaySupportService thirdPaySupportService;
 	@PostConstruct
 	public void init() {
 		try {
@@ -156,6 +160,7 @@ public class TaskServiceImpl implements ITaskService {
 		Product product=productDao.find(task.getProductId());
 		GovermentOrder order=govermentOrderDao.find(product.getGovermentorderId());
 		Borrower borrower=borrowerDao.find(order.getBorrowerId());
+		List<String> loanNos=new ArrayList<String>();
 		loop:for(Submit submit:submits)
 		{
 			if(interrupted)

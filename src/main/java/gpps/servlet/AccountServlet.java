@@ -410,6 +410,11 @@ public class AccountServlet {
 		}
 
 	}
+	@RequestMapping(value = { "/account/checkBuy/response/bg" })
+	public void checkBuyBg(HttpServletRequest req,HttpServletResponse resp)
+	{
+		Map<String,String> params=getAllParams(req);
+	}
 	@RequestMapping(value = { "/account/repay/request" })
 	public void repay(HttpServletRequest req, HttpServletResponse resp) {
 		// HttpSession session=req.getSession();
@@ -517,7 +522,67 @@ public class AccountServlet {
 		// TODO 重定向到指定页面
 		write(resp, "还款成功，返回管理页面<a href='/views/google/admin.html'>返回</a>");
 	}
+	@RequestMapping(value = { "/account/cardBinding/response" })
+	public void completeCardBinding(HttpServletRequest req, HttpServletResponse resp) {
+		completeCardBindingBg(req, resp);
+		//重定向到指定页面
+		write(resp,"<head><script>window.location.href='/views/google/myaccount.html?fid=mycenter'</script></head>");
+	}
 
+	@RequestMapping(value = { "/account/cardBinding/response/bg" })
+	public void completeCardBindingBg(HttpServletRequest req, HttpServletResponse resp) {
+		log.info("后台回调:"+req.getRequestURI());
+		Map<String,String> params=getAllParams(req);
+		if(params==null)
+		{
+			write(resp, "解析第三方支付错误");
+			return;
+		}
+		String resultCode=params.get("ResultCode");
+		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
+		{
+			write(resp, "第三方支付返回错误,结果代码："+resultCode+",错误信息："+params.get("Message"));
+			return;
+		}
+		//MoneymoremoreId + PlatformMoneymoremore + Action + CardType + BankCode + CardNo + BranchBankName + Province 
+		//+ City + WithholdBeginDate + WithholdEndDate + SingleWithholdLimit + TotalWithholdLimit+ RandomTimeStamp 
+		//+ Remark1 + Remark2 + Remark3 + ResultCode
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append(StringUtil.strFormat(params.get("MoneymoremoreId")));
+		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(params.get("Action")));
+		sBuilder.append(StringUtil.strFormat(params.get("CardType")));
+		sBuilder.append(StringUtil.strFormat(params.get("BankCode")));
+		sBuilder.append(StringUtil.strFormat(params.get("CardNo")));
+		sBuilder.append(StringUtil.strFormat(params.get("BranchBankName")));
+		sBuilder.append(StringUtil.strFormat(params.get("Province")));
+		sBuilder.append(StringUtil.strFormat(params.get("City")));
+		sBuilder.append(StringUtil.strFormat(params.get("WithholdBeginDate")));
+		sBuilder.append(StringUtil.strFormat(params.get("WithholdEndDate")));
+		sBuilder.append(StringUtil.strFormat(params.get("SingleWithholdLimit")));
+		sBuilder.append(StringUtil.strFormat(params.get("TotalWithholdLimit")));
+		sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
+		sBuilder.append(StringUtil.strFormat(params.get("ResultCode")));
+		RsaHelper rsa = RsaHelper.getInstance();
+		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
+		if(!sign.equals(params.get("SignInfo")))
+		{
+			write(resp, "错误的签名");
+			return;
+		}
+//		String thirdPartyAccount = params.get("MoneymoremoreId");
+//		String accountType=params.get("AccountType");
+//		String loanPlatformAccount=params.get("LoanPlatformAccount");
+//		Integer id=Integer.parseInt(loanPlatformAccount.substring(1, loanPlatformAccount.length()));
+//		if (StringUtil.isEmpty(accountType)) {
+//			lenderService.registerThirdPartyAccount(id,thirdPartyAccount);
+//		} else if (accountType.equals("1")) {
+//			borrowerService.registerThirdPartyAccount(id,thirdPartyAccount);
+//		}
+	}
 	private void writeThirdParty(HttpServletResponse resp, String message) {
 
 		StringBuilder text = new StringBuilder();

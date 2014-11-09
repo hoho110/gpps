@@ -32,7 +32,8 @@
     </bean>
     <bean id="chinanprSupportService" class="gpps.service.impl.ThirdPaySupportServiceImpl">
         <property name="url" value="${pay.url}"></property>
-        <property name="privateKey" value="${key}"></property>
+        <property name="privateKey" value="${privateKey}"></property>
+        <property name="publicKey" value="${publicKey}"></property>
     </bean>
 	<import resource="classpath:spring-dao.xml"/>
 </beans>

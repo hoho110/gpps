@@ -13,6 +13,8 @@ import gpps.service.ILoginService;
 import gpps.service.IProductService;
 import gpps.service.ISubmitService;
 import gpps.service.exception.InsufficientBalanceException;
+import gpps.service.thirdpay.CardBinding;
+import gpps.service.thirdpay.IHttpClientService;
 import gpps.service.thirdpay.IThirdPaySupportService;
 import gpps.service.thirdpay.Recharge;
 import gpps.service.thirdpay.RegistAccount;
@@ -20,6 +22,7 @@ import gpps.service.thirdpay.Transfer;
 import gpps.service.thirdpay.Transfer.LoanJson;
 import gpps.tools.Common;
 import gpps.tools.ObjectUtil;
+import gpps.tools.RsaHelper;
 import gpps.tools.StringUtil;
 
 import java.io.IOException;
@@ -34,6 +37,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -41,15 +45,20 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	public static final String ACTION_REGISTACCOUNT="0";
 	public static final String ACTION_RECHARGE="1";
 	public static final String ACTION_TRANSFER="2";
+	public static final String ACTION_CHECK="3";
+	public static final String ACTION_CARDBINDING="4";
 	private static Map<String, String> urls=new HashMap<String, String>();
 	static {
 		urls.put(ACTION_REGISTACCOUNT, "/loan/toloanregisterbind.action");
 		urls.put(ACTION_RECHARGE, "/loan/toloanrecharge.action");
 		urls.put(ACTION_TRANSFER, "/loan/loan.action");
+		urls.put(ACTION_CHECK, "/loan/toloantransferaudit.action");
+		urls.put(ACTION_CARDBINDING, "/loan/toloanfastpay.action");
 	}
 	private String url="";
 	private String platformMoneymoremore="p401";
 	private String privateKey;
+	private String publicKey;
 	@Autowired
 	IAccountService accountService;
 	@Autowired
@@ -62,6 +71,18 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	IGovermentOrderService orderService;
 	@Autowired
 	IBorrowerService borrowerService;
+	@Autowired
+	IHttpClientService httpClientService;
+	
+	private Logger log=Logger.getLogger(ThirdPaySupportServiceImpl.class);
+	public String getPublicKey() {
+		return publicKey;
+	}
+
+	public void setPublicKey(String publicKey) {
+		this.publicKey = publicKey;
+	}
+
 	public String getUrl() {
 		return url;
 	}
@@ -151,7 +172,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			cashStreamId = accountService.rechargeBorrowerAccount(borrower.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "充值");
 		}
 		else {
-			throw new RuntimeException("不支持该用户开户");
+			throw new RuntimeException("不支持该用户充值");
 		}
 		recharge.setOrderNo(String.valueOf(cashStreamId));
 		recharge.setSignInfo(recharge.getSign(privateKey));
@@ -203,5 +224,97 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		}
 		transfer.setSignInfo(transfer.getSign(privateKey));
 		return transfer;
+	}
+
+	@Override
+	public void check(List<String> loanNos,int auditType) {
+		if(loanNos==null||loanNos.size()==0)
+			return;
+		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		StringBuilder loanNoSBuilder=new StringBuilder();
+		Map<String,String> params=new HashMap<String, String>();
+		params.put("PlatformMoneymoremore", platformMoneymoremore);
+		params.put("AuditType", String.valueOf(auditType));
+		params.put("ReturnURL", req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + "/account/checkBuy/response/bg");
+		params.put("NotifyURL", params.get("ReturnURL"));
+		for(int i=0;i<loanNos.size();i++)
+		{
+			if(loanNoSBuilder.length()!=0)
+				loanNoSBuilder.append(",");
+			loanNoSBuilder.append(loanNos.get(i));
+			if(i>0&&i%200==0)
+			{
+				params.put("LoanNoList", loanNoSBuilder.toString());
+				
+				//LoanNoList + PlatformMoneymoremore + AuditType + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ReturnURL + NotifyURL
+				StringBuilder sBuilder=new StringBuilder();
+				sBuilder.append(StringUtil.strFormat(params.get("LoanNoList")));
+				sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
+				sBuilder.append(StringUtil.strFormat(params.get("AuditType")));
+				sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
+				sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
+				sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
+				sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
+				sBuilder.append(StringUtil.strFormat(params.get("ReturnURL")));
+				sBuilder.append(StringUtil.strFormat(params.get("NotifyURL")));
+				RsaHelper rsa = RsaHelper.getInstance();
+				String signInfo=rsa.signData(sBuilder.toString(), privateKey);
+				params.put("SignInfo", signInfo);
+				String body=httpClientService.post(url, params);
+				log.info(body);
+				
+				loanNoSBuilder=new StringBuilder();
+			}
+		}
+		if(loanNoSBuilder.length()>0)
+		{
+			params.put("LoanNoList", loanNoSBuilder.toString());
+			
+			//LoanNoList + PlatformMoneymoremore + AuditType + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ReturnURL + NotifyURL
+			StringBuilder sBuilder=new StringBuilder();
+			sBuilder.append(StringUtil.strFormat(params.get("LoanNoList")));
+			sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
+			sBuilder.append(StringUtil.strFormat(params.get("AuditType")));
+			sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
+			sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
+			sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
+			sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
+			sBuilder.append(StringUtil.strFormat(params.get("ReturnURL")));
+			sBuilder.append(StringUtil.strFormat(params.get("NotifyURL")));
+			RsaHelper rsa = RsaHelper.getInstance();
+			String signInfo=rsa.signData(sBuilder.toString(), privateKey);
+			params.put("SignInfo", signInfo);
+			String body=httpClientService.post(url, params);
+			log.info(body);
+		}
+	}
+
+	@Override
+	public CardBinding getCardBinding(String cardNo) {
+		CardBinding cardBinding=new CardBinding();
+		cardBinding.setBaseUrl(getBaseUrl(ACTION_CARDBINDING));
+		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		HttpSession session=req.getSession();
+		Object currentUser=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+		cardBinding.setPlatformMoneymoremore(platformMoneymoremore);
+		cardBinding.setAction("2");
+		RsaHelper rsa = RsaHelper.getInstance();
+		cardBinding.setCardNo(cardNo);
+		cardBinding.setReturnURL(req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() +"/account/cardBinding/response");
+		cardBinding.setNotifyURL(cardBinding.getReturnURL()+"/bg");
+		if(currentUser instanceof Lender)
+		{
+			Lender lender=(Lender)currentUser;
+			cardBinding.setMoneymoremoreId(lender.getThirdPartyAccount());
+		}else if(currentUser instanceof Borrower){
+			Borrower borrower=(Borrower)currentUser;
+			cardBinding.setMoneymoremoreId(borrower.getThirdPartyAccount());
+		}
+		else {
+			throw new RuntimeException("不支持该用户开户");
+		}
+		cardBinding.setSignInfo(cardBinding.getSign(privateKey));
+		cardBinding.setCardNo(rsa.encryptData(cardNo, publicKey));
+		return cardBinding;
 	}
 }

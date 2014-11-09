@@ -1,5 +1,7 @@
 package gpps.service.thirdpay;
 
+import gpps.service.exception.InsufficientBalanceException;
+
 public interface IThirdPaySupportService {
 	/**
 	 * 根据行为获取url
@@ -11,6 +13,8 @@ public interface IThirdPaySupportService {
 	public RegistAccount getRegistAccount();
 	
 	public Recharge getRecharge(String amount);
+	
+	public Transfer getTransferToBuy(Integer submitId,String pid) throws InsufficientBalanceException;
 	
 	public String getPrivateKey();
 }

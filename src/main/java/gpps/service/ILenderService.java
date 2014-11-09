@@ -53,7 +53,7 @@ public interface ILenderService extends ILoginService{
 	 */
 	public Lender getCurrentUser();
 	
-	public void registerThirdPartyAccount(String thirdPartyAccount);
+	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount);
 	
 	public boolean isIdentityAuthentication();
 	public boolean isThirdPartyAuthentication();

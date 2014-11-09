@@ -33,4 +33,6 @@ public interface ICashStreamDao {
 	 * @return
 	 */
 	public List<CashStream> findRepayCashStream(@Param("submitId")Integer submitId,@Param("payBackId")Integer payBackId);
+	
+	public void updateLoanNo(@Param("cashStreamId") Integer cashStreamId,@Param("loanNo") String loanNo);
 }

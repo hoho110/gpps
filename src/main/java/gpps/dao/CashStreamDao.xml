@@ -96,4 +96,7 @@
             and payBackId=#{payBackId}
         </if>
     </select>
+    <update id="updateLoanNo">
+    	update CashStream set loanNo=#{loanNo} where id=#{cashStreamId}
+    </update>
 </mapper>

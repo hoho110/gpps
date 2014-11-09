@@ -336,6 +336,7 @@ create table CashStream
    description          varchar(2000),
    paybackId            integer,
    state                int not null default 1,
+   loanNo               varchar(255),
    primary key (id)
 );
 

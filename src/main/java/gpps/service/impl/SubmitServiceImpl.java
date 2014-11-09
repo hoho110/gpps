@@ -333,12 +333,16 @@ public class SubmitServiceImpl implements ISubmitService {
 	public void confirmBuy(Integer submitId) throws IllegalConvertException {
 		changeState(submitId, Submit.STATE_COMPLETEPAY);
 		Submit submit=submitDao.find(submitId);
-		Lender lender=lenderService.getCurrentUser();
+		Lender lender=lenderService.find(submit.getLenderId());
 		int grade=lender.getGrade()+submit.getAmount().intValue();
 		int level=Lender.gradeToLevel(grade);
 		lenderDao.changeGradeAndLevel(lender.getId(), grade, level);
-		lender.setGrade(grade);
-		lender.setLevel(level);
+		lender=lenderService.getCurrentUser();
+		if(lender!=null)
+		{
+			lender.setGrade(grade);
+			lender.setLevel(level);
+		}
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import gpps.model.CashStream;
 import gpps.model.Lender;
 import gpps.model.PayBack;
 import gpps.model.Product;
-import gpps.model.Submit;
 import gpps.model.Task;
 import gpps.service.IAccountService;
 import gpps.service.IBorrowerService;
@@ -21,7 +20,8 @@ import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.thirdpay.IThirdPaySupportService;
-import gpps.tools.ObjectUtil;
+import gpps.service.thirdpay.Transfer.LoanJson;
+import gpps.tools.Common;
 import gpps.tools.RsaHelper;
 import gpps.tools.StringUtil;
 
@@ -30,6 +30,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -74,15 +75,15 @@ public class AccountServlet {
 	public static final String SUBMITID = "submitId";
 	public static final String PAYBACKID = "paybackId";
 
-	@RequestMapping(value = { "/account/thirdPartyRegist/request" })
-	public void thirdPartyRegist(HttpServletRequest req, HttpServletResponse resp) {
-		log.debug("第三方注册开始");
-		Object user = checkUserSession(req, resp);
-		if (user == null)
-			return;
-		writeThirdParty(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台注册认证</h3>说明：该步骤跳转到第三方平台进行用户账户注册.<p><a href='/account/thirdPartyRegist/response'>完成第三方认证</a></p></div>");
-		// log.debug("第三方注册完毕，跳转回本地");
-	}
+//	@RequestMapping(value = { "/account/thirdPartyRegist/request" })
+//	public void thirdPartyRegist(HttpServletRequest req, HttpServletResponse resp) {
+//		log.debug("第三方注册开始");
+//		Object user = checkUserSession(req, resp);
+//		if (user == null)
+//			return;
+//		writeThirdParty(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台注册认证</h3>说明：该步骤跳转到第三方平台进行用户账户注册.<p><a href='/account/thirdPartyRegist/response'>完成第三方认证</a></p></div>");
+//		// log.debug("第三方注册完毕，跳转回本地");
+//	}
 
 	@RequestMapping(value = { "/account/thirdPartyRegist/response" })
 	public void completeThirdPartyRegist(HttpServletRequest req, HttpServletResponse resp) {
@@ -134,48 +135,41 @@ public class AccountServlet {
 			return;
 		}
 		String thirdPartyAccount = params.get("MoneymoremoreId");
-		HttpSession session = req.getSession();
-		Object user = session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
-		if (user == null) {
-			try {
-				resp.sendError(403, "未找到用户信息，请重新登录");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-		if (user instanceof Lender) {
-			lenderService.registerThirdPartyAccount(thirdPartyAccount);
-		} else if (user instanceof Borrower) {
-			borrowerService.registerThirdPartyAccount(thirdPartyAccount);
+		String accountType=params.get("AccountType");
+		String loanPlatformAccount=params.get("LoanPlatformAccount");
+		Integer id=Integer.parseInt(loanPlatformAccount.substring(1, loanPlatformAccount.length()));
+		if (StringUtil.isEmpty(accountType)) {
+			lenderService.registerThirdPartyAccount(id,thirdPartyAccount);
+		} else if (accountType.equals("1")) {
+			borrowerService.registerThirdPartyAccount(id,thirdPartyAccount);
 		}
 	}
 
-	@RequestMapping(value = { "/account/recharge/request" })
-	public void recharge(HttpServletRequest req, HttpServletResponse resp) {
-		String amount = req.getParameter(AMOUNT);
-		HttpSession session = req.getSession();
-		Object user = session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
-		if (user == null) {
-			try {
-				resp.sendError(403, "未找到用户信息，请重新登录");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-		Integer cashStreamId = null;
-		if (user instanceof Lender) {
-			Lender lender = (Lender) user;
-			cashStreamId = accountService.rechargeLenderAccount(lender.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "充值");
-		} else if (user instanceof Borrower) {
-			Borrower borrower = (Borrower) user;
-			cashStreamId = accountService.rechargeBorrowerAccount(borrower.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "充值");
-		}
-		log.debug("充值：amount=" + amount + ",cashStreamId=" + cashStreamId);
-		log.debug("跳转到第三方进行充值");
-		writeThirdParty(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台充值</h3>说明：该步骤跳转到第三方平台,用户完成从银行卡到第三方平台账户的充值.<p><a href='/account/recharge/response?cashStreamId=" + cashStreamId + "'>充值成功</a><p><a href='javascript:window.close()'>充值失败</a></p></div>");
-	}
+//	@RequestMapping(value = { "/account/recharge/request" })
+//	public void recharge(HttpServletRequest req, HttpServletResponse resp) {
+//		String amount = req.getParameter(AMOUNT);
+//		HttpSession session = req.getSession();
+//		Object user = session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+//		if (user == null) {
+//			try {
+//				resp.sendError(403, "未找到用户信息，请重新登录");
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			return;
+//		}
+//		Integer cashStreamId = null;
+//		if (user instanceof Lender) {
+//			Lender lender = (Lender) user;
+//			cashStreamId = accountService.rechargeLenderAccount(lender.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "充值");
+//		} else if (user instanceof Borrower) {
+//			Borrower borrower = (Borrower) user;
+//			cashStreamId = accountService.rechargeBorrowerAccount(borrower.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "充值");
+//		}
+//		log.debug("充值：amount=" + amount + ",cashStreamId=" + cashStreamId);
+//		log.debug("跳转到第三方进行充值");
+//		writeThirdParty(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台充值</h3>说明：该步骤跳转到第三方平台,用户完成从银行卡到第三方平台账户的充值.<p><a href='/account/recharge/response?cashStreamId=" + cashStreamId + "'>充值成功</a><p><a href='javascript:window.close()'>充值失败</a></p></div>");
+//	}
 
 	@RequestMapping(value = { "/account/recharge/response" })
 	public void completeRecharge(HttpServletRequest req, HttpServletResponse resp) {
@@ -224,14 +218,21 @@ public class AccountServlet {
 			return;
 		}
 		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", StringUtil.strFormat(params.get("OrderNo"))));
+		String loanNo=params.get("LoanNo");
 		try {
 			log.debug("充值成功");
 			CashStream cashStream=cashStreamDao.find(cashStreamId);
+			if(cashStream.getState()==CashStream.STATE_SUCCESS)
+			{
+				log.debug("重复的回复");
+				return;
+			}
 			if(cashStream.getChiefamount().compareTo(new BigDecimal(StringUtil.strFormat(params.get("Amount"))))!=0)
 			{
 				write(resp, "充值金额不符，请联系管理员解决.");
 				return;
 			}
+			cashStreamDao.updateLoanNo(cashStreamId, loanNo);
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		} catch (IllegalConvertException e) {
 			log.error(e.getMessage(), e);
@@ -292,83 +293,123 @@ public class AccountServlet {
 		// "取现成功，5秒后自动跳转到我的帐户<a href='/views/google/myaccount.html?fid=cash&sid=cash-withdraw'>我的帐户</a>");
 	}
 
-	@RequestMapping(value = { "/account/buy/request" })
-	public void buy(HttpServletRequest req, HttpServletResponse resp) {
-		String pid = req.getParameter("pid");
-		HttpSession session = req.getSession();
-		Object user = session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
-		if (user == null) {
-			try {
-				resp.sendError(403, "未找到用户信息，请重新登录");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-		Integer submitId = Integer.parseInt(StringUtil.checkNullAndTrim(SUBMITID, req.getParameter(SUBMITID)));
-		Submit submit = ObjectUtil.checkNullObject(Submit.class, submitService.find(submitId));
-		Integer cashStreamId = null;
-		try {
-			cashStreamId = accountService.freezeLenderAccount(((Lender) user).getAccountId(), submit.getAmount(), submitId, "购买");
-		} catch (InsufficientBalanceException e) {
-			try {
-				resp.sendError(400, "余额不足");
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			log.debug(e.getMessage(), e);
-			return;
-		}
-		log.debug("购买：amount=" + submit.getAmount() + ",cashStreamId=" + cashStreamId);
-		log.debug("跳转到第三方进行购买");
-		// log.debug("第三方购买完毕，跳转回本地");
-		// try {
-		// resp.sendRedirect("/account/buy/response?cashStreamId="+cashStreamId);
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
-		String html = "";
-		if (pid != null) {
-			html = "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>" + "说明：该步骤跳转到第三方平台,用户输入第三方平台账户密码完成购买.<p><a href='/account/buy/response?cashStreamId=" + cashStreamId + "&success=true&pid=" + pid + "'>购买成功</a></p>" + "<p><a href='/account/buy/response?cashStreamId=" + cashStreamId + "&success=false&pid=" + pid + "'>购买失败</a></p></div>";
-		} else {
-			html = "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>" + "说明：该步骤跳转到第三方平台,用户输入第三方平台账户密码完成购买.<p><a href='/account/buy/response?cashStreamId=" + cashStreamId + "&success=true'>购买成功</a></p>" + "<p><a href='/account/buy/response?cashStreamId=" + cashStreamId + "&success=false'>购买失败</a></p></div>";
-		}
-
-		writeThirdParty(resp, html);
-	}
+//	@RequestMapping(value = { "/account/buy/request" })
+//	public void buy(HttpServletRequest req, HttpServletResponse resp) {
+//		String pid = req.getParameter("pid");
+//		HttpSession session = req.getSession();
+//		Object user = session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+//		if (user == null) {
+//			try {
+//				resp.sendError(403, "未找到用户信息，请重新登录");
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			return;
+//		}
+//		Integer submitId = Integer.parseInt(StringUtil.checkNullAndTrim(SUBMITID, req.getParameter(SUBMITID)));
+//		Submit submit = ObjectUtil.checkNullObject(Submit.class, submitService.find(submitId));
+//		Integer cashStreamId = null;
+//		try {
+//			cashStreamId = accountService.freezeLenderAccount(((Lender) user).getAccountId(), submit.getAmount(), submitId, "购买");
+//		} catch (InsufficientBalanceException e) {
+//			try {
+//				resp.sendError(400, "余额不足");
+//			} catch (IOException e1) {
+//				e1.printStackTrace();
+//			}
+//			log.debug(e.getMessage(), e);
+//			return;
+//		}
+//		log.debug("购买：amount=" + submit.getAmount() + ",cashStreamId=" + cashStreamId);
+//		log.debug("跳转到第三方进行购买");
+//		// log.debug("第三方购买完毕，跳转回本地");
+//		// try {
+//		// resp.sendRedirect("/account/buy/response?cashStreamId="+cashStreamId);
+//		// } catch (IOException e) {
+//		// e.printStackTrace();
+//		// }
+//		String html = "";
+//		if (pid != null) {
+//			html = "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>" + "说明：该步骤跳转到第三方平台,用户输入第三方平台账户密码完成购买.<p><a href='/account/buy/response?cashStreamId=" + cashStreamId + "&success=true&pid=" + pid + "'>购买成功</a></p>" + "<p><a href='/account/buy/response?cashStreamId=" + cashStreamId + "&success=false&pid=" + pid + "'>购买失败</a></p></div>";
+//		} else {
+//			html = "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>" + "说明：该步骤跳转到第三方平台,用户输入第三方平台账户密码完成购买.<p><a href='/account/buy/response?cashStreamId=" + cashStreamId + "&success=true'>购买成功</a></p>" + "<p><a href='/account/buy/response?cashStreamId=" + cashStreamId + "&success=false'>购买失败</a></p></div>";
+//		}
+//
+//		writeThirdParty(resp, html);
+//	}
 
 	@RequestMapping(value = { "/account/buy/response" })
 	public void completeBuy(HttpServletRequest req, HttpServletResponse resp) {
-		String pid = req.getParameter("pid");
-		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim(CASHSTREAMID, req.getParameter(CASHSTREAMID)));
-		boolean success = Boolean.parseBoolean(StringUtil.checkNullAndTrim(CASHSTREAMID, req.getParameter("success")));
-		if (success) {
-			try {
-				log.debug("购买成功");
-				CashStream cashStream = cashStreamDao.find(cashStreamId);
-				submitService.confirmBuy(cashStream.getSubmitId());
-				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-			} catch (IllegalConvertException e) {
-				log.error(e.getMessage(), e);
-			}
-			// TODO 重定向到指定页面
-			if (pid != null)
-				writeLocal(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/views/google/productdetail.html?pid=" + pid + "'>继续购买</a></p><a href='/views/google/myaccount.html'>返回我的帐户</a></div>");
-			else {
-				writeLocal(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/views/google/myaccount.html'>返回我的帐户</a></p></div>");
-			}
-		} else {
-			try {
-				log.debug("购买失败");
-				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_FAIL);
-			} catch (IllegalConvertException e) {
-				e.printStackTrace();
-			}
-			write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=submit&sid=submit-toafford'</script></head>");
+		completeBuyBg(req, resp);
+		String pid=(String) req.getAttribute("pid");
+		if (!StringUtil.isEmpty(pid))
+			write(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/views/google/productdetail.html?pid=" + pid + "'>继续购买</a></p><a href='/views/google/myaccount.html'>返回我的帐户</a></div>");
+		else {
+			write(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/views/google/myaccount.html'>返回我的帐户</a></p></div>");
+		}
+//			log.debug("购买失败");
+//			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_FAIL);
+//			write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=submit&sid=submit-toafford'</script></head>");
+	}
+	@RequestMapping(value = { "/account/buy/response/bg" })
+	public void completeBuyBg(HttpServletRequest req, HttpServletResponse resp) {
+		log.info("后台回调:"+req.getRequestURI());
+		Map<String,String> params=getAllParams(req);
+		if(params==null)
+		{
+			write(resp, "解析第三方支付错误");
+			return;
+		}
+		String resultCode=params.get("ResultCode");
+		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
+		{
+			write(resp, "第三方支付返回错误,结果代码："+resultCode+",错误信息："+params.get("Message"));
+			return;
+		}
+		//LoanJsonList + PlatformMoneymoremore + Action + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ResultCode
+		StringBuilder sBuilder=new StringBuilder();
+		String loanJsonList = null;
+		try {
+			loanJsonList=URLDecoder.decode(params.get("LoanJsonList"),"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		sBuilder.append(StringUtil.strFormat(loanJsonList));
+		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(params.get("Action")));
+		sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
+		sBuilder.append(StringUtil.strFormat(params.get("ResultCode")));
+		RsaHelper rsa = RsaHelper.getInstance();
+		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
+		if(!sign.equals(params.get("SignInfo")))
+		{
+			write(resp, "错误的签名");
+			return;
+		}
+		List<Object> loanJsons=Common.JSONDecodeList(loanJsonList, LoanJson.class);
+		String pid = params.get("Remark1");
+		req.setAttribute("pid", pid);
+		LoanJson loanJson=(LoanJson)(loanJsons.get(0));
+		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim(CASHSTREAMID, loanJson.getOrderNo()));
+		String loanNo=loanJson.getLoanNo();
+		CashStream cashStream = cashStreamDao.find(cashStreamId);
+		if(cashStream.getState()==CashStream.STATE_SUCCESS)
+		{
+			log.debug("重复的回复");
+			return;
+		}
+		try {
+			submitService.confirmBuy(cashStream.getSubmitId());
+			cashStreamDao.updateLoanNo(cashStreamId, loanNo);
+			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+		} catch (IllegalConvertException e) {
+			e.printStackTrace();
 		}
 
 	}
-
 	@RequestMapping(value = { "/account/repay/request" })
 	public void repay(HttpServletRequest req, HttpServletResponse resp) {
 		// HttpSession session=req.getSession();

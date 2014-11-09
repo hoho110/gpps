@@ -1,0 +1,1 @@
+alter table CashStream add(loanNo varchar(255));

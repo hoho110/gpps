@@ -369,5 +369,13 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	public void update(Integer id, String corporationName, String corporationAddr, String brange) {
 		borrowerDao.update(id, corporationName, corporationAddr, brange);
 	}
+
+	@Override
+	public void bindCard(Integer id, Integer cardId) {
+		borrowerDao.bindCard(id, cardId);
+		Borrower borrower=getCurrentUser();
+		if(borrower!=null)
+			borrower.setCardBindingId(cardId);
+	}
 	
 }

@@ -17,5 +17,6 @@
 		<mapper resource="gpps/dao/TaskDao.xml" />
 		<mapper resource="gpps/dao/StateLogDao.xml" />
 		<mapper resource="gpps/dao/FinancingRequestDao.xml" />
+		<mapper resource="gpps/dao/CardBindingDao.xml" />
 	</mappers>
 </configuration>

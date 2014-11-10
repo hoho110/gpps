@@ -22,5 +22,8 @@ public interface IThirdPaySupportService {
 	
 	public void check(List<String> loanNos,int auditType);
 	
-	public CardBinding getCardBinding(String cardNo);
+	public CardBinding getCardBinding();
+	
+	public Cash getCash(String amount) throws InsufficientBalanceException;
+	
 }

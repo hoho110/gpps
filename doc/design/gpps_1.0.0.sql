@@ -42,6 +42,8 @@ drop table if exists ProductSeries;
 
 drop table if exists FinancingRequest;
 
+drop table if exists CardBinding;
+
 /*==============================================================*/
 /* Table: Borrower                                              */
 /*==============================================================*/
@@ -71,6 +73,7 @@ create table Borrower
    level                int not null default 0,
    lastModifyTime       BIGINT not null default 0,
    brange                varchar(255),
+      cardBindingId        integer,
    primary key (id)
 );
 
@@ -137,6 +140,7 @@ create table Lender
    address              varchar(255),
    thirdPartyAccount    varchar(255),
    annualIncome         varchar(255),
+      cardBindingId        integer,
    primary key (id)
 );
 
@@ -414,6 +418,20 @@ create table FinancingRequest
    primary key (id)
 );
 
+/*==============================================================*/
+/* Table: CardBinding                                           */
+/*==============================================================*/
+create table CardBinding
+(
+   id                   Integer not null auto_increment,
+   CardNo               varchar(100) not null,
+   CardType             int not null default 0,
+   BankCode             varchar(100) not null,
+   BranchBankName       varchar(100) not null,
+   Province             varchar(100) not null,
+   City                 varchar(100) not null,
+   primary key (id)
+);
 alter table FinancingRequest add constraint FK_Reference_FinancingRequest_Borrower foreign key (borrowerID)
       references Borrower (id) on delete restrict on update restrict;
 
@@ -461,4 +479,7 @@ alter table PayBack add constraint FK_Ref_PayBack_product foreign key (productId
       
 alter table Govermentorder add constraint FK_Reference_GovermentOrder_FinancingRequest foreign key (FinancingRequestId)
       references FinancingRequest (id) on delete restrict on update restrict;
-
+alter table Lender add constraint FK_Ref_Lender_CardBinding foreign key (cardbindingId)
+      references CardBinding (id) on delete restrict on update restrict;
+alter table Borrower add constraint FK_Ref_Borrower_CardBinding foreign key (cardBindingId)
+      references CardBinding (id) on delete restrict on update restrict;

@@ -33,5 +33,7 @@ public interface ILenderDao {
 	 * @param state -1 不限
 	 * @return
 	 */
-	public List<Borrower> findByPrivilegeWithPaging(@Param("privilege")int privilege,@Param("offset")int offset,@Param("recnum")int recnum);
+	public List<Lender> findByPrivilegeWithPaging(@Param("privilege")int privilege,@Param("offset")int offset,@Param("recnum")int recnum);
+	public void bindCard(@Param("id")Integer id,@Param("cardId")Integer cardId);
+	public Lender findByThirdPartyAccount(String thirdPartyAccount);
 }

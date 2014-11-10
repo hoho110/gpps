@@ -128,4 +128,6 @@ public interface IBorrowerService extends ILoginService {
 	 */
 	public Map<String, Object> findByPrivilegeWithPaging(int privilege,int offset,int recnum);
 	public void update(Integer id,String corporationName,String corporationAddr,String brange);
+	
+	public void bindCard(Integer id, Integer cardId);
 }

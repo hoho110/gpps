@@ -1,5 +1,6 @@
 package gpps.service.impl;
 
+import gpps.dao.ICardBindingDao;
 import gpps.model.Borrower;
 import gpps.model.GovermentOrder;
 import gpps.model.Lender;
@@ -14,6 +15,7 @@ import gpps.service.IProductService;
 import gpps.service.ISubmitService;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.thirdpay.CardBinding;
+import gpps.service.thirdpay.Cash;
 import gpps.service.thirdpay.IHttpClientService;
 import gpps.service.thirdpay.IThirdPaySupportService;
 import gpps.service.thirdpay.Recharge;
@@ -47,6 +49,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	public static final String ACTION_TRANSFER="2";
 	public static final String ACTION_CHECK="3";
 	public static final String ACTION_CARDBINDING="4";
+	public static final String ACTION_CASH="5";
 	private static Map<String, String> urls=new HashMap<String, String>();
 	static {
 		urls.put(ACTION_REGISTACCOUNT, "/loan/toloanregisterbind.action");
@@ -54,6 +57,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		urls.put(ACTION_TRANSFER, "/loan/loan.action");
 		urls.put(ACTION_CHECK, "/loan/toloantransferaudit.action");
 		urls.put(ACTION_CARDBINDING, "/loan/toloanfastpay.action");
+		urls.put(ACTION_CASH, "/loan/toloanwithdraws.action");
 	}
 	private String url="";
 	private String platformMoneymoremore="p401";
@@ -73,6 +77,8 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	IBorrowerService borrowerService;
 	@Autowired
 	IHttpClientService httpClientService;
+	@Autowired
+	ICardBindingDao cardBindingDao;
 	
 	private Logger log=Logger.getLogger(ThirdPaySupportServiceImpl.class);
 	public String getPublicKey() {
@@ -290,7 +296,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	}
 
 	@Override
-	public CardBinding getCardBinding(String cardNo) {
+	public CardBinding getCardBinding() {
 		CardBinding cardBinding=new CardBinding();
 		cardBinding.setBaseUrl(getBaseUrl(ACTION_CARDBINDING));
 		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -298,8 +304,8 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		Object currentUser=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
 		cardBinding.setPlatformMoneymoremore(platformMoneymoremore);
 		cardBinding.setAction("2");
-		RsaHelper rsa = RsaHelper.getInstance();
-		cardBinding.setCardNo(cardNo);
+//		RsaHelper rsa = RsaHelper.getInstance();
+//		cardBinding.setCardNo(cardNo);
 		cardBinding.setReturnURL(req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() +"/account/cardBinding/response");
 		cardBinding.setNotifyURL(cardBinding.getReturnURL()+"/bg");
 		if(currentUser instanceof Lender)
@@ -314,7 +320,52 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			throw new RuntimeException("不支持该用户开户");
 		}
 		cardBinding.setSignInfo(cardBinding.getSign(privateKey));
-		cardBinding.setCardNo(rsa.encryptData(cardNo, publicKey));
+//		cardBinding.setCardNo(rsa.encryptData(cardNo, publicKey));
 		return cardBinding;
+	}
+
+	@Override
+	public Cash getCash(String amount) throws InsufficientBalanceException {
+		Cash cash=new Cash();
+		cash.setBaseUrl(getBaseUrl(ACTION_CASH));
+		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		HttpSession session=req.getSession();
+		Object currentUser=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+		cash.setPlatformMoneymoremore(platformMoneymoremore);
+		cash.setAmount(amount);
+		Integer cashStreamId = null;
+		String cardNo=null;
+		gpps.model.CardBinding cardBinding=null;
+		if(currentUser instanceof Lender)
+		{
+			Lender lender=(Lender)currentUser;
+			cash.setWithdrawMoneymoremore(lender.getThirdPartyAccount());
+			cashStreamId = accountService.cashLenderAccount(lender.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "提现");
+			cardBinding=cardBindingDao.find(lender.getCardBindingId());
+		}else if(currentUser instanceof Borrower){
+			Borrower borrower=(Borrower)currentUser;
+			cash.setWithdrawMoneymoremore(borrower.getThirdPartyAccount());
+			cashStreamId = accountService.cashBorrowerAccount(borrower.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "提现");
+			cardBinding=cardBindingDao.find(borrower.getCardBindingId());
+		}
+		else {
+			throw new RuntimeException("不支持该用户体现");
+		}
+		if(cardBinding==null)
+			throw new RuntimeException("未绑定银行卡");
+		cardNo=cardBinding.getCardNo();
+		cash.setCardNo(cardNo);
+		cash.setCardType(String.valueOf(cardBinding.getCardType()));
+		cash.setBankCode(cardBinding.getBankCode());
+		cash.setBranchBankName(cardBinding.getBranchBankName());
+		cash.setProvince(cardBinding.getProvince());
+		cash.setCity(cardBinding.getCity());
+		cash.setOrderNo(String.valueOf(cashStreamId));
+		cash.setReturnURL(req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() +"/account/cash/response");
+		cash.setNotifyURL(cash.getReturnURL()+"/bg");
+		cash.setSignInfo(cash.getSign(privateKey));
+		RsaHelper rsa = RsaHelper.getInstance();
+		cash.setCardNo(rsa.encryptData(cardNo, publicKey));
+		return cash;
 	}
 }

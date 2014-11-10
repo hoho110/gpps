@@ -186,4 +186,12 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 			return Pagination.buildResult(null, count, offset, recnum);
 		return Pagination.buildResult(lenderDao.findByPrivilegeWithPaging(privilege, offset, recnum), count, offset, recnum);
 	}
+
+	@Override
+	public void bindCard(Integer id, Integer cardId) {
+		lenderDao.bindCard(id, cardId);
+		Lender lender=getCurrentUser();
+		if(lender!=null)
+			lender.setCardBindingId(cardId);
+	}
 }

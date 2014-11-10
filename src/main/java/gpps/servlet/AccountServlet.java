@@ -1,8 +1,12 @@
 package gpps.servlet;
 
+import gpps.dao.IBorrowerDao;
+import gpps.dao.ICardBindingDao;
 import gpps.dao.ICashStreamDao;
+import gpps.dao.ILenderDao;
 import gpps.dao.IProductSeriesDao;
 import gpps.model.Borrower;
+import gpps.model.CardBinding;
 import gpps.model.CashStream;
 import gpps.model.Lender;
 import gpps.model.PayBack;
@@ -69,6 +73,12 @@ public class AccountServlet {
 	IBorrowerService borrowerService;
 	@Autowired
 	IThirdPaySupportService thirdPaySupportService;
+	@Autowired
+	ICardBindingDao cardBindingDao;
+	@Autowired
+	ILenderDao lenderDao;
+	@Autowired
+	IBorrowerDao borrowerDao;
 	Logger log = Logger.getLogger(AccountServlet.class);
 	public static final String AMOUNT = "amount";
 	public static final String CASHSTREAMID = "cashStreamId";
@@ -239,58 +249,118 @@ public class AccountServlet {
 		}
 	}
 
-	@RequestMapping(value = { "/account/cash/request" })
-	public void cash(HttpServletRequest req, HttpServletResponse resp) {
-		String amount = req.getParameter(AMOUNT);
-		HttpSession session = req.getSession();
-		Object user = session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
-		if (user == null) {
-			try {
-				resp.sendError(403, "未找到用户信息，请重新登录");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
-		Integer cashStreamId = null;
-		try {
-			if (user instanceof Lender) {
-				Lender lender = (Lender) user;
-				cashStreamId = accountService.cashLenderAccount(lender.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "提现");
-			} else if (user instanceof Borrower) {
-				Borrower borrower = (Borrower) user;
-				cashStreamId = accountService.cashBorrowerAccount(borrower.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "提现");
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (InsufficientBalanceException e) {
-			try {
-				resp.sendError(400, "余额不足");
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			log.debug(e.getMessage(), e);
-			return;
-		}
-		log.debug("取现：amount=" + amount + ",cashStreamId=" + cashStreamId);
-		log.debug("跳转到第三方进行取现");
-		writeThirdParty(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台提现</h3>说明：该步骤跳转到第三方平台,用户输入第三方平台账户密码完成从账户到银行卡的提现.<p><a href='/account/cash/response?cashStreamId=" + cashStreamId + "'>提现成功</a><p><a href='javascript:window.close()'>提现失败</a></p></div>");
-	}
+//	@RequestMapping(value = { "/account/cash/request" })
+//	public void cash(HttpServletRequest req, HttpServletResponse resp) {
+//		String amount = req.getParameter(AMOUNT);
+//		HttpSession session = req.getSession();
+//		Object user = session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+//		if (user == null) {
+//			try {
+//				resp.sendError(403, "未找到用户信息，请重新登录");
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			return;
+//		}
+//		Integer cashStreamId = null;
+//		try {
+//			if (user instanceof Lender) {
+//				Lender lender = (Lender) user;
+//				cashStreamId = accountService.cashLenderAccount(lender.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "提现");
+//			} else if (user instanceof Borrower) {
+//				Borrower borrower = (Borrower) user;
+//				cashStreamId = accountService.cashBorrowerAccount(borrower.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "提现");
+//			}
+//		} catch (NumberFormatException e) {
+//			e.printStackTrace();
+//		} catch (InsufficientBalanceException e) {
+//			try {
+//				resp.sendError(400, "余额不足");
+//			} catch (IOException e1) {
+//				e1.printStackTrace();
+//			}
+//			log.debug(e.getMessage(), e);
+//			return;
+//		}
+//		log.debug("取现：amount=" + amount + ",cashStreamId=" + cashStreamId);
+//		log.debug("跳转到第三方进行取现");
+//		writeThirdParty(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台提现</h3>说明：该步骤跳转到第三方平台,用户输入第三方平台账户密码完成从账户到银行卡的提现.<p><a href='/account/cash/response?cashStreamId=" + cashStreamId + "'>提现成功</a><p><a href='javascript:window.close()'>提现失败</a></p></div>");
+//	}
 
 	@RequestMapping(value = { "/account/cash/response" })
 	public void completeCash(HttpServletRequest req, HttpServletResponse resp) {
-		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", req.getParameter(CASHSTREAMID)));
+		completeCashBg(req, resp);
+		write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=cash&sid=cash-withdraw'</script></head>");
+	}
+	@RequestMapping(value = { "/account/cash/response/bg" })
+	public void completeCashBg(HttpServletRequest req, HttpServletResponse resp) {
+		log.info("后台回调:"+req.getRequestURI());
+		Map<String,String> params=getAllParams(req);
+		if(params==null)
+		{
+			write(resp, "解析第三方支付错误");
+			return;
+		}
+		String resultCode=params.get("ResultCode");
+		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
+		{
+			write(resp, "第三方支付返回错误,结果代码："+resultCode+",错误信息："+params.get("Message"));
+			return;
+		}
+		//WithdrawMoneymoremore + PlatformMoneymoremore + LoanNo + OrderNo + Amount + FeeMax + FeeWithdraws 
+		//+ FeePercent + Fee + FreeLimit + FeeRate + FeeSplitting + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ResultCode
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append(StringUtil.strFormat(params.get("WithdrawMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(params.get("LoanNo")));
+		sBuilder.append(StringUtil.strFormat(params.get("OrderNo")));
+		sBuilder.append(StringUtil.strFormat(params.get("Amount")));
+		sBuilder.append(StringUtil.strFormat(params.get("FeeMax")));
+		sBuilder.append(StringUtil.strFormat(params.get("FeeWithdraws")));
+		sBuilder.append(StringUtil.strFormat(params.get("FeePercent")));
+		sBuilder.append(StringUtil.strFormat(params.get("Fee")));
+		sBuilder.append(StringUtil.strFormat(params.get("FreeLimit")));
+		sBuilder.append(StringUtil.strFormat(params.get("FeeRate")));
+		sBuilder.append(StringUtil.strFormat(params.get("FeeSplitting")));
+		sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
+		sBuilder.append(StringUtil.strFormat(params.get("ResultCode")));
+		RsaHelper rsa = RsaHelper.getInstance();
+		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
+		if(!sign.equals(params.get("SignInfo")))
+		{
+			write(resp, "错误的签名");
+			return;
+		}
+		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", StringUtil.strFormat(params.get("OrderNo"))));
+		String loanNo=params.get("LoanNo");
 		try {
 			log.debug("取现成功");
+			CashStream cashStream=cashStreamDao.find(cashStreamId);
+			if(cashStream.getState()==CashStream.STATE_SUCCESS)
+			{
+				log.debug("重复的回复");
+				return;
+			}
+			if(cashStream.getChiefamount().negate().compareTo(new BigDecimal(StringUtil.strFormat(params.get("Amount"))))!=0)
+			{
+				write(resp, "取现金额不符，请联系管理员解决.");
+				return;
+			}
+			cashStreamDao.updateLoanNo(cashStreamId, loanNo);
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		} catch (IllegalConvertException e) {
 			log.error(e.getMessage(), e);
 		}
-
-		write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=cash&sid=cash-withdraw'</script></head>");
-		// TODO 重定向到指定页面
-		// writeLocal(resp,
-		// "取现成功，5秒后自动跳转到我的帐户<a href='/views/google/myaccount.html?fid=cash&sid=cash-withdraw'>我的帐户</a>");
+//		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", req.getParameter(CASHSTREAMID)));
+//		try {
+//			log.debug("取现成功");
+//			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+//		} catch (IllegalConvertException e) {
+//			log.error(e.getMessage(), e);
+//		}
 	}
 
 //	@RequestMapping(value = { "/account/buy/request" })
@@ -539,7 +609,7 @@ public class AccountServlet {
 			return;
 		}
 		String resultCode=params.get("ResultCode");
-		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
+		if(StringUtil.isEmpty(resultCode)||(!resultCode.equals("88")&&!resultCode.equals("89")))
 		{
 			write(resp, "第三方支付返回错误,结果代码："+resultCode+",错误信息："+params.get("Message"));
 			return;
@@ -553,7 +623,9 @@ public class AccountServlet {
 		sBuilder.append(StringUtil.strFormat(params.get("Action")));
 		sBuilder.append(StringUtil.strFormat(params.get("CardType")));
 		sBuilder.append(StringUtil.strFormat(params.get("BankCode")));
-		sBuilder.append(StringUtil.strFormat(params.get("CardNo")));
+		RsaHelper rsa = RsaHelper.getInstance();
+		String cardNo=rsa.decryptData(params.get("CardNo"), thirdPaySupportService.getPrivateKey());
+		sBuilder.append(StringUtil.strFormat(cardNo));
 		sBuilder.append(StringUtil.strFormat(params.get("BranchBankName")));
 		sBuilder.append(StringUtil.strFormat(params.get("Province")));
 		sBuilder.append(StringUtil.strFormat(params.get("City")));
@@ -566,12 +638,31 @@ public class AccountServlet {
 		sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
 		sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
 		sBuilder.append(StringUtil.strFormat(params.get("ResultCode")));
-		RsaHelper rsa = RsaHelper.getInstance();
 		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
 		if(!sign.equals(params.get("SignInfo")))
 		{
 			write(resp, "错误的签名");
 			return;
+		}
+		CardBinding cardBinding=new CardBinding();
+		cardBinding.setBankCode(params.get("BankCode"));
+		cardBinding.setBranchBankName(params.get("BranchBankName"));
+		cardBinding.setCardNo(cardNo);
+		cardBinding.setCardType(Integer.parseInt(params.get("CardType")));
+		cardBinding.setCity(params.get("City"));
+		cardBinding.setProvince(params.get("Province"));
+		cardBindingDao.create(cardBinding);
+		String moneymoremoreId=params.get("MoneymoremoreId");
+		Lender lender=lenderDao.findByThirdPartyAccount(moneymoremoreId);
+		if(lender!=null)
+		{
+			lenderService.bindCard(lender.getId(), cardBinding.getId());
+		}
+		else 
+		{
+			Borrower borrower=borrowerDao.findByThirdPartyAccount(moneymoremoreId);
+			if(borrower!=null)
+				borrowerService.bindCard(borrower.getId(), cardBinding.getId());
 		}
 //		String thirdPartyAccount = params.get("MoneymoremoreId");
 //		String accountType=params.get("AccountType");

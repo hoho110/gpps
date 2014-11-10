@@ -93,4 +93,10 @@
     	corporationName=#{corporationName},corporationAddr=#{corporationAddr},brange=#{brange}
     	where id=#{id}
     </update>
+    <update id="bindCard">
+    	update borrower set cardBindingId=#{cardId} where id=#{id}
+    </update>
+    <select id="findByThirdPartyAccount" parameterType="String" resultType="gpps.model.Borrower">
+    	select * from borrower where thirdPartyAccount=#{thirdPartyAccount}
+    </select>
 </mapper>

@@ -375,11 +375,11 @@ a.accordion-toggle {
 										//window.location.href = "/account/thirdPartyRegist/request";
 										$('#cardBindingformdiv').empty();
 										var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
-                                        var cardBinding=service.getCardBinding("6222123412341234123");
+                                        var cardBinding=service.getCardBinding();
                                         var content="<form id='cardBindingform' action='"+cardBinding.baseUrl+"'method='post' target='_blank'>";
                                         for(var o in cardBinding)
                                        	{
-                                            if(o=="baseUrl")
+                                            if(o=="baseUrl"||o=="_i_"||o=="_t_")
                                            	{
                                             	continue;
                                            	}

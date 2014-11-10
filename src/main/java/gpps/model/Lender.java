@@ -22,6 +22,7 @@ public class Lender {
 	private String annualIncome;//年收入
 	private String thirdPartyAccount;//用户的乾多多标识
 	private String accountNumber;//多多号
+	private Integer cardBindingId;
 	public Integer getId() {
 		return id;
 	}
@@ -123,6 +124,12 @@ public class Lender {
 	}
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
+	}
+	public Integer getCardBindingId() {
+		return cardBindingId;
+	}
+	public void setCardBindingId(Integer cardBindingId) {
+		this.cardBindingId = cardBindingId;
 	}
 	public static int gradeToLevel(int grade)
 	{

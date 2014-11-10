@@ -27,6 +27,7 @@ public class Borrower {
 	private int level=0;//信用等级
 	private long lastModifyTime=System.currentTimeMillis();
 	private String brange;//经营范围
+	private Integer cardBindingId;
 	public Integer getId() {
 		return id;
 	}
@@ -159,6 +160,12 @@ public class Borrower {
 	}
 	public void setBrange(String brange) {
 		this.brange = brange;
+	}
+	public Integer getCardBindingId() {
+		return cardBindingId;
+	}
+	public void setCardBindingId(Integer cardBindingId) {
+		this.cardBindingId = cardBindingId;
 	}
 	public static int creditValueToLevel(int creditValue)
 	{

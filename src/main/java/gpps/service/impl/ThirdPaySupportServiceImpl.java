@@ -195,7 +195,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			throw new RuntimeException("未找到用户信息，请重新登录");
 		Submit submit = ObjectUtil.checkNullObject(Submit.class, submitService.find(submitId));
 		GovermentOrder order=orderService.findGovermentOrderByProduct(submit.getProductId());
-		Borrower borrower=borrowerService.find(order.getId());
+		Borrower borrower=borrowerService.find(order.getBorrowerId());
 		
 		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		transfer.setAction("1");
@@ -223,12 +223,13 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		loanJson.setRemark("");
 		loanJson.setSecondaryJsonList("");
 		loanJsons.add(loanJson);
+		transfer.setLoanJsonList(Common.JSONEncode(loanJsons));
+		transfer.setSignInfo(transfer.getSign(privateKey));
 		try {
-			transfer.setLoanJsonList(URLEncoder.encode(Common.JSONEncode(loanJsons),"UTF-8"));
+			transfer.setLoanJsonList(URLEncoder.encode(transfer.getLoanJsonList(),"UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		transfer.setSignInfo(transfer.getSign(privateKey));
 		return transfer;
 	}
 

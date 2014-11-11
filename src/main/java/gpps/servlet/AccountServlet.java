@@ -24,6 +24,7 @@ import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.thirdpay.IThirdPaySupportService;
+import gpps.service.thirdpay.ResultCodeException;
 import gpps.service.thirdpay.Transfer.LoanJson;
 import gpps.tools.Common;
 import gpps.tools.RsaHelper;
@@ -34,6 +35,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -97,53 +99,39 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/thirdPartyRegist/response" })
 	public void completeThirdPartyRegist(HttpServletRequest req, HttpServletResponse resp) {
-		completeThirdPartyRegistBg(req, resp);
+		try {
+			completeThirdPartyRegistProcessor(req, resp);
+		} catch (SignatureException e) {
+			log.error(e.getMessage(),e);
+		} catch (ResultCodeException e) {
+			//TODO 返回页面提示信息
+			log.debug(e.getMessage(),e);
+		}
 		//重定向到指定页面
 		write(resp,"<head><script>window.location.href='/views/google/myaccount.html?fid=mycenter'</script></head>");
 	}
-
+	
 	@RequestMapping(value = { "/account/thirdPartyRegist/response/bg" })
 	public void completeThirdPartyRegistBg(HttpServletRequest req, HttpServletResponse resp) {
-		log.info("后台回调:"+req.getRequestURI());
+		try {
+			completeThirdPartyRegistProcessor(req, resp);
+		} catch (SignatureException e) {
+			log.error(e.getMessage(),e);
+			return;
+		} catch (ResultCodeException e) {
+			log.debug(e.getMessage(),e);
+			return;
+		}
+		writeSuccess(resp);
+	}
+	private void completeThirdPartyRegistProcessor(HttpServletRequest req, HttpServletResponse resp) throws SignatureException, ResultCodeException
+	{
+		log.debug("开户回调:"+req.getRequestURI());
 		Map<String,String> params=getAllParams(req);
-		if(params==null)
-		{
-			write(resp, "解析第三方支付错误");
-			return;
-		}
-		String resultCode=params.get("ResultCode");
-		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
-		{
-			write(resp, "第三方支付返回错误,结果代码："+resultCode+",错误信息："+params.get("Message"));
-			return;
-		}
-		//AccountType + AccountNumber + Mobile + Email + RealName + IdentificationNo + LoanPlatformAccount 
-		//+ MoneymoremoreId + PlatformMoneymoremore + AuthFee + AuthState + RandomTimeStamp + Remark1 + Remark2 + Remark3 
-		//+ ResultCode
-		StringBuilder sBuilder=new StringBuilder();
-		sBuilder.append(StringUtil.strFormat(params.get("AccountType")));
-		sBuilder.append(StringUtil.strFormat(params.get("AccountNumber")));
-		sBuilder.append(StringUtil.strFormat(params.get("Mobile")));
-		sBuilder.append(StringUtil.strFormat(params.get("Email")));
-		sBuilder.append(StringUtil.strFormat(params.get("RealName")));
-		sBuilder.append(StringUtil.strFormat(params.get("IdentificationNo")));
-		sBuilder.append(StringUtil.strFormat(params.get("LoanPlatformAccount")));
-		sBuilder.append(StringUtil.strFormat(params.get("MoneymoremoreId")));
-		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
-		sBuilder.append(StringUtil.strFormat(params.get("AuthFee")));
-		sBuilder.append(StringUtil.strFormat(params.get("AuthState")));
-		sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
-		sBuilder.append(StringUtil.strFormat(params.get("ResultCode")));
-		RsaHelper rsa = RsaHelper.getInstance();
-		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
-		if(!sign.equals(params.get("SignInfo")))
-		{
-			write(resp, "错误的签名");
-			return;
-		}
+		String[] signStrs={"AccountType","AccountNumber","Mobile","Email","RealName","IdentificationNo","LoanPlatformAccount",
+				"MoneymoremoreId","PlatformMoneymoremore","AuthFee","AuthState","RandomTimeStamp",
+				"Remark1","Remark2","Remark3","ResultCode"};
+		checkRollBack(params, signStrs);
 		String thirdPartyAccount = params.get("MoneymoremoreId");
 		String accountType=params.get("AccountType");
 		String loanPlatformAccount=params.get("LoanPlatformAccount");
@@ -154,7 +142,21 @@ public class AccountServlet {
 			borrowerService.registerThirdPartyAccount(id,thirdPartyAccount);
 		}
 	}
-
+	private void checkRollBack(Map<String,String> params,String[] signStrs) throws ResultCodeException, SignatureException
+	{
+		String resultCode=params.get("ResultCode");
+		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
+			throw new ResultCodeException(resultCode, params.get("Message"));
+		StringBuilder sBuilder=new StringBuilder();
+		for(String str:signStrs)
+		{
+			sBuilder.append(StringUtil.strFormat(params.get(str)));
+		}
+		RsaHelper rsa = RsaHelper.getInstance();
+		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
+		if(!sign.equals(params.get("SignInfo")))
+			throw new SignatureException();
+	}
 //	@RequestMapping(value = { "/account/recharge/request" })
 //	public void recharge(HttpServletRequest req, HttpServletResponse resp) {
 //		String amount = req.getParameter(AMOUNT);
@@ -183,72 +185,56 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/recharge/response" })
 	public void completeRecharge(HttpServletRequest req, HttpServletResponse resp) {
-		
-		completeRechargeBg(req, resp);
+		try {
+			completeRechargeProcessor(req, resp);
+		} catch (SignatureException e) {
+			log.error(e.getMessage(),e);
+		} catch (ResultCodeException e) {
+			//TODO 返回页面提示信息
+			log.debug(e.getMessage(),e);
+		}
 		write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=cash&sid=cash-recharge'</script></head>");
 	}
 	@RequestMapping(value = { "/account/recharge/response/bg" })
 	public void completeRechargeBg(HttpServletRequest req, HttpServletResponse resp) {
-		log.info("后台回调:"+req.getRequestURI());
+		try {
+			completeRechargeProcessor(req, resp);
+		} catch (SignatureException e) {
+			log.error(e.getMessage(),e);
+			return;
+		} catch (ResultCodeException e) {
+			log.debug(e.getMessage(),e);
+		}
+		writeSuccess(resp); 
+	}
+	private void completeRechargeProcessor(HttpServletRequest req, HttpServletResponse resp) throws SignatureException, ResultCodeException
+	{
+		log.debug("充值回调:"+req.getRequestURI());
 		Map<String,String> params=getAllParams(req);
-		if(params==null)
-		{
-			write(resp, "解析第三方支付错误");
-			return;
-		}
-		String resultCode=params.get("ResultCode");
-		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
-		{
-			write(resp, "第三方支付返回错误,结果代码："+resultCode+",错误信息："+params.get("Message"));
-			return;
-		}
-		//RechargeMoneymoremore + PlatformMoneymoremore + LoanNo + OrderNo + Amount + Fee + FeePlatform 
-		//+ RechargeType + FeeType + CardNoList + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ResultCode
-		StringBuilder sBuilder=new StringBuilder();
-		sBuilder.append(StringUtil.strFormat(params.get("RechargeMoneymoremore")));
-		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
-		sBuilder.append(StringUtil.strFormat(params.get("LoanNo")));
-		sBuilder.append(StringUtil.strFormat(params.get("OrderNo")));
-		sBuilder.append(StringUtil.strFormat(params.get("Amount")));
-		sBuilder.append(StringUtil.strFormat(params.get("Fee")));
-		sBuilder.append(StringUtil.strFormat(params.get("FeePlatform")));
-		sBuilder.append(StringUtil.strFormat(params.get("RechargeType")));
-		sBuilder.append(StringUtil.strFormat(params.get("FeeType")));
-		sBuilder.append(StringUtil.strFormat(params.get("CardNoList")));
-		sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
-		sBuilder.append(StringUtil.strFormat(params.get("ResultCode")));
-		RsaHelper rsa = RsaHelper.getInstance();
-		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
-		if(!sign.equals(params.get("SignInfo")))
-		{
-			write(resp, "错误的签名");
-			return;
-		}
+		String[] signStrs={"RechargeMoneymoremore","PlatformMoneymoremore","LoanNo","OrderNo","Amount","Fee","FeePlatform",
+				"RechargeType","FeeType","CardNoList","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
+		checkRollBack(params, signStrs);
 		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", StringUtil.strFormat(params.get("OrderNo"))));
 		String loanNo=params.get("LoanNo");
+		log.debug("充值成功");
+		CashStream cashStream=cashStreamDao.find(cashStreamId);
+		if(cashStream.getState()==CashStream.STATE_SUCCESS)
+		{
+			log.debug("重复的回复");
+			return;
+		}
+//		if(cashStream.getChiefamount().compareTo(new BigDecimal(StringUtil.strFormat(params.get("Amount"))))!=0)
+//		{
+//			write(resp, "充值金额不符，请联系管理员解决.");
+//			return;
+//		}
+		cashStreamDao.updateLoanNo(cashStreamId, loanNo);
 		try {
-			log.debug("充值成功");
-			CashStream cashStream=cashStreamDao.find(cashStreamId);
-			if(cashStream.getState()==CashStream.STATE_SUCCESS)
-			{
-				log.debug("重复的回复");
-				return;
-			}
-			if(cashStream.getChiefamount().compareTo(new BigDecimal(StringUtil.strFormat(params.get("Amount"))))!=0)
-			{
-				write(resp, "充值金额不符，请联系管理员解决.");
-				return;
-			}
-			cashStreamDao.updateLoanNo(cashStreamId, loanNo);
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		} catch (IllegalConvertException e) {
-			log.error(e.getMessage(), e);
+			e.printStackTrace();
 		}
 	}
-
 //	@RequestMapping(value = { "/account/cash/request" })
 //	public void cash(HttpServletRequest req, HttpServletResponse resp) {
 //		String amount = req.getParameter(AMOUNT);
@@ -289,51 +275,34 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/cash/response" })
 	public void completeCash(HttpServletRequest req, HttpServletResponse resp) {
-		completeCashBg(req, resp);
+		try {
+			completeCashProcessor(req,resp);
+		} catch (SignatureException e) {
+			log.error(e.getMessage(),e);
+		} catch (ResultCodeException e) {
+			log.debug(e.getMessage(),e);
+		}
 		write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=cash&sid=cash-withdraw'</script></head>");
 	}
 	@RequestMapping(value = { "/account/cash/response/bg" })
 	public void completeCashBg(HttpServletRequest req, HttpServletResponse resp) {
-		log.info("后台回调:"+req.getRequestURI());
+		try {
+			completeCashProcessor(req,resp);
+		} catch (SignatureException e) {
+			log.error(e.getMessage(),e);
+			return;
+		} catch (ResultCodeException e) {
+			log.debug(e.getMessage(),e);
+		}
+		writeSuccess(resp); 
+	}
+	private void completeCashProcessor(HttpServletRequest req,HttpServletResponse reps) throws SignatureException, ResultCodeException
+	{
+		log.debug("提现回调:"+req.getRequestURI());
 		Map<String,String> params=getAllParams(req);
-		if(params==null)
-		{
-			write(resp, "解析第三方支付错误");
-			return;
-		}
-		String resultCode=params.get("ResultCode");
-		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
-		{
-			write(resp, "第三方支付返回错误,结果代码："+resultCode+",错误信息："+params.get("Message"));
-			return;
-		}
-		//WithdrawMoneymoremore + PlatformMoneymoremore + LoanNo + OrderNo + Amount + FeeMax + FeeWithdraws 
-		//+ FeePercent + Fee + FreeLimit + FeeRate + FeeSplitting + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ResultCode
-		StringBuilder sBuilder=new StringBuilder();
-		sBuilder.append(StringUtil.strFormat(params.get("WithdrawMoneymoremore")));
-		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
-		sBuilder.append(StringUtil.strFormat(params.get("LoanNo")));
-		sBuilder.append(StringUtil.strFormat(params.get("OrderNo")));
-		sBuilder.append(StringUtil.strFormat(params.get("Amount")));
-		sBuilder.append(StringUtil.strFormat(params.get("FeeMax")));
-		sBuilder.append(StringUtil.strFormat(params.get("FeeWithdraws")));
-		sBuilder.append(StringUtil.strFormat(params.get("FeePercent")));
-		sBuilder.append(StringUtil.strFormat(params.get("Fee")));
-		sBuilder.append(StringUtil.strFormat(params.get("FreeLimit")));
-		sBuilder.append(StringUtil.strFormat(params.get("FeeRate")));
-		sBuilder.append(StringUtil.strFormat(params.get("FeeSplitting")));
-		sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
-		sBuilder.append(StringUtil.strFormat(params.get("ResultCode")));
-		RsaHelper rsa = RsaHelper.getInstance();
-		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
-		if(!sign.equals(params.get("SignInfo")))
-		{
-			write(resp, "错误的签名");
-			return;
-		}
+		String[] signStrs={"WithdrawMoneymoremore","PlatformMoneymoremore","LoanNo","OrderNo","Amount","FeeMax","FeeWithdraws",
+				"FeePercent","Fee","FreeLimit","FeeRate","FeeSplitting","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
+		checkRollBack(params, signStrs);
 		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", StringUtil.strFormat(params.get("OrderNo"))));
 		String loanNo=params.get("LoanNo");
 		try {
@@ -344,25 +313,17 @@ public class AccountServlet {
 				log.debug("重复的回复");
 				return;
 			}
-			if(cashStream.getChiefamount().negate().compareTo(new BigDecimal(StringUtil.strFormat(params.get("Amount"))))!=0)
-			{
-				write(resp, "取现金额不符，请联系管理员解决.");
-				return;
-			}
+//			if(cashStream.getChiefamount().negate().compareTo(new BigDecimal(StringUtil.strFormat(params.get("Amount"))))!=0)
+//			{
+//				write(resp, "取现金额不符，请联系管理员解决.");
+//				return;
+//			}
 			cashStreamDao.updateLoanNo(cashStreamId, loanNo);
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		} catch (IllegalConvertException e) {
 			log.error(e.getMessage(), e);
 		}
-//		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", req.getParameter(CASHSTREAMID)));
-//		try {
-//			log.debug("取现成功");
-//			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-//		} catch (IllegalConvertException e) {
-//			log.error(e.getMessage(), e);
-//		}
 	}
-
 //	@RequestMapping(value = { "/account/buy/request" })
 //	public void buy(HttpServletRequest req, HttpServletResponse resp) {
 //		String pid = req.getParameter("pid");
@@ -410,7 +371,13 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/buy/response" })
 	public void completeBuy(HttpServletRequest req, HttpServletResponse resp) {
-		completeBuyBg(req, resp);
+		try {
+			completeBuyProcessor(req, resp);
+		} catch (SignatureException e) {
+			e.printStackTrace();
+		} catch (ResultCodeException e) {
+			e.printStackTrace();
+		}
 		String pid=(String) req.getAttribute("pid");
 		if (!StringUtil.isEmpty(pid))
 			write(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/views/google/productdetail.html?pid=" + pid + "'>继续购买</a></p><a href='/views/google/myaccount.html'>返回我的帐户</a></div>");
@@ -423,42 +390,30 @@ public class AccountServlet {
 	}
 	@RequestMapping(value = { "/account/buy/response/bg" })
 	public void completeBuyBg(HttpServletRequest req, HttpServletResponse resp) {
-		log.info("后台回调:"+req.getRequestURI());
+		try {
+			completeBuyProcessor(req, resp);
+		} catch (SignatureException e) {
+			e.printStackTrace();
+			return;
+		} catch (ResultCodeException e) {
+			e.printStackTrace();
+			return;
+		}
+		writeSuccess(resp);
+	}
+	private void completeBuyProcessor(HttpServletRequest req,HttpServletResponse resp) throws SignatureException, ResultCodeException
+	{
+		log.debug("购买回调:"+req.getRequestURI());
 		Map<String,String> params=getAllParams(req);
-		if(params==null)
-		{
-			write(resp, "解析第三方支付错误");
-			return;
-		}
-		String resultCode=params.get("ResultCode");
-		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
-		{
-			write(resp, "第三方支付返回错误,结果代码："+resultCode+",错误信息："+params.get("Message"));
-			return;
-		}
-		//LoanJsonList + PlatformMoneymoremore + Action + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ResultCode
-		StringBuilder sBuilder=new StringBuilder();
+		String[] signStrs={"LoanJsonList","PlatformMoneymoremore","Action","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
 		String loanJsonList = null;
 		try {
 			loanJsonList=URLDecoder.decode(params.get("LoanJsonList"),"UTF-8");
+			params.put("LoanJsonList", loanJsonList);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		sBuilder.append(StringUtil.strFormat(loanJsonList));
-		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
-		sBuilder.append(StringUtil.strFormat(params.get("Action")));
-		sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
-		sBuilder.append(StringUtil.strFormat(params.get("ResultCode")));
-		RsaHelper rsa = RsaHelper.getInstance();
-		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
-		if(!sign.equals(params.get("SignInfo")))
-		{
-			write(resp, "错误的签名");
-			return;
-		}
+		checkRollBack(params, signStrs);
 		List<Object> loanJsons=Common.JSONDecodeList(loanJsonList, LoanJson.class);
 		String pid = params.get("Remark1");
 		req.setAttribute("pid", pid);
@@ -478,8 +433,8 @@ public class AccountServlet {
 		} catch (IllegalConvertException e) {
 			e.printStackTrace();
 		}
-
 	}
+	
 	@RequestMapping(value = { "/account/checkBuy/response/bg" })
 	public void checkBuyBg(HttpServletRequest req,HttpServletResponse resp)
 	{
@@ -594,56 +549,41 @@ public class AccountServlet {
 	}
 	@RequestMapping(value = { "/account/cardBinding/response" })
 	public void completeCardBinding(HttpServletRequest req, HttpServletResponse resp) {
-		completeCardBindingBg(req, resp);
+		try {
+			completeCardBindingProcessor(req, resp);
+		} catch (SignatureException e) {
+			e.printStackTrace();
+		} catch (ResultCodeException e) {
+			e.printStackTrace();
+		}
 		//重定向到指定页面
 		write(resp,"<head><script>window.location.href='/views/google/myaccount.html?fid=mycenter'</script></head>");
 	}
 
 	@RequestMapping(value = { "/account/cardBinding/response/bg" })
 	public void completeCardBindingBg(HttpServletRequest req, HttpServletResponse resp) {
-		log.info("后台回调:"+req.getRequestURI());
+		try {
+			completeCardBindingProcessor(req, resp);
+		} catch (SignatureException e) {
+			e.printStackTrace();
+			return;
+		} catch (ResultCodeException e) {
+			e.printStackTrace();
+			return;
+		}
+		writeSuccess(resp);
+	}
+	private void completeCardBindingProcessor(HttpServletRequest req,HttpServletResponse resp) throws SignatureException, ResultCodeException
+	{
+		log.debug("购买回调:"+req.getRequestURI());
 		Map<String,String> params=getAllParams(req);
-		if(params==null)
-		{
-			write(resp, "解析第三方支付错误");
-			return;
-		}
-		String resultCode=params.get("ResultCode");
-		if(StringUtil.isEmpty(resultCode)||(!resultCode.equals("88")&&!resultCode.equals("89")))
-		{
-			write(resp, "第三方支付返回错误,结果代码："+resultCode+",错误信息："+params.get("Message"));
-			return;
-		}
-		//MoneymoremoreId + PlatformMoneymoremore + Action + CardType + BankCode + CardNo + BranchBankName + Province 
-		//+ City + WithholdBeginDate + WithholdEndDate + SingleWithholdLimit + TotalWithholdLimit+ RandomTimeStamp 
-		//+ Remark1 + Remark2 + Remark3 + ResultCode
-		StringBuilder sBuilder=new StringBuilder();
-		sBuilder.append(StringUtil.strFormat(params.get("MoneymoremoreId")));
-		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
-		sBuilder.append(StringUtil.strFormat(params.get("Action")));
-		sBuilder.append(StringUtil.strFormat(params.get("CardType")));
-		sBuilder.append(StringUtil.strFormat(params.get("BankCode")));
+		String[] signStrs={"MoneymoremoreId","PlatformMoneymoremore","Action","CardType","BankCode","CardNo","BranchBankName",
+				"Province","City","WithholdBeginDate","WithholdEndDate","SingleWithholdLimit","TotalWithholdLimit+ "
+						+ "RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
 		RsaHelper rsa = RsaHelper.getInstance();
 		String cardNo=rsa.decryptData(params.get("CardNo"), thirdPaySupportService.getPrivateKey());
-		sBuilder.append(StringUtil.strFormat(cardNo));
-		sBuilder.append(StringUtil.strFormat(params.get("BranchBankName")));
-		sBuilder.append(StringUtil.strFormat(params.get("Province")));
-		sBuilder.append(StringUtil.strFormat(params.get("City")));
-		sBuilder.append(StringUtil.strFormat(params.get("WithholdBeginDate")));
-		sBuilder.append(StringUtil.strFormat(params.get("WithholdEndDate")));
-		sBuilder.append(StringUtil.strFormat(params.get("SingleWithholdLimit")));
-		sBuilder.append(StringUtil.strFormat(params.get("TotalWithholdLimit")));
-		sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
-		sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
-		sBuilder.append(StringUtil.strFormat(params.get("ResultCode")));
-		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
-		if(!sign.equals(params.get("SignInfo")))
-		{
-			write(resp, "错误的签名");
-			return;
-		}
+		params.put("CardNo", cardNo);
+		checkRollBack(params, signStrs);
 		CardBinding cardBinding=new CardBinding();
 		cardBinding.setBankCode(params.get("BankCode"));
 		cardBinding.setBranchBankName(params.get("BranchBankName"));
@@ -664,15 +604,6 @@ public class AccountServlet {
 			if(borrower!=null)
 				borrowerService.bindCard(borrower.getId(), cardBinding.getId());
 		}
-//		String thirdPartyAccount = params.get("MoneymoremoreId");
-//		String accountType=params.get("AccountType");
-//		String loanPlatformAccount=params.get("LoanPlatformAccount");
-//		Integer id=Integer.parseInt(loanPlatformAccount.substring(1, loanPlatformAccount.length()));
-//		if (StringUtil.isEmpty(accountType)) {
-//			lenderService.registerThirdPartyAccount(id,thirdPartyAccount);
-//		} else if (accountType.equals("1")) {
-//			borrowerService.registerThirdPartyAccount(id,thirdPartyAccount);
-//		}
 	}
 	private void writeThirdParty(HttpServletResponse resp, String message) {
 
@@ -730,9 +661,9 @@ public class AccountServlet {
 	}
 
 	private Map<String, String> getAllParams(HttpServletRequest req) {
+		Map<String, String> params = new HashMap<String, String>();
 		try {
 			req.setCharacterEncoding("UTF-8");
-			Map<String, String> params = new HashMap<String, String>();
 			Map m = req.getParameterMap();
 			Iterator it = m.keySet().iterator();
 			while (it.hasNext()) {
@@ -742,10 +673,26 @@ public class AccountServlet {
 				log.info(key + "=" + value);
 				params.put(key, value);
 			}
-			return params;
 		} catch (Throwable e) {
 			log.error(e.getMessage(),e);
 		}
-		return null;
+		return params;
+	}
+	private void writeSuccess(HttpServletResponse resp)
+	{
+		resp.setCharacterEncoding("UTF-8");
+		resp.setStatus(200);
+		PrintWriter writer = null;
+		try {
+			writer = resp.getWriter();
+			writer.write("SUCCESS");
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (writer != null) {
+				writer.flush();
+				writer.close();
+			}
+		}
 	}
 }

@@ -2,6 +2,8 @@ package gpps.service;
 
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import gpps.model.Lender;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
@@ -53,7 +55,7 @@ public interface ILenderService extends ILoginService{
 	 */
 	public Lender getCurrentUser();
 	
-	public void registerThirdPartyAccount(String thirdPartyAccount);
+	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount);
 	
 	public boolean isIdentityAuthentication();
 	public boolean isThirdPartyAuthentication();
@@ -65,4 +67,5 @@ public interface ILenderService extends ILoginService{
 	 * @return
 	 */
 	public Map<String, Object> findByPrivilegeWithPaging(int privilege,int offset,int recnum);
+	public void bindCard(Integer id,Integer cardId);
 }

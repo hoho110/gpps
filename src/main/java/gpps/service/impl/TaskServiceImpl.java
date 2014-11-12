@@ -20,8 +20,10 @@ import gpps.service.IAccountService;
 import gpps.service.IPayBackService;
 import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.thirdpay.IThirdPaySupportService;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -56,6 +58,8 @@ public class TaskServiceImpl implements ITaskService {
 	IPayBackDao payBackDao;
 	@Autowired
 	IPayBackService payBackService;
+	@Autowired
+	IThirdPaySupportService thirdPaySupportService;
 	@PostConstruct
 	public void init() {
 		try {
@@ -153,31 +157,24 @@ public class TaskServiceImpl implements ITaskService {
 		List<Submit> submits=submitDao.findAllByProductAndState(task.getProductId(), Submit.STATE_COMPLETEPAY);
 		if(submits==null||submits.size()==0)
 			return;
-		Product product=productDao.find(task.getProductId());
-		GovermentOrder order=govermentOrderDao.find(product.getGovermentorderId());
-		Borrower borrower=borrowerDao.find(order.getBorrowerId());
+		List<String> loanNos=new ArrayList<String>();
 		loop:for(Submit submit:submits)
 		{
-			if(interrupted)
+			CashStream freezeCS=null;
+			List<CashStream> cashStreams=cashStreamDao.findSubmitCashStream(submit.getId());
+			for(CashStream cashStream:cashStreams)
 			{
-				List<CashStream> cashStreams=cashStreamDao.findSubmitCashStream(submit.getId());
-				for(CashStream cashStream:cashStreams)
+				if(cashStream.getAction()==CashStream.ACTION_PAY&&cashStream.getState()==CashStream.STATE_SUCCESS)
 				{
-					if(cashStream.getAction()==CashStream.ACTION_PAY)
-					{
-						logger.debug("支付任务["+task.getId()+"],Submit["+submit.getId()+"]已执行过。");
-						continue loop;
-					}
+					logger.debug("支付任务["+task.getId()+"],Submit["+submit.getId()+"]已执行过。");
+					continue loop;
 				}
+				if(cashStream.getAction()==CashStream.ACTION_FREEZE&&cashStream.getState()==CashStream.STATE_SUCCESS)
+					freezeCS=cashStream;
 			}
-			Lender lender=lenderDao.find(submit.getLenderId());
-			try {
-				accountService.pay(lender.getAccountId(), borrower.getAccountId(),submit.getAmount(), submit.getId(), "支付");
-			} catch (IllegalConvertException e) {
-				logger.error(e.getMessage(),e);
-			}
-			logger.debug("支付任务["+task.getId()+"],Lender["+lender.getId()+"]为Submit["+submit.getId()+"]支付了"+submit.getAmount()+"元");
+			loanNos.add(freezeCS.getLoanNo());
 		}
+		thirdPaySupportService.check(loanNos, 1);
 		logger.info("支付任务["+task.getId()+"]完毕，涉及Submit"+submits.size()+"个");
 	}
 	private void executeQuitFinancingTask(Task task,boolean interrupted)
@@ -189,28 +186,24 @@ public class TaskServiceImpl implements ITaskService {
 		List<Submit> submits=submitDao.findAllByProductAndState(task.getProductId(), Submit.STATE_COMPLETEPAY);
 		if(submits==null||submits.size()==0)
 			return;
+		List<String> loanNos=new ArrayList();
 		loop:for(Submit submit:submits)
 		{
-			if(interrupted)
+			CashStream freezeCS=null;
+			List<CashStream> cashStreams=cashStreamDao.findSubmitCashStream(submit.getId());
+			for(CashStream cashStream:cashStreams)
 			{
-				List<CashStream> cashStreams=cashStreamDao.findSubmitCashStream(submit.getId());
-				for(CashStream cashStream:cashStreams)
+				if(cashStream.getAction()==CashStream.ACTION_UNFREEZE&&cashStream.getState()==CashStream.STATE_SUCCESS)
 				{
-					if(cashStream.getAction()==CashStream.ACTION_UNFREEZE)
-					{
-						logger.debug("流标任务["+task.getId()+"],Submit["+submit.getId()+"]已执行过。");
-						continue loop;
-					}
+					logger.debug("流标任务["+task.getId()+"],Submit["+submit.getId()+"]已执行过。");
+					continue loop;
 				}
+				if(cashStream.getAction()==CashStream.ACTION_FREEZE&&cashStream.getState()==CashStream.STATE_SUCCESS)
+					freezeCS=cashStream;
 			}
-			Lender lender=lenderDao.find(submit.getLenderId());
-			try {
-				accountService.unfreezeLenderAccount(lender.getAccountId(), submit.getAmount(), submit.getId(), "流标");
-			} catch (IllegalConvertException e) {
-				logger.error(e.getMessage(),e);
-			}
-			logger.debug("流标任务["+task.getId()+"],Lender["+lender.getId()+"]从Submit["+submit.getId()+"]解冻了"+submit.getAmount()+"元");
+			loanNos.add(freezeCS.getLoanNo());
 		}
+		thirdPaySupportService.check(loanNos, 2);
 		logger.info("流标任务["+task.getId()+"]完毕，涉及Submit"+submits.size()+"个");
 	}
 	private void executeRepayTask(Task task,boolean interrupted)

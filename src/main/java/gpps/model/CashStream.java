@@ -29,6 +29,7 @@ public class CashStream {
 	public static final int STATE_SUCCESS=1<<1;
 	public static final int STATE_FAIL=1<<2;
 	private int state=STATE_INIT;
+	private String loanNo;//钱多多流水号
 	public Integer getId() {
 		return id;
 	}
@@ -95,6 +96,15 @@ public class CashStream {
 	public void setState(int state) {
 		this.state = state;
 	}
+	public String getLoanNo() {
+		return loanNo;
+	}
+	public void setLoanNo(String loanNo) {
+		this.loanNo = loanNo;
+	}
+
+
+
 	//辅助对象
 	private Submit submit;
 	public Submit getSubmit() {

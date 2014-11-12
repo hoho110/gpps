@@ -5,7 +5,6 @@ import gpps.model.Borrower;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-import org.junit.runners.Parameterized.Parameters;
 
 public interface IBorrowerDao {
 	public int countAll();
@@ -40,4 +39,7 @@ public interface IBorrowerDao {
 	 */
 	public List<Borrower> findByPrivilegeWithPaging(@Param("privilege")int privilege,@Param("offset")int offset,@Param("recnum")int recnum);
 	public void update(@Param("id")Integer id,@Param("corporationName")String corporationName,@Param("corporationAddr")String corporationAddr,@Param("brange")String brange);
+	public void bindCard(@Param("id")Integer id,@Param("cardId")Integer cardId);
+	public Borrower findByThirdPartyAccount(String thirdPartyAccount);
+	public void updateAuthorizeTypeOpen(@Param("id")Integer id,@Param("authorizeTypeOpen")int authorizeTypeOpen);
 }

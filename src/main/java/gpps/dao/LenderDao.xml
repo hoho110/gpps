@@ -85,4 +85,10 @@
         order by createtime desc
         LIMIT #{offset}, #{recnum}
     </select>
+    <update id="bindCard">
+    	update Lender set cardBindingId=#{cardId} where id=#{id}
+    </update>
+    <select id="findByThirdPartyAccount" parameterType="String" resultType="gpps.model.Lender">
+    	select * from Lender where thirdPartyAccount=#{thirdPartyAccount}
+    </select>
 </mapper>

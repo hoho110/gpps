@@ -335,11 +335,12 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	}
 
 	@Override
-	public void registerThirdPartyAccount(String thirdPartyAccount) {
-		Borrower borrower=getCurrentUser();
+	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount) {
 		thirdPartyAccount=checkNullAndTrim("thirdPartyAccount", thirdPartyAccount);
-		borrowerDao.registerThirdPartyAccount(borrower.getId(), thirdPartyAccount);
-		borrower.setThirdPartyAccount(thirdPartyAccount);
+		borrowerDao.registerThirdPartyAccount(id, thirdPartyAccount);
+		Borrower borrower=getCurrentUser();
+		if(borrower!=null)
+			borrower.setThirdPartyAccount(thirdPartyAccount);
 	}
 
 	@Override
@@ -367,6 +368,14 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	@Override
 	public void update(Integer id, String corporationName, String corporationAddr, String brange) {
 		borrowerDao.update(id, corporationName, corporationAddr, brange);
+	}
+
+	@Override
+	public void bindCard(Integer id, Integer cardId) {
+		borrowerDao.bindCard(id, cardId);
+		Borrower borrower=getCurrentUser();
+		if(borrower!=null)
+			borrower.setCardBindingId(cardId);
 	}
 	
 }

@@ -153,11 +153,12 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	}
 
 	@Override
-	public void registerThirdPartyAccount(String thirdPartyAccount) {
-		Lender lender=getCurrentUser();
+	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount) {
 		thirdPartyAccount=checkNullAndTrim("thirdPartyAccount", thirdPartyAccount);
-		lenderDao.registerThirdPartyAccount(lender.getId(), thirdPartyAccount);
-		lender.setThirdPartyAccount(thirdPartyAccount);
+		lenderDao.registerThirdPartyAccount(id, thirdPartyAccount);
+		Lender lender=getCurrentUser();
+		if(lender!=null)
+			lender.setThirdPartyAccount(thirdPartyAccount);
 	}
 
 	@Override
@@ -184,5 +185,13 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		if(count==0)
 			return Pagination.buildResult(null, count, offset, recnum);
 		return Pagination.buildResult(lenderDao.findByPrivilegeWithPaging(privilege, offset, recnum), count, offset, recnum);
+	}
+
+	@Override
+	public void bindCard(Integer id, Integer cardId) {
+		lenderDao.bindCard(id, cardId);
+		Lender lender=getCurrentUser();
+		if(lender!=null)
+			lender.setCardBindingId(cardId);
 	}
 }

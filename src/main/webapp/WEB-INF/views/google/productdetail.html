@@ -43,6 +43,8 @@
 		src="/easyservice/gpps.service.IBorrowerService?json"></script>	
 <script type="text/javascript"
 		src="/easyservice/gpps.service.IProductActionService?json"></script>
+<script type="text/javascript"
+        src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
 <script src="js/getuser.js"></script>
     
     <script>
@@ -219,7 +221,8 @@
  
                         <a class="btns btn_xlarge investBtn" href="javascript:void(0);" id="invest">立即投资</a>
                     </div>
-           
+           			<div id="buyformdiv" style="display:none">
+					</div>
            			<div id="dt_div" class="markUpInfo">
                         <p class="mark-up-info">
                             <span id="detailDate"></span>
@@ -501,7 +504,23 @@
 		//	  backdrop: false
 		//});
  		
- 		window.location.href = "/account/buy/request?submitId="+oid+"&pid="+pid;
+ 		//window.location.href = "/account/buy/request?submitId="+oid+"&pid="+pid;
+ 		var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+        var transfer=service.getTransferToBuy(oid,pid);
+        var content="<form id='buyform' action='"+transfer.baseUrl+"'method='post' target='_blank'>";
+        for(var o in transfer)
+       	{
+            if(o=="baseUrl")
+           	{
+            	continue;
+           	}
+            var len = o.length;
+            var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
+            content+="<input id='"+name+"' name='"+name+"' value='"+transfer[o]+"'/> ";
+       	}
+        content+="</form>";
+        $('#buyformdiv').html(content);
+        $('#buyform').submit();
  		
  		}catch(e){
  			alert(e.message);

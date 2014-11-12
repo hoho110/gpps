@@ -57,7 +57,8 @@
         src="/easyservice/gpps.dao.IGovermentOrderDao?json"></script>
     <script type="text/javascript"
         src="/easyservice/gpps.service.IProductService?json"></script>
-
+	<script type="text/javascript"
+        src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
 	<script src="js/baccount.js"></script>
 	<script src="js/getuser.js"></script>
 	
@@ -182,6 +183,8 @@ a.accordion-toggle {
 								<div id="spsw"
 									style="color: red; font-size: 12px; font-weight: bold; margin-top: 5px;">
 									<span class="glyphicon glyphicon-remove"></span> 第三方账户未开通
+								</div>
+								<div id="spswformdiv" style="display:none">
 								</div>
 							</div>
 						</div>
@@ -370,7 +373,23 @@ a.accordion-toggle {
 												if ($(this).attr('data-sk') == 'done') {
 													return;
 												}
-												window.location.href = "/account/thirdPartyRegist/request";
+												//window.location.href = "/account/thirdPartyRegist/request";
+												var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+                                                var registAccount=service.getRegistAccount();
+                                                var content="<form id='spswform' action='"+registAccount.baseUrl+"'method='post' target='_blank'>";
+                                                for(var o in registAccount)
+                                               	{
+                                                    if(o=="baseUrl")
+                                                   	{
+                                                    	continue;
+                                                   	}
+                                                    var len = o.length;
+                                                    var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
+                                                    content+="<input id='"+name+"' name='"+name+"' value='"+registAccount[o]+"'/> ";
+                                               	}
+                                                content+="</form>";
+                                                $('#spswformdiv').html(content);
+                                                $('#spswform').submit();
 											});
 							}
 

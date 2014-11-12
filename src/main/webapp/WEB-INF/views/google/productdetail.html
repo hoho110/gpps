@@ -552,7 +552,9 @@
         			$('.detail-content-body').append('<h5>营业执照</h5>');
         			var pp0 = $('<p></p>');
         			for(var i=0; i<bitems0.size(); i++){
-        				var img = $('<img class="accessory" title="点击看大图" src="/download/borrower/'+order.borrowerId+'/0/'+bitems0.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				var url = "/download/borrower/"+order.borrowerId+"/0/"+bitems0.get(i).id;
+        				var viewurl = "/imageview/borrower/"+order.borrowerId+"/0/"+bitems0.get(i).id;
+        				var img = $('<img class="accessory" title="点击看大图" data-sk='+viewurl+' src='+url+'></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
         				pp0.append(img);
         			}
         			$('.detail-content-body').append(pp0);
@@ -563,7 +565,9 @@
         			$('.detail-content-body').append('<h5>政采资质</h5>');
         			var pp1 = $('<p></p>');
         			for(var i=0; i<bitems1.size(); i++){
-        				var img = $('<img class="accessory" src="/download/borrower/'+order.borrowerId+'/1/'+bitems1.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				var url = "/download/borrower/"+order.borrowerId+"/1/"+bitems1.get(i).id;
+        				var viewurl = "/imageview/borrower/"+order.borrowerId+"/1/"+bitems1.get(i).id;
+        				var img = $('<img class="accessory" data-sk='+viewurl+' src='+url+'></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
         				pp1.append(img);
         			}
         			$('.detail-content-body').append(pp1);
@@ -574,7 +578,9 @@
         			$('.detail-content-body').append('<h5>法人证件</h5>');
         			var pp2 = $('<p></p>');
         			for(var i=0; i<bitems2.size(); i++){
-        				var img = $('<img class="accessory" src="/download/borrower/'+order.borrowerId+'/2/'+bitems2.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				var url = "/download/borrower/"+order.borrowerId+"/2/"+bitems2.get(i).id;
+        				var viewurl = "/imageview/borrower/"+order.borrowerId+"/2/"+bitems2.get(i).id;
+        				var img = $('<img class="accessory" data-sk='+viewurl+' src='+url+'></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
         				pp2.append(img);
         			}
         			$('.detail-content-body').append(pp2);
@@ -585,7 +591,9 @@
         			$('.detail-content-body').append('<h5>办公环境</h5>');
         			var pp3 = $('<p></p>');
         			for(var i=0; i<bitems3.size(); i++){
-        				var img = $('<img class="accessory" src="/download/borrower/'+order.borrowerId+'/3/'+bitems3.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				var url = "/download/borrower/"+order.borrowerId+"/3/"+bitems3.get(i).id;
+        				var viewurl = "/imageview/borrower/"+order.borrowerId+"/3/"+bitems3.get(i).id;
+        				var img = $('<img class="accessory" data-sk='+viewurl+' src='+url+'></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
         				pp3.append(img);
         			}
         			$('.detail-content-body').append(pp3);
@@ -597,14 +605,16 @@
         			$('.detail-content-body').append('<h5>中标文件</h5>');
         			var pp = $('<p></p>');
         			for(var i=0; i<items.size(); i++){
-        				var img = $('<img class="accessory" src="/download/order/'+order.id+'/0/'+items.get(i).id+'"></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				var url = "/download/order/"+order.borrowerId+"/0/"+items.get(i).id;
+        				var viewurl = "/imageview/order/"+order.borrowerId+"/0/"+items.get(i).id;
+        				var img = $('<img class="accessory" data-sk='+viewurl+' src='+url+'></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
         				pp.append(img);
         			}
         			$('.detail-content-body').append(pp);
         			
         			
         			$('img.accessory').click(function(e){
-    					var source = $(this).attr('src');
+    					var source = $(this).attr('data-sk');
     					window.open(source);
     				});
         			

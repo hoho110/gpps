@@ -9,6 +9,7 @@ import gpps.model.Borrower;
 import gpps.model.CardBinding;
 import gpps.model.CashStream;
 import gpps.model.Lender;
+import gpps.model.LenderAccount;
 import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.Task;
@@ -438,7 +439,52 @@ public class AccountServlet {
 	@RequestMapping(value = { "/account/checkBuy/response/bg" })
 	public void checkBuyBg(HttpServletRequest req,HttpServletResponse resp)
 	{
+		try {
+			checkBuyProcessor(req,resp);
+		} catch (SignatureException e) {
+			e.printStackTrace();
+			return;
+		} catch (ResultCodeException e) {
+			e.printStackTrace();
+			return;
+		}
+		writeSuccess(resp);
+	}
+	
+	private void checkBuyProcessor(HttpServletRequest req,HttpServletResponse resp) throws SignatureException, ResultCodeException
+	{
+		log.debug("购买确认回调:"+req.getRequestURI());
 		Map<String,String> params=getAllParams(req);
+		String[] signStrs={"LoanNoList","LoanNoListFail","PlatformMoneymoremore","AuditType","RandomTimeStamp"
+				,"Remark1","Remark2","Remark3","ResultCode"};
+		checkRollBack(params, signStrs);
+		String auditType=params.get("AuditType");
+		if(!StringUtil.isEmpty(params.get("LoanNoList")))
+		{
+			String[] loanNoList=params.get("LoanNoList").split(",");
+			for(String loanNo:loanNoList)
+			{
+				List<CashStream> cashStreams=cashStreamDao.findSuccessByActionAndLoanNo(-1, loanNo);
+				if(cashStreams.size()==2)
+					continue;    //重复的命令
+				CashStream cashStream=cashStreams.get(0);
+				try {
+					Integer cashStreamId=null;
+					if(auditType.equals("1")) //通过审核
+					{
+						cashStreamId=accountService.pay(cashStream.getLenderAccountId(), cashStream.getBorrowerAccountId(),cashStream.getChiefamount(),cashStream.getSubmitId(), "支付");
+					}
+					else
+					{
+						cashStreamId=accountService.unfreezeLenderAccount(cashStream.getLenderAccountId(), cashStream.getChiefamount(), cashStream.getSubmitId(), "流标");
+					}
+					cashStreamDao.updateLoanNo(cashStreamId, loanNo);
+				} catch (IllegalConvertException e) {
+					e.printStackTrace();
+				}
+			}
+			//TODO 处理LoanNoListFail
+		}
 	}
 	@RequestMapping(value = { "/account/repay/request" })
 	public void repay(HttpServletRequest req, HttpServletResponse resp) {

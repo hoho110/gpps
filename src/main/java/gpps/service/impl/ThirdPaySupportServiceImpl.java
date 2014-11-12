@@ -237,6 +237,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	public void check(List<String> loanNos,int auditType) {
 		if(loanNos==null||loanNos.size()==0)
 			return;
+		String baseUrl=getBaseUrl(ACTION_CHECK);
 		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		StringBuilder loanNoSBuilder=new StringBuilder();
 		Map<String,String> params=new HashMap<String, String>();
@@ -267,7 +268,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 				RsaHelper rsa = RsaHelper.getInstance();
 				String signInfo=rsa.signData(sBuilder.toString(), privateKey);
 				params.put("SignInfo", signInfo);
-				String body=httpClientService.post(url, params);
+				String body=httpClientService.post(baseUrl, params);
 				log.info(body);
 				
 				loanNoSBuilder=new StringBuilder();
@@ -291,7 +292,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			RsaHelper rsa = RsaHelper.getInstance();
 			String signInfo=rsa.signData(sBuilder.toString(), privateKey);
 			params.put("SignInfo", signInfo);
-			String body=httpClientService.post(url, params);
+			String body=httpClientService.post(baseUrl, params);
 			log.info(body);
 		}
 	}

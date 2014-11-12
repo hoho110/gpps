@@ -35,4 +35,11 @@ public interface ICashStreamDao {
 	public List<CashStream> findRepayCashStream(@Param("submitId")Integer submitId,@Param("payBackId")Integer payBackId);
 	
 	public void updateLoanNo(@Param("cashStreamId") Integer cashStreamId,@Param("loanNo") String loanNo);
+	/**
+	 * 根据action及loanNo查找流水
+	 * @param action -1为不限
+	 * @param loanNo 
+	 * @return
+	 */
+	public List<CashStream> findSuccessByActionAndLoanNo(int action,String loanNo);
 }

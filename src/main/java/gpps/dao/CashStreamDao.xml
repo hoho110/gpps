@@ -99,4 +99,10 @@
     <update id="updateLoanNo">
     	update CashStream set loanNo=#{loanNo} where id=#{cashStreamId}
     </update>
+    <select id="findSuccessByActionAndLoanNo">
+    	select * from CashStream where loanNo=#{loanNo} and state=2
+    	<if test="action != -1">
+			and action=#{action}
+		</if>
+    </select>
 </mapper>

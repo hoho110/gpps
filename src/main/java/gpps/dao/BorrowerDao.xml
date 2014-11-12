@@ -99,4 +99,7 @@
     <select id="findByThirdPartyAccount" parameterType="String" resultType="gpps.model.Borrower">
     	select * from borrower where thirdPartyAccount=#{thirdPartyAccount}
     </select>
+    <update id="updateAuthorizeTypeOpen">
+    	update borrower set authorizeTypeOpen=#{authorizeTypeOpen} where id=#{id}
+    </update>
 </mapper>

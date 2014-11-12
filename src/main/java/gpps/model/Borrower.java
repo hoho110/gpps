@@ -28,6 +28,9 @@ public class Borrower {
 	private long lastModifyTime=System.currentTimeMillis();
 	private String brange;//经营范围
 	private Integer cardBindingId;
+	public static final int AUTHORIZETYPEOPEN_RECHARGE=1<<1;//还款授权
+	public static final int AUTHORIZETYPEOPEN_SECORD=1<<2;//二次分配授权
+	private int authorizeTypeOpen=0;
 	public Integer getId() {
 		return id;
 	}
@@ -166,6 +169,12 @@ public class Borrower {
 	}
 	public void setCardBindingId(Integer cardBindingId) {
 		this.cardBindingId = cardBindingId;
+	}
+	public int getAuthorizeTypeOpen() {
+		return authorizeTypeOpen;
+	}
+	public void setAuthorizeTypeOpen(int authorizeTypeOpen) {
+		this.authorizeTypeOpen = authorizeTypeOpen;
 	}
 	public static int creditValueToLevel(int creditValue)
 	{

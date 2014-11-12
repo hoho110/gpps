@@ -41,4 +41,5 @@ public interface IBorrowerDao {
 	public void update(@Param("id")Integer id,@Param("corporationName")String corporationName,@Param("corporationAddr")String corporationAddr,@Param("brange")String brange);
 	public void bindCard(@Param("id")Integer id,@Param("cardId")Integer cardId);
 	public Borrower findByThirdPartyAccount(String thirdPartyAccount);
+	public void updateAuthorizeTypeOpen(@Param("id")Integer id,@Param("authorizeTypeOpen")int authorizeTypeOpen);
 }

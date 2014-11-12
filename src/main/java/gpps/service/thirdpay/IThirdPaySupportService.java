@@ -1,6 +1,7 @@
 package gpps.service.thirdpay;
 
 import gpps.service.exception.InsufficientBalanceException;
+import gpps.service.exception.LoginException;
 
 import java.util.List;
 
@@ -12,11 +13,11 @@ public interface IThirdPaySupportService {
 	 */
 	public String getBaseUrl(String action);
 	
-	public RegistAccount getRegistAccount();
+	public RegistAccount getRegistAccount() throws LoginException;
 	
-	public Recharge getRecharge(String amount);
+	public Recharge getRecharge(String amount) throws LoginException;
 	
-	public Transfer getTransferToBuy(Integer submitId,String pid) throws InsufficientBalanceException;
+	public Transfer getTransferToBuy(Integer submitId,String pid) throws InsufficientBalanceException, LoginException;
 	
 	public String getPrivateKey();
 	/**
@@ -31,8 +32,10 @@ public interface IThirdPaySupportService {
 	 */
 	public void check(List<String> loanNos,int auditType);
 	
-	public CardBinding getCardBinding();
+	public CardBinding getCardBinding() throws LoginException;
 	
-	public Cash getCash(String amount) throws InsufficientBalanceException;
+	public Cash getCash(String amount) throws InsufficientBalanceException, LoginException;
+	
+	public Authorize getAuthorize() throws LoginException;
 	
 }

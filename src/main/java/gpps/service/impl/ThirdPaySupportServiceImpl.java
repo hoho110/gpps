@@ -14,6 +14,8 @@ import gpps.service.ILoginService;
 import gpps.service.IProductService;
 import gpps.service.ISubmitService;
 import gpps.service.exception.InsufficientBalanceException;
+import gpps.service.exception.LoginException;
+import gpps.service.thirdpay.Authorize;
 import gpps.service.thirdpay.CardBinding;
 import gpps.service.thirdpay.Cash;
 import gpps.service.thirdpay.IHttpClientService;
@@ -50,6 +52,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	public static final String ACTION_CHECK="3";
 	public static final String ACTION_CARDBINDING="4";
 	public static final String ACTION_CASH="5";
+	public static final String ACTION_AUTHORIZE="6";
 	private static Map<String, String> urls=new HashMap<String, String>();
 	static {
 		urls.put(ACTION_REGISTACCOUNT, "/loan/toloanregisterbind.action");
@@ -58,6 +61,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		urls.put(ACTION_CHECK, "/loan/toloantransferaudit.action");
 		urls.put(ACTION_CARDBINDING, "/loan/toloanfastpay.action");
 		urls.put(ACTION_CASH, "/loan/toloanwithdraws.action");
+		urls.put(ACTION_AUTHORIZE, "/loan/toloanauthorize.action");
 	}
 	private String url="";
 	private String platformMoneymoremore="p401";
@@ -119,12 +123,14 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	}
 
 	@Override
-	public RegistAccount getRegistAccount() {
+	public RegistAccount getRegistAccount() throws LoginException {
 		RegistAccount registAccount=new RegistAccount();
 		registAccount.setBaseUrl(getBaseUrl(ACTION_REGISTACCOUNT));
 		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		HttpSession session=req.getSession();
 		Object currentUser=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+		if(currentUser==null)
+			throw new LoginException("未找到用户信息，请重新登录");
 		if(currentUser instanceof Lender)
 		{
 			registAccount.setAccountType(null);
@@ -154,13 +160,14 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	}
 
 	@Override
-	public Recharge getRecharge(String amount) {
+	public Recharge getRecharge(String amount) throws LoginException {
 		Recharge recharge=new Recharge();
 		recharge.setBaseUrl(getBaseUrl(ACTION_RECHARGE));
 		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		HttpSession session=req.getSession();
 		Object currentUser=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
-		
+		if(currentUser==null)
+			throw new LoginException("未找到用户信息，请重新登录");
 		recharge.setAmount(amount);
 		recharge.setReturnURL(req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + "/account/recharge/response");
 		recharge.setNotifyURL(recharge.getReturnURL()+"/bg");
@@ -186,13 +193,13 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	}
 
 	@Override
-	public Transfer getTransferToBuy(Integer submitId,String pid) throws InsufficientBalanceException {
+	public Transfer getTransferToBuy(Integer submitId,String pid) throws InsufficientBalanceException, LoginException {
 		Transfer transfer=new Transfer();
 		transfer.setBaseUrl(getBaseUrl(ACTION_TRANSFER));
 		
 		Lender lender=lenderService.getCurrentUser();
 		if(lender==null)
-			throw new RuntimeException("未找到用户信息，请重新登录");
+			throw new LoginException("未找到用户信息，请重新登录");
 		Submit submit = ObjectUtil.checkNullObject(Submit.class, submitService.find(submitId));
 		GovermentOrder order=orderService.findGovermentOrderByProduct(submit.getProductId());
 		Borrower borrower=borrowerService.find(order.getBorrowerId());
@@ -298,12 +305,14 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	}
 
 	@Override
-	public CardBinding getCardBinding() {
+	public CardBinding getCardBinding() throws LoginException {
 		CardBinding cardBinding=new CardBinding();
 		cardBinding.setBaseUrl(getBaseUrl(ACTION_CARDBINDING));
 		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		HttpSession session=req.getSession();
 		Object currentUser=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+		if(currentUser==null)
+			throw new LoginException("未找到用户信息，请重新登录");
 		cardBinding.setPlatformMoneymoremore(platformMoneymoremore);
 		cardBinding.setAction("2");
 //		RsaHelper rsa = RsaHelper.getInstance();
@@ -327,12 +336,14 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	}
 
 	@Override
-	public Cash getCash(String amount) throws InsufficientBalanceException {
+	public Cash getCash(String amount) throws InsufficientBalanceException, LoginException {
 		Cash cash=new Cash();
 		cash.setBaseUrl(getBaseUrl(ACTION_CASH));
 		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		HttpSession session=req.getSession();
 		Object currentUser=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+		if(currentUser==null)
+			throw new LoginException("未找到用户信息，请重新登录");
 		cash.setPlatformMoneymoremore(platformMoneymoremore);
 		cash.setAmount(amount);
 		Integer cashStreamId = null;
@@ -351,7 +362,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			cardBinding=cardBindingDao.find(borrower.getCardBindingId());
 		}
 		else {
-			throw new RuntimeException("不支持该用户体现");
+			throw new RuntimeException("不支持该用户提现");
 		}
 		if(cardBinding==null)
 			throw new RuntimeException("未绑定银行卡");
@@ -369,5 +380,21 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		RsaHelper rsa = RsaHelper.getInstance();
 		cash.setCardNo(rsa.encryptData(cardNo, publicKey));
 		return cash;
+	}
+
+	@Override
+	public Authorize getAuthorize() throws LoginException {
+		Borrower borrower=borrowerService.getCurrentUser();
+		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+		if(borrower==null)
+			throw new LoginException("未找到用户信息，请重新登录");
+		Authorize authorize=new Authorize();
+		authorize.setBaseUrl(getBaseUrl(ACTION_AUTHORIZE));
+		
+		authorize.setMoneymoremoreId(borrower.getThirdPartyAccount());
+		authorize.setPlatformMoneymoremore(platformMoneymoremore);
+		authorize.setAuthorizeTypeOpen("1");
+		authorize.setReturnURL(req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() +"/account/authorize/response");
+		return authorize;
 	}
 }

@@ -651,6 +651,67 @@ public class AccountServlet {
 				borrowerService.bindCard(borrower.getId(), cardBinding.getId());
 		}
 	}
+	@RequestMapping(value = { "/account/authorize/response" })
+	public void completeAuthorize(HttpServletRequest req,HttpServletResponse resp)
+	{
+		try {
+			completeAuthorizeProcessor(req,resp);
+		} catch (SignatureException e) {
+			e.printStackTrace();
+		} catch (ResultCodeException e) {
+			e.printStackTrace();
+		}
+		write(resp,"<head><script>window.location.href='/views/google/myaccount.html?fid=mycenter'</script></head>");
+	}
+	@RequestMapping(value = { "/account/authorize/response/bg" })
+	public void completeAuthorizeBg(HttpServletRequest req,HttpServletResponse resp)
+	{
+		try {
+			completeAuthorizeProcessor(req,resp);
+		} catch (SignatureException e) {
+			e.printStackTrace();
+			return;
+		} catch (ResultCodeException e) {
+			e.printStackTrace();
+			return;
+		}
+		writeSuccess(resp);
+	}
+	private void completeAuthorizeProcessor(HttpServletRequest req,HttpServletResponse resp) throws SignatureException, ResultCodeException
+	{
+		log.debug("授权回调:"+req.getRequestURI());
+		Map<String,String> params=getAllParams(req);
+		String[] signStrs={"MoneymoremoreId","PlatformMoneymoremore","AuthorizeTypeOpen","AuthorizeTypeClose","AuthorizeType","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
+		checkRollBack(params, signStrs);
+		String authorizeTypeOpen=params.get("AuthorizeTypeOpen");
+		String authorizeTypeClose=params.get("AuthorizeTypeClose");
+		String moneymoremoreId=params.get("MoneymoremoreId");
+		Borrower borrower=borrowerDao.findByThirdPartyAccount(moneymoremoreId);
+		int originalAuthorizeTypeOpen=borrower.getAuthorizeTypeOpen();
+		if(!StringUtil.isEmpty(authorizeTypeOpen))
+		{
+			String[] strs=authorizeTypeOpen.split(",");
+			for(String str:strs)
+			{
+				if(str.equals("3"))
+					originalAuthorizeTypeOpen=originalAuthorizeTypeOpen|Borrower.AUTHORIZETYPEOPEN_SECORD;
+				else
+					originalAuthorizeTypeOpen=originalAuthorizeTypeOpen|Integer.parseInt(str);
+			}
+		}
+		if(!StringUtil.isEmpty(authorizeTypeClose))
+		{
+			String[] strs=authorizeTypeOpen.split(",");
+			for(String str:strs)
+			{
+				if(str.equals("3"))
+					originalAuthorizeTypeOpen=originalAuthorizeTypeOpen-(originalAuthorizeTypeOpen&Borrower.AUTHORIZETYPEOPEN_SECORD);
+				else
+					originalAuthorizeTypeOpen=originalAuthorizeTypeOpen-(originalAuthorizeTypeOpen&Integer.parseInt(str));
+			}
+		}
+		borrowerDao.updateAuthorizeTypeOpen(borrower.getId(), originalAuthorizeTypeOpen);
+	}
 	private void writeThirdParty(HttpServletResponse resp, String message) {
 
 		StringBuilder text = new StringBuilder();

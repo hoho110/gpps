@@ -219,6 +219,8 @@ public class TaskServiceImpl implements ITaskService {
 		Product product=productDao.find(payBack.getProductId());
 		BigDecimal totalChiefAmount=payBack.getChiefAmount();
 		BigDecimal totalInterest=payBack.getInterest();
+		//TODO 取付款人乾多多标识，收款人乾多多标识，网贷平台订单号，金额（本金+利息）
+		//accountService.repay 去掉changeCashStreamState
 		loop:for(int i=0;i<submits.size();i++)
 		{
 			Submit submit=submits.get(i);
@@ -237,13 +239,13 @@ public class TaskServiceImpl implements ITaskService {
 			Lender lender=lenderDao.find(submit.getLenderId());
 			BigDecimal lenderChiefAmount=null;
 			BigDecimal lenderInterest=null;
-			if(i==(submits.size()-1))
-			{
-				lenderChiefAmount=totalChiefAmount;
-				lenderInterest=totalInterest;
-			}
-			else
-			{
+//			if(i==(submits.size()-1))
+//			{
+//				lenderChiefAmount=totalChiefAmount;
+//				lenderInterest=totalInterest;
+//			}
+//			else
+//			{
 				if(payBack.getType()==PayBack.TYPE_LASTPAY)
 				{
 					List<CashStream> cashStreams=cashStreamDao.findRepayCashStream(submit.getId(), null);
@@ -263,13 +265,18 @@ public class TaskServiceImpl implements ITaskService {
 				lenderInterest=payBack.getInterest().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
 				totalChiefAmount.subtract(lenderChiefAmount);
 				totalInterest.subtract(lenderInterest);
-			}
+//			}
 			try {
 				accountService.repay(lender.getAccountId(), payBack.getBorrowerAccountId(), lenderChiefAmount, lenderInterest, submit.getId(), payBack.getId(), "还款");
 			} catch (IllegalConvertException e) {
 				logger.error(e.getMessage(),e);
 			}
 			logger.debug("还款任务["+task.getId()+"],Lender["+lender.getId()+"]因Submit["+submit.getId()+"]获取还款本金"+lenderChiefAmount+"元,利息"+lenderInterest+"元");
+		}
+		if(totalChiefAmount.add(totalInterest).compareTo(BigDecimal.ZERO)>0)
+		{
+			//TODO 有余额则放入自有账户中
+			
 		}
 		logger.info("还款任务["+task.getId()+"]完毕，涉及Submit"+submits.size()+"个");
 	}

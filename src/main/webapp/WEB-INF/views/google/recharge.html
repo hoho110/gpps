@@ -58,58 +58,12 @@
                 7.支付限额请参照 <a href="http://www.chinapnr.com/helpcenter_zfsm.html" target="_blank">支付说明</a>。
                 
                </div>
-               <div style="width:100%; padding-top:20px;">
-               
-               <div class="rechargeBoxTitle">
-               		 请选择银行</div>
-               
-                <ul class="rechargeList">
                 
-                <li>
-                    <input name="radio" type="radio" value="radio" class="radioStyle" onclick="getbank('ICBC')" /><img
-                        src="img/gs.jpg" width="123" height="36" onclick="getbank('ICBC')" /></li>
-                <li>
-                    <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('CCB')" /><img
-                        src="img/js.jpg" width="123" height="36" onclick="getbank('CCB')" /></li>
-                <li>
-                    <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('BOC')" /><img
-                        src="img/zg.jpg" width="123" height="36" onclick="getbank('BOC')" /></li>
-                <li>
-                    <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('BOCOM')" /><img
-                        src="img/jt.jpg" width="123" height="36" onclick="getbank('BOCOM')" /></li>
-               
-                <li>
-                    <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('SPDB')" /><img
-                        src="img/pf.jpg" width="123" height="36" onclick="getbank('SPDB')" /></li>
-                <li>
-                    <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('CEB')" /><img
-                        src="img/gd.jpg" width="123" height="36" onclick="getbank('CEB')" /></li>
-                <li>
-                    <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('CMB')" /><img
-                        src="img/zs.jpg" width="123" height="36" onclick="getbank('CMB')" /></li>
-                <li>
-                    <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('CIB')" /><img
-                        src="img/xy.jpg" width="123" height="36" onclick="getbank('CIB')" /></li>
-                <li>
-                    <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('ABC')" /><img
-                        src="img/ny.jpg" width="123" height="36" onclick="getbank('ABC')" /></li>
-                         <li>
-                    <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('CMBC')" /><img
-                        src="img/ms.jpg" width="123" height="36" onclick="getbank('CMCB')" /></li>
-                <li>
-                    <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('PSBC')" /><img
-                        src="img/yz.jpg" width="123" height="36" onclick="getbank('PSBC')" /></li>
-                <li>
-                    <input type="radio" name="radio" value="radio" class="radioStyle" onclick="getbank('BOS')" /><img
-                        src="img/sh.jpg" width="123" height="36" onclick="getbank('BOS')" /></li>
-            </ul>
-            </div>
-                
-                <div>
+                <div style="padding-top:20px; padding-left:300px;">
                  <div class="rechargeBoxTitle">
-               		 请输入金额</div>
+               		 请输入充值金额</div>
             <div class="rechargeNO">
-                <input name="txtAccount" type="text" id="txtAccount" /><span
+                <input name="txtAccount" type="text" id="txtAccount" style="height:35px;"/><span
                     id="msg" style="color: #b94a48; font-weight: bold;"></span></div>
             <div class="confirmAndCancel">
                 <input type="button" name="btnSub" value="确 认" id="rechargeConfirm" class="confirmAndCancelBtn" />
@@ -243,14 +197,6 @@ $(document).ready(function() {
 			document.getElementById('msg').innerHTML='金额必须大于0且为整数或小数，小数点后不超过两位';
 			$('#txtAccount').val('');
 		}else{
-			//	document.getElementById('msg').innerHTML='';
-				
-			//	$('#myModal').modal({
-			//		  keyboard: false,
-			//		  backdrop: false
-			//	});
-			//	window.open("/account/recharge/request?amount="+value, "", "toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes, fullscreen = yes");
-			//window.location.href="/account/recharge/request?amount="+value;
 			var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
             var recharge=service.getRecharge(value);
             var content="<form id='rechargeform' action='"+recharge.baseUrl+"'method='post'>";

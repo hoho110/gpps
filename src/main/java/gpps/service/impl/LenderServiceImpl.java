@@ -41,6 +41,9 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		Lender lender=lenderDao.findByLoginIdAndPassword(loginId, password);
 		if(lender==null)
 			throw new LoginException("Login fail!!");
+		
+		lender.setCardBinding(cardBindingDao.find(lender.getCardBindingId()));
+		
 		session.setAttribute(SESSION_ATTRIBUTENAME_USER, lender);
 	}
 

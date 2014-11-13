@@ -12,6 +12,7 @@
 <link href="css/index/justified-nav.css" rel="stylesheet">
 <link href="css/plist/a.css" rel="stylesheet">
 <link href="css/rtd_files/css2.css" rel="stylesheet">
+<link href="css/mine.css" rel="stylesheet">
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script type="text/javascript"
@@ -33,8 +34,8 @@
 	<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
       
       </div>
-	<div class="row" style="height:100px; text-align:center;">
-	<img style="width:600px; height:80px;" src="mall/step1.png"></img>
+	<div class="row" style="margin-bottom:40px; text-align:center; margin-top:20px;">
+	<span class="orange">1:平台注册</span>&nbsp;>>&nbsp;<span class="grey">2:实名认证</span>&nbsp;>>&nbsp;<span class="grey">3:第三方注册</span>&nbsp;>>&nbsp;<span class="grey">4:完成</span>
 	<div style="clear:both;"></div>
 	</div>
 	<div class="form-horizontal" role="form" style="width:400px; margin: 0 auto;">
@@ -98,6 +99,14 @@
 				<input type="text" class="form-control" id="license">
 			</div>
 			</div>
+			
+			
+			<div class="form-group has-success has-feedback" id="email">
+			<label class="control-label col-sm-3" for="inputSuccess3">邮箱</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="email">
+			</div>
+			</div>
 
 			
 			<div class="form-group has-success has-feedback">
@@ -156,6 +165,7 @@ $(document).ready(function() {
 	$('#username').focus();
     $('#login').click(function(e){
 			var username = $('input#username').val();
+			var email = $('input#email').val();
 			var password = $('input#password').val();
 			var password_r = $('input#password_r').val();
 			var phone = $('input#phone').val();
@@ -216,6 +226,36 @@ $(document).ready(function() {
 				$('input#password_r').parent().parent().removeClass('has-error').addClass('has-success');
 				removeMessage();
 				}
+			
+			
+			var emailreg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+			
+			if(email==null||email==''){
+				$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(error);
+				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*请输入邮箱地址');
+				return;
+	        }else if(service.isLoginIdExist(email)){
+	        	$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(error);
+				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*邮箱已被注册');
+				return;
+			}
+	        else if(!emailreg.test(email)){
+					$('input#email').parent().find('span').remove();
+					$('input#email').parent().append(error);
+					$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+					addMessage('*邮箱格式不正确');
+					return;
+				}
+	        else{
+	        	$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(ok);
+				$('input#email').parent().parent().removeClass('has-error').addClass('has-success');
+				removeMessage();
+	        	}
 
 
 			if(validate==null||validate==''){
@@ -235,7 +275,7 @@ $(document).ready(function() {
 			if(usertype=='1')
 			{
 			try{
-				var lender = {"_t_":"gpps.model.Lender", "loginId":username, "password" : password, "tel" : phone};
+				var lender = {"_t_":"gpps.model.Lender", "loginId":username, "password" : password, "tel" : phone, "email" : email};
 				service.register(lender, validate);
 				window.location.href="register2.html";
 			}catch(ee){
@@ -277,7 +317,7 @@ $(document).ready(function() {
 				
 				
 				try{
-					var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname, "license" : license};
+					var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname, "license" : license, "email" : email};
 					bservice.register(borrower, validate);
 					window.location.href="baccount.html";
 				}catch(ee){
@@ -291,6 +331,31 @@ $(document).ready(function() {
 			
 			
         });
+    
+    
+    $('input#email').blur(function(e){
+    	var email = $(this).val();
+    	var emailreg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+        	if(email==null||email==''){
+        }else if(service.isLoginIdExist(email)){
+        	$('input#email').parent().find('span').remove();
+			$('input#email').parent().append(error);
+			$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+			addMessage('*邮箱已被注册');
+		}
+        else if(!emailreg.test(email)){
+				$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(error);
+				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*邮箱格式不正确');
+			}
+        else{
+        	$('input#email').parent().find('span').remove();
+			$('input#email').parent().append(ok);
+			$('input#email').parent().parent().removeClass('has-error').addClass('has-success');
+			removeMessage();
+        		}
+    });
 
     $('input#username').blur(function(e){
         var username = $(this).val();
@@ -335,7 +400,7 @@ $(document).ready(function() {
     	
  	  var phone = $('input#phone').val();
  	  
- 	  var reg=/^1\d{10}$/;
+ 	  var reg=/^1[3-8]+\d{9}$/;
  	  
  	  if(phone==null || phone==''){
  		 $('input#phone').parent().find('span').remove();

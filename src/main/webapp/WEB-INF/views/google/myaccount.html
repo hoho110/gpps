@@ -103,13 +103,10 @@ a.accordion-toggle {
 
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div id="account_total" class="col-xs-6 col-md-6"
+						<div id="account_total" class="col-xs-8 col-md-8"
 							style="BACKGROUND-COLOR: #fef9f1; padding-top: 10px;">
-							<div class="col-xs-3 col-md-3">
-								<img src="img/head.bmp" width="100" height="130"
-									style="margin-right: 8px;" />
-							</div>
-							<div class="col-xs-9 col-md-9">
+							
+							<div class="col-xs-7 col-md-7">
 								<div>
 									<strong id="welcome"></strong> <a
 										style="margin-left: 50px;" href="resetpsw.html">修改密码</a> <a
@@ -137,6 +134,25 @@ a.accordion-toggle {
 										id="totalincome"></span>元
 									</span>
 								</div>
+								
+								</div>
+								
+								<div class="col-xs-5 col-md-5">
+								<div style="margin-top: 15px;">
+									<span class="grey">身份证号：<span class="grey" id="idcard"></span>
+									</span><button id="bindidcard" style="float:right;">身份证绑定</button>
+									<div style="clear:both;"></div>
+								</div>
+								<div style="margin-top: 5px;">
+									<span class="grey">钱多多账户：<span class="grey" id="tpaccount"></span>
+									</span><button id="loginmmm" style="float:right;">登录钱多多</button>
+									<div style="clear:both;"></div>
+								</div>
+								<div style="margin-top: 5px;">
+									<span class="grey">绑定银行卡：<span class="grey" id="bankcard"></span>
+									</span><button id="rebind" style="float:right;">绑定</button>
+									<div style="clear:both;"></div>
+								</div>
 							</div>
 							<div class="col-xs-12 col-md-12">
 								<div class="btn-group btn-group-lg  btn-group-justified"
@@ -150,7 +166,8 @@ a.accordion-toggle {
 								</div>
 							</div>
 						</div>
-						<div class="col-xs-6 col-md-6">
+						
+						<div class="col-xs-4 col-md-4">
 							<div class="col-xs-3 col-md-3" style="padding-top: 20px;">
 								<img src="img/phone.jpg" style="width: 80px; height: 100px;"></img>
 								<div
@@ -178,17 +195,9 @@ a.accordion-toggle {
 								<div id="spswformdiv" style="display:none">
 								</div>
 							</div>
-							<div class="col-xs-3 col-md-3" style="padding-top: 20px;">
-								<a id="cardBinding" title="绑定银行卡" href="#" data-sk='none'><img
-									id="cardBinding" src="img/sanfang_n.jpg"
-									style="width: 80px; height: 100px;"></img></a>
-								<div id="cardBinding"
-									style="color: red; font-size: 12px; font-weight: bold; margin-top: 5px;">
-									<span class="glyphicon glyphicon-remove"></span> 未绑定银行卡
-								</div>
-								<div id="cardBindingformdiv" style="display:none">
-								</div>
-							</div>
+							
+							<div id="cardBindingformdiv" style="display:none;"></div>
+							
 						</div>
 						<div style="clear: both;"></div>
 					</div>
@@ -316,20 +325,44 @@ a.accordion-toggle {
 							var totalincome = account.totalincome;
 						//	$('#totalincome').html((parseFloat(totalincome.value)+0.09).toFixed(0));
 							$('#totalincome').html(totalincome.value);
+							
+							
+							var bankcard = cuser.cardBindingId;
+							if(bankcard != null){
+								$('#bankcard').html('已绑定');
+								$('#rebind').html('重新绑定');
+							}else{
+								$('#bankcard').html('暂未绑定');
+								$('#rebind').html('绑定');
+							}
+							
 
 
 							var identity = cuser.identityCard;
 							if (identity != null && identity != "") {
+								$('#idcard').html(identity);
+								$('#bindidcard').html('已绑定');
+								$('#bindidcard').attr('disabled', 'disabled');
 								$('img#identity').attr('src', 'img/people.jpg').attr('title', '身份证已绑定').attr('disabled', 'disabled');
 								$('a#identity').attr('href', '#');
 								$('div#identity')
 										.css('color', 'green')
 										.html(
 												'<span class="glyphicon glyphicon-ok"></span>身份证已绑定')
+							}else{
+								$('#idcard').html('暂未绑定');
+								$('#bindidcard').click(function(){
+									window.location.href = 'register2.html';
+								});
 							}
 
 							var spsw = cuser.thirdPartyAccount;
+							
 							if (spsw != null && spsw != "") {
+								$('#tpaccount').html(spsw);
+								$('#loginmmm').click(function(e){
+									window.open('http://218.4.234.150:88/main');
+								})
 								$('img#spsw').attr('src', 'img/sanfang.jpg').attr('title', '第三方账户已开通').attr('disabled', 'disabled');
 								$('a#spsw').attr('href', '#').attr('data-sk',
 										'done');
@@ -337,6 +370,32 @@ a.accordion-toggle {
 										.css('color', 'green')
 										.html(
 												'<span class="glyphicon glyphicon-ok"></span>第三方账户已开通')
+							}else{
+								$('#tpaccount').html("暂未开通");
+								$('#loginmmm').html('马上注册');
+								
+								if(identity!=null && identity!="")
+								{
+								$('#loginmmm').click(function(e){
+									$('#spswformdiv').empty();
+									var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+                                    var registAccount=service.getRegistAccount();
+                                    var content="<form id='spswform' action='"+registAccount.baseUrl+"'method='post'>";
+                                    for(var o in registAccount)
+                                   	{
+                                        if(o=="baseUrl")
+                                       	{
+                                        	continue;
+                                       	}
+                                        var len = o.length;
+                                        var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
+                                        content+="<input id='"+name+"' name='"+name+"' value='"+registAccount[o]+"'/> ";
+                                   	}
+                                    content+="</form>";
+                                    $('#spswformdiv').html(content);
+                                    $('#spswform').submit();
+								});
+								}
 							}
 
 							
@@ -367,12 +426,13 @@ a.accordion-toggle {
                                                 $('#spswform').submit();
 											});
 							}
-							$('a#cardBinding').click(
+							
+							
+							
+							
+							if (spsw != null && spsw != "") {
+							$('button#rebind').click(
 									function(e) {
-										if ($(this).attr('data-sk') == 'done') {
-											return;
-										}
-										//window.location.href = "/account/thirdPartyRegist/request";
 										$('#cardBindingformdiv').empty();
 										var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
                                         var cardBinding=service.getCardBinding();
@@ -391,6 +451,11 @@ a.accordion-toggle {
                                         $('#cardBindingformdiv').html(content);
                                         $('#cardBindingform').submit();
 									});
+							
+							}
+							
+							
+							
 							$('button.nav-first').click(function(e) {
 												$('button.nav-first').removeClass(
 														'active');

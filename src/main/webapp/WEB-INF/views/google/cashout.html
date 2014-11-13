@@ -183,7 +183,7 @@ $(document).ready(function() {
 			$('#cashformdiv').empty();
 			var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
             var cash=service.getCash(value);
-            var content="<form id='cashform' action='"+cash.baseUrl+"'method='post' target='_blank'>";
+            var content="<form id='cashform' action='"+cash.baseUrl+"'method='post'>";
             for(var o in cash)
            	{
                 if(o=="baseUrl"||o=="_i_"||o=="_t_")

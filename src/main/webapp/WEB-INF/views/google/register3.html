@@ -3,6 +3,12 @@
 <HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>政采贷</TITLE>
 <META content="text/html; charset=utf-8" http-equiv=Content-Type><LINK 
 rel=stylesheet type=text/css href="rtd_files/css2.css">
+<link href="css/mine.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script type="text/javascript"
+		src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+        src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
 
 <BODY>
 <DIV class=regFrame>
@@ -14,9 +20,40 @@ rel=stylesheet type=text/css href="rtd_files/css2.css">
 <DIV style="PADDING-TOP: 50px" class=rechargeOKBox><IMG src="rtd_files/OK.jpg" 
 width=130 height=130 border=0> 
 <P class=rechargeOKText>身份验证成功，开通第三方支付，享资金安全保障。</P>
-<P class=regHFTX><A style="CURSOR: hand" href="/account/thirdPartyRegist/request"><IMG 
+<P class=regHFTX><A style="CURSOR: hand" href="javascript:void(0);" id="spsw"><IMG 
 src="rtd_files/kt.jpg" width=110 height=40 border=0></A></P>
 <P class=rechargeOKPrompt>政采贷使用<A href="http://www.chinapnr.com/" 
-target=_blank>汇付天下</A>提供的第三方资金托管服务<BR>全方位监管保证您的资金安全</P></DIV></DIV>
+target=_blank>双乾支付</A>提供的第三方资金托管服务<BR>全方位资金托管保证您的资金安全</P></DIV></DIV>
 <DIV class=regBtm>© 春蕾资产管理有限公司 
-客服热线：400-869-0311</DIV></DIV></DIV></BODY></HTML>
+客服热线：400-869-0311</DIV></DIV></DIV>
+<div id="spswformdiv" style="display:none">
+</div>
+
+
+<script>
+		$(document).ready(function() {
+			$('a#spsw').click(
+					function(e) {
+						$('#spswformdiv').empty();
+						var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+                        var registAccount=service.getRegistAccount();
+                        var content="<form id='spswform' action='"+registAccount.baseUrl+"'method='post'>";
+                        for(var o in registAccount)
+                       	{
+                            if(o=="baseUrl")
+                           	{
+                            	continue;
+                           	}
+                            var len = o.length;
+                            var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
+                            content+="<input id='"+name+"' name='"+name+"' value='"+registAccount[o]+"'/> ";
+                       	}
+                        content+="</form>";
+                        $('#spswformdiv').html(content);
+                        $('#spswform').submit();
+					});
+		});
+		
+</script>
+
+</BODY></HTML>

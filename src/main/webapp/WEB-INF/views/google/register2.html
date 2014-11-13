@@ -12,6 +12,7 @@
 <link href="css/index/justified-nav.css" rel="stylesheet">
 <link href="css/plist/a.css" rel="stylesheet">
 <link href="css/rtd_files/css2.css" rel="stylesheet">
+<link href="css/mine.css" rel="stylesheet">
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/tool.js"></script>
@@ -40,8 +41,8 @@ if(cuser==null && buser==null){
 	<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
       
       </div>
-	<div class="row" style="height:100px; text-align:center">
-	<img style="width:600px; height:80px;" src="mall/step2.png"></img>
+	<div class="row" style="margin-bottom:40px; text-align:center; margin-top:20px;">
+	<span class="grey">1:平台注册</span>&nbsp;>>&nbsp;<span class="orange">2:实名认证</span>&nbsp;>>&nbsp;<span class="grey">3:第三方注册</span>&nbsp;>>&nbsp;<span class="grey">4:完成</span>
 	<div style="clear:both;"></div>
 	</div>
 	<div class="form-horizontal" role="form" style="width:400px; margin: 0 auto;">
@@ -168,14 +169,14 @@ $(document).ready(function() {
 				}
     	   
     	   
-    	   var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+    	   //var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
     	   if(identity==null||identity==''){
     		   $('input#identity').parent().find('span').remove();
 				$('input#identity').parent().append(error);
 				$('input#identity').parent().parent().removeClass('has-success').addClass('has-error');
 				addMessage('*请输入身份证号');
 				return;
-				}else if(reg.test(identity) === false){
+				}else if(cidInfo(identity) === false){
 					$('input#identity').parent().find('span').remove();
 					$('input#identity').parent().append(error);
 					$('input#identity').parent().parent().removeClass('has-success').addClass('has-error');

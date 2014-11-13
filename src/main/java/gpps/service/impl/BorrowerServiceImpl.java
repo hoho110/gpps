@@ -4,6 +4,7 @@ import static gpps.tools.StringUtil.checkNullAndTrim;
 import gpps.constant.Pagination;
 import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.IBorrowerDao;
+import gpps.dao.ICardBindingDao;
 import gpps.dao.IFinancingRequestDao;
 import gpps.dao.IGovermentOrderDao;
 import gpps.dao.IProductDao;
@@ -50,6 +51,8 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	IGovermentOrderDao govermentOrderDao;
 	@Autowired
 	IProductDao productDao;
+	@Autowired
+	ICardBindingDao cardBindingDao;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	@Override
 	public void login(String loginId, String password, String graphValidateCode) throws LoginException, ValidateCodeException {
@@ -375,7 +378,10 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		borrowerDao.bindCard(id, cardId);
 		Borrower borrower=getCurrentUser();
 		if(borrower!=null)
+		{
 			borrower.setCardBindingId(cardId);
+			borrower.setCardBinding(cardBindingDao.find(cardId));
+		}
 	}
 	
 }

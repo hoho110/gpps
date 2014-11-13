@@ -11,8 +11,10 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import gpps.constant.Pagination;
+import gpps.dao.ICardBindingDao;
 import gpps.dao.ILenderAccountDao;
 import gpps.dao.ILenderDao;
+import gpps.model.CardBinding;
 import gpps.model.Lender;
 import gpps.model.LenderAccount;
 import gpps.service.ILenderService;
@@ -27,6 +29,8 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	ILenderDao lenderDao;
 	@Autowired
 	ILenderAccountDao lenderAccountDao;
+	@Autowired
+	ICardBindingDao cardBindingDao;
 	@Override
 	public void login(String loginId, String password, String graphValidateCode)
 			throws LoginException, ValidateCodeException {
@@ -192,6 +196,9 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		lenderDao.bindCard(id, cardId);
 		Lender lender=getCurrentUser();
 		if(lender!=null)
+		{
 			lender.setCardBindingId(cardId);
+			lender.setCardBinding(cardBindingDao.find(cardId));
+		}
 	}
 }

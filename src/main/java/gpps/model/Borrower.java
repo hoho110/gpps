@@ -176,6 +176,14 @@ public class Borrower {
 	public void setAuthorizeTypeOpen(int authorizeTypeOpen) {
 		this.authorizeTypeOpen = authorizeTypeOpen;
 	}
+	
+	private CardBinding cardBinding;
+	public CardBinding getCardBinding() {
+		return cardBinding;
+	}
+	public void setCardBinding(CardBinding cardBinding) {
+		this.cardBinding = cardBinding;
+	}
 	public static int creditValueToLevel(int creditValue)
 	{
 		//TODO borrower级别修改

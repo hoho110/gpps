@@ -131,6 +131,16 @@ public class Lender {
 	public void setCardBindingId(Integer cardBindingId) {
 		this.cardBindingId = cardBindingId;
 	}
+	
+	
+	//辅助对象
+	private CardBinding cardBinding;
+	public CardBinding getCardBinding() {
+		return cardBinding;
+	}
+	public void setCardBinding(CardBinding cardBinding) {
+		this.cardBinding = cardBinding;
+	}
 	public static int gradeToLevel(int grade)
 	{
 		if(grade>10000000)

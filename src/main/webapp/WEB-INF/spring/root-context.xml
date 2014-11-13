@@ -34,6 +34,8 @@
         <property name="url" value="${pay.url}"></property>
         <property name="privateKey" value="${privateKey}"></property>
         <property name="publicKey" value="${publicKey}"></property>
+        <property name="serverHost" value="${serverHost}"></property>
+        <property name="serverPort" value="${serverPort}"></property>
     </bean>
 	<import resource="classpath:spring-dao.xml"/>
 </beans>

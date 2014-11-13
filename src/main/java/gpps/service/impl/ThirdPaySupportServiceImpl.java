@@ -67,6 +67,8 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	private String platformMoneymoremore="p401";
 	private String privateKey;
 	private String publicKey;
+	private String serverHost;
+	private String serverPort;
 	@Autowired
 	IAccountService accountService;
 	@Autowired
@@ -83,7 +85,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	IHttpClientService httpClientService;
 	@Autowired
 	ICardBindingDao cardBindingDao;
-	
+
 	private Logger log=Logger.getLogger(ThirdPaySupportServiceImpl.class);
 	public String getPublicKey() {
 		return publicKey;
@@ -113,6 +115,23 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	public void setPlatformMoneymoremore(String platformMoneymoremore) {
 		this.platformMoneymoremore = platformMoneymoremore;
 	}
+	
+	public String getServerHost() {
+		return serverHost;
+	}
+
+	public void setServerHost(String serverHost) {
+		this.serverHost = serverHost;
+	}
+
+	public String getServerPort() {
+		return serverPort;
+	}
+
+	public void setServerPort(String serverPort) {
+		this.serverPort = serverPort;
+	}
+
 	@Override
 	public String getPrivateKey() {
 		return privateKey;
@@ -245,12 +264,11 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		if(loanNos==null||loanNos.size()==0)
 			return;
 		String baseUrl=getBaseUrl(ACTION_CHECK);
-		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		StringBuilder loanNoSBuilder=new StringBuilder();
 		Map<String,String> params=new HashMap<String, String>();
 		params.put("PlatformMoneymoremore", platformMoneymoremore);
 		params.put("AuditType", String.valueOf(auditType));
-		params.put("ReturnURL", req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + "/account/checkBuy/response/bg");
+		params.put("ReturnURL", "http://" + serverHost + ":" + serverPort + "/account/checkBuy/response/bg");
 		params.put("NotifyURL", params.get("ReturnURL"));
 		for(int i=0;i<loanNos.size();i++)
 		{

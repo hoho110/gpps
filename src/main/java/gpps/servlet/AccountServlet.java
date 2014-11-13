@@ -132,7 +132,7 @@ public class AccountServlet {
 		String[] signStrs={"AccountType","AccountNumber","Mobile","Email","RealName","IdentificationNo","LoanPlatformAccount",
 				"MoneymoremoreId","PlatformMoneymoremore","AuthFee","AuthState","RandomTimeStamp",
 				"Remark1","Remark2","Remark3","ResultCode"};
-		checkRollBack(params, signStrs);
+		thirdPaySupportService.checkRollBack(params, signStrs);
 		String thirdPartyAccount = params.get("MoneymoremoreId");
 		String accountType=params.get("AccountType");
 		String loanPlatformAccount=params.get("LoanPlatformAccount");
@@ -143,21 +143,7 @@ public class AccountServlet {
 			borrowerService.registerThirdPartyAccount(id,thirdPartyAccount);
 		}
 	}
-	private void checkRollBack(Map<String,String> params,String[] signStrs) throws ResultCodeException, SignatureException
-	{
-		String resultCode=params.get("ResultCode");
-		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
-			throw new ResultCodeException(resultCode, params.get("Message"));
-		StringBuilder sBuilder=new StringBuilder();
-		for(String str:signStrs)
-		{
-			sBuilder.append(StringUtil.strFormat(params.get(str)));
-		}
-		RsaHelper rsa = RsaHelper.getInstance();
-		String sign=rsa.signData(sBuilder.toString(), thirdPaySupportService.getPrivateKey());
-		if(!sign.equals(params.get("SignInfo")))
-			throw new SignatureException();
-	}
+
 //	@RequestMapping(value = { "/account/recharge/request" })
 //	public void recharge(HttpServletRequest req, HttpServletResponse resp) {
 //		String amount = req.getParameter(AMOUNT);
@@ -214,7 +200,7 @@ public class AccountServlet {
 		Map<String,String> params=getAllParams(req);
 		String[] signStrs={"RechargeMoneymoremore","PlatformMoneymoremore","LoanNo","OrderNo","Amount","Fee","FeePlatform",
 				"RechargeType","FeeType","CardNoList","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
-		checkRollBack(params, signStrs);
+		thirdPaySupportService.checkRollBack(params, signStrs);
 		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", StringUtil.strFormat(params.get("OrderNo"))));
 		String loanNo=params.get("LoanNo");
 		log.debug("充值成功");
@@ -303,7 +289,7 @@ public class AccountServlet {
 		Map<String,String> params=getAllParams(req);
 		String[] signStrs={"WithdrawMoneymoremore","PlatformMoneymoremore","LoanNo","OrderNo","Amount","FeeMax","FeeWithdraws",
 				"FeePercent","Fee","FreeLimit","FeeRate","FeeSplitting","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
-		checkRollBack(params, signStrs);
+		thirdPaySupportService.checkRollBack(params, signStrs);
 		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", StringUtil.strFormat(params.get("OrderNo"))));
 		String loanNo=params.get("LoanNo");
 		try {
@@ -414,7 +400,7 @@ public class AccountServlet {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		checkRollBack(params, signStrs);
+		thirdPaySupportService.checkRollBack(params, signStrs);
 		List<Object> loanJsons=Common.JSONDecodeList(loanJsonList, LoanJson.class);
 		String pid = params.get("Remark1");
 		req.setAttribute("pid", pid);
@@ -440,7 +426,9 @@ public class AccountServlet {
 	public void checkBuyBg(HttpServletRequest req,HttpServletResponse resp)
 	{
 		try {
-			checkBuyProcessor(req,resp);
+			log.debug("购买确认回调:"+req.getRequestURI());
+			Map<String,String> params=getAllParams(req);
+			thirdPaySupportService.checkBuyProcessor(params);
 		} catch (SignatureException e) {
 			e.printStackTrace();
 			return;
@@ -449,42 +437,6 @@ public class AccountServlet {
 			return;
 		}
 		writeSuccess(resp);
-	}
-	
-	private void checkBuyProcessor(HttpServletRequest req,HttpServletResponse resp) throws SignatureException, ResultCodeException
-	{
-		log.debug("购买确认回调:"+req.getRequestURI());
-		Map<String,String> params=getAllParams(req);
-		String[] signStrs={"LoanNoList","LoanNoListFail","PlatformMoneymoremore","AuditType","RandomTimeStamp"
-				,"Remark1","Remark2","Remark3","ResultCode"};
-		checkRollBack(params, signStrs);
-		String auditType=params.get("AuditType");
-		if(!StringUtil.isEmpty(params.get("LoanNoList")))
-		{
-			String[] loanNoList=params.get("LoanNoList").split(",");
-			for(String loanNo:loanNoList)
-			{
-				List<CashStream> cashStreams=cashStreamDao.findSuccessByActionAndLoanNo(-1, loanNo);
-				if(cashStreams.size()==2)
-					continue;    //重复的命令
-				CashStream cashStream=cashStreams.get(0);
-				try {
-					Integer cashStreamId=null;
-					if(auditType.equals("1")) //通过审核
-					{
-						cashStreamId=accountService.pay(cashStream.getLenderAccountId(), cashStream.getBorrowerAccountId(),cashStream.getChiefamount(),cashStream.getSubmitId(), "支付");
-					}
-					else
-					{
-						cashStreamId=accountService.unfreezeLenderAccount(cashStream.getLenderAccountId(), cashStream.getChiefamount(), cashStream.getSubmitId(), "流标");
-					}
-					cashStreamDao.updateLoanNo(cashStreamId, loanNo);
-				} catch (IllegalConvertException e) {
-					e.printStackTrace();
-				}
-			}
-			//TODO 处理LoanNoListFail
-		}
 	}
 //	@RequestMapping(value = { "/account/repay/request" })
 //	public void repay(HttpServletRequest req, HttpServletResponse resp) {
@@ -605,7 +557,7 @@ public class AccountServlet {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		checkRollBack(params, signStrs);
+		thirdPaySupportService.checkRollBack(params, signStrs);
 		List<Object> loanJsons=Common.JSONDecodeList(loanJsonList, LoanJson.class);
 		if(loanJsons==null||loanJsons.size()==0)
 			return;
@@ -664,7 +616,7 @@ public class AccountServlet {
 		RsaHelper rsa = RsaHelper.getInstance();
 		String cardNo=rsa.decryptData(params.get("CardNo"), thirdPaySupportService.getPrivateKey());
 		params.put("CardNo", cardNo);
-		checkRollBack(params, signStrs);
+		thirdPaySupportService.checkRollBack(params, signStrs);
 		CardBinding cardBinding=new CardBinding();
 		cardBinding.setBankCode(params.get("BankCode"));
 		cardBinding.setBranchBankName(params.get("BranchBankName"));
@@ -717,7 +669,7 @@ public class AccountServlet {
 		log.debug("授权回调:"+req.getRequestURI());
 		Map<String,String> params=getAllParams(req);
 		String[] signStrs={"MoneymoremoreId","PlatformMoneymoremore","AuthorizeTypeOpen","AuthorizeTypeClose","AuthorizeType","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
-		checkRollBack(params, signStrs);
+		thirdPaySupportService.checkRollBack(params, signStrs);
 		String authorizeTypeOpen=params.get("AuthorizeTypeOpen");
 		String authorizeTypeClose=params.get("AuthorizeTypeClose");
 		String moneymoremoreId=params.get("MoneymoremoreId");

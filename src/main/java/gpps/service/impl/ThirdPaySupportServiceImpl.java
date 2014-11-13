@@ -1,7 +1,9 @@
 package gpps.service.impl;
 
 import gpps.dao.ICardBindingDao;
+import gpps.dao.ICashStreamDao;
 import gpps.model.Borrower;
+import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.Lender;
 import gpps.model.Product;
@@ -13,6 +15,7 @@ import gpps.service.ILenderService;
 import gpps.service.ILoginService;
 import gpps.service.IProductService;
 import gpps.service.ISubmitService;
+import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.LoginException;
 import gpps.service.thirdpay.Authorize;
@@ -22,6 +25,7 @@ import gpps.service.thirdpay.IHttpClientService;
 import gpps.service.thirdpay.IThirdPaySupportService;
 import gpps.service.thirdpay.Recharge;
 import gpps.service.thirdpay.RegistAccount;
+import gpps.service.thirdpay.ResultCodeException;
 import gpps.service.thirdpay.Transfer;
 import gpps.service.thirdpay.Transfer.LoanJson;
 import gpps.tools.Common;
@@ -33,6 +37,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +50,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.google.gson.Gson;
 public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	public static final String ACTION_REGISTACCOUNT="0";
 	public static final String ACTION_RECHARGE="1";
@@ -85,6 +92,8 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	IHttpClientService httpClientService;
 	@Autowired
 	ICardBindingDao cardBindingDao;
+	@Autowired
+	ICashStreamDao cashStreamDao;
 
 	private Logger log=Logger.getLogger(ThirdPaySupportServiceImpl.class);
 	public String getPublicKey() {
@@ -279,8 +288,8 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			{
 				params.put("LoanNoList", loanNoSBuilder.toString());
 				sendCheck(params,baseUrl);
-				//测试回调
-				sendCheckRollback(params);
+//				//测试回调
+//				sendCheckRollback(params);
 				loanNoSBuilder=new StringBuilder();
 			}
 		}
@@ -288,8 +297,8 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		{
 			params.put("LoanNoList", loanNoSBuilder.toString());
 			sendCheck(params,baseUrl);
-			//测试回调
-			sendCheckRollback(params);
+//			//测试回调
+//			sendCheckRollback(params);
 		}
 	}
 	private void sendCheck(Map<String,String> params,String baseUrl)
@@ -309,7 +318,15 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		String signInfo=rsa.signData(sBuilder.toString(), privateKey);
 		params.put("SignInfo", signInfo);
 		String body=httpClientService.post(baseUrl, params);
-		log.info(body);
+		Gson gson = new Gson();
+		Map<String,String> returnParams=gson.fromJson(body, Map.class);
+		try {
+			checkBuyProcessor(returnParams);
+		} catch (SignatureException e) {
+			e.printStackTrace();
+		} catch (ResultCodeException e) {
+			e.printStackTrace();
+		}
 	}
 	private void sendCheckRollback(Map<String,String> params)
 	{
@@ -502,5 +519,56 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		paramsRollback.put("SignInfo", signInfo);
 		String body=httpClientService.post(paramsRollback.get("NotifyURL"), paramsRollback);
 		log.info(body);
+	}
+	public void checkRollBack(Map<String,String> params,String[] signStrs) throws ResultCodeException, SignatureException
+	{
+		String resultCode=params.get("ResultCode");
+		if(StringUtil.isEmpty(resultCode)||!resultCode.equals("88"))
+			throw new ResultCodeException(resultCode, params.get("Message"));
+		StringBuilder sBuilder=new StringBuilder();
+		for(String str:signStrs)
+		{
+			sBuilder.append(StringUtil.strFormat(params.get(str)));
+		}
+		RsaHelper rsa = RsaHelper.getInstance();
+		String sign=rsa.signData(sBuilder.toString(), privateKey);
+		if(!sign.equals(params.get("SignInfo")))
+			throw new SignatureException();
+	}
+	public void checkBuyProcessor(Map<String,String> params) throws SignatureException, ResultCodeException
+	{
+		String[] signStrs={"LoanNoList","LoanNoListFail","PlatformMoneymoremore","AuditType","RandomTimeStamp"
+				,"Remark1","Remark2","Remark3","ResultCode"};
+		checkRollBack(params, signStrs);
+		String auditType=params.get("AuditType");
+		if(!StringUtil.isEmpty(params.get("LoanNoList")))
+		{
+			String[] loanNoList=params.get("LoanNoList").split(",");
+			for(String loanNo:loanNoList)
+			{
+				List<CashStream> cashStreams=cashStreamDao.findSuccessByActionAndLoanNo(-1, loanNo);
+				if(cashStreams.size()==2)
+					continue;    //重复的命令
+				CashStream cashStream=cashStreams.get(0);
+				try {
+					Integer cashStreamId=null;
+					if(auditType.equals("1")) //通过审核
+					{
+						Submit submit=submitService.find(cashStream.getSubmitId());
+						GovermentOrder order=orderService.findGovermentOrderByProduct(submit.getProductId());
+						Borrower borrower=borrowerService.find(order.getBorrowerId());
+						cashStreamId=accountService.pay(cashStream.getLenderAccountId(), borrower.getAccountId(),cashStream.getChiefamount(),cashStream.getSubmitId(), "支付");
+					}
+					else
+					{
+						cashStreamId=accountService.unfreezeLenderAccount(cashStream.getLenderAccountId(), cashStream.getChiefamount(), cashStream.getSubmitId(), "流标");
+					}
+					cashStreamDao.updateLoanNo(cashStreamId, loanNo);
+				} catch (IllegalConvertException e) {
+					e.printStackTrace();
+				}
+			}
+			//TODO 处理LoanNoListFail
+		}
 	}
 }

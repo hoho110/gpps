@@ -4,7 +4,9 @@ import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.LoginException;
 import gpps.service.thirdpay.Transfer.LoanJson;
 
+import java.security.SignatureException;
 import java.util.List;
+import java.util.Map;
 
 public interface IThirdPaySupportService {
 	/**
@@ -41,4 +43,8 @@ public interface IThirdPaySupportService {
 	
 	public void repay(List<LoanJson> loanJsons);
 	
+	
+	public void checkRollBack(Map<String,String> params,String[] signStrs) throws ResultCodeException, SignatureException;
+	
+	public void checkBuyProcessor(Map<String,String> params) throws SignatureException, ResultCodeException;
 }

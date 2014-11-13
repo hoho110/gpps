@@ -177,6 +177,8 @@ public class TaskServiceImpl implements ITaskService {
 				if(cashStream.getAction()==CashStream.ACTION_FREEZE&&cashStream.getState()==CashStream.STATE_SUCCESS)
 					freezeCS=cashStream;
 			}
+			if(freezeCS==null)
+				continue;
 			loanNos.add(freezeCS.getLoanNo());
 		}
 		thirdPaySupportService.check(loanNos, 1);

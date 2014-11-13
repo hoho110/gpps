@@ -2,6 +2,9 @@ package gpps.service;
 
 import gpps.model.PayBack;
 import gpps.model.ProductSeries;
+import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.IllegalOperationException;
+import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.UnSupportRepayInAdvanceException;
 
 import java.util.List;
@@ -57,4 +60,6 @@ public interface IPayBackService {
 	public boolean canRepay(Integer payBackId);
 	
 	public boolean canRepayInAdvance(Integer payBackId);
+	
+	public void repay(Integer payBackId) throws IllegalStateException, IllegalOperationException, InsufficientBalanceException, IllegalConvertException;
 }

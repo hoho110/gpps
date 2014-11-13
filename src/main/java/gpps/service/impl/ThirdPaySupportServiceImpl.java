@@ -275,53 +275,62 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			if(loanNoSBuilder.length()!=0)
 				loanNoSBuilder.append(",");
 			loanNoSBuilder.append(loanNos.get(i));
-			if(i>0&&i%200==0)
+			if((i+1)%200==0)
 			{
 				params.put("LoanNoList", loanNoSBuilder.toString());
-				
-				//LoanNoList + PlatformMoneymoremore + AuditType + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ReturnURL + NotifyURL
-				StringBuilder sBuilder=new StringBuilder();
-				sBuilder.append(StringUtil.strFormat(params.get("LoanNoList")));
-				sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
-				sBuilder.append(StringUtil.strFormat(params.get("AuditType")));
-				sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
-				sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
-				sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
-				sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
-				sBuilder.append(StringUtil.strFormat(params.get("ReturnURL")));
-				sBuilder.append(StringUtil.strFormat(params.get("NotifyURL")));
-				RsaHelper rsa = RsaHelper.getInstance();
-				String signInfo=rsa.signData(sBuilder.toString(), privateKey);
-				params.put("SignInfo", signInfo);
-				String body=httpClientService.post(baseUrl, params);
-				log.info(body);
-				
+				sendCheck(params,baseUrl);
+				//测试回调
+				sendCheckRollback(params);
 				loanNoSBuilder=new StringBuilder();
 			}
 		}
 		if(loanNoSBuilder.length()>0)
 		{
 			params.put("LoanNoList", loanNoSBuilder.toString());
-			
-			//LoanNoList + PlatformMoneymoremore + AuditType + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ReturnURL + NotifyURL
-			StringBuilder sBuilder=new StringBuilder();
-			sBuilder.append(StringUtil.strFormat(params.get("LoanNoList")));
-			sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
-			sBuilder.append(StringUtil.strFormat(params.get("AuditType")));
-			sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
-			sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
-			sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
-			sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
-			sBuilder.append(StringUtil.strFormat(params.get("ReturnURL")));
-			sBuilder.append(StringUtil.strFormat(params.get("NotifyURL")));
-			RsaHelper rsa = RsaHelper.getInstance();
-			String signInfo=rsa.signData(sBuilder.toString(), privateKey);
-			params.put("SignInfo", signInfo);
-			String body=httpClientService.post(baseUrl, params);
-			log.info(body);
+			sendCheck(params,baseUrl);
+			//测试回调
+			sendCheckRollback(params);
 		}
 	}
-
+	private void sendCheck(Map<String,String> params,String baseUrl)
+	{
+		//LoanNoList + PlatformMoneymoremore + AuditType + RandomTimeStamp + Remark1 + Remark2 + Remark3 + ReturnURL + NotifyURL
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append(StringUtil.strFormat(params.get("LoanNoList")));
+		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(params.get("AuditType")));
+		sBuilder.append(StringUtil.strFormat(params.get("RandomTimeStamp")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark1")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark2")));
+		sBuilder.append(StringUtil.strFormat(params.get("Remark3")));
+		sBuilder.append(StringUtil.strFormat(params.get("ReturnURL")));
+		sBuilder.append(StringUtil.strFormat(params.get("NotifyURL")));
+		RsaHelper rsa = RsaHelper.getInstance();
+		String signInfo=rsa.signData(sBuilder.toString(), privateKey);
+		params.put("SignInfo", signInfo);
+		String body=httpClientService.post(baseUrl, params);
+		log.info(body);
+	}
+	private void sendCheckRollback(Map<String,String> params)
+	{
+		Map<String,String> paramsRollback=new HashMap<String,String>();
+		paramsRollback.putAll(params);
+		paramsRollback.put("ResultCode", "88");
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append(StringUtil.strFormat(paramsRollback.get("LoanNoList")));
+		sBuilder.append(StringUtil.strFormat(paramsRollback.get("PlatformMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(paramsRollback.get("AuditType")));
+		sBuilder.append(StringUtil.strFormat(paramsRollback.get("RandomTimeStamp")));
+		sBuilder.append(StringUtil.strFormat(paramsRollback.get("Remark1")));
+		sBuilder.append(StringUtil.strFormat(paramsRollback.get("Remark2")));
+		sBuilder.append(StringUtil.strFormat(paramsRollback.get("Remark3")));
+		sBuilder.append(StringUtil.strFormat(paramsRollback.get("ResultCode")));
+		RsaHelper rsa = RsaHelper.getInstance();
+		String signInfo=rsa.signData(sBuilder.toString(), privateKey);
+		paramsRollback.put("SignInfo", signInfo);
+		String body=httpClientService.post(params.get("NotifyURL"), paramsRollback);
+		log.info(body);
+	}
 	@Override
 	public CardBinding getCardBinding() throws LoginException {
 		CardBinding cardBinding=new CardBinding();
@@ -414,5 +423,84 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		authorize.setAuthorizeTypeOpen("1");
 		authorize.setReturnURL(req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() +"/account/authorize/response");
 		return authorize;
+	}
+
+	@Override
+	public void repay(List<LoanJson> loanJsons) {
+		if(loanJsons==null||loanJsons.size()==0)
+			return;
+		String baseUrl=getBaseUrl(ACTION_TRANSFER);
+		Map<String,String> params=new HashMap<String,String>();
+		params.put("PlatformMoneymoremore", platformMoneymoremore);
+		params.put("TransferAction", "2");
+		params.put("Action", "2");
+		params.put("TransferType", "2");
+		params.put("NeedAudit", "1");
+		params.put("NotifyURL", "http://"+serverHost+":"+serverPort+"/account/repay/response/bg");
+		List<LoanJson> temp=new ArrayList<LoanJson>();
+		for(int i=0;i<loanJsons.size();i++)
+		{
+			temp.add(loanJsons.get(i));
+			if((i+1)%200==0)
+			{
+				String LoanJsonList=Common.JSONEncode(temp);
+				params.put("LoanJsonList", LoanJsonList);
+				temp.clear();
+				sendRepay(params,baseUrl);
+				//测试
+				sendRepayRollback(LoanJsonList);
+			}
+		}
+		if(temp.size()>0)
+		{
+			String LoanJsonList=Common.JSONEncode(temp);
+			params.put("LoanJsonList", LoanJsonList);
+			sendRepay(params,baseUrl);
+			//测试
+			sendRepayRollback(LoanJsonList);
+		}
+	}
+	private void sendRepay(Map<String,String> params,String baseUrl)
+	{
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append(StringUtil.strFormat(params.get("LoanNoList")));
+		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(params.get("TransferAction")));
+		sBuilder.append(StringUtil.strFormat(params.get("Action")));
+		sBuilder.append(StringUtil.strFormat(params.get("TransferType")));
+		sBuilder.append(StringUtil.strFormat(params.get("NeedAudit")));
+		sBuilder.append(StringUtil.strFormat(params.get("NotifyURL")));
+		RsaHelper rsa = RsaHelper.getInstance();
+		String signInfo=rsa.signData(sBuilder.toString(), privateKey);
+		params.put("SignInfo", signInfo);
+		try {
+			params.put("LoanNoList",URLEncoder.encode(params.get("LoanNoList"),"UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		String body=httpClientService.post(baseUrl, params);
+		log.info(body);
+	}
+	private void sendRepayRollback(String LoanJsonList)
+	{
+		Map<String,String> paramsRollback=new HashMap<String,String>();
+		try {
+			paramsRollback.put("LoanNoList",URLEncoder.encode(LoanJsonList,"UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		paramsRollback.put("PlatformMoneymoremore", platformMoneymoremore);
+		paramsRollback.put("ResultCode", "88");
+		paramsRollback.put("Message", "成功");
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append(LoanJsonList);
+		sBuilder.append(StringUtil.strFormat(paramsRollback.get("PlatformMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(paramsRollback.get("ResultCode")));
+		sBuilder.append(StringUtil.strFormat(paramsRollback.get("Message")));
+		RsaHelper rsa = RsaHelper.getInstance();
+		String signInfo=rsa.signData(sBuilder.toString(), privateKey);
+		paramsRollback.put("SignInfo", signInfo);
+		String body=httpClientService.post(paramsRollback.get("NotifyURL"), paramsRollback);
+		log.info(body);
 	}
 }

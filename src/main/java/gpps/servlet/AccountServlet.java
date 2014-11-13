@@ -486,76 +486,76 @@ public class AccountServlet {
 			//TODO 处理LoanNoListFail
 		}
 	}
-	@RequestMapping(value = { "/account/repay/request" })
-	public void repay(HttpServletRequest req, HttpServletResponse resp) {
-		// HttpSession session=req.getSession();
-		// Object
-		// user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
-		// if(user==null)
-		// {
-		// try {
-		// resp.sendError(403,"未找到用户信息，请重新登录");
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
-		// return;
-		// }
-		// 测试暂时借款人账户ID不从Session取,而从payback中取
-		Integer payBackId = Integer.parseInt(StringUtil.checkNullAndTrim(PAYBACKID, req.getParameter(PAYBACKID)));
-		PayBack payBack = payBackService.find(payBackId);
-		Product currentProduct = productService.find(payBack.getProductId());
-		if (currentProduct.getState() != Product.STATE_REPAYING) {
-			write(resp, "该产品尚未进入还款阶段");
-			return;
-		}
-		// 验证还款顺序
-		List<Product> products = productService.findByGovermentOrder(currentProduct.getGovermentorderId());
-		for (Product product : products) {
-			if (product.getId() == (int) (currentProduct.getId())) {
-				List<PayBack> payBacks = payBackService.findAll(product.getId());
-				for (PayBack pb : payBacks) {
-					if (pb.getState() == PayBack.STATE_FINISHREPAY || pb.getState() == PayBack.STATE_REPAYING)
-						continue;
-					if (pb.getDeadline() < payBack.getDeadline()) {
-						write(resp, "请按时间顺序进行还款");
-						return;
-					}
-				}
-				continue;
-			}
-			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
-			if (product.getProductSeries().getType() < currentProduct.getProductSeries().getType()) {
-				List<PayBack> payBacks = payBackService.findAll(product.getId());
-				for (PayBack pb : payBacks) {
-					if (pb.getState() == PayBack.STATE_FINISHREPAY || pb.getState() == PayBack.STATE_REPAYING)
-						continue;
-					if (pb.getDeadline() <= payBack.getDeadline()) {
-						write(resp, "请先还完稳健型/平衡型产品再进行此次还款");
-						return;
-					}
-				}
-			}
-		}
+//	@RequestMapping(value = { "/account/repay/request" })
+//	public void repay(HttpServletRequest req, HttpServletResponse resp) {
+//		// HttpSession session=req.getSession();
+//		// Object
+//		// user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+//		// if(user==null)
+//		// {
+//		// try {
+//		// resp.sendError(403,"未找到用户信息，请重新登录");
+//		// } catch (IOException e) {
+//		// e.printStackTrace();
+//		// }
+//		// return;
+//		// }
+//		// 测试暂时借款人账户ID不从Session取,而从payback中取
+//		Integer payBackId = Integer.parseInt(StringUtil.checkNullAndTrim(PAYBACKID, req.getParameter(PAYBACKID)));
+//		PayBack payBack = payBackService.find(payBackId);
+//		Product currentProduct = productService.find(payBack.getProductId());
+//		if (currentProduct.getState() != Product.STATE_REPAYING) {
+//			write(resp, "该产品尚未进入还款阶段");
+//			return;
+//		}
+//		// 验证还款顺序
+//		List<Product> products = productService.findByGovermentOrder(currentProduct.getGovermentorderId());
+//		for (Product product : products) {
+//			if (product.getId() == (int) (currentProduct.getId())) {
+//				List<PayBack> payBacks = payBackService.findAll(product.getId());
+//				for (PayBack pb : payBacks) {
+//					if (pb.getState() == PayBack.STATE_FINISHREPAY || pb.getState() == PayBack.STATE_REPAYING)
+//						continue;
+//					if (pb.getDeadline() < payBack.getDeadline()) {
+//						write(resp, "请按时间顺序进行还款");
+//						return;
+//					}
+//				}
+//				continue;
+//			}
+//			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
+//			if (product.getProductSeries().getType() < currentProduct.getProductSeries().getType()) {
+//				List<PayBack> payBacks = payBackService.findAll(product.getId());
+//				for (PayBack pb : payBacks) {
+//					if (pb.getState() == PayBack.STATE_FINISHREPAY || pb.getState() == PayBack.STATE_REPAYING)
+//						continue;
+//					if (pb.getDeadline() <= payBack.getDeadline()) {
+//						write(resp, "请先还完稳健型/平衡型产品再进行此次还款");
+//						return;
+//					}
+//				}
+//			}
+//		}
+//
+//		Integer cashStreamId = null;
+//		try {
+//			cashStreamId = accountService.freezeBorrowerAccount(payBack.getBorrowerAccountId(), payBack.getChiefAmount().add(payBack.getInterest()), payBack.getId(), "冻结");
+//		} catch (InsufficientBalanceException e) {
+//			try {
+//				resp.sendError(400, "余额不足");
+//			} catch (IOException e1) {
+//				e1.printStackTrace();
+//			}
+//			log.debug(e.getMessage(), e);
+//			return;
+//		}
+//		log.debug("还款：amount=" + payBack.getChiefAmount().add(payBack.getInterest()) + ",cashStreamId=" + cashStreamId);
+//		log.debug("跳转到第三方进行还款");
+//		writeThirdParty(resp, "说明：该步骤跳转到第三方平台,借款人输入第三方平台账户密码完成还款.<p><a href='/account/repay/response?cashStreamId=" + cashStreamId + "'>还款成功</a><p><a href='javascript:window.close()'>还款失败</a>");
+//	}
 
-		Integer cashStreamId = null;
-		try {
-			cashStreamId = accountService.freezeBorrowerAccount(payBack.getBorrowerAccountId(), payBack.getChiefAmount().add(payBack.getInterest()), payBack.getId(), "冻结");
-		} catch (InsufficientBalanceException e) {
-			try {
-				resp.sendError(400, "余额不足");
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			log.debug(e.getMessage(), e);
-			return;
-		}
-		log.debug("还款：amount=" + payBack.getChiefAmount().add(payBack.getInterest()) + ",cashStreamId=" + cashStreamId);
-		log.debug("跳转到第三方进行还款");
-		writeThirdParty(resp, "说明：该步骤跳转到第三方平台,借款人输入第三方平台账户密码完成还款.<p><a href='/account/repay/response?cashStreamId=" + cashStreamId + "'>还款成功</a><p><a href='javascript:window.close()'>还款失败</a>");
-	}
-
-	@RequestMapping(value = { "/account/repay/response" })
-	public void completeRepay(HttpServletRequest req, HttpServletResponse resp) {
+	@RequestMapping(value = { "/account/repay/response/bg" })
+	public void completeRepayBg(HttpServletRequest req, HttpServletResponse resp) {
 		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", req.getParameter(CASHSTREAMID)));
 		try {
 			log.debug("购买成功");
@@ -592,6 +592,41 @@ public class AccountServlet {
 		}
 		// TODO 重定向到指定页面
 		write(resp, "还款成功，返回管理页面<a href='/views/google/admin.html'>返回</a>");
+	}
+	private void completeRepayProcessor(HttpServletRequest req, HttpServletResponse resp) throws SignatureException, ResultCodeException
+	{
+		log.debug("还款回调:"+req.getRequestURI());
+		Map<String,String> params=getAllParams(req);
+		String[] signStrs={"LoanJsonList","PlatformMoneymoremore","Action","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
+		String loanJsonList = null;
+		try {
+			loanJsonList=URLDecoder.decode(params.get("LoanJsonList"),"UTF-8");
+			params.put("LoanJsonList", loanJsonList);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		checkRollBack(params, signStrs);
+		List<Object> loanJsons=Common.JSONDecodeList(loanJsonList, LoanJson.class);
+		if(loanJsons==null||loanJsons.size()==0)
+			return;
+		for(Object obj:loanJsons)
+		{
+			LoanJson loanJson=(LoanJson)obj;
+			Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim(CASHSTREAMID, loanJson.getOrderNo()));
+			String loanNo=loanJson.getLoanNo();
+			CashStream cashStream = cashStreamDao.find(cashStreamId);
+			if(cashStream.getState()==CashStream.STATE_SUCCESS)
+			{
+				log.debug("重复的回复");
+				continue;
+			}
+			cashStreamDao.updateLoanNo(cashStreamId, loanNo);
+			try {
+				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			} catch (IllegalConvertException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	@RequestMapping(value = { "/account/cardBinding/response" })
 	public void completeCardBinding(HttpServletRequest req, HttpServletResponse resp) {

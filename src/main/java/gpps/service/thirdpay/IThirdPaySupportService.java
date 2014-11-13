@@ -2,6 +2,7 @@ package gpps.service.thirdpay;
 
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.LoginException;
+import gpps.service.thirdpay.Transfer.LoanJson;
 
 import java.util.List;
 
@@ -37,5 +38,7 @@ public interface IThirdPaySupportService {
 	public Cash getCash(String amount) throws InsufficientBalanceException, LoginException;
 	
 	public Authorize getAuthorize() throws LoginException;
+	
+	public void repay(List<LoanJson> loanJsons);
 	
 }

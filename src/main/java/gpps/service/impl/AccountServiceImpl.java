@@ -203,7 +203,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_REPAY);
 		cashStreamDao.create(cashStream);
-		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
+//		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//批量还款，不需要第三方操作
 		return cashStream.getId();
 	}

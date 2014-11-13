@@ -1,5 +1,6 @@
 package gpps.service.impl;
 
+import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.IBorrowerDao;
 import gpps.dao.ICashStreamDao;
 import gpps.dao.IGovermentOrderDao;
@@ -9,6 +10,7 @@ import gpps.dao.IProductDao;
 import gpps.dao.ISubmitDao;
 import gpps.dao.ITaskDao;
 import gpps.model.Borrower;
+import gpps.model.BorrowerAccount;
 import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.Lender;
@@ -21,6 +23,7 @@ import gpps.service.IPayBackService;
 import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.thirdpay.IThirdPaySupportService;
+import gpps.service.thirdpay.Transfer.LoanJson;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -60,6 +63,8 @@ public class TaskServiceImpl implements ITaskService {
 	IPayBackService payBackService;
 	@Autowired
 	IThirdPaySupportService thirdPaySupportService;
+	@Autowired
+	IBorrowerAccountDao borrowerAccountDao;
 	@PostConstruct
 	public void init() {
 		try {
@@ -217,10 +222,13 @@ public class TaskServiceImpl implements ITaskService {
 			return;
 		PayBack payBack=payBackService.find(task.getPayBackId());
 		Product product=productDao.find(payBack.getProductId());
+		GovermentOrder order=govermentOrderDao.find(product.getGovermentorderId());
+		Borrower borrower=borrowerDao.find(order.getBorrowerId());
 		BigDecimal totalChiefAmount=payBack.getChiefAmount();
 		BigDecimal totalInterest=payBack.getInterest();
 		//TODO 取付款人乾多多标识，收款人乾多多标识，网贷平台订单号，金额（本金+利息）
 		//accountService.repay 去掉changeCashStreamState
+		List<LoanJson> loanJsons=new ArrayList<LoanJson>();
 		loop:for(int i=0;i<submits.size();i++)
 		{
 			Submit submit=submits.get(i);
@@ -267,7 +275,14 @@ public class TaskServiceImpl implements ITaskService {
 				totalInterest.subtract(lenderInterest);
 //			}
 			try {
-				accountService.repay(lender.getAccountId(), payBack.getBorrowerAccountId(), lenderChiefAmount, lenderInterest, submit.getId(), payBack.getId(), "还款");
+				Integer cashStreamId=accountService.repay(lender.getAccountId(), payBack.getBorrowerAccountId(), lenderChiefAmount, lenderInterest, submit.getId(), payBack.getId(), "还款");
+				LoanJson loadJson=new LoanJson();
+				loadJson.setLoanOutMoneymoremore(lender.getThirdPartyAccount());
+				loadJson.setLoanInMoneymoremore(borrower.getThirdPartyAccount());
+				loadJson.setOrderNo(String.valueOf(cashStreamId));
+				loadJson.setBatchNo(String.valueOf(product.getId()));
+				loadJson.setAmount(lenderChiefAmount.add(lenderInterest).toString());
+				loanJsons.add(loadJson);
 			} catch (IllegalConvertException e) {
 				logger.error(e.getMessage(),e);
 			}
@@ -278,6 +293,7 @@ public class TaskServiceImpl implements ITaskService {
 			//TODO 有余额则放入自有账户中
 			
 		}
+		thirdPaySupportService.repay(loanJsons);
 		logger.info("还款任务["+task.getId()+"]完毕，涉及Submit"+submits.size()+"个");
 	}
 	@Override

@@ -41,5 +41,5 @@ public interface ICashStreamDao {
 	 * @param loanNo 
 	 * @return
 	 */
-	public List<CashStream> findSuccessByActionAndLoanNo(int action,String loanNo);
+	public List<CashStream> findSuccessByActionAndLoanNo(@Param("action")int action,@Param("loanNo")String loanNo);
 }

@@ -9,23 +9,33 @@ import gpps.dao.IProductSeriesDao;
 import gpps.dao.IStateLogDao;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
+import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.ProductSeries;
 import gpps.model.StateLog;
+import gpps.model.Task;
+import gpps.service.IAccountService;
 import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IPayBackService;
+import gpps.service.IProductService;
+import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.IllegalOperationException;
+import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.UnSupportRepayInAdvanceException;
+import gpps.tools.StringUtil;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +57,15 @@ public class PayBackServiceImpl implements IPayBackService {
 	IBorrowerService borrowerService;
 	@Autowired
 	IGovermentOrderDao govermentOrderDao;
+	@Autowired
+	IProductService productService;
+	@Autowired
+	IAccountService accountService;
+	@Autowired
+	ITaskService taskService;
+	@Autowired
+	IGovermentOrderService orderService;
+	Logger log=Logger.getLogger(PayBackServiceImpl.class);
 	@Override
 	public void create(PayBack payback) {
 		payBackDao.create(payback);
@@ -459,6 +478,67 @@ public class PayBackServiceImpl implements IPayBackService {
 			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
 		}
 		return payBacks;
+	}
+
+	@Override
+	public void repay(Integer payBackId) throws IllegalStateException,IllegalOperationException, InsufficientBalanceException, IllegalConvertException {
+		PayBack payBack = find(payBackId);
+		Product currentProduct = productService.find(payBack.getProductId());
+		if (currentProduct.getState() != Product.STATE_REPAYING) 
+			throw new IllegalStateException("该产品尚未进入还款阶段");
+		// 验证还款顺序
+		List<Product> products = productService.findByGovermentOrder(currentProduct.getGovermentorderId());
+		for (Product product : products) {
+			if (product.getId() == (int) (currentProduct.getId())) {
+				List<PayBack> payBacks = findAll(product.getId());
+				for (PayBack pb : payBacks) {
+					if (pb.getState() == PayBack.STATE_FINISHREPAY || pb.getState() == PayBack.STATE_REPAYING)
+						continue;
+					if (pb.getDeadline() < payBack.getDeadline()) 
+						throw new IllegalOperationException("请按时间顺序进行还款");
+				}
+				continue;
+			}
+			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
+			if (product.getProductSeries().getType() < currentProduct.getProductSeries().getType()) {
+				List<PayBack> payBacks = findAll(product.getId());
+				for (PayBack pb : payBacks) {
+					if (pb.getState() == PayBack.STATE_FINISHREPAY || pb.getState() == PayBack.STATE_REPAYING)
+						continue;
+					if (pb.getDeadline() <= payBack.getDeadline()) 
+						throw new IllegalOperationException("请先还完稳健型/平衡型产品再进行此次还款");
+				}
+			}
+		}
+		Integer cashStreamId = accountService.freezeBorrowerAccount(payBack.getBorrowerAccountId(), payBack.getChiefAmount().add(payBack.getInterest()), payBack.getId(), "冻结");
+		log.debug("还款：amount=" + payBack.getChiefAmount().add(payBack.getInterest()) + ",cashStreamId=" + cashStreamId);
+		CashStream cashStream = cashStreamDao.find(cashStreamId);
+		// 增加还款任务
+		Task task = new Task();
+		task.setCreateTime(System.currentTimeMillis());
+		task.setPayBackId(cashStream.getPaybackId());
+		task.setProductId(payBack.getProductId());
+		task.setState(Task.STATE_INIT);
+		task.setType(Task.TYPE_REPAY);
+		taskService.submit(task);
+		accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+		accountService.unfreezeBorrowerAccount(cashStream.getBorrowerAccountId(), cashStream.getChiefamount(), cashStream.getPaybackId(), "解冻");
+		changeState(cashStream.getPaybackId(), PayBack.STATE_FINISHREPAY);
+		if (payBack.getType() == PayBack.TYPE_LASTPAY) {
+			// TODO 金额正确，设置产品状态为还款完毕
+			productService.finishRepay(payBack.getProductId());
+			Product product = productService.find(payBack.getProductId());
+			List<Product> allProducts = productService.findByGovermentOrder(product.getGovermentorderId());
+			boolean isAllRepay = true;
+			for (Product pro : allProducts) {
+				if (pro.getState() != Product.STATE_FINISHREPAY) {
+					isAllRepay = false;
+					break;
+				}
+			}
+			if (isAllRepay)
+				orderService.closeFinancing(product.getGovermentorderId());
+		}
 	}
 
 }

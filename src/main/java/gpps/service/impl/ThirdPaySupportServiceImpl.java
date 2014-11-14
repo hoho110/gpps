@@ -557,11 +557,11 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 						Submit submit=submitService.find(cashStream.getSubmitId());
 						GovermentOrder order=orderService.findGovermentOrderByProduct(submit.getProductId());
 						Borrower borrower=borrowerService.find(order.getBorrowerId());
-						cashStreamId=accountService.pay(cashStream.getLenderAccountId(), borrower.getAccountId(),cashStream.getChiefamount(),cashStream.getSubmitId(), "支付");
+						cashStreamId=accountService.pay(cashStream.getLenderAccountId(), borrower.getAccountId(),cashStream.getChiefamount().negate(),cashStream.getSubmitId(), "支付");
 					}
 					else
 					{
-						cashStreamId=accountService.unfreezeLenderAccount(cashStream.getLenderAccountId(), cashStream.getChiefamount(), cashStream.getSubmitId(), "流标");
+						cashStreamId=accountService.unfreezeLenderAccount(cashStream.getLenderAccountId(), cashStream.getChiefamount().negate(), cashStream.getSubmitId(), "流标");
 					}
 					cashStreamDao.updateLoanNo(cashStreamId, loanNo);
 				} catch (IllegalConvertException e) {

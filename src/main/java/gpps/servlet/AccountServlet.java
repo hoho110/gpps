@@ -508,42 +508,16 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/repay/response/bg" })
 	public void completeRepayBg(HttpServletRequest req, HttpServletResponse resp) {
-		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", req.getParameter(CASHSTREAMID)));
 		try {
-			log.debug("购买成功");
-			CashStream cashStream = cashStreamDao.find(cashStreamId);
-			// 增加还款任务
-			Task task = new Task();
-			task.setCreateTime(System.currentTimeMillis());
-			task.setPayBackId(cashStream.getPaybackId());
-			PayBack payBack = payBackService.find(cashStream.getPaybackId());
-			task.setProductId(payBack.getProductId());
-			task.setState(Task.STATE_INIT);
-			task.setType(Task.TYPE_REPAY);
-			taskService.submit(task);
-			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-			accountService.unfreezeBorrowerAccount(cashStream.getBorrowerAccountId(), cashStream.getChiefamount(), cashStream.getPaybackId(), "解冻");
-			payBackService.changeState(cashStream.getPaybackId(), PayBack.STATE_FINISHREPAY);
-			if (payBack.getType() == PayBack.TYPE_LASTPAY) {
-				// TODO 金额正确，设置产品状态为还款完毕
-				productService.finishRepay(payBack.getProductId());
-				Product product = productService.find(payBack.getProductId());
-				List<Product> products = productService.findByGovermentOrder(product.getGovermentorderId());
-				boolean isAllRepay = true;
-				for (Product pro : products) {
-					if (pro.getState() != Product.STATE_FINISHREPAY) {
-						isAllRepay = false;
-						break;
-					}
-				}
-				if (isAllRepay)
-					orderService.closeFinancing(product.getGovermentorderId());
-			}
-		} catch (IllegalConvertException e) {
-			log.error(e.getMessage(), e);
+			completeRepayProcessor(req,resp);
+		} catch (SignatureException e) {
+			e.printStackTrace();
+			return;
+		} catch (ResultCodeException e) {
+			e.printStackTrace();
+			return;
 		}
-		// TODO 重定向到指定页面
-		write(resp, "还款成功，返回管理页面<a href='/views/google/admin.html'>返回</a>");
+		writeSuccess(resp);
 	}
 	private void completeRepayProcessor(HttpServletRequest req, HttpServletResponse resp) throws SignatureException, ResultCodeException
 	{

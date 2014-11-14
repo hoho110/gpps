@@ -465,7 +465,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 				temp.clear();
 				sendRepay(params,baseUrl);
 				//测试
-				sendRepayRollback(LoanJsonList);
+				sendRepayRollback(LoanJsonList,params.get("NotifyURL"));
 			}
 		}
 		if(temp.size()>0)
@@ -474,13 +474,13 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			params.put("LoanJsonList", LoanJsonList);
 			sendRepay(params,baseUrl);
 			//测试
-			sendRepayRollback(LoanJsonList);
+			sendRepayRollback(LoanJsonList,params.get("NotifyURL"));
 		}
 	}
 	private void sendRepay(Map<String,String> params,String baseUrl)
 	{
 		StringBuilder sBuilder=new StringBuilder();
-		sBuilder.append(StringUtil.strFormat(params.get("LoanNoList")));
+		sBuilder.append(StringUtil.strFormat(params.get("LoanJsonList")));
 		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
 		sBuilder.append(StringUtil.strFormat(params.get("TransferAction")));
 		sBuilder.append(StringUtil.strFormat(params.get("Action")));
@@ -491,18 +491,18 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		String signInfo=rsa.signData(sBuilder.toString(), privateKey);
 		params.put("SignInfo", signInfo);
 		try {
-			params.put("LoanNoList",URLEncoder.encode(params.get("LoanNoList"),"UTF-8"));
+			params.put("LoanNoList",URLEncoder.encode(params.get("LoanJsonList"),"UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		String body=httpClientService.post(baseUrl, params);
 		log.info(body);
 	}
-	private void sendRepayRollback(String LoanJsonList)
+	private void sendRepayRollback(String LoanJsonList,String notifyURL)
 	{
 		Map<String,String> paramsRollback=new HashMap<String,String>();
 		try {
-			paramsRollback.put("LoanNoList",URLEncoder.encode(LoanJsonList,"UTF-8"));
+			paramsRollback.put("LoanJsonList",URLEncoder.encode(LoanJsonList,"UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -513,11 +513,11 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		sBuilder.append(LoanJsonList);
 		sBuilder.append(StringUtil.strFormat(paramsRollback.get("PlatformMoneymoremore")));
 		sBuilder.append(StringUtil.strFormat(paramsRollback.get("ResultCode")));
-		sBuilder.append(StringUtil.strFormat(paramsRollback.get("Message")));
+//		sBuilder.append(StringUtil.strFormat(paramsRollback.get("Message")));
 		RsaHelper rsa = RsaHelper.getInstance();
 		String signInfo=rsa.signData(sBuilder.toString(), privateKey);
 		paramsRollback.put("SignInfo", signInfo);
-		String body=httpClientService.post(paramsRollback.get("NotifyURL"), paramsRollback);
+		String body=httpClientService.post(notifyURL, paramsRollback);
 		log.info(body);
 	}
 	public void checkRollBack(Map<String,String> params,String[] signStrs) throws ResultCodeException, SignatureException

@@ -1,5 +1,6 @@
 package gpps.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -34,7 +35,7 @@ public interface ICashStreamDao {
 	 */
 	public List<CashStream> findRepayCashStream(@Param("submitId")Integer submitId,@Param("payBackId")Integer payBackId);
 	
-	public void updateLoanNo(@Param("cashStreamId") Integer cashStreamId,@Param("loanNo") String loanNo);
+	public void updateLoanNo(@Param("cashStreamId") Integer cashStreamId,@Param("loanNo") String loanNo,@Param("fee")BigDecimal fee);
 	/**
 	 * 根据action及loanNo查找流水
 	 * @param action -1为不限

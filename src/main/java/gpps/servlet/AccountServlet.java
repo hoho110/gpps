@@ -215,7 +215,7 @@ public class AccountServlet {
 //			write(resp, "充值金额不符，请联系管理员解决.");
 //			return;
 //		}
-		cashStreamDao.updateLoanNo(cashStreamId, loanNo);
+		cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
 		try {
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		} catch (IllegalConvertException e) {
@@ -305,7 +305,7 @@ public class AccountServlet {
 //				write(resp, "取现金额不符，请联系管理员解决.");
 //				return;
 //			}
-			cashStreamDao.updateLoanNo(cashStreamId, loanNo);
+			cashStreamDao.updateLoanNo(cashStreamId, loanNo,new BigDecimal(params.get("FeeWithdraws")));
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		} catch (IllegalConvertException e) {
 			log.error(e.getMessage(), e);
@@ -415,7 +415,7 @@ public class AccountServlet {
 		}
 		try {
 			submitService.confirmBuy(cashStream.getSubmitId());
-			cashStreamDao.updateLoanNo(cashStreamId, loanNo);
+			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		} catch (IllegalConvertException e) {
 			e.printStackTrace();
@@ -546,7 +546,7 @@ public class AccountServlet {
 				log.debug("重复的回复");
 				continue;
 			}
-			cashStreamDao.updateLoanNo(cashStreamId, loanNo);
+			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
 			try {
 				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 			} catch (IllegalConvertException e) {

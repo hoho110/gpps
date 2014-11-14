@@ -1,5 +1,4 @@
 alter table CashStream add(loanNo varchar(255));
-
 create table CardBinding
 (
    id                   Integer not null auto_increment,
@@ -17,3 +16,5 @@ alter table Lender add constraint FK_Ref_Lender_CardBinding foreign key (cardbin
       references CardBinding (id) on delete restrict on update restrict;
 alter table Borrower add constraint FK_Ref_Borrower_CardBinding foreign key (cardBindingId)
       references CardBinding (id) on delete restrict on update restrict;
+
+alter table CashStream add(fee decimal(12,2) not null default 0);

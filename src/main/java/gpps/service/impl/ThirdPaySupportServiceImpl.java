@@ -563,7 +563,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 					{
 						cashStreamId=accountService.unfreezeLenderAccount(cashStream.getLenderAccountId(), cashStream.getChiefamount().negate(), cashStream.getSubmitId(), "流标");
 					}
-					cashStreamDao.updateLoanNo(cashStreamId, loanNo);
+					cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
 				} catch (IllegalConvertException e) {
 					e.printStackTrace();
 				}

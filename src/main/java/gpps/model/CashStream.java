@@ -20,6 +20,7 @@ public class CashStream {
 	private Integer submitId;
 	private BigDecimal chiefamount = BigDecimal.ZERO;//本金
 	private BigDecimal interest = BigDecimal.ZERO;//利息
+	private BigDecimal fee = BigDecimal.ZERO;//手续费
 	private String description;
 	private Integer paybackId;
 	/**
@@ -102,6 +103,15 @@ public class CashStream {
 	public void setLoanNo(String loanNo) {
 		this.loanNo = loanNo;
 	}
+	public BigDecimal getFee() {
+		return fee;
+	}
+	public void setFee(BigDecimal fee) {
+		this.fee = fee;
+	}
+
+
+
 
 
 

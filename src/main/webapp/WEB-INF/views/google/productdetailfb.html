@@ -487,7 +487,14 @@
         					alert('请按顺序还款');
         					return;
         				}else{
-        		 		window.location.href = '/account/repay/request?paybackId='+$(this).attr('id');
+        					try{
+        						paybackService.repay(parseInt(id));
+        						alert('还款成功！');
+        						window.location.reload();
+        					}catch(e){
+        						alert(e.message);
+        						window.location.reload();
+        					}
         				}
         		 	});
         		}else if($(this).attr('data-sk')=='basic'){

@@ -532,7 +532,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		}
 		RsaHelper rsa = RsaHelper.getInstance();
 		String sign=rsa.signData(sBuilder.toString(), privateKey);
-		if(!sign.equals(params.get("SignInfo")))
+		if(!sign.equals(params.get("SignInfo").replaceAll("\r", "")))
 			throw new SignatureException();
 	}
 	public void checkBuyProcessor(Map<String,String> params) throws SignatureException, ResultCodeException

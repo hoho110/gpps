@@ -78,11 +78,12 @@ public abstract class AbstractLoginServiceImpl implements ILoginService {
 	{
 		return DigestUtils.md5Hex(checkNullAndTrim("password", password)+PASSWORDSEED);
 	}
-	private char[] codeSequence = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
-			'K', 'L', 'M', 'N',  'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
-			'X', 'Y', 'Z','a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-			'k', 'l', 'm', 'n',  'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
-			'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+//	private char[] codeSequence = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+//			'K', 'L', 'M', 'N',  'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+//			'X', 'Y', 'Z','a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+//			'k', 'l', 'm', 'n',  'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
+//			'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+	private char[] codeSequence = {'1', '2', '3', '4', '5', '6', '7', '8', '9','0'};
 	private String getRandomValidateCode(int length)
 	{
 		StringBuffer randomCode = new StringBuffer();

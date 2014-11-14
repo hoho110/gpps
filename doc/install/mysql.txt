@@ -38,3 +38,5 @@ Enter password:calis123
 
 远程访问权限：GRANT ALL PRIVILEGES ON *.* TO root@'%' IDENTIFIED BY 'calis123';
 
+创建UTF-8的数据库：
+CREATE DATABASE gpps DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;

@@ -80,7 +80,7 @@
 </div>
 </div>
 </div>
-
+<div id="cardBindingformdiv" style="display:none;"></div>
 
 
 <script src="js/head.js"></script>
@@ -101,6 +101,7 @@ $(document).ready(function() {
 	if(cuser!=null){
 		var thirdPartyAccount = cuser.thirdPartyAccount;
 		var identityCard = cuser.identityCard;
+		var cardbinding = cuser.cardBinding;
 		
 		if(identityCard==null || identityCard==''){
 			if(confirm("您尚未实名认证，马上认证?")){
@@ -115,10 +116,33 @@ $(document).ready(function() {
 			}else{
 				window.close();
 			}
+		}else if(cardbinding==null){
+			if(confirm("您尚未绑定银行卡，马上绑卡？")){
+				$('#cardBindingformdiv').empty();
+				var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+                var cardBinding=service.getCardBinding();
+                var content="<form id='cardBindingform' action='"+cardBinding.baseUrl+"'method='post'>";
+                for(var o in cardBinding)
+               	{
+                    if(o=="baseUrl"||o=="_i_"||o=="_t_")
+                   	{
+                    	continue;
+                   	}
+                    var len = o.length;
+                    var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
+                    content+="<input id='"+name+"' name='"+name+"' value='"+cardBinding[o]+"'/> ";
+               	}
+                content+="</form>";
+                $('#cardBindingformdiv').html(content);
+                $('#cardBindingform').submit();
+			}else{
+				window.close();
+			}
 		}
 	}else if(buser!=null){
 		var privilege = buser.privilege;
 		var thirdPartyAccount = buser.thirdPartyAccount;
+		var cardbinding = buser.cardBinding;
 		if(privilege==10){
 			if(confirm("您尚未申请实地净调，马上申请?")){
 				window.location.href="baccount.html";
@@ -132,6 +156,28 @@ $(document).ready(function() {
 		else if(thirdPartyAccount==null || thirdPartyAccount==''){
 			if(confirm("您尚未在第三方注册，马上注册？")){
 				window.location.href="register3.html";
+			}else{
+				window.close();
+			}
+		}else if(cardbinding==null){
+			if(confirm("您尚未绑定银行卡，马上绑卡？")){
+				$('#cardBindingformdiv').empty();
+				var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+                var cardBinding=service.getCardBinding();
+                var content="<form id='cardBindingform' action='"+cardBinding.baseUrl+"'method='post'>";
+                for(var o in cardBinding)
+               	{
+                    if(o=="baseUrl"||o=="_i_"||o=="_t_")
+                   	{
+                    	continue;
+                   	}
+                    var len = o.length;
+                    var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
+                    content+="<input id='"+name+"' name='"+name+"' value='"+cardBinding[o]+"'/> ";
+               	}
+                content+="</form>";
+                $('#cardBindingformdiv').html(content);
+                $('#cardBindingform').submit();
 			}else{
 				window.close();
 			}

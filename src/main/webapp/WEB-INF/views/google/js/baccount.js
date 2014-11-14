@@ -1188,7 +1188,7 @@ var paybackcanpay = function(container){
 	var aaData = new Array();
 	for(var i=0; i<paybacks.size(); i++){
 		var data=paybacks.get(i);
-		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
 	                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 	                    data.chiefAmount.value,
 	                    data.interest.value,
@@ -1207,11 +1207,20 @@ var paybackcanpay = function(container){
 	
 	$('button.pay').click(function(e){
 		var paybackid = $(this).attr('id');
-		$('#myModal').modal({
-			  keyboard: false,
-			  backdrop: false
-		});
-		window.open('/account/repay/request?paybackId='+paybackid);
+//		$('#myModal').modal({
+//			  keyboard: false,
+//			  backdrop: false
+//		});
+//		window.open('/account/repay/request?paybackId='+paybackid);
+		try{
+			paybackService.repay(parseInt(paybackid));
+			alert('还款成功！');
+			window.location.href="baccount.html?fid=payback&sid=payback-have";
+		}catch(e){
+			alert(e.message);
+			window.location.href="baccount.html?fid=payback&sid=payback-canpay";
+		}
+		
 	});
 }
 
@@ -1241,7 +1250,7 @@ var paybackcanapply = function(container){
 	var aaData = new Array();
 	for(var i=0; i<paybacks.size(); i++){
 		var data=paybacks.get(i);
-		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
 	                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 	                    data.chiefAmount.value,
 	                    data.interest.value,
@@ -1307,7 +1316,7 @@ var paybackhave = function(container){
 		{
 			for(var i=0; i<datas.size(); i++){
 				var data=datas.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+				result.aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
 			                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 			                    data.chiefAmount.value,
 			                    data.interest.value,
@@ -1355,7 +1364,7 @@ var paybackto = function(container){
 	var aaData = new Array();
 	for(var i=0; i<paybacks.size(); i++){
 		var data=paybacks.get(i);
-		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' >"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
 	                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 	                    data.chiefAmount.value,
 	                    data.interest.value,

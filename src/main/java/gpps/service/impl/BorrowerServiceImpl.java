@@ -63,6 +63,10 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		Borrower borrower = borrowerDao.findByLoginIdAndPassword(loginId, password);
 		if (borrower == null)
 			throw new LoginException("Login fail!!");
+		if(borrower.getCardBindingId()!=null)
+		{
+			borrower.setCardBinding(cardBindingDao.find(borrower.getCardBindingId()));
+		}
 		session.setAttribute(SESSION_ATTRIBUTENAME_USER, borrower);
 	}
 

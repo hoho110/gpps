@@ -294,7 +294,7 @@ public class TaskServiceImpl implements ITaskService {
 		if(change.compareTo(BigDecimal.ZERO)>0)
 		{
 			//有余额则放入自有账户中
-			Integer cashStreamId=accountService.storeChange(payBack.getId(),change, "存零");
+			Integer cashStreamId=accountService.storeChange(payBack.getBorrowerAccountId(),payBack.getId(),change, "存零");
 			LoanJson loadJson=new LoanJson();
 			loadJson.setLoanOutMoneymoremore(borrower.getThirdPartyAccount());
 			loadJson.setLoanInMoneymoremore(thirdPaySupportService.getPlatformMoneymoremore());

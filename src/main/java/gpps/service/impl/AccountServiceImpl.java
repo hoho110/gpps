@@ -294,6 +294,7 @@ public class AccountServiceImpl implements IAccountService {
 						throw new RuntimeException();
 					break;
 				case CashStream.ACTION_STORECHANGE:
+					borrowerAccountDao.repay(cashStream.getBorrowerAccountId(), cashStream.getChiefamount().add(cashStream.getInterest()));
 					break;
 				default:
 					throw new UnsupportedOperationException();
@@ -579,13 +580,14 @@ public class AccountServiceImpl implements IAccountService {
 	}
 
 	@Override
-	public Integer storeChange(Integer paybackId, BigDecimal amount,
+	public Integer storeChange(Integer borrowerAccountId,Integer paybackId, BigDecimal amount,
 			String description) {
 		CashStream cashStream=new CashStream();
 		cashStream.setAction(CashStream.ACTION_STORECHANGE);
 		cashStream.setPaybackId(paybackId);
 		cashStream.setChiefamount(amount);
 		cashStream.setDescription(description);
+		cashStream.setBorrowerAccountId(borrowerAccountId);
 		cashStreamDao.create(cashStream);
 		return cashStream.getId();
 	}

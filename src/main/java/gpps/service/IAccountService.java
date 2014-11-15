@@ -92,7 +92,7 @@ public interface IAccountService {
 	 * @param description
 	 * @return
 	 */
-	public Integer storeChange(Integer paybackId,BigDecimal amount,String description);
+	public Integer storeChange(Integer borrowerAccountId,Integer paybackId,BigDecimal amount,String description);
 	/**
 	 * 修改资金流的状态
 	 * 在该方法中实际对账户(借款人/贷款人)进行修改

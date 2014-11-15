@@ -387,5 +387,11 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 			borrower.setCardBinding(cardBindingDao.find(cardId));
 		}
 	}
+
+	@Override
+	public boolean isEmailExist(String email) {
+		Borrower borrower=borrowerDao.findByEmail(email.trim());
+		return borrower==null?false:true;
+	}
 	
 }

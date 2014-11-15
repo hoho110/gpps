@@ -146,16 +146,23 @@ a.accordion-toggle {
 							
 							
 							<div class="col-xs-5 col-md-5">
+								<div style="margin-top: 5px;">
+									<span class="grey">开户银行：<span class="grey" id="bankname"></span>
+									</span>
+									<div style="clear:both;"></div>
+								</div>
+								<div style="margin-top: 5px;">
+									<span class="grey">开户卡号：<span class="grey" id="bankcard"></span>
+									</span>
+									<div style="clear:both;"></div>
+								</div>
+								
 								<div style="margin-top: 15px;">
 									<span class="grey">钱多多账户：<span class="grey" id="tpaccount"></span>
 									</span><button id="loginmmm" style="float:right;">登录钱多多</button>
 									<div style="clear:both;"></div>
 								</div>
-								<div style="margin-top: 5px;">
-									<span class="grey">绑定银行卡：<span class="grey" id="bankcard"></span>
-									</span><button id="rebind" style="float:right;">绑定</button>
-									<div style="clear:both;"></div>
-								</div>
+								
 								<div style="margin-top: 5px;">
 									<span class="grey">授权还款：<span class="grey" id="giveauth"></span>
 									</span><button id="togive" style="float:right;">授权</button>
@@ -339,11 +346,13 @@ a.accordion-toggle {
 							
 							var cardBinding = buser.cardBinding;
 							if(cardBinding != null){
+								$('#bankname').html(cardBinding.branchBankName);
 								$('#bankcard').html(cardBinding.cardNo);
-								$('#rebind').html('重新绑定');
+								
 							}else{
+								$('#bankname').html('暂未绑定');
 								$('#bankcard').html('暂未绑定');
-								$('#rebind').html('绑定');
+								
 							}
 							
 							var authorizeTypeOpen = buser.authorizeTypeOpen;

@@ -156,6 +156,11 @@ a.accordion-toggle {
 									</span><button id="rebind" style="float:right;">绑定</button>
 									<div style="clear:both;"></div>
 								</div>
+								<div style="margin-top: 5px;">
+									<span class="grey">授权还款：<span class="grey" id="giveauth"></span>
+									</span><button id="togive" style="float:right;">授权</button>
+									<div style="clear:both;"></div>
+								</div>
 							</div>
 							
 							
@@ -289,6 +294,7 @@ a.accordion-toggle {
 </div>
 <div id="cardBindingformdiv" style="display:none;"></div>
 <div id="spswformdiv" style="display:none;"></div>
+<div id="authformdiv" style="display:none;"></div>
 
 
 
@@ -338,6 +344,33 @@ a.accordion-toggle {
 							}else{
 								$('#bankcard').html('暂未绑定');
 								$('#rebind').html('绑定');
+							}
+							
+							var authorizeTypeOpen = buser.authorizeTypeOpen;
+							if(authorizeTypeOpen!=2){
+								$('#giveauth').html('未授权');
+								$('#togive').click(function(e){
+									$('#authformdiv').empty();
+									var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+                                    var auth=service.getAuthorize();
+                                    var content="<form id='authform' action='"+auth.baseUrl+"'method='post' target='_blank'>";
+                                    for(var o in auth)
+                                   	{
+                                        if(o=="baseUrl"||o=="_i_"||o=="_t_")
+                                       	{
+                                        	continue;
+                                       	}
+                                        var len = o.length;
+                                        var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
+                                        content+="<input id='"+name+"' name='"+name+"' value='"+auth[o]+"'/> ";
+                                   	}
+                                    content+="</form>";
+                                    $('#authformdiv').html(content);
+                                    $('#authform').submit();
+								});
+							}else{
+								$('#giveauth').html('已授权');
+								$('togive').attr('disabled', 'disabled');
 							}
 
 

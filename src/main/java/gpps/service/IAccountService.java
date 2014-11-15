@@ -84,6 +84,15 @@ public interface IAccountService {
 	 * @exception InsufficientBalanceException 余额不足
 	 */
 	public Integer cashBorrowerAccount(Integer borrowerAccountId,BigDecimal amount,String description) throws InsufficientBalanceException;
+	
+	/**
+	 * 将还款除不尽的零钱放入平台自有账户
+	 * @param paybackId
+	 * @param amount
+	 * @param description
+	 * @return
+	 */
+	public Integer storeChange(Integer paybackId,BigDecimal amount,String description);
 	/**
 	 * 修改资金流的状态
 	 * 在该方法中实际对账户(借款人/贷款人)进行修改

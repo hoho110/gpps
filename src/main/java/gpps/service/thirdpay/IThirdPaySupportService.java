@@ -16,6 +16,8 @@ public interface IThirdPaySupportService {
 	 */
 	public String getBaseUrl(String action);
 	
+	public String getPlatformMoneymoremore();
+	
 	public RegistAccount getRegistAccount() throws LoginException;
 	
 	public Recharge getRecharge(String amount) throws LoginException;
@@ -47,4 +49,5 @@ public interface IThirdPaySupportService {
 	public void checkRollBack(Map<String,String> params,String[] signStrs) throws ResultCodeException, SignatureException;
 	
 	public void checkBuyProcessor(Map<String,String> params) throws SignatureException, ResultCodeException;
+	public void repayProcessor(Map<String,String> params) throws SignatureException, ResultCodeException;
 }

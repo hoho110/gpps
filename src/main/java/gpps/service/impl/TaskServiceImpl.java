@@ -273,14 +273,14 @@ public class TaskServiceImpl implements ITaskService {
 					lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
 				}
 				lenderInterest=payBack.getInterest().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
-				totalChiefAmount.subtract(lenderChiefAmount);
-				totalInterest.subtract(lenderInterest);
+				totalChiefAmount=totalChiefAmount.subtract(lenderChiefAmount);
+				totalInterest=totalInterest.subtract(lenderInterest);
 //			}
 			try {
 				Integer cashStreamId=accountService.repay(lender.getAccountId(), payBack.getBorrowerAccountId(), lenderChiefAmount, lenderInterest, submit.getId(), payBack.getId(), "还款");
 				LoanJson loadJson=new LoanJson();
-				loadJson.setLoanOutMoneymoremore(lender.getThirdPartyAccount());
-				loadJson.setLoanInMoneymoremore(borrower.getThirdPartyAccount());
+				loadJson.setLoanOutMoneymoremore(borrower.getThirdPartyAccount());
+				loadJson.setLoanInMoneymoremore(lender.getThirdPartyAccount());
 				loadJson.setOrderNo(String.valueOf(cashStreamId));
 				loadJson.setBatchNo(String.valueOf(product.getId()));
 				loadJson.setAmount(lenderChiefAmount.add(lenderInterest).toString());
@@ -290,10 +290,18 @@ public class TaskServiceImpl implements ITaskService {
 			}
 			logger.debug("还款任务["+task.getId()+"],Lender["+lender.getId()+"]因Submit["+submit.getId()+"]获取还款本金"+lenderChiefAmount+"元,利息"+lenderInterest+"元");
 		}
-		if(totalChiefAmount.add(totalInterest).compareTo(BigDecimal.ZERO)>0)
+		BigDecimal change=totalChiefAmount.add(totalInterest);
+		if(change.compareTo(BigDecimal.ZERO)>0)
 		{
-			//TODO 有余额则放入自有账户中
-			
+			//有余额则放入自有账户中
+			Integer cashStreamId=accountService.storeChange(payBack.getId(),change, "存零");
+			LoanJson loadJson=new LoanJson();
+			loadJson.setLoanOutMoneymoremore(borrower.getThirdPartyAccount());
+			loadJson.setLoanInMoneymoremore(thirdPaySupportService.getPlatformMoneymoremore());
+			loadJson.setOrderNo(String.valueOf(cashStreamId));
+			loadJson.setBatchNo(String.valueOf(product.getId()));
+			loadJson.setAmount(change.toString());
+			loanJsons.add(loadJson);
 		}
 		thirdPaySupportService.repay(loanJsons);
 		logger.info("还款任务["+task.getId()+"]完毕，涉及Submit"+submits.size()+"个");

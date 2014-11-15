@@ -36,6 +36,7 @@ import gpps.tools.StringUtil;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.SignatureException;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -475,8 +477,8 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			String LoanJsonList=Common.JSONEncode(temp);
 			params.put("LoanJsonList", LoanJsonList);
 			sendRepay(params,baseUrl);
-			//测试
-			sendRepayRollback(LoanJsonList,params.get("NotifyURL"));
+//			//测试
+//			sendRepayRollback(LoanJsonList,params.get("NotifyURL"));
 		}
 	}
 	private void sendRepay(Map<String,String> params,String baseUrl)
@@ -498,7 +500,15 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			e.printStackTrace();
 		}
 		String body=httpClientService.post(baseUrl, params);
-		log.info(body);
+		Gson gson = new Gson();
+		List returnParams=gson.fromJson(body, List.class);
+		try {
+			repayProcessor((Map<String,String>)returnParams.get(1));
+		} catch (SignatureException e) {
+			e.printStackTrace();
+		} catch (ResultCodeException e) {
+			e.printStackTrace();
+		}
 	}
 	private void sendRepayRollback(String LoanJsonList,String notifyURL)
 	{
@@ -571,6 +581,39 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 				}
 			}
 			//TODO 处理LoanNoListFail
+		}
+	}
+	public void repayProcessor(Map<String,String> params) throws SignatureException, ResultCodeException
+	{
+		String[] signStrs={"LoanJsonList","PlatformMoneymoremore","Action","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
+		String loanJsonList = null;
+		try {
+			loanJsonList=URLDecoder.decode(params.get("LoanJsonList"),"UTF-8");
+			params.put("LoanJsonList", loanJsonList);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		checkRollBack(params, signStrs);
+		List<Object> loanJsons=Common.JSONDecodeList(loanJsonList, LoanJson.class);
+		if(loanJsons==null||loanJsons.size()==0)
+			return;
+		for(Object obj:loanJsons)
+		{
+			LoanJson loanJson=(LoanJson)obj;
+			Integer cashStreamId = Integer.parseInt(loanJson.getOrderNo());
+			String loanNo=loanJson.getLoanNo();
+			CashStream cashStream = cashStreamDao.find(cashStreamId);
+			if(cashStream.getState()==CashStream.STATE_SUCCESS)
+			{
+				log.debug("重复的回复");
+				continue;
+			}
+			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
+			try {
+				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			} catch (IllegalConvertException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

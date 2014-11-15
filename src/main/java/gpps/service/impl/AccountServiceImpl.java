@@ -293,6 +293,8 @@ public class AccountServiceImpl implements IAccountService {
 					else
 						throw new RuntimeException();
 					break;
+				case CashStream.ACTION_STORECHANGE:
+					break;
 				default:
 					throw new UnsupportedOperationException();
 				}
@@ -574,5 +576,17 @@ public class AccountServiceImpl implements IAccountService {
 		detail=payBackDao.sumBorrowerWillBeRepayedPayBacks(borrower.getAccountId(), states, cal.getTimeInMillis());
 		map.put(PayBackDetail.ONEMONTH, detail==null?new PayBackDetail():detail);
 		return map;
+	}
+
+	@Override
+	public Integer storeChange(Integer paybackId, BigDecimal amount,
+			String description) {
+		CashStream cashStream=new CashStream();
+		cashStream.setAction(CashStream.ACTION_STORECHANGE);
+		cashStream.setPaybackId(paybackId);
+		cashStream.setChiefamount(amount);
+		cashStream.setDescription(description);
+		cashStreamDao.create(cashStream);
+		return cashStream.getId();
 	}
 }

@@ -509,7 +509,9 @@ public class AccountServlet {
 	@RequestMapping(value = { "/account/repay/response/bg" })
 	public void completeRepayBg(HttpServletRequest req, HttpServletResponse resp) {
 		try {
-			completeRepayProcessor(req,resp);
+			log.debug("还款回调:"+req.getRequestURI());
+			Map<String,String> params=getAllParams(req);
+			thirdPaySupportService.repayProcessor(params);
 		} catch (SignatureException e) {
 			e.printStackTrace();
 			return;
@@ -518,41 +520,6 @@ public class AccountServlet {
 			return;
 		}
 		writeSuccess(resp);
-	}
-	private void completeRepayProcessor(HttpServletRequest req, HttpServletResponse resp) throws SignatureException, ResultCodeException
-	{
-		log.debug("还款回调:"+req.getRequestURI());
-		Map<String,String> params=getAllParams(req);
-		String[] signStrs={"LoanJsonList","PlatformMoneymoremore","Action","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
-		String loanJsonList = null;
-		try {
-			loanJsonList=URLDecoder.decode(params.get("LoanJsonList"),"UTF-8");
-			params.put("LoanJsonList", loanJsonList);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		thirdPaySupportService.checkRollBack(params, signStrs);
-		List<Object> loanJsons=Common.JSONDecodeList(loanJsonList, LoanJson.class);
-		if(loanJsons==null||loanJsons.size()==0)
-			return;
-		for(Object obj:loanJsons)
-		{
-			LoanJson loanJson=(LoanJson)obj;
-			Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim(CASHSTREAMID, loanJson.getOrderNo()));
-			String loanNo=loanJson.getLoanNo();
-			CashStream cashStream = cashStreamDao.find(cashStreamId);
-			if(cashStream.getState()==CashStream.STATE_SUCCESS)
-			{
-				log.debug("重复的回复");
-				continue;
-			}
-			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
-			try {
-				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-			} catch (IllegalConvertException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	@RequestMapping(value = { "/account/cardBinding/response" })
 	public void completeCardBinding(HttpServletRequest req, HttpServletResponse resp) {

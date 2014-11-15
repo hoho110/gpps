@@ -437,8 +437,10 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		
 		authorize.setMoneymoremoreId(borrower.getThirdPartyAccount());
 		authorize.setPlatformMoneymoremore(platformMoneymoremore);
-		authorize.setAuthorizeTypeOpen("1");
+		authorize.setAuthorizeTypeOpen("2");
 		authorize.setReturnURL(req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() +"/account/authorize/response");
+		authorize.setNotifyURL(authorize.getReturnURL()+"/bg");
+		authorize.setSignInfo(authorize.getSign(privateKey));
 		return authorize;
 	}
 

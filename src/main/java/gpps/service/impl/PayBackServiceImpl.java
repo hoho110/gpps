@@ -476,6 +476,7 @@ public class PayBackServiceImpl implements IPayBackService {
 			payBack.setProduct(product);
 			product.setGovermentOrder(govermentOrderDao.find(product.getGovermentorderId()));
 			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
+			changePayBackLimit(payBack, product);
 		}
 		return payBacks;
 	}
@@ -540,5 +541,16 @@ public class PayBackServiceImpl implements IPayBackService {
 				orderService.closeFinancing(product.getGovermentorderId());
 		}
 	}
-
+	private void changePayBackLimit(PayBack payBack,Product product)
+	{
+		if(product.getState()==Product.STATE_UNPUBLISH||product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
+		{
+			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+			payBack.setInterest(payBack.getInterest().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+		}else
+		{
+			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+			payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+		}
+	}
 }

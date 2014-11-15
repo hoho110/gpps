@@ -899,7 +899,7 @@ var cashProcessor=function(action,state,container){
 			                    (parseFloat(cashs.get(i).chiefamount.value)+parseFloat(cashs.get(i).interest.value)).toFixed(2), 
 			                    cashs.get(i).chiefamount.value, 
 			                    cashs.get(i).interest.value, 
-			                    0, 
+			                    cashs.get(i).fee.value, 
 			                    cashstate[cashs.get(i).action], 
 			                    cashs.get(i).description]);
 		}

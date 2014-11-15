@@ -73,7 +73,8 @@ create table Borrower
    level                int not null default 0,
    lastModifyTime       BIGINT not null default 0,
    brange                varchar(255),
-      cardBindingId        integer,
+   cardBindingId        integer,
+   authorizeTypeOpen    int not null default 0,
    primary key (id)
 );
 

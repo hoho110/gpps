@@ -18,3 +18,4 @@ alter table Borrower add constraint FK_Ref_Borrower_CardBinding foreign key (car
       references CardBinding (id) on delete restrict on update restrict;
 
 alter table CashStream add(fee decimal(12,2) not null default 0);
+alter table borrower add(authorizeTypeOpen    int not null default 0);

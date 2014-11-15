@@ -672,6 +672,9 @@ public class AccountServlet {
 			}
 		}
 		borrowerDao.updateAuthorizeTypeOpen(borrower.getId(), originalAuthorizeTypeOpen);
+		borrower=borrowerService.getCurrentUser();
+		if(borrower!=null)
+			borrower.setAuthorizeTypeOpen(originalAuthorizeTypeOpen);
 	}
 	private void writeThirdParty(HttpServletResponse resp, String message) {
 

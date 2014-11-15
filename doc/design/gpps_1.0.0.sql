@@ -73,7 +73,8 @@ create table Borrower
    level                int not null default 0,
    lastModifyTime       BIGINT not null default 0,
    brange                varchar(255),
-      cardBindingId        integer,
+   cardBindingId        integer,
+   authorizeTypeOpen    int not null default 0,
    primary key (id)
 );
 
@@ -341,6 +342,7 @@ create table CashStream
    paybackId            integer,
    state                int not null default 1,
    loanNo               varchar(255),
+   fee                  decimal(12,2) not null default 0,
    primary key (id)
 );
 

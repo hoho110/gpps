@@ -13,6 +13,7 @@ public interface IBorrowerDao {
 	public Borrower findByLoginIdAndPassword(@Param("loginId") String loginId,@Param("password") String password);
 	public List<Borrower> findByPrivilege(int privilege);
 	public Borrower findByTel(String tel);
+	public Borrower findByEmail(String email);
 	public Borrower findByIdentityCard(String identityCard);
 	public List<Borrower> findByState(int state);
 	public void create(Borrower borrower);

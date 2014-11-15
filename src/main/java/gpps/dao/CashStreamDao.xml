@@ -97,7 +97,11 @@
         </if>
     </select>
     <update id="updateLoanNo">
-    	update CashStream set loanNo=#{loanNo} where id=#{cashStreamId}
+    	update CashStream set loanNo=#{loanNo}
+    	<if test="fee != null">
+			,fee=#{fee}
+		</if>
+    	where id=#{cashStreamId}
     </update>
     <select id="findSuccessByActionAndLoanNo" resultType="gpps.model.CashStream">
     	select * from CashStream where loanNo=#{loanNo} and state=2

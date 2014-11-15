@@ -22,6 +22,11 @@
 		*
 		from Lender where tel=#{tel}
 	</select>
+	<select id="findByEmail" parameterType="String" resultType="gpps.model.Lender">
+		select
+		*
+		from Lender where email=#{email}
+	</select>
 	<select id="findByIdentityCard" parameterType="String" resultType="gpps.model.Lender">
         select *
         from Lender where identityCard=#{identityCard}

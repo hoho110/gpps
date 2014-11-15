@@ -204,4 +204,9 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 			lender.setCardBinding(cardBindingDao.find(cardId));
 		}
 	}
+	@Override
+	public boolean isEmailExist(String email) {
+		Lender lender=lenderDao.findByEmail(email.trim());
+		return lender==null?false:true;
+	}
 }

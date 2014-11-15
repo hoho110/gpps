@@ -264,7 +264,7 @@ public class TaskServiceImpl implements ITaskService {
 					{
 						for(CashStream cashStream:cashStreams)
 						{
-							repayedChiefAmount.add(cashStream.getChiefamount());
+							repayedChiefAmount=repayedChiefAmount.add(cashStream.getChiefamount());
 						}
 					}
 					lenderChiefAmount=submit.getAmount().subtract(repayedChiefAmount);

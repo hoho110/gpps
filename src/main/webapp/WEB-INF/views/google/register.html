@@ -236,8 +236,14 @@ $(document).ready(function() {
 				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
 				addMessage('*请输入邮箱地址');
 				return;
-	        }else if(service.isLoginIdExist(email)){
+	        }else if(usertype=='1'&&service.isEmailExist(email)){
 	        	$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(error);
+				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*邮箱已被注册');
+				return;
+			}else if(usertype=='0'&&bservice.isEmailExist(email)){
+				$('input#email').parent().find('span').remove();
 				$('input#email').parent().append(error);
 				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
 				addMessage('*邮箱已被注册');
@@ -337,11 +343,18 @@ $(document).ready(function() {
     	var email = $(this).val();
     	var emailreg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
         	if(email==null||email==''){
-        }else if(service.isLoginIdExist(email)){
+        }else if(usertype=='1'&&service.isEmailExist(email)){
         	$('input#email').parent().find('span').remove();
 			$('input#email').parent().append(error);
 			$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
 			addMessage('*邮箱已被注册');
+			return;
+		}else if(usertype=='0'&&bservice.isEmailExist(email)){
+			$('input#email').parent().find('span').remove();
+			$('input#email').parent().append(error);
+			$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+			addMessage('*邮箱已被注册');
+			return;
 		}
         else if(!emailreg.test(email)){
 				$('input#email').parent().find('span').remove();

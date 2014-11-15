@@ -192,13 +192,13 @@ $(document).ready(function() {
 		var account = accountDao.find(cuser.accountId);
 		
 		var usable = account.usable;
-		cashoutAmount = (parseFloat(usable.value)+0.09).toFixed(0);
+		cashoutAmount = usable.value;
 	}else if(buser!=null){
 		name = buser.name==null?buser.loginId:buser.name;
 		var baccount = baccountDao.find(buser.accountId);
 		
 		var usable = baccount.usable;
-		cashoutAmount = (parseFloat(usable.value)+0.09).toFixed(0);
+		cashoutAmount = usable.value;
 	}
 	
 	
@@ -225,6 +225,9 @@ $(document).ready(function() {
 			document.getElementById('msg').innerHTML='金额必须大于0且为整数或小数，小数点后不超过两位';
 			$('#txtAccount').val('');
 		}else{
+			
+			if(confirm('您确认要执行提现吗?'))
+			try{
 				//window.location.href = "/account/cash/request?amount="+value;
 			$('#cashformdiv').empty();
 			var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
@@ -243,6 +246,11 @@ $(document).ready(function() {
             content+="</form>";
             $('#cashformdiv').html(content);
             $('#cashform').submit();
+			}catch(e){
+				alert(e.message);
+			}
+            
+            
 		};
 	});
 })

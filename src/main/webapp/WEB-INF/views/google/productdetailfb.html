@@ -487,6 +487,8 @@
         					alert('请按顺序还款');
         					return;
         				}else{
+        					if(confirm('您确认要执行本次还款吗？'))
+        						{
         					try{
         						paybackService.repay(parseInt(id));
         						alert('还款成功！');
@@ -495,6 +497,7 @@
         						alert(e.message);
         						window.location.reload();
         					}
+        						}
         				}
         		 	});
         		}else if($(this).attr('data-sk')=='basic'){

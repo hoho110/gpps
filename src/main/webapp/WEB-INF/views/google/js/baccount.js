@@ -1206,6 +1206,7 @@ var paybackcanpay = function(container){
 	table.dataTable(mySettings);
 	
 	$('button.pay').click(function(e){
+		if(confirm('确认要执行本次还款？')){
 		var paybackid = $(this).attr('id');
 //		$('#myModal').modal({
 //			  keyboard: false,
@@ -1220,7 +1221,7 @@ var paybackcanpay = function(container){
 			alert(e.message);
 			window.location.href="baccount.html?fid=payback&sid=payback-canpay";
 		}
-		
+		}
 	});
 }
 

@@ -319,13 +319,13 @@ a.accordion-toggle {
 
 							var account = accountDao.find(buser.accountId);
 							var total = account.total;
-							$('#total').html((parseFloat(total.value)+0.09).toFixed(0));
+							$('#total').html(total.value);
 
 							var usable = account.usable;
-							$('#usable').html((parseFloat(usable.value)+0.09).toFixed(0));
+							$('#usable').html(usable.value);
 
 							var freeze = account.freeze;
-							$('#freeze').html((parseFloat(freeze.value)+0.09).toFixed(0));
+							$('#freeze').html(freeze.value);
 
 							var used = 0;
 							$('#used').html(used);

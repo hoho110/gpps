@@ -507,7 +507,7 @@
  		//window.location.href = "/account/buy/request?submitId="+oid+"&pid="+pid;
  		var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
         var transfer=service.getTransferToBuy(oid,pid);
-        var content="<form id='buyform' action='"+transfer.baseUrl+"'method='post' target='_blank'>";
+        var content="<form id='buyform' action='"+transfer.baseUrl+"'method='post'>";
         for(var o in transfer)
        	{
             if(o=="baseUrl")

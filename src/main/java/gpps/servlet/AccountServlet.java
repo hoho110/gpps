@@ -100,16 +100,19 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/thirdPartyRegist/response" })
 	public void completeThirdPartyRegist(HttpServletRequest req, HttpServletResponse resp) {
+		String message=null;
 		try {
 			completeThirdPartyRegistProcessor(req, resp);
 		} catch (SignatureException e) {
 			log.error(e.getMessage(),e);
+			message=e.getMessage();
 		} catch (ResultCodeException e) {
 			//TODO 返回页面提示信息
 			log.debug(e.getMessage(),e);
+			message=e.getMessage();
 		}
 		//重定向到指定页面
-		write(resp,"<head><script>window.location.href='/views/google/myaccount.html?fid=mycenter'</script></head>");
+		writeMsg(resp,message,"/views/google/myaccount.html?fid=mycenter");
 	}
 	
 	@RequestMapping(value = { "/account/thirdPartyRegist/response/bg" })
@@ -172,15 +175,18 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/recharge/response" })
 	public void completeRecharge(HttpServletRequest req, HttpServletResponse resp) {
+		String message=null;
 		try {
 			completeRechargeProcessor(req, resp);
 		} catch (SignatureException e) {
 			log.error(e.getMessage(),e);
+			message=e.getMessage();
 		} catch (ResultCodeException e) {
 			//TODO 返回页面提示信息
 			log.debug(e.getMessage(),e);
+			message=e.getMessage();
 		}
-		write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=cash&sid=cash-recharge'</script></head>");
+		writeMsg(resp,message,"/views/google/myaccount.html?fid=cash&sid=cash-recharge");
 	}
 	@RequestMapping(value = { "/account/recharge/response/bg" })
 	public void completeRechargeBg(HttpServletRequest req, HttpServletResponse resp) {
@@ -262,14 +268,17 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/cash/response" })
 	public void completeCash(HttpServletRequest req, HttpServletResponse resp) {
+		String message=null;
 		try {
 			completeCashProcessor(req,resp);
 		} catch (SignatureException e) {
 			log.error(e.getMessage(),e);
+			message=e.getMessage();
 		} catch (ResultCodeException e) {
 			log.debug(e.getMessage(),e);
+			message=e.getMessage();
 		}
-		write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=cash&sid=cash-withdraw'</script></head>");
+		writeMsg(resp,message,"/views/google/myaccount.html?fid=cash&sid=cash-withdraw");
 	}
 	@RequestMapping(value = { "/account/cash/response/bg" })
 	public void completeCashBg(HttpServletRequest req, HttpServletResponse resp) {
@@ -358,14 +367,21 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/buy/response" })
 	public void completeBuy(HttpServletRequest req, HttpServletResponse resp) {
+		String message=null;
 		try {
 			completeBuyProcessor(req, resp);
 		} catch (SignatureException e) {
 			e.printStackTrace();
+			message=e.getMessage();
 		} catch (ResultCodeException e) {
 			e.printStackTrace();
+			message=e.getMessage();
 		}
 		String pid=(String) req.getAttribute("pid");
+		if(!StringUtil.isEmpty(message)){
+			writeMsg(resp,message,"/views/google/myaccount.html");
+			return;
+		}
 		if (!StringUtil.isEmpty(pid))
 			write(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/views/google/productdetail.html?pid=" + pid + "'>继续购买</a></p><a href='/views/google/myaccount.html'>返回我的帐户</a></div>");
 		else {
@@ -523,15 +539,18 @@ public class AccountServlet {
 	}
 	@RequestMapping(value = { "/account/cardBinding/response" })
 	public void completeCardBinding(HttpServletRequest req, HttpServletResponse resp) {
+		String message=null;
 		try {
 			completeCardBindingProcessor(req, resp);
 		} catch (SignatureException e) {
 			e.printStackTrace();
+			message=e.getMessage();
 		} catch (ResultCodeException e) {
 			e.printStackTrace();
+			message=e.getMessage();
 		}
 		//重定向到指定页面
-		write(resp,"<head><script>window.location.href='/views/google/myaccount.html?fid=mycenter'</script></head>");
+		writeMsg(resp,message,"/views/google/myaccount.html?fid=mycenter");
 	}
 
 	@RequestMapping(value = { "/account/cardBinding/response/bg" })
@@ -571,25 +590,44 @@ public class AccountServlet {
 		if(lender!=null)
 		{
 			lenderService.bindCard(lender.getId(), cardBinding.getId());
+			//加一分钱
+			Integer cashStreamId=accountService.rechargeLenderAccount(lender.getAccountId(), new BigDecimal(0.01), "快捷支付充值");
+			try {
+				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			} catch (IllegalConvertException e) {
+				e.printStackTrace();
+			}
 		}
 		else 
 		{
 			Borrower borrower=borrowerDao.findByThirdPartyAccount(moneymoremoreId);
 			if(borrower!=null)
+			{
 				borrowerService.bindCard(borrower.getId(), cardBinding.getId());
+				//加一分钱
+				Integer cashStreamId=accountService.rechargeBorrowerAccount(borrower.getAccountId(), new BigDecimal(0.01), "快捷支付充值");
+				try {
+					accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+				} catch (IllegalConvertException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	@RequestMapping(value = { "/account/authorize/response" })
 	public void completeAuthorize(HttpServletRequest req,HttpServletResponse resp)
 	{
+		String message=null;
 		try {
 			completeAuthorizeProcessor(req,resp);
 		} catch (SignatureException e) {
 			e.printStackTrace();
+			message=e.getMessage();
 		} catch (ResultCodeException e) {
 			e.printStackTrace();
+			message=e.getMessage();
 		}
-		write(resp,"<head><script>window.location.href='/views/google/myaccount.html?fid=mycenter'</script></head>");
+		writeMsg(resp,message,"/views/google/myaccount.html?fid=mycenter");
 	}
 	@RequestMapping(value = { "/account/authorize/response/bg" })
 	public void completeAuthorizeBg(HttpServletRequest req,HttpServletResponse resp)
@@ -673,6 +711,30 @@ public class AccountServlet {
 		try {
 			writer = resp.getWriter();
 			writer.write(message.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (writer != null) {
+				writer.flush();
+				writer.close();
+			}
+		}
+
+	}
+	private void writeMsg(HttpServletResponse resp, String message,String redirct) {
+		resp.setContentType("text/html");
+		resp.setCharacterEncoding("utf-8");
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append("<head><script>");
+		if(!StringUtil.isEmpty(message))
+		{
+			sBuilder.append("alert('").append(message).append("');");
+		}
+		sBuilder.append("window.location.href='").append(redirct).append("'</script></head>");
+		PrintWriter writer = null;
+		try {
+			writer = resp.getWriter();
+			writer.write(sBuilder.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

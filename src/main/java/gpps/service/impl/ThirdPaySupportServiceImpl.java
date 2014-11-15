@@ -545,7 +545,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		RsaHelper rsa = RsaHelper.getInstance();
 		String sign=rsa.signData(sBuilder.toString(), privateKey);
 		if(!sign.replaceAll("\r", "").equals(params.get("SignInfo").replaceAll("\r", "")))
-			throw new SignatureException();
+			throw new SignatureException("非法的签名");
 	}
 	public void checkBuyProcessor(Map<String,String> params) throws SignatureException, ResultCodeException
 	{

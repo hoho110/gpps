@@ -1,6 +1,7 @@
 package gpps.service;
 
 import gpps.model.Borrower;
+import gpps.model.CardBinding;
 import gpps.model.FinancingRequest;
 import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.exception.IllegalConvertException;
@@ -129,5 +130,5 @@ public interface IBorrowerService extends ILoginService {
 	public Map<String, Object> findByPrivilegeWithPaging(int privilege,int offset,int recnum);
 	public void update(Integer id,String corporationName,String corporationAddr,String brange);
 	
-	public void bindCard(Integer id, Integer cardId);
+	public void bindCard(CardBinding cardBinding);
 }

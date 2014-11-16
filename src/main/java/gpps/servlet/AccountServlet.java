@@ -577,18 +577,27 @@ public class AccountServlet {
 		String cardNo=rsa.decryptData(params.get("CardNo"), thirdPaySupportService.getPrivateKey());
 		params.put("CardNo", cardNo);
 		thirdPaySupportService.checkRollBack(params, signStrs);
-		CardBinding cardBinding=new CardBinding();
-		cardBinding.setBankCode(params.get("BankCode"));
-		cardBinding.setBranchBankName(params.get("BranchBankName"));
-		cardBinding.setCardNo(cardNo);
-		cardBinding.setCardType(Integer.parseInt(params.get("CardType")));
-		cardBinding.setCity(params.get("City"));
-		cardBinding.setProvince(params.get("Province"));
-		cardBindingDao.create(cardBinding);
 		String moneymoremoreId=params.get("MoneymoremoreId");
 		Lender lender=lenderDao.findByThirdPartyAccount(moneymoremoreId);
 		if(lender!=null)
 		{
+			if(lender.getCardBindingId()!=null)
+			{
+				CardBinding orignal=cardBindingDao.find(lender.getCardBindingId());
+				if(orignal!=null&&orignal.getCardNo().equals(cardNo))
+				{
+					//已绑定
+					return;
+				}
+			}
+			CardBinding cardBinding=new CardBinding();
+			cardBinding.setBankCode(params.get("BankCode"));
+			cardBinding.setBranchBankName(params.get("BranchBankName"));
+			cardBinding.setCardNo(cardNo);
+			cardBinding.setCardType(Integer.parseInt(params.get("CardType")));
+			cardBinding.setCity(params.get("City"));
+			cardBinding.setProvince(params.get("Province"));
+			cardBindingDao.create(cardBinding);
 			lenderService.bindCard(lender.getId(), cardBinding.getId());
 			//加一分钱
 			Integer cashStreamId=accountService.rechargeLenderAccount(lender.getAccountId(), new BigDecimal(0.01), "快捷支付充值");
@@ -598,21 +607,21 @@ public class AccountServlet {
 				e.printStackTrace();
 			}
 		}
-		else 
-		{
-			Borrower borrower=borrowerDao.findByThirdPartyAccount(moneymoremoreId);
-			if(borrower!=null)
-			{
-				borrowerService.bindCard(borrower.getId(), cardBinding.getId());
-				//加一分钱
-				Integer cashStreamId=accountService.rechargeBorrowerAccount(borrower.getAccountId(), new BigDecimal(0.01), "快捷支付充值");
-				try {
-					accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-				} catch (IllegalConvertException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+//		else 
+//		{
+//			Borrower borrower=borrowerDao.findByThirdPartyAccount(moneymoremoreId);
+//			if(borrower!=null)
+//			{
+//				borrowerService.bindCard(borrower.getId(), cardBinding.getId());
+//				//加一分钱
+//				Integer cashStreamId=accountService.rechargeBorrowerAccount(borrower.getAccountId(), new BigDecimal(0.01), "快捷支付充值");
+//				try {
+//					accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+//				} catch (IllegalConvertException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
 	}
 	@RequestMapping(value = { "/account/authorize/response" })
 	public void completeAuthorize(HttpServletRequest req,HttpServletResponse resp)

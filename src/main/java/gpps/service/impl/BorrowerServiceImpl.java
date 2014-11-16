@@ -10,6 +10,7 @@ import gpps.dao.IGovermentOrderDao;
 import gpps.dao.IProductDao;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
+import gpps.model.CardBinding;
 import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
@@ -378,14 +379,13 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	}
 
 	@Override
-	public void bindCard(Integer id, Integer cardId) {
-		borrowerDao.bindCard(id, cardId);
+	public void bindCard(CardBinding cardBinding) {
 		Borrower borrower=getCurrentUser();
-		if(borrower!=null)
-		{
-			borrower.setCardBindingId(cardId);
-			borrower.setCardBinding(cardBindingDao.find(cardId));
-		}
+		cardBindingDao.create(cardBinding);
+		borrowerDao.bindCard(borrower.getId(), cardBinding.getId());
+		
+		borrower.setCardBindingId(cardBinding.getId());
+		borrower.setCardBinding(cardBinding);
 	}
 
 	@Override

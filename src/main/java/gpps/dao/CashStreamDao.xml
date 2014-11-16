@@ -84,7 +84,7 @@
 		<![CDATA[
 			select sum(chiefamount) chiefAmount,sum(interest) interest from CashStream
 			where 
-			lenderAccountId=#{lenderAccountId} and action=4 
+			lenderAccountId=#{lenderAccountId} and action=4  and state=2
 			and  createtime >= #{starttime} and createtime <= #{endtime}
 		]]>
 	</select>

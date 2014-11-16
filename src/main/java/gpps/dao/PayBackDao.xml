@@ -96,7 +96,7 @@
 	</select>
 	<select id="sumBorrowerWillBeRepayedPayBacks" resultType="gpps.service.PayBackDetail">
 		select sum(a.chiefamount*b.realAmount/100000) chiefAmount,sum(a.interest*b.realAmount/100000) interest from  PayBack a,Product b where a.productId=b.id
-		and a.borrowerAccountId=#{borrowerAccountId} and b.state=1
+		and a.borrowerAccountId=#{borrowerAccountId} and b.state=2
 		<if test="states != null">
 			and a.state in
 			<foreach item="item" index="index" collection="states" open="("

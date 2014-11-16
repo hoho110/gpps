@@ -155,7 +155,12 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 
 	@Override
 	public Borrower find(int id) {
-		return borrowerDao.find(id);
+		Borrower borrower = borrowerDao.find(id);
+		if(borrower!=null && borrower.getCardBindingId()!=null)
+		{
+			borrower.setCardBinding(cardBindingDao.find(borrower.getCardBindingId()));
+		}
+		return borrower;
 	}
 
 	@Override
@@ -379,8 +384,8 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	}
 
 	@Override
-	public void bindCard(CardBinding cardBinding) {
-		Borrower borrower=getCurrentUser();
+	public void bindCard(Integer id, CardBinding cardBinding) {
+		Borrower borrower=find(id);
 		cardBindingDao.create(cardBinding);
 		borrowerDao.bindCard(borrower.getId(), cardBinding.getId());
 		

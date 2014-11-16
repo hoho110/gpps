@@ -45,25 +45,7 @@
 				<input type="text" class="form-control" id="license" disabled="disabled"></input>
 			</div>
 		</div>
-		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-3" for="inputSuccess3">联系电话</label>
-			<div class="col-sm-9">
-				<input type="text" class="form-control" id="tel" disabled="disabled"></input>
-			</div>
-		</div>
 		
-		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-3" for="inputSuccess3">联系电话</label>
-			<div class="col-sm-9">
-				<input type="text" class="form-control" id="tel" disabled="disabled"></input>
-			</div>
-		</div>
-		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-3" for="inputSuccess3">联系电话</label>
-			<div class="col-sm-9">
-				<input type="text" class="form-control" id="tel" disabled="disabled"></input>
-			</div>
-		</div>
 		<div class="form-group has-success has-feedback">
 			<label class="control-label col-sm-3" for="inputSuccess3">联系电话</label>
 			<div class="col-sm-9">
@@ -90,6 +72,69 @@
 			</div>
 		</div>
 		</div>
+		
+		<div class="row" style="margin-bottom:20px; margin-top:20px;padding-left:20px;">
+		<div class="row" style="margin-bottom:20px;">
+		<div class="col-md-10" style="text-align:center;">
+			<span style="font-size:24px; font-weight:bold;">企业开户信息
+		</div>
+		<div class="col-md-2"><button id="cardsave">保存</button></div>
+		</div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">开户行</label>
+			<div class="col-sm-9">
+				<select class="form-control" id="bankcode">
+  					<option value=1>中国银行</option>
+					<option value=2>工商银行</option>
+  					<option value=3>农业银行</option>
+  					<option value=4>交通银行</option>
+  					<option value=5>广发银行</option>
+  					<option value=7>建设银行</option>
+  					<option value=8>上海浦发银行</option>
+  					<option value=10>招商银行</option>
+  					<option value=11>邮政储蓄银行</option>
+  					<option value=12>民生银行</option>
+  					
+  					<option value=12>民生银行</option>
+  					<option value=13>兴业银行</option>
+  					<option value=14>广东发展银行</option>
+  					<option value=17>中信银行</option>
+  					<option value=18>华夏银行</option>
+  					<option value=19>中国光大银行</option>
+  					
+  					<option value=28>平安银行</option>
+  					<option value=29>浙商银行</option>
+  					<option value=30>上海农村商业银行</option>
+				</select>
+
+			</div>
+		</div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">支行名称</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="branchbankname">
+			</div>
+		</div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">所在省</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="province">
+			</div>
+		</div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">所在市</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="city">
+			</div>
+		</div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">账号</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="bankaccount">
+			</div>
+		</div>
+		</div>
+		
 		<div class="row" style="border: #eee solid 1px;">
 			<div class="col-md-12">
 				请选择上传附件类型：<select id="category">
@@ -145,6 +190,14 @@ function refreshInfo(){
 	$('#addr').val(borrower.corporationAddr==null?"":borrower.corporationAddr);
 	$('#frname').val(borrower.corporationName==null?"":borrower.corporationName);
 	$('#range').val(borrower.brange==null?"":borrower.brange);
+	
+	if(borrower.cardBinding!=null){	
+	$('#bankcode').val(borrower.cardBinding.bankCode);
+	$('#branchbankname').val(borrower.cardBinding.branchBankName);
+	$('#province').val(borrower.cardBinding.province);
+	$('#city').val(borrower.cardBinding.city);
+	$('#bankaccount').val(borrower.cardBinding.cardNo);
+	}
 }
 
 
@@ -206,6 +259,38 @@ $('#save').click(function(e){
 	borrowerService.update(id,frname,addr,brange)
 	alert('保存完成！');
 });
+
+$('#cardsave').click(function(e){
+	var bankcode = $('#bankcode').val();
+	var branchbankname = $('#branchbankname').val();
+	var province = $('#province').val();
+	var city = $('#city').val();
+	var bankaccount = $('#bankaccount').val();
+	if(branchbankname==null || branchbankname==''){
+		alert('分行名称必须填写！');
+		return;
+	}
+	if(province==null||province==''){
+		alert('省份代码必须填写！');
+		return;
+	}
+	if(city==null||city==''){
+		alert('城市代码必须填写！');
+		return;
+	}
+	if(bankaccount==null||bankaccount==''){
+		alert('银行卡号必须填写！');
+		return;
+	}
+	var cardbinding = {"_t_":"gpps.model.CardBinding", "bankCode":bankcode, "cardType" : 0, "branchBankName" : branchbankname, "province" : province, "city" : city, "cardNo" : bankaccount};
+	
+	try{
+		borrowerService.bindCard(id, cardbinding);
+		alert('保存成功！');
+	}catch(e){
+		alert(e.message);
+	}
+})
 
 	
 	

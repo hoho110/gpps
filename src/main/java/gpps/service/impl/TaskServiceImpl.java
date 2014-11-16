@@ -130,6 +130,12 @@ public class TaskServiceImpl implements ITaskService {
 						logger.info("任务:"+task+"处理完毕");
 					}catch (Throwable e) {
 						logger.error(e.getMessage(),e);
+						//执行出错，线程休眠1分钟
+						try {
+							Thread.sleep(60*1000);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
 					}
 				}
 			}

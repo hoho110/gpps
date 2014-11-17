@@ -355,6 +355,7 @@ public class PayBackServiceImpl implements IPayBackService {
 				payBack.setProduct(product);
 				product.setGovermentOrder(govermentOrderDao.find(product.getGovermentorderId()));
 				product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
+				changeBorrowerPayBackLimit(payBack,product);
 				canBeRepayedPayBacks.add(payBack);
 			}
 		}
@@ -375,6 +376,7 @@ public class PayBackServiceImpl implements IPayBackService {
 				payBack.setProduct(product);
 				product.setGovermentOrder(govermentOrderDao.find(product.getGovermentorderId()));
 				product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
+				changeBorrowerPayBackLimit(payBack,product);
 				canBeRepayedInAdvancePayBacks.add(payBack);
 			}
 		}
@@ -476,7 +478,7 @@ public class PayBackServiceImpl implements IPayBackService {
 			payBack.setProduct(product);
 			product.setGovermentOrder(govermentOrderDao.find(product.getGovermentorderId()));
 			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
-			changePayBackLimit(payBack, product);
+			changeBorrowerPayBackLimit(payBack, product);
 		}
 		return payBacks;
 	}
@@ -541,7 +543,7 @@ public class PayBackServiceImpl implements IPayBackService {
 				orderService.closeFinancing(product.getGovermentorderId());
 		}
 	}
-	private void changePayBackLimit(PayBack payBack,Product product)
+	private void changeBorrowerPayBackLimit(PayBack payBack,Product product)
 	{
 		if(product.getState()==Product.STATE_UNPUBLISH||product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
 		{

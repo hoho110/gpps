@@ -63,6 +63,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	public static final String ACTION_CARDBINDING="4";
 	public static final String ACTION_CASH="5";
 	public static final String ACTION_AUTHORIZE="6";
+	public static final String ACTION_ORDERQUERY="7";
 	private static Map<String, String> urls=new HashMap<String, String>();
 	static {
 		urls.put(ACTION_REGISTACCOUNT, "/loan/toloanregisterbind.action");
@@ -72,6 +73,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		urls.put(ACTION_CARDBINDING, "/loan/toloanfastpay.action");
 		urls.put(ACTION_CASH, "/loan/toloanwithdraws.action");
 		urls.put(ACTION_AUTHORIZE, "/loan/toloanauthorize.action");
+		urls.put(ACTION_ORDERQUERY, "/loan/loanorderquery.action");
 	}
 	private String url="";
 	private String platformMoneymoremore="p401";
@@ -615,6 +617,44 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			} catch (IllegalConvertException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	@Override
+	public void checkCash(Integer cashStreamId)
+			throws IllegalOperationException {
+		CashStream cashStream=cashStreamDao.find(cashStreamId);
+		if(cashStream==null)
+			return;
+		if(cashStream.getAction()!=CashStream.ACTION_CASH)
+			throw new IllegalOperationException("只验证提现");
+		if(cashStream.getState()!=CashStream.STATE_SUCCESS)
+			throw new IllegalOperationException("只验证已提现的流水");
+		String baseUrl=getBaseUrl(ACTION_ORDERQUERY);
+		Map<String,String> params=new HashMap<String,String>();
+		params.put("PlatformMoneymoremore", platformMoneymoremore);
+		params.put("Action", "2");
+		params.put("LoanNo", cashStream.getLoanNo());
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(params.get("Action")));
+		sBuilder.append(StringUtil.strFormat(params.get("LoanNo")));
+		RsaHelper rsa = RsaHelper.getInstance();
+		params.put("SignInfo", rsa.signData(sBuilder.toString(), privateKey));
+		String body=httpClientService.post(baseUrl, params);
+		Gson gson = new Gson();
+		Map<String,String> returnParams=gson.fromJson(body, Map.class);
+		try {
+			String withdrawsState=returnParams.get("WithdrawsState");
+			if(withdrawsState.equals("2"))
+			{
+				//退回
+				accountService.returnCash(Integer.parseInt(returnParams.get("OrderNo")));
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (IllegalConvertException e) {
+			e.printStackTrace();
 		}
 	}
 }

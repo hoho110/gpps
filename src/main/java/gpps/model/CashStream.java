@@ -25,11 +25,12 @@ public class CashStream {
 	private String description;
 	private Integer paybackId;
 	/**
-	 * 1:预操作；2:操作完成;4操作失败
+	 * 1:预操作；2:操作完成;4操作失败;8 提现退回
 	 */
 	public static final int STATE_INIT=1;
 	public static final int STATE_SUCCESS=1<<1;
 	public static final int STATE_FAIL=1<<2;
+	public static final int STATE_RETURN=1<<3;
 	private int state=STATE_INIT;
 	private String loanNo;//钱多多流水号
 	public Integer getId() {

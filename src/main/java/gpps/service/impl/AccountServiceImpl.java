@@ -27,6 +27,7 @@ import gpps.service.ILenderService;
 import gpps.service.IProductService;
 import gpps.service.PayBackDetail;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
 
 import java.math.BigDecimal;
@@ -239,7 +240,10 @@ public class AccountServiceImpl implements IAccountService {
 	static int[][] validConverts = { 
 		{ CashStream.STATE_INIT, CashStream.STATE_FAIL }, 
 		{ CashStream.STATE_INIT, CashStream.STATE_SUCCESS }, 
-		{ CashStream.STATE_FAIL, CashStream.STATE_SUCCESS } };
+		{ CashStream.STATE_FAIL, CashStream.STATE_SUCCESS }, 
+		{ CashStream.STATE_INIT, CashStream.STATE_RETURN }, 
+		{ CashStream.STATE_FAIL, CashStream.STATE_RETURN }, 
+		{ CashStream.STATE_SUCCESS, CashStream.STATE_RETURN }};
 
 	@Override
 	@Transactional
@@ -307,7 +311,7 @@ public class AccountServiceImpl implements IAccountService {
 
 	@Override
 	public void checkThroughThirdPlatform(Integer cashStreamId) {
-		//TODO 
+		
 	}
 
 	@Override
@@ -590,5 +594,26 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setBorrowerAccountId(borrowerAccountId);
 		cashStreamDao.create(cashStream);
 		return cashStream.getId();
+	}
+
+	@Override
+	@Transactional
+	public void returnCash(Integer cashStreamId) throws IllegalConvertException {
+		CashStream cashStream = cashStreamDao.find(cashStreamId);
+		if (cashStream.getState() == CashStream.STATE_RETURN)
+			return;
+		if (cashStream.getState() != cashStream.STATE_SUCCESS)
+			changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+		changeCashStreamState(cashStreamId, CashStream.STATE_RETURN);
+		// 退回资金
+		Integer csId = null;
+		if (cashStream.getLenderAccountId() != null) {
+			csId = rechargeLenderAccount(cashStream.getLenderAccountId(),
+					cashStream.getChiefamount(), "提现退回");
+		} else {
+			csId = rechargeBorrowerAccount(cashStream.getBorrowerAccountId(),
+					cashStream.getChiefamount(), "提现退回");
+		}
+		changeCashStreamState(csId, CashStream.STATE_SUCCESS);
 	}
 }

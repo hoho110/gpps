@@ -298,8 +298,23 @@ public class AccountServlet {
 		Map<String,String> params=getAllParams(req);
 		String[] signStrs={"WithdrawMoneymoremore","PlatformMoneymoremore","LoanNo","OrderNo","Amount","FeeMax","FeeWithdraws",
 				"FeePercent","Fee","FreeLimit","FeeRate","FeeSplitting","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
-		thirdPaySupportService.checkRollBack(params, signStrs);
 		Integer cashStreamId = Integer.parseInt(StringUtil.checkNullAndTrim("cashStreamId", StringUtil.strFormat(params.get("OrderNo"))));
+		try{
+			thirdPaySupportService.checkRollBack(params, signStrs);
+		}catch(ResultCodeException e)
+		{
+			String resultCode=e.getResultCode();
+			if(resultCode.equals("89"))
+			{
+				try {
+					accountService.returnCash(cashStreamId);
+				} catch (IllegalConvertException e1) {
+					e1.printStackTrace();
+				}
+			}
+			else 
+				throw e;
+		}
 		String loanNo=params.get("LoanNo");
 		try {
 			log.debug("取现成功");

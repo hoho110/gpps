@@ -4,6 +4,7 @@ import gpps.constant.Pagination;
 import gpps.model.CashStream;
 import gpps.model.PayBack;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
 
 import java.math.BigDecimal;
@@ -135,4 +136,9 @@ public interface IAccountService {
 	
 	public Map<String,PayBackDetail> getBorrowerRepayedDetail();
 	public Map<String,PayBackDetail> getBorrowerWillBeRepayedDetail();
+	/**
+	 * 提现退回
+	 * @throws IllegalConvertException 
+	 */
+	public void returnCash(Integer cashStreamId) throws IllegalConvertException;
 }

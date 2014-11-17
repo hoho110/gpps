@@ -485,6 +485,9 @@ public class PayBackServiceImpl implements IPayBackService {
 
 	@Override
 	public void repay(Integer payBackId) throws IllegalStateException,IllegalOperationException, InsufficientBalanceException, IllegalConvertException {
+		Borrower borrower=borrowerService.getCurrentUser();
+		if((borrower.getAuthorizeTypeOpen()&Borrower.AUTHORIZETYPEOPEN_RECHARGE)==0)
+			throw new IllegalOperationException("请先授权还款权限，然后再执行还款");
 		PayBack payBack = find(payBackId);
 		Product currentProduct = productService.find(payBack.getProductId());
 		if (currentProduct.getState() != Product.STATE_REPAYING) 

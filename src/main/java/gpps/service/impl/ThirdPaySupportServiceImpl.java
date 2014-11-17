@@ -16,6 +16,7 @@ import gpps.service.ILoginService;
 import gpps.service.IProductService;
 import gpps.service.ISubmitService;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.LoginException;
 import gpps.service.thirdpay.Authorize;
@@ -382,7 +383,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	}
 
 	@Override
-	public Cash getCash(String amount) throws InsufficientBalanceException, LoginException {
+	public Cash getCash(String amount) throws InsufficientBalanceException, LoginException, IllegalOperationException {
 		Cash cash=new Cash();
 		cash.setBaseUrl(getBaseUrl(ACTION_CASH));
 		HttpServletRequest req=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -411,7 +412,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			throw new RuntimeException("不支持该用户提现");
 		}
 		if(cardBinding==null)
-			throw new RuntimeException("未绑定银行卡");
+			throw new IllegalOperationException("未绑定银行卡");
 		cardNo=cardBinding.getCardNo();
 		cash.setCardNo(cardNo);
 		cash.setCardType(String.valueOf(cardBinding.getCardType()));

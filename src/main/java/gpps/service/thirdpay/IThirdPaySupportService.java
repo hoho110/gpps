@@ -1,5 +1,6 @@
 package gpps.service.thirdpay;
 
+import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.LoginException;
 import gpps.service.thirdpay.Transfer.LoanJson;
@@ -39,7 +40,7 @@ public interface IThirdPaySupportService {
 	
 	public CardBinding getCardBinding() throws LoginException;
 	
-	public Cash getCash(String amount) throws InsufficientBalanceException, LoginException;
+	public Cash getCash(String amount) throws InsufficientBalanceException, LoginException, IllegalOperationException;
 	
 	public Authorize getAuthorize() throws LoginException;
 	

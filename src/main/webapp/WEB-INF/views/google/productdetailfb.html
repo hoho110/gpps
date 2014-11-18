@@ -579,8 +579,8 @@
         			$('.detail-content-body').append('<h5>中标文件</h5>');
         			var pp = $('<p></p>');
         			for(var i=0; i<items.size(); i++){
-        				var url = "/download/order/"+order.borrowerId+"/0/"+items.get(i).id;
-        				var viewurl = "/imageview/order/"+order.borrowerId+"/0/"+items.get(i).id;
+        				var url = "/download/order/"+order.id+"/0/"+items.get(i).id;
+        				var viewurl = "/imageview/order/"+order.id+"/0/"+items.get(i).id;
         				var img = $('<img class="accessory" data-sk='+viewurl+' src='+url+'></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
         				pp.append(img);
         			}

@@ -11,6 +11,7 @@ import gpps.dao.IGovermentOrderDao;
 import gpps.dao.ILenderAccountDao;
 import gpps.dao.IPayBackDao;
 import gpps.dao.IProductDao;
+import gpps.dao.IStateLogDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
@@ -20,6 +21,7 @@ import gpps.model.Lender;
 import gpps.model.LenderAccount;
 import gpps.model.PayBack;
 import gpps.model.Product;
+import gpps.model.StateLog;
 import gpps.model.Submit;
 import gpps.service.IAccountService;
 import gpps.service.IBorrowerService;
@@ -68,7 +70,8 @@ public class AccountServiceImpl implements IAccountService {
 	IGovermentOrderDao orderDao;
 	@Autowired
 	IProductService productService;
-	
+	@Autowired
+	IStateLogDao stateLogDao;
 	@Override
 	public Integer rechargeLenderAccount(Integer lenderAccountId, BigDecimal amount, String description) {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
@@ -78,6 +81,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_RECHARGE);
 		cashStreamDao.create(cashStream);
+		recordStateLogWithCreate(cashStream);
 		return cashStream.getId();
 	}
 
@@ -90,6 +94,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_RECHARGE);
 		cashStreamDao.create(cashStream);
+		recordStateLogWithCreate(cashStream);
 		return cashStream.getId();
 	}
 
@@ -107,6 +112,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_FREEZE);
 		cashStreamDao.create(cashStream);
+		recordStateLogWithCreate(cashStream);
 //		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//TODO 调用第三方接口冻结,如不成功则事务回滚
 		return cashStream.getId();
@@ -124,6 +130,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setAction(CashStream.ACTION_FREEZE);
 		cashStream.setPaybackId(paybackId);
 		cashStreamDao.create(cashStream);
+		recordStateLogWithCreate(cashStream);
 //		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//TODO 调用第三方接口冻结,如不成功则事务回滚
 		return cashStream.getId();
@@ -139,6 +146,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_UNFREEZE);
 		cashStreamDao.create(cashStream);
+		recordStateLogWithCreate(cashStream);
 		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		return cashStream.getId();
 	}
@@ -156,6 +164,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setState(CashStream.STATE_SUCCESS);
 		cashStreamDao.create(cashStream);
+		recordStateLogWithCreate(cashStream);
 		return cashStream.getId();
 	}
 	@Override
@@ -173,6 +182,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setAction(CashStream.ACTION_UNFREEZE);
 		cashStream.setState(CashStream.STATE_SUCCESS);
 		cashStreamDao.create(cashStream);
+		recordStateLogWithCreate(cashStream);
 		
 		cashStream=new CashStream();
 		cashStream.setLenderAccountId(lenderAccountId);
@@ -182,6 +192,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_PAY);
 		cashStreamDao.create(cashStream);
+		recordStateLogWithCreate(cashStream);
 		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//批量解冻，不需要第三方操作
 		return cashStream.getId();
@@ -204,6 +215,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_REPAY);
 		cashStreamDao.create(cashStream);
+		recordStateLogWithCreate(cashStream);
 //		changeCashStreamState(cashStream.getId(), CashStream.STATE_SUCCESS);
 		//批量还款，不需要第三方操作
 		return cashStream.getId();
@@ -220,6 +232,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_CASH);
 		cashStreamDao.create(cashStream);
+		recordStateLogWithCreate(cashStream);
 		return cashStream.getId();
 	}
 
@@ -234,6 +247,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setDescription(description);
 		cashStream.setAction(CashStream.ACTION_CASH);
 		cashStreamDao.create(cashStream);
+		recordStateLogWithCreate(cashStream);
 		return cashStream.getId();
 	}
 
@@ -253,6 +267,13 @@ public class AccountServiceImpl implements IAccountService {
 		for (int[] validStateConvert : validConverts) {
 			if (cashStream.getState() == validStateConvert[0] && state == validStateConvert[1]) {
 				cashStreamDao.changeCashStreamState(cashStreamId, state);
+				StateLog stateLog=new StateLog();
+				stateLog.setCreatetime(System.currentTimeMillis());
+				stateLog.setRefid(cashStreamId);
+				stateLog.setSource(cashStream.getState());
+				stateLog.setTarget(state);
+				stateLog.setType(StateLog.TYPE_CASHSTREAM);
+				stateLogDao.create(stateLog);
 				if(state!=CashStream.STATE_SUCCESS)
 					return;
 				switch (cashStream.getAction()) {
@@ -615,5 +636,14 @@ public class AccountServiceImpl implements IAccountService {
 					cashStream.getChiefamount(), "提现退回");
 		}
 		changeCashStreamState(csId, CashStream.STATE_SUCCESS);
+	}
+	private void recordStateLogWithCreate(CashStream cashStream)
+	{
+		StateLog stateLog=new StateLog();
+		stateLog.setCreatetime(System.currentTimeMillis());
+		stateLog.setRefid(cashStream.getId());
+		stateLog.setTarget(cashStream.getState());
+		stateLog.setType(stateLog.TYPE_CASHSTREAM);
+		stateLogDao.create(stateLog);
 	}
 }

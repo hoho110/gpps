@@ -98,6 +98,13 @@ public class ProductServiceImpl implements IProductService {
 		product.setIncomeEndtime(endtime.getTimeInMillis());
 		
 		productDao.create(product);
+		StateLog productStateLog=new StateLog();
+		productStateLog.setCreatetime(System.currentTimeMillis());
+		productStateLog.setRefid(product.getId());
+		productStateLog.setTarget(product.getState());
+		productStateLog.setType(productStateLog.TYPE_PRODUCT);
+		stateLogDao.create(productStateLog);
+		
 		Borrower borrower=borrowerDao.find(order.getBorrowerId());
 		// 创建还款计划
 		List<PayBack> payBacks=payBackService.generatePayBacks(PayBack.BASELINE.intValue(), product.getRate().doubleValue(),productSeries.getType(), starttime.getTimeInMillis(), endtime.getTimeInMillis());
@@ -108,6 +115,13 @@ public class ProductServiceImpl implements IProductService {
 			payBack.setBorrowerAccountId(borrower.getAccountId());
 			payBack.setProductId(product.getId());
 			payBackDao.create(payBack);
+			
+			StateLog stateLog=new StateLog();
+			stateLog.setCreatetime(System.currentTimeMillis());
+			stateLog.setRefid(payBack.getId());
+			stateLog.setTarget(payBack.getState());
+			stateLog.setType(stateLog.TYPE_PAYBACK);
+			stateLogDao.create(stateLog);
 		}
 	}
 	static int[][] validConverts={

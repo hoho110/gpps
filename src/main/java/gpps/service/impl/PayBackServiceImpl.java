@@ -69,6 +69,12 @@ public class PayBackServiceImpl implements IPayBackService {
 	@Override
 	public void create(PayBack payback) {
 		payBackDao.create(payback);
+		StateLog stateLog=new StateLog();
+		stateLog.setCreatetime(System.currentTimeMillis());
+		stateLog.setRefid(payback.getId());
+		stateLog.setTarget(payback.getState());
+		stateLog.setType(stateLog.TYPE_PAYBACK);
+		stateLogDao.create(stateLog);
 	}
 
 	@Override

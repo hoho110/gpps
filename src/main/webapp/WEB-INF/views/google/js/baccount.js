@@ -1206,6 +1206,12 @@ var paybackcanpay = function(container){
 	table.dataTable(mySettings);
 	
 	$('button.pay').click(function(e){
+		
+		if(buser.authorizeTypeOpen!=2){
+			alert('尚未授权平台自动还款，请先执行授权再还款！');
+			return;
+		}
+		
 		if(confirm('确认要执行本次还款？')){
 		var paybackid = $(this).attr('id');
 //		$('#myModal').modal({

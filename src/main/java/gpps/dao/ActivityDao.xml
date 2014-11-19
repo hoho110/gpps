@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gpps.dao.IActivityDao">
+	<select id="find" parameterType="Integer" resultType="gpps.model.Activity">
+		select *
+		from Activity where id=#{id}
+	</select>
+	<insert id="create" parameterType="gpps.model.Activity"
+        useGeneratedKeys="true" keyProperty="id">
+        insert into
+        Activity(name,applystarttime,applyendtime,starttime,question,answer,createtime,state,url)
+        values(#{name},#{applystarttime},#{applyendtime},#{starttime},#{question},#{answer},#{createtime},#{state},#{url})
+    </insert>
+    <select id="countByState" resultType="int">
+        select count(*)
+        from Activity where state=#{state}
+    </select>
+	<select id="findByState" resultType="gpps.model.Activity">
+		select count(*)
+        from Activity where state=#{state}
+		order by createtime desc
+		LIMIT #{offset}, #{recnum}
+	</select>
+</mapper>

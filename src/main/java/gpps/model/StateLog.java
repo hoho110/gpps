@@ -3,15 +3,16 @@ package gpps.model;
 public class StateLog {
 	private Integer id;
 	/**
-	 * 0：submit 1：product 2：Govermentorder,3:payback
+	 * 0：submit 1：product 2：Govermentorder,3:payback 4:CashStream
 	 */
 	public static final int TYPE_SUBMIT=0;
 	public static final int TYPE_PRODUCT=1;
 	public static final int TYPE_GOVERMENTORDER=2;
 	public static final int TYPE_PAYBACK=3;
+	public static final int TYPE_CASHSTREAM=4;
 	private int type;
 	private long createtime = System.currentTimeMillis();
-	private int source;//原状态
+	private int source=-99;//原状态,-99表示无source
 	private int target;//目标状态
 	private Integer refid;
 	public Integer getId() {

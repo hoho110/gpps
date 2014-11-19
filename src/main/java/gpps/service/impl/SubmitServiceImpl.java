@@ -157,6 +157,14 @@ public class SubmitServiceImpl implements ISubmitService {
 			submit.setProductId(productId);
 			submit.setState(Submit.STATE_WAITFORPAY);
 			submitDao.create(submit);
+
+			StateLog stateLog=new StateLog();
+			stateLog.setCreatetime(System.currentTimeMillis());
+			stateLog.setRefid(submit.getId());
+			stateLog.setTarget(submit.getState());
+			stateLog.setType(stateLog.TYPE_SUBMIT);
+			stateLogDao.create(stateLog);
+			
 			productDao.buy(productId, amount);
 //			Integer cashStreamId=accountService.freezeLenderAccount(lender.getAccountId(), amount, submit.getId(), null);
 			product.setRealAmount(product.getRealAmount().add(amount));

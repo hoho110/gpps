@@ -12,6 +12,7 @@ import gpps.dao.IProductSeriesDao;
 import gpps.dao.IStateLogDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
+import gpps.model.CashStream;
 import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
@@ -115,6 +116,12 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 //		starttime.set(starttime.get(Calendar.YEAR), starttime.get(Calendar.MONTH), starttime.get(Calendar.DATE), 0, 0, 0);
 //		govermentOrder.setFinancingStarttime(starttime.getTimeInMillis());
 		govermentOrderDao.create(govermentOrder);
+		StateLog stateLog=new StateLog();
+		stateLog.setCreatetime(System.currentTimeMillis());
+		stateLog.setRefid(govermentOrder.getId());
+		stateLog.setTarget(govermentOrder.getState());
+		stateLog.setType(stateLog.TYPE_GOVERMENTORDER);
+		stateLogDao.create(stateLog);
 		return govermentOrder;
 	}
 	@Override

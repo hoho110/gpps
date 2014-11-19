@@ -1,10 +1,10 @@
 package gpps.dao;
 
+import gpps.model.Help;
+
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
-
-import gpps.model.Help;
 
 public interface IHelpDao {
 	public int countAll();

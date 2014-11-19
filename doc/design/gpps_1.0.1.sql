@@ -64,18 +64,18 @@ create table Activity
    id                   integer not null auto_increment,
    name                 varchar(255) not null default '0' comment '0:public
             1:private',
-   applystarttime       bigint not null comment '0:ĞÂÊÖÎÊÌâ
-            1:³£¼ûÎÊÌâ',
+   applystarttime       bigint not null comment '0:æ–°æ‰‹é—®é¢˜
+            1:å¸¸è§é—®é¢˜',
    applyendtime         bigint not null default 0 comment '0:lender
             1:borrower',
    starttime            bigint not null,
    question             varchar(2000),
    answer               mediumtext,
    createtime           bigint not null,
-   state                int not null default 0 comment '0:Î´·¢²¼
-            1£º±¨Ãû
-            2£º½øĞĞ
-            3£º½áÊø',
+   state                int not null default 0 comment '0:æœªå‘å¸ƒ
+            1ï¼šæŠ¥å
+            2ï¼šè¿›è¡Œ
+            3ï¼šç»“æŸ',
    url                  varchar(255),
    primary key (id)
 );
@@ -91,8 +91,8 @@ create table ActivityRef
    participatorId       Integer not null,
    ActivityId           Integer not null,
    applytime            bigint not null,
-   applystate           int not null comment '0:²Î¼Ó
-            1£ºÎ´²Î¼Ó',
+   applystate           int not null comment '0:å‚åŠ 
+            1ï¼šæœªå‚åŠ ',
    awarddetail          varchar(255),
    description          varchar(255),
    primary key (id)
@@ -112,11 +112,11 @@ create table Borrower
    identitycard         varchar(50),
    accountid            integer not null,
    createtime           BIGINT not null,
-   material             mediumtext comment '¼ÇÂ¼ÁËÆóÒµÏà¹Ø×ÊÁÏµÄ¸½¼şÂ·¾¶',
+   material             mediumtext comment 'è®°å½•äº†ä¼ä¸šç›¸å…³èµ„æ–™çš„é™„ä»¶è·¯å¾„',
    request              mediumtext,
-   privilege            int not null comment '10£ºÓĞ²é¿´È¨ÏŞµÄÆóÒµÓÃ»§
-            11£ºÉêÇëÈÚ×ÊÈ¨ÏŞµÄÆóÒµÓÃ»§
-            12£ºÓĞÈÚ×ÊÈ¨ÏŞµÄÆóÒµÓÃ»§',
+   privilege            int not null comment '10ï¼šæœ‰æŸ¥çœ‹æƒé™çš„ä¼ä¸šç”¨æˆ·
+            11ï¼šç”³è¯·èèµ„æƒé™çš„ä¼ä¸šç”¨æˆ·
+            12ï¼šæœ‰èèµ„æƒé™çš„ä¼ä¸šç”¨æˆ·',
    creditValue          int not null default 0,
    companyName          varchar(255),
    license              varchar(255),
@@ -126,7 +126,7 @@ create table Borrower
    thirdPartyAccount    varchar(255),
    level                int not null default 0,
    lastModifyTime       BIGINT not null default 0,
-   range                varchar(255),
+   brange                varchar(255),
    cardBindingId        integer,
    authorizeTypeOpen    int not null default 0,
    primary key (id)
@@ -183,16 +183,16 @@ create table Govermentorder
 (
    ID                   integer not null auto_increment,
    borrowerId           integer not null,
-   material             mediumtext comment '¼ÇÂ¼Ïà¹Ø×ÊÁÏ¸½¼şµÄÂ·¾¶',
-   state                int not null comment '0£ºÉêÇëÈÚ×Ê
-            -1£º²µ»ØÖØÌî
-            -2£ºÖØĞÂÉêÇë
-            -100£º¾Ü¾ø
-            1£ºÉóºËÍ¨¹ı
-            2£º²úÆ·ÒÑ·¢²¼
-            3£ºÈÚ×ÊÖĞ
-            4£º»¹¿îÖĞ
-            5£ºÒÑ¹Ø±Õ',
+   material             mediumtext comment 'è®°å½•ç›¸å…³èµ„æ–™é™„ä»¶çš„è·¯å¾„',
+   state                int not null comment '0ï¼šç”³è¯·èèµ„
+            -1ï¼šé©³å›é‡å¡«
+            -2ï¼šé‡æ–°ç”³è¯·
+            -100ï¼šæ‹’ç»
+            1ï¼šå®¡æ ¸é€šè¿‡
+            2ï¼šäº§å“å·²å‘å¸ƒ
+            3ï¼šèèµ„ä¸­
+            4ï¼šè¿˜æ¬¾ä¸­
+            5ï¼šå·²å…³é—­',
    financingStarttime   bigint not null default 0,
    financingEndtime     bigint not null default 0,
    createtime           bigint not null default 0,
@@ -213,8 +213,8 @@ create table Help
    id                   integer not null auto_increment,
    type                 int not null default 0 comment '0:public
             1:private',
-   publictype           int not null comment '0:ĞÂÊÖÎÊÌâ
-            1:³£¼ûÎÊÌâ',
+   publictype           int not null comment '0:æ–°æ‰‹é—®é¢˜
+            1:å¸¸è§é—®é¢˜',
    questionertype       int not null default 0 comment '0:lender
             1:borrower',
    questionerId         Integer,
@@ -238,8 +238,8 @@ create table Lender
    identitycard         varchar(50),
    accountid            integer not null,
    createtime           BIGINT not null,
-   privilege            int not null comment '00£ºÆÕÍ¨ÓÃ»§
-            01£ºvip1',
+   privilege            int not null comment '00ï¼šæ™®é€šç”¨æˆ·
+            01ï¼švip1',
    grade                int not null default 0,
    level                int not null default 0,
    sex                  int not null default 0,
@@ -276,8 +276,8 @@ create table Letter
    receiverId           Integer not null,
    content              mediumtext,
    createtime           bigint not null,
-   "read"               int not null default 0 comment '0:Î´¶Á
-            1£ºÒÑ¶Á',
+   markread               int not null default 0 comment '0:æœªè¯»
+            1ï¼šå·²è¯»',
    primary key (id)
 );
 
@@ -304,10 +304,10 @@ create table Notice
             1:private',
    content              mediumtext,
    publishtime          bigint not null,
-   to                   int not null default -1 comment '-1:²»ÏŞ
-            0£ºlender
-            1£ºborrower',
-   level                int not null default -1 comment '-1£º²»ÏŞ£¬to²»Îª-1Ê±ÆôÓÃ',
+   usefor                   int not null default -1 comment '-1:ä¸é™
+            0ï¼šlender
+            1ï¼šborrower',
+   level                int not null default -1 comment '-1ï¼šä¸é™ï¼Œtoä¸ä¸º-1æ—¶å¯ç”¨',
    primary key (id)
 );
 
@@ -317,15 +317,15 @@ create table Notice
 create table PayBackModel
 (
    ID                   int not null auto_increment,
-   type                 int not null default 2 comment '0£º µÈ¶î±¾Ï¢
-            1£ºÏÈ»¹ÀûÏ¢£¬µ½ÆÚ»¹±¾
-            2£ºµ½ÆÚ»¹±¾¸¶Ï¢',
-   freqencyType         int not null default 9 comment '0:°´ÈÕ
-            1£º°´ÖÜ
-            2£º°´°ëÔÂ
-            3£º°´ÔÂ
-            4£º°´Ö¸¶¨ÈÕÆÚ
-            9£ºÎ´Ö¸¶¨',
+   type                 int not null default 2 comment '0ï¼š ç­‰é¢æœ¬æ¯
+            1ï¼šå…ˆè¿˜åˆ©æ¯ï¼Œåˆ°æœŸè¿˜æœ¬
+            2ï¼šåˆ°æœŸè¿˜æœ¬ä»˜æ¯',
+   freqencyType         int not null default 9 comment '0:æŒ‰æ—¥
+            1ï¼šæŒ‰å‘¨
+            2ï¼šæŒ‰åŠæœˆ
+            3ï¼šæŒ‰æœˆ
+            4ï¼šæŒ‰æŒ‡å®šæ—¥æœŸ
+            9ï¼šæœªæŒ‡å®š',
    primary key (ID)
 );
 
@@ -335,28 +335,28 @@ create table PayBackModel
 create table Product
 (
    ID                   integer not null auto_increment,
-   state                int not null default 0 comment '0£ºÍ¶±êÖĞ
-            1£º»¹¿îÖĞ
-            -1£ºÉêÇë¹Ø±Õ
-            -2£ºÑÓÆÚ
-            2£ºÒÑ¹Ø±Õ
-            3£º»¹¿îÍê³É
-            4£ºÁ÷±ê',
+   state                int not null default 0 comment '0ï¼šæŠ•æ ‡ä¸­
+            1ï¼šè¿˜æ¬¾ä¸­
+            -1ï¼šç”³è¯·å…³é—­
+            -2ï¼šå»¶æœŸ
+            2ï¼šå·²å…³é—­
+            3ï¼šè¿˜æ¬¾å®Œæˆ
+            4ï¼šæµæ ‡',
    GovermentorderId     integer not null,
    expectAmount         decimal(12,2) not null default 0,
    realAmount           decimal(12,2) not null default 0,
    rate                 decimal(3,3) not null default 0,
-   paybackmodel         int not null comment '0£º µÈ¶î±¾Ï¢
-            1£ºÏÈ»¹ÀûÏ¢£¬µ½ÆÚ»¹±¾
-            2£ºµ½ÆÚ»¹±¾¸¶Ï¢
+   paybackmodel         int not null comment '0ï¼š ç­‰é¢æœ¬æ¯
+            1ï¼šå…ˆè¿˜åˆ©æ¯ï¼Œåˆ°æœŸè¿˜æœ¬
+            2ï¼šåˆ°æœŸè¿˜æœ¬ä»˜æ¯
             
             
-            0:°´ÈÕ
-            1£º°´ÖÜ
-            2£º°´°ëÔÂ
-            3£º°´ÔÂ
-            4£º°´Ö¸¶¨ÈÕÆÚ
-            9£ºÎ´Ö¸¶¨',
+            0:æŒ‰æ—¥
+            1ï¼šæŒ‰å‘¨
+            2ï¼šæŒ‰åŠæœˆ
+            3ï¼šæŒ‰æœˆ
+            4ï¼šæŒ‰æŒ‡å®šæ—¥æœŸ
+            9ï¼šæœªæŒ‡å®š',
    accessory            mediumtext,
    productseriesId      integer not null,
    levelToBuy           int not null,
@@ -375,18 +375,18 @@ create table Product
 create table ProductAction
 (
    ID                   integer not null auto_increment,
-   createtime           bigint not null default 0 comment '0£ºÍ¶±êÖĞ
-            1£º»¹¿îÖĞ
-            -1£ºÉêÇë¹Ø±Õ
-            2£ºÒÑ¹Ø±Õ
-            3£º»¹¿îÍê³É
-            4£ºÁ÷±ê',
+   createtime           bigint not null default 0 comment '0ï¼šæŠ•æ ‡ä¸­
+            1ï¼šè¿˜æ¬¾ä¸­
+            -1ï¼šç”³è¯·å…³é—­
+            2ï¼šå·²å…³é—­
+            3ï¼šè¿˜æ¬¾å®Œæˆ
+            4ï¼šæµæ ‡',
    title                varchar(255) not null,
    detail               varchar(2000) default '0',
-   type                 int not null default 0 comment '-2£ºÑÏÖØÎÊÌâ
-            -1£º²»Ë³Àû
-            0£ºÕı³£
-            1£ºÀûºÃ',
+   type                 int not null default 0 comment '-2ï¼šä¸¥é‡é—®é¢˜
+            -1ï¼šä¸é¡ºåˆ©
+            0ï¼šæ­£å¸¸
+            1ï¼šåˆ©å¥½',
    productId            integer not null,
    primary key (ID)
 );
@@ -397,9 +397,9 @@ create table ProductAction
 create table StateLog
 (
    ID                   integer not null auto_increment,
-   type                 int not null comment '0£ºsubmit
-            1£ºproduct
-            2£ºGovermentorder',
+   type                 int not null comment '0ï¼šsubmit
+            1ï¼šproduct
+            2ï¼šGovermentorder',
    createtime           bigint not null,
    source               int not null,
    target               int not null,
@@ -413,17 +413,17 @@ create table StateLog
 create table Submit
 (
    Id                   integer not null auto_increment,
-   state                int not null default 0 comment '0:ÉêÇë¾º±ê->
-            1:´ıÖ§¸¶
-            	£¨Ö§¸¶£©
-            2:¾º±êÖĞ
-            	(ÈÚ×ÊÉóºË³É¹¦)
-            3:»¹¿îÖĞ
-            4£º»¹¿îÍê±Ï
+   state                int not null default 0 comment '0:ç”³è¯·ç«æ ‡->
+            1:å¾…æ”¯ä»˜
+            	ï¼ˆæ”¯ä»˜ï¼‰
+            2:ç«æ ‡ä¸­
+            	(èèµ„å®¡æ ¸æˆåŠŸ)
+            3:è¿˜æ¬¾ä¸­
+            4ï¼šè¿˜æ¬¾å®Œæ¯•
             
-            6:Á÷±ê(ÈÚ×ÊÉóºË²»³É¹¦)
-            7:ÍË¶©£¨Î´Ö§¸¶£©
-            8£ºÒì³££¨¶î¶È²»×ã£©ÉêÇë²»³É¹¦',
+            6:æµæ ‡(èèµ„å®¡æ ¸ä¸æˆåŠŸ)
+            7:é€€è®¢ï¼ˆæœªæ”¯ä»˜ï¼‰
+            8ï¼šå¼‚å¸¸ï¼ˆé¢åº¦ä¸è¶³ï¼‰ç”³è¯·ä¸æˆåŠŸ',
    createtime           bigint not null,
    lenderId             integer not null,
    productId            integer not null,
@@ -458,8 +458,8 @@ create table admin
    loginId              varchar(255),
    password             varchar(255) not null,
    createtime           BIGINT not null,
-   privilege            int not null default 0 comment '0: Ö»¿´
-            1£º¿É²Ù×÷',
+   privilege            int not null default 0 comment '0: åªçœ‹
+            1ï¼šå¯æ“ä½œ',
    primary key (id)
 );
 
@@ -478,12 +478,12 @@ create table adminGroup
 create table cashstream
 (
    id                   integer not null auto_increment,
-   action               int not null comment '0:ÏòÕË»§³äÖµ
-            1:¶³½á(°üÀ¨½è¿î·½¾º±ê¶³½á/ÈÚ×Ê·½»¹Ç®¶³½á)
-            2£º½â¶³
-            3:½è¿î·½»ã³ö¸øÈÚ×Ê·½
-            4:ÈÚ×Ê·½:»ãÈë½è¿î·½
-            5:´ÓÕË»§ÌáÏÖ',
+   action               int not null comment '0:å‘è´¦æˆ·å……å€¼
+            1:å†»ç»“(åŒ…æ‹¬å€Ÿæ¬¾æ–¹ç«æ ‡å†»ç»“/èèµ„æ–¹è¿˜é’±å†»ç»“)
+            2ï¼šè§£å†»
+            3:å€Ÿæ¬¾æ–¹æ±‡å‡ºç»™èèµ„æ–¹
+            4:èèµ„æ–¹:æ±‡å…¥å€Ÿæ¬¾æ–¹
+            5:ä»è´¦æˆ·æç°',
    chiefamount          decimal(12,2) not null default 0,
    createtime           bigint not null,
    LenderAccountId      integer,
@@ -534,10 +534,10 @@ create table payback
    ID                   integer not null auto_increment,
    borroweraccountid    integer not null,
    productId            integer not null,
-   state                int not null comment '0£º´ı»¹¿î
-            1£ºÒÑ»¹¿î
-            2£ºÑÓÆÚ(´ıÈ·¶¨)',
-   type                 int not null default 0 comment '0:ÀûÏ¢ºÍ±¾Ï¢;1:Ò»´ÎĞÔ±¾½ğ',
+   state                int not null comment '0ï¼šå¾…è¿˜æ¬¾
+            1ï¼šå·²è¿˜æ¬¾
+            2ï¼šå»¶æœŸ(å¾…ç¡®å®š)',
+   type                 int not null default 0 comment '0:åˆ©æ¯å’Œæœ¬æ¯;1:ä¸€æ¬¡æ€§æœ¬é‡‘',
    chiefamount          decimal(12,2) not null,
    deadline             bigint not null,
    interest             decimal(12,2) not null,

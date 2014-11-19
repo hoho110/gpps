@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class LoginServlet {
 	@Autowired
 	ILenderService lenderService;
-	@RequestMapping(value={"/test"})
+	@RequestMapping(value={"/"})
 	public void test(HttpServletRequest req, HttpServletResponse resp)
 	{
 		try {

@@ -95,16 +95,16 @@
         <property name="mapperInterface" value="gpps.dao.ICardBindingDao"></property>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
-    <bean id="adminDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="gpps.dao.IAdminDao"></property>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-    </bean>
+<!--     <bean id="adminDao" class="org.mybatis.spring.mapper.MapperFactoryBean"> -->
+<!--         <property name="mapperInterface" value="gpps.dao.IAdminDao"></property> -->
+<!--         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property> -->
+<!--     </bean> -->
     <bean id="handleLogDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
         <property name="mapperInterface" value="gpps.dao.IHandleLogDao"></property>
         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
     </bean>
-    <bean id="helpDao" class="org.mybatis.spring.mapper.MapperFactoryBean">
-        <property name="mapperInterface" value="gpps.dao.IHelpDao"></property>
-        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-    </bean>
+<!--     <bean id="helpDao" class="org.mybatis.spring.mapper.MapperFactoryBean"> -->
+<!--         <property name="mapperInterface" value="gpps.dao.IHelpDao"></property> -->
+<!--         <property name="sqlSessionFactory" ref="sqlSessionFactory"></property> -->
+<!--     </bean> -->
 </beans>

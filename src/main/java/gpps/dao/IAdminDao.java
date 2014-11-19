@@ -1,8 +1,8 @@
 package gpps.dao;
 
-import java.util.List;
-
 import gpps.model.Admin;
+
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 

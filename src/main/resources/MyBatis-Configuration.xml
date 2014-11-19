@@ -14,12 +14,11 @@
 		<mapper resource="gpps/dao/ProductSeriesDao.xml" />
 		<mapper resource="gpps/dao/PayBackDao.xml" />
 		<mapper resource="gpps/dao/ProductActionDao.xml" />
+		<mapper resource="gpps/dao/CardBindingDao.xml" />
 		<mapper resource="gpps/dao/TaskDao.xml" />
 		<mapper resource="gpps/dao/StateLogDao.xml" />
 		<mapper resource="gpps/dao/FinancingRequestDao.xml" />
-		<mapper resource="gpps/dao/CardBindingDao.xml" />
-<!-- 		<mapper resource="gpps/dao/AdminDao.xml" /> -->
 		<mapper resource="gpps/dao/HandleLogDao.xml" />
-<!-- 		<mapper resource="gpps/dao/HelpDao.xml" /> -->
+		<mapper resource="gpps/dao/AdminDao.xml" />
 	</mappers>
 </configuration>

@@ -6,7 +6,7 @@
 
 
 
-6.cashstream状态改变加入statelog。所有实体创建的时候也加入statelog.
+6.cashstream状态改变加入statelog。所有实体创建的时候也加入statelog.   yes
 7.用户行为日志,记录到一个表里。记录服务名，方法名，调用时间，调用者类型，调用者ID，参数转成JSON，多参数用,分割
 8.交易正确性校验
 9.测试，性能测试与功能测试

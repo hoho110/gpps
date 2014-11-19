@@ -93,9 +93,13 @@ public class SubmitServiceImpl implements ISubmitService {
 								logger.debug("Submit[id:"+submit.getId()+"]未支付，过期退订");
 							}
 						}
-						sleep(10L*1000);
 					} catch (Throwable e) {
 						logger.error(e.getMessage(),e);
+					}
+					try {
+						sleep(10L*1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 				}
 			}

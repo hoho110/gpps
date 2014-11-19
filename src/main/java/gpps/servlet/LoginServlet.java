@@ -16,6 +16,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class LoginServlet {
 	@Autowired
 	ILenderService lenderService;
+	@RequestMapping(value={"/test"})
+	public void test(HttpServletRequest req, HttpServletResponse resp)
+	{
+		try {
+			resp.sendRedirect("/views/google/index.html");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	@RequestMapping(value={"/login/graphValidateCode"})
 	public void thirdPartyRegist(HttpServletRequest req, HttpServletResponse resp)
 	{

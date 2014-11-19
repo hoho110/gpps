@@ -20,7 +20,7 @@ public class LoginServlet {
 	public void test(HttpServletRequest req, HttpServletResponse resp)
 	{
 		try {
-			resp.sendRedirect("/views/google/index.html");
+			resp.sendRedirect("/index.html");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

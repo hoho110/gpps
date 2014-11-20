@@ -194,10 +194,10 @@ create table Govermentorder
             4：还款中
             5：已关闭',
    financingStarttime   bigint not null default 0,
+   financingEndtime     bigint not null default 0,
    createtime           bigint not null default 0,
    title                varchar(255),
    incomeStarttime      bigint not null,
-   incomeEndtime        bigint not null,
    lastModifytime       bigint not null,
    description          varchar(2000),
    FinancingRequestId   integer,

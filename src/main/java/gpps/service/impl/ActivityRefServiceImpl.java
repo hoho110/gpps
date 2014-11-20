@@ -41,10 +41,6 @@ public class ActivityRefServiceImpl implements IActivityRefService{
 		{
 			ref.setParticipatorType(ActivityRef.PARTICIPATORTYPE_LENDER);
 			ref.setParticipatorId(((Lender)user).getId());
-		}else if(user instanceof Borrower)
-		{
-			ref.setParticipatorType(ActivityRef.PARTICIPATORTYPE_BORROWER);
-			ref.setParticipatorId(((Borrower)user).getId());
 		}
 		else
 			throw new RuntimeException("不支持的用户类型");

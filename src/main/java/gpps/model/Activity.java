@@ -6,8 +6,6 @@ public class Activity {
 	private long applystarttime;
 	private long applyendtime;
 	private long starttime;
-	private String question;
-	private String answer;
 	private long createtime;
 	// 0:未发布;1：报名;2：进行;3：结束
 	public static final int STATE_UNPUBLISHED = 0;
@@ -44,18 +42,6 @@ public class Activity {
 	}
 	public void setStarttime(long starttime) {
 		this.starttime = starttime;
-	}
-	public String getQuestion() {
-		return question;
-	}
-	public void setQuestion(String question) {
-		this.question = question;
-	}
-	public String getAnswer() {
-		return answer;
-	}
-	public void setAnswer(String answer) {
-		this.answer = answer;
 	}
 	public long getCreatetime() {
 		return createtime;

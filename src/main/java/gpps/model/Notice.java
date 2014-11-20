@@ -5,6 +5,7 @@ public class Notice {
 	private String title;
 	private String content;
 	private long publishtime = System.currentTimeMillis();
+	public static final int USEFOR_ALL = -1;
 	public static final int USEFOR_LENDER = 0;
 	public static final int USEFOR_BORROWER = 1;
 	private int usefor = -1;// -1:不限 0：lender 1：borrower',

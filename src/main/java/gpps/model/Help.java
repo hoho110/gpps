@@ -5,7 +5,7 @@ public class Help {
 	public static final int TYPE_PUBLIC = 0;
 	public static final int TYPE_PRIVATE = 1;
 	private int type = TYPE_PUBLIC;
-	public static final int PUBLICTYPE_BEGINNER = 0;// 新手问题
+	public static final int PUBLICTYPE_BEGINNER = 0;// 新手帮助
 	public static final int PUBLICTYPE_COMMON = 1;// 常见问题
 	private int publicType;
 	public static final int QUESTIONERTYPE_LENDER = 0;//

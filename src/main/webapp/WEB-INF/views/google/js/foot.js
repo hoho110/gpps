@@ -6,8 +6,8 @@ function foot(){
 	str += '<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding : 10px 10px 10px 10px;">';
 	str += '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="text-align:center; color:#999">';
 	str += '政采贷  Copyright © 2013-2014. All rights reserved<br>';
-	str += '地址：北京XXXXXXXXXXX国际大厦<br>';
-	str += '京ICP备14001357号-3';
+	str += '地址：北京市海淀区中关村大街18号8层05-555<br>';
+	str += '京ICP备14055121号';
 	str += '</div>';
 	str += '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">';
 	str += '<img src="img/cx.jpg"></img>';

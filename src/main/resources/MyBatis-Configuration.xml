@@ -25,5 +25,6 @@
 		<mapper resource="gpps/dao/ActivityRefDao.xml" />
 		<mapper resource="gpps/dao/LetterDao.xml" />
 		<mapper resource="gpps/dao/NewsDao.xml" />
+		<mapper resource="gpps/dao/NoticeDao.xml" />
 	</mappers>
 </configuration>

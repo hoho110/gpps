@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gpps.dao.INoticeDao">
+	<select id="find" parameterType="Integer" resultType="gpps.model.Notice">
+		select *
+		from Notice where id=#{id}
+	</select>
+	<insert id="create" parameterType="gpps.model.Notice"
+        useGeneratedKeys="true" keyProperty="id">
+        insert into
+        Notice(title,content,publishtime,usefor,level)
+        values(#{title},#{content},#{publishtime},#{usefor},#{level})
+    </insert>
+    <select id="count" resultType="int">
+        select count(*)
+        from Notice where 1=1
+        <if test="usefor != -1">
+            and usefor=#{usefor}
+            <if test="level != -1">
+                <![CDATA[ and level >= #{level} ]]>
+            </if>
+        </if>
+    </select>
+	<select id="findAll" resultType="gpps.model.Notice">
+		select *
+        from Notice where 1=1
+        <if test="usefor != -1">
+            and usefor=#{usefor}
+            <if test="level != -1">
+                <![CDATA[ and level >= #{level} ]]>
+            </if>
+        </if>
+		order by publishtime desc
+		LIMIT #{offset}, #{recnum}
+	</select>
+</mapper>

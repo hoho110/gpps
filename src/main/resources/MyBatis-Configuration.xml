@@ -18,8 +18,12 @@
 		<mapper resource="gpps/dao/TaskDao.xml" />
 		<mapper resource="gpps/dao/StateLogDao.xml" />
 		<mapper resource="gpps/dao/FinancingRequestDao.xml" />
+		
 		<mapper resource="gpps/dao/HandleLogDao.xml" />
 		<mapper resource="gpps/dao/AdminDao.xml" />
-		<mapper resource="gpps/dao/HelpDao.xml" />
+		<mapper resource="gpps/dao/ActivityDao.xml" />
+		<mapper resource="gpps/dao/ActivityRefDao.xml" />
+		<mapper resource="gpps/dao/LetterDao.xml" />
+		<mapper resource="gpps/dao/NewsDao.xml" />
 	</mappers>
 </configuration>

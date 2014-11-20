@@ -229,7 +229,7 @@ create table Help
 /*==============================================================*/
 create table Lender
 (
-   id                   integer not null,
+   id                   integer not null auto_increment,
    name                 varchar(50),
    tel                  varchar(50),
    email                varchar(50),

@@ -5,6 +5,7 @@ import gpps.model.Admin;
 import gpps.model.Borrower;
 import gpps.model.HandleLog;
 import gpps.model.Lender;
+import gpps.service.IHandleLogService;
 import gpps.service.ILenderService;
 import gpps.service.ILoginService;
 
@@ -54,7 +55,7 @@ public class HttpTransport {
 	@Autowired
 	ILenderService lenderService;
 	@Autowired
-	IHandleLogDao handleLogDao;
+	IHandleLogService handleLogService;
 	protected static final String HEADER_IFMODSINCE = "If-Modified-Since";
 	protected static final String HEADER_IFNONEMATCH = "If-None-Match";
 	protected static final String HEADER_LASTMOD = "Last-Modified";
@@ -256,7 +257,7 @@ public class HttpTransport {
 						handleLog.setCallmethod(req.getMethod().getName());
 						handleLog.setCallService(req.getInterfacClass().getName());
 						handleLog.setCallparam(eJsonIOManager.getSerializer(req.getArgs()).serialize(req.getArgs()));
-						handleLogDao.create(handleLog);
+						handleLogService.create(handleLog);
 					}
 				} catch (Throwable e) {
 					e.printStackTrace();

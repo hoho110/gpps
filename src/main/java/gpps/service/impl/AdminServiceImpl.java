@@ -13,7 +13,8 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//@Service
+import org.springframework.stereotype.Service;
+@Service
 public class AdminServiceImpl extends AbstractLoginServiceImpl implements IAdminService{
 	@Autowired
 	IAdminDao adminDao;

@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2014/11/19 13:54:46                          */
+/* Created on:     2014/11/20 10:44:50                          */
 /*==============================================================*/
 
 
@@ -85,7 +85,7 @@ create table Activity
 /*==============================================================*/
 create table ActivityRef
 (
-   id                   integer not null,
+   id                   integer not null auto_increment,
    participatortype     int not null default 0 comment '0:lender
             1:borrower',
    participatorId       Integer not null,
@@ -103,7 +103,7 @@ create table ActivityRef
 /*==============================================================*/
 create table Borrower
 (
-   id                   integer not null,
+   id                   integer not null auto_increment,
    name                 varchar(50),
    tel                  varchar(50),
    email                varchar(50),
@@ -126,7 +126,7 @@ create table Borrower
    thirdPartyAccount    varchar(255),
    level                int not null default 0,
    lastModifyTime       BIGINT not null default 0,
-   brange                varchar(255),
+   brange               varchar(255),
    cardBindingId        integer,
    authorizeTypeOpen    int not null default 0,
    primary key (id)
@@ -276,7 +276,7 @@ create table Letter
    receiverId           Integer not null,
    content              mediumtext,
    createtime           bigint not null,
-   markread               int not null default 0 comment '0:未读
+   markRead             int not null default 0 comment '0:未读
             1：已读',
    primary key (id)
 );
@@ -304,7 +304,7 @@ create table Notice
             1:private',
    content              mediumtext,
    publishtime          bigint not null,
-   usefor                   int not null default -1 comment '-1:不限
+   usefor               int not null default -1 comment '-1:不限
             0：lender
             1：borrower',
    level                int not null default -1 comment '-1：不限，to不为-1时启用',
@@ -451,7 +451,7 @@ create table Task
 /*==============================================================*/
 create table admin
 (
-   id                   integer not null,
+   id                   integer not null auto_increment,
    name                 varchar(50),
    tel                  varchar(50),
    email                varchar(50),
@@ -553,7 +553,7 @@ create table productseries
    ID                   integer not null auto_increment,
    title                varchar(100) not null,
    tag                  mediumtext,
-   description         varchar(2000),
+   description          varchar(2000),
    type                 int not null default 0,
    typedetail           varchar(255),
    primary key (ID)

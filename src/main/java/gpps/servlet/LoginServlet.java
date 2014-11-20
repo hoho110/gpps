@@ -17,7 +17,7 @@ public class LoginServlet {
 	@Autowired
 	ILenderService lenderService;
 	@RequestMapping(value={"/"})
-	public void test(HttpServletRequest req, HttpServletResponse resp)
+	public void entry(HttpServletRequest req, HttpServletResponse resp)
 	{
 		try {
 			resp.sendRedirect("/index.html");

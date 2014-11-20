@@ -112,7 +112,7 @@ public class AccountServlet {
 			message=e.getMessage();
 		}
 		//重定向到指定页面
-		writeMsg(resp,message,"/views/google/myaccount.html?fid=mycenter");
+		writeMsg(resp,message,"/myaccount.html?fid=mycenter");
 	}
 	
 	@RequestMapping(value = { "/account/thirdPartyRegist/response/bg" })
@@ -186,7 +186,7 @@ public class AccountServlet {
 			log.debug(e.getMessage(),e);
 			message=e.getMessage();
 		}
-		writeMsg(resp,message,"/views/google/myaccount.html?fid=cash&sid=cash-recharge");
+		writeMsg(resp,message,"/myaccount.html?fid=cash&sid=cash-recharge");
 	}
 	@RequestMapping(value = { "/account/recharge/response/bg" })
 	public void completeRechargeBg(HttpServletRequest req, HttpServletResponse resp) {
@@ -278,7 +278,7 @@ public class AccountServlet {
 			log.debug(e.getMessage(),e);
 			message=e.getMessage();
 		}
-		writeMsg(resp,message,"/views/google/myaccount.html?fid=cash&sid=cash-withdraw");
+		writeMsg(resp,message,"/myaccount.html?fid=cash&sid=cash-withdraw");
 	}
 	@RequestMapping(value = { "/account/cash/response/bg" })
 	public void completeCashBg(HttpServletRequest req, HttpServletResponse resp) {
@@ -394,17 +394,17 @@ public class AccountServlet {
 		}
 		String pid=(String) req.getAttribute("pid");
 		if(!StringUtil.isEmpty(message)){
-			writeMsg(resp,message,"/views/google/myaccount.html");
+			writeMsg(resp,message,"/myaccount.html");
 			return;
 		}
 		if (!StringUtil.isEmpty(pid))
-			write(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/views/google/productdetail.html?pid=" + pid + "'>继续购买</a></p><a href='/views/google/myaccount.html'>返回我的帐户</a></div>");
+			write(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/productdetail.html?pid=" + pid + "'>继续购买</a></p><a href='/myaccount.html'>返回我的帐户</a></div>");
 		else {
-			write(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/views/google/myaccount.html'>返回我的帐户</a></p></div>");
+			write(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/myaccount.html'>返回我的帐户</a></p></div>");
 		}
 //			log.debug("购买失败");
 //			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_FAIL);
-//			write(resp, "<head><script>window.location.href='/views/google/myaccount.html?fid=submit&sid=submit-toafford'</script></head>");
+//			write(resp, "<head><script>window.location.href='/myaccount.html?fid=submit&sid=submit-toafford'</script></head>");
 	}
 	@RequestMapping(value = { "/account/buy/response/bg" })
 	public void completeBuyBg(HttpServletRequest req, HttpServletResponse resp) {
@@ -565,7 +565,7 @@ public class AccountServlet {
 			message=e.getMessage();
 		}
 		//重定向到指定页面
-		writeMsg(resp,message,"/views/google/myaccount.html?fid=mycenter");
+		writeMsg(resp,message,"/myaccount.html?fid=mycenter");
 	}
 
 	@RequestMapping(value = { "/account/cardBinding/response/bg" })
@@ -651,7 +651,7 @@ public class AccountServlet {
 			e.printStackTrace();
 			message=e.getMessage();
 		}
-		writeMsg(resp,message,"/views/google/myaccount.html?fid=mycenter");
+		writeMsg(resp,message,"/myaccount.html?fid=mycenter");
 	}
 	@RequestMapping(value = { "/account/authorize/response/bg" })
 	public void completeAuthorizeBg(HttpServletRequest req,HttpServletResponse resp)

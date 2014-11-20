@@ -197,7 +197,6 @@ create table Govermentorder
    createtime           bigint not null default 0,
    title                varchar(255),
    incomeStarttime      bigint not null,
-   incomeEndtime        bigint not null,
    lastModifytime       bigint not null,
    description          varchar(2000),
    FinancingRequestId   integer,

@@ -1,6 +1,12 @@
 package com.easyservice;
 
+import gpps.dao.IHandleLogDao;
+import gpps.model.Admin;
+import gpps.model.Borrower;
+import gpps.model.HandleLog;
+import gpps.model.Lender;
 import gpps.service.ILenderService;
+import gpps.service.ILoginService;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
@@ -19,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.easyservice.ejson.EJsonManager;
+import com.easyservice.ejson.IEJsonIOManager;
 import com.easyservice.exception.PermissionException;
 import com.easyservice.exception.ProtocolParseException;
 import com.easyservice.security.IAuthorityValidateService;
@@ -45,11 +53,14 @@ public class HttpTransport {
 	IRemoteServiceRegister register;
 	@Autowired
 	ILenderService lenderService;
+	@Autowired
+	IHandleLogDao handleLogDao;
 	protected static final String HEADER_IFMODSINCE = "If-Modified-Since";
 	protected static final String HEADER_IFNONEMATCH = "If-None-Match";
 	protected static final String HEADER_LASTMOD = "Last-Modified";
 	Map<String, MethodDescriptor[]> caches = new ConcurrentHashMap<String, MethodDescriptor[]>();
 	MangleClassInfoPool mangleClassInfoPool = MangleClassInfoPool.getDefault();
+	private static IEJsonIOManager eJsonIOManager=EJsonManager.getDefaultManager(); 
 
 	@RequestMapping(value={"/easyservice/{interface}","/easyservice/{interface}/{method}"})
 	public void service(HttpServletRequest req, HttpServletResponse resp) {
@@ -222,6 +233,34 @@ public class HttpTransport {
 				rt.setExceptionType(ExceptionType.ET_SE_SERVICE_NOT_FOUND);
 				rt.setException(new RuntimeException("can not find service: " + req.getInterfacClass().getName() + " with target=" + req.getTarget()));
 			} else {
+				try {
+					HttpSession session=req.getHttpParse().getRequest().getSession();
+					Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+					if(user!=null)
+					{
+						HandleLog handleLog=new HandleLog();
+						if(user instanceof Lender)
+						{
+							handleLog.setHandlerId(((Lender)user).getId());
+							handleLog.setHandlertype(HandleLog.HANDLERTYPE_LENDER);
+						}
+						else if(user instanceof Borrower)
+						{
+							handleLog.setHandlerId(((Borrower)user).getId());
+							handleLog.setHandlertype(HandleLog.HANDLERTYPE_BORROWER);
+						}else if(user instanceof Admin)
+						{
+							handleLog.setHandlerId(((Admin)user).getId());
+							handleLog.setHandlertype(HandleLog.HANDLERTYPE_ADMIN);
+						}
+						handleLog.setCallmethod(req.getMethod().getName());
+						handleLog.setCallService(req.getInterfacClass().getName());
+						handleLog.setCallparam(eJsonIOManager.getSerializer(req.getArgs()).serialize(req.getArgs()));
+						handleLogDao.create(handleLog);
+					}
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
 				rt.setResult((R) req.getMethod().invoke(service, req.getArgs()));
 			}
 		} catch (Throwable e) {

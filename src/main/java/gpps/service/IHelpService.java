@@ -4,8 +4,11 @@ import gpps.model.Help;
 
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface IHelpService {
-	public void create(Help help);
+	public void createPublic(Help help);
+	public void createPrivate(Help help);
 	public Help find(Integer id);
 	/**
 	 * 翻页查找信息展示
@@ -21,9 +24,14 @@ public interface IHelpService {
 //	 */
 	/**
 	 * 翻页查找我的帮助
+	 * @param type -1不限 1:未回答 2：已回答
 	 * @param offset
 	 * @param recnum
 	 * @return
 	 */
-	public Map<String,Object> findMyHelps(int offset,int recnum);
+	public Map<String,Object> findMyHelps(int type,int offset,int recnum);
+	
+	public Map<String,Object> findPrivateHelps(int type,int offset,int recnum);
+	
+	public void answer(Integer id,String answer);
 }

@@ -4,6 +4,7 @@ public class Help {
 	private Integer id;
 	public static final int TYPE_PUBLIC = 0;
 	public static final int TYPE_PRIVATE = 1;
+	public static final int TYPE_PRIVATE_ANSWERED=2;
 	private int type = TYPE_PUBLIC;
 	public static final int PUBLICTYPE_BEGINNER = 0;// 新手帮助
 	public static final int PUBLICTYPE_COMMON = 1;// 常见问题
@@ -14,7 +15,8 @@ public class Help {
 	private Integer questionerId;
 	private String question;
 	private String answer;
-	private long createtime;
+	private long createtime=System.currentTimeMillis();
+	private long answertime;
 	public Integer getId() {
 		return id;
 	}
@@ -62,5 +64,11 @@ public class Help {
 	}
 	public void setCreatetime(long createtime) {
 		this.createtime = createtime;
+	}
+	public long getAnswertime() {
+		return answertime;
+	}
+	public void setAnswertime(long answertime) {
+		this.answertime = answertime;
 	}
 }

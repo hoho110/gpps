@@ -28,11 +28,12 @@ public class LetterServiceImpl implements ILetterService{
 
 	@Override
 	public Letter find(Integer id) {
+		alreadyRead(id);
 		return letterDao.find(id);
 	}
 
 	@Override
-	public Map<String, Object> findMyLetters(int offset, int recnum) {
+	public Map<String, Object> findMyLetters(int markRead,int offset, int recnum) {
 		Integer receiverId=null;
 		int receivertype=Letter.RECEIVERTYPE_LENDER;
 		HttpSession session=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
@@ -48,16 +49,25 @@ public class LetterServiceImpl implements ILetterService{
 		}
 		else
 			throw new RuntimeException("不支持的用户类型");
-		int count=letterDao.countByReceiver(receivertype, receiverId);
+		int count=letterDao.countByReceiver(markRead,receivertype, receiverId);
 		if(count==0)
 			return Pagination.buildResult(null, count, offset, recnum);
-		List<Letter> letters=letterDao.findByReceiver(receivertype, receiverId, offset, recnum);
+		List<Letter> letters=letterDao.findByReceiver(markRead,receivertype, receiverId, offset, recnum);
 		return Pagination.buildResult(letters, count, offset, recnum);
 	}
 
 	@Override
 	public void alreadyRead(Integer id) {
-		letterDao.changeMarkRead(id, Letter.MARKREAD_YES);
+		letterDao.changeMarkRead(id, Letter.MARKREAD_YES,System.currentTimeMillis());
+	}
+
+	@Override
+	public Map<String, Object> findAll(int offset, int recnum) {
+		int count=letterDao.countAll();
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		List<Letter> letters=letterDao.findAll(offset, recnum);
+		return Pagination.buildResult(letters, count, offset, recnum);
 	}
 
 }

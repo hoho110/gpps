@@ -13,23 +13,31 @@
     </insert>
     <select id="count" resultType="int">
         select count(*)
-        from Notice where 1=1
-        <if test="usefor != -1">
-            and usefor=#{usefor}
-            <if test="level != -1">
-                <![CDATA[ and level >= #{level} ]]>
-            </if>
-        </if>
+        from Notice 
+        <if test="usefors != null">
+			where usefor in
+			<foreach item="item" index="index" collection="usefors" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			<if test="level != -1">
+				<![CDATA[ and level <= #{level} ]]>
+			</if>
+		</if>
     </select>
 	<select id="findAll" resultType="gpps.model.Notice">
 		select *
-        from Notice where 1=1
-        <if test="usefor != -1">
-            and usefor=#{usefor}
-            <if test="level != -1">
-                <![CDATA[ and level >= #{level} ]]>
-            </if>
-        </if>
+        from Notice 
+        <if test="usefors != null">
+			where usefor in
+			<foreach item="item" index="index" collection="usefors" open="("
+				separator="," close=")">
+				#{item}
+			</foreach>
+			<if test="level != -1">
+				<![CDATA[ and level <= #{level} ]]>
+			</if>
+		</if>
 		order by publishtime desc
 		LIMIT #{offset}, #{recnum}
 	</select>

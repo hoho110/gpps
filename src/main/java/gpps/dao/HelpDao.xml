@@ -11,8 +11,8 @@
 	<insert id="create" parameterType="gpps.model.Help"
         useGeneratedKeys="true" keyProperty="id">
         insert into
-        Help(type,publicType,questionerType,questionerId,question,answer,createtime)
-        values(#{type},#{publicType},#{questionerType},#{questionerId},#{question},#{answer},#{createtime})
+        Help(type,publicType,questionerType,questionerId,question,answer,createtime,answertime)
+        values(#{type},#{publicType},#{questionerType},#{questionerId},#{question},#{answer},#{createtime},#{answertime})
     </insert>
     <select id="countPublicHelps" resultType="int">
         select count(*)
@@ -32,7 +32,10 @@
 	</select>
 	<select id="countPrivateHelps" resultType="int">
         select count(*)
-        from Help where type=1
+        from Help where 1=1
+        <if test="type != -1">
+        	and type=#{type}
+        </if>
         <if test="questionerType != -1">
             and publicType=#{publicType}
             <if test="questionerId != null">
@@ -42,7 +45,10 @@
     </select>
     <select id="findPrivateHelps" resultType="gpps.model.Help">
         select *
-        from Help where type=1
+        from Help where 1=1
+        <if test="type != -1">
+        	and type=#{type}
+        </if>
         <if test="questionerType != -1">
             and publicType=#{publicType}
             <if test="questionerId != null">
@@ -52,4 +58,7 @@
         order by createtime desc
         LIMIT #{offset}, #{recnum}
     </select>
+    <update id="answer">
+    	update Help set answer=#{answer},answertime=#{answer} where id=#{id}
+    </update>
 </mapper>

@@ -1,0 +1,2 @@
+alter table Help add(answertime bigint);
+alter table Letter add(readtime bigint);

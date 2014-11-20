@@ -8,20 +8,34 @@
 	<insert id="create" parameterType="gpps.model.Letter"
         useGeneratedKeys="true" keyProperty="id">
         insert into
-        Letter(receivertype,receiverId,content,createtime,markRead)
-        values(#{receivertype},#{receiverId},#{content},#{createtime},#{markRead})
+        Letter(receivertype,receiverId,content,createtime,markRead,readtime)
+        values(#{receivertype},#{receiverId},#{content},#{createtime},#{markRead},#{readtime})
     </insert>
     <select id="countByReceiver" resultType="int">
         select count(*)
-        from Letter where receivertype=#{receivertype} and receiverId=#{receiverId}
+        from Letter where receivertype=#{receivertype} and receiverId=#{receiverId} 
+        <if test="markRead != -1">
+        	and markRead=#{markRead}
+        </if>
     </select>
 	<select id="findByReceiver" resultType="gpps.model.Letter">
 		 select *
         from Letter where receivertype=#{receivertype} and receiverId=#{receiverId}
+        <if test="markRead != -1">
+        	and markRead=#{markRead}
+        </if>
 		order by createtime desc
 		LIMIT #{offset}, #{recnum}
 	</select>
 	<update id="changeMarkRead">
-		update Letter set markRead=#{markRead} where id=#{id}
+		update Letter set markRead=#{markRead},readtime=#{readtime} where id=#{id}
 	</update>
+	<select id="countAll" resultType="int">
+		select count(*) from Letter
+	</select>
+	<select id="findAll">
+		select * from Letter 
+		order by createtime desc
+		LIMIT #{offset}, #{recnum}
+	</select>
 </mapper>

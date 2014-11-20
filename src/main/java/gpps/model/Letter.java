@@ -11,6 +11,7 @@ public class Letter {
 	public static final int MARKREAD_NO=0;
 	public static final int MARKREAD_YES=1;
 	private int markRead=MARKREAD_NO;
+	private long readtime;
 	public Integer getId() {
 		return id;
 	}
@@ -46,5 +47,11 @@ public class Letter {
 	}
 	public void setMarkRead(int markRead) {
 		this.markRead = markRead;
+	}
+	public long getReadtime() {
+		return readtime;
+	}
+	public void setReadtime(long readtime) {
+		this.readtime = readtime;
 	}
 }

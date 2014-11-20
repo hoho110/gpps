@@ -5,11 +5,11 @@ public class Notice {
 	private String title;
 	private String content;
 	private long publishtime = System.currentTimeMillis();
-	public static final int USEFOR_ALL = -1;
-	public static final int USEFOR_LENDER = 0;
-	public static final int USEFOR_BORROWER = 1;
-	private int usefor = -1;// -1:不限 0：lender 1：borrower',
-	private int level = -1;// -1：不限，to不为-1时启用
+	public static final int USEFOR_ALL = 0;
+	public static final int USEFOR_LENDER = 1;
+	public static final int USEFOR_BORROWER = 2;
+	private int usefor =USEFOR_ALL;//0 ：All,1:lender 2：borrower
+	private int level = 0;
 	public Integer getId() {
 		return id;
 	}

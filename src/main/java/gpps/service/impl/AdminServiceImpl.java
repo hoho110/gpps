@@ -114,4 +114,9 @@ public class AdminServiceImpl extends AbstractLoginServiceImpl implements IAdmin
 	public List<Admin> findAll() {
 		return adminDao.findAll();
 	}
+
+	@Override
+	public void changePrivilege(Integer id, int privilege) {
+		adminDao.changePrivilege(id, privilege);
+	}
 }

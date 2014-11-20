@@ -15,4 +15,5 @@ public interface IAdminService extends ILoginService{
 	public Admin find(int id);
 	public Admin getCurrentUser();
 	public List<Admin> findAll();
+	public void changePrivilege(Integer id,int privilege);
 }

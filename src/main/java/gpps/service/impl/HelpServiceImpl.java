@@ -24,10 +24,17 @@ public class HelpServiceImpl implements IHelpService {
 	IHelpDao helpDao;
 
 	@Override
-	public void create(Help help) {
+	public void createPublic(Help help) {
+		help.setCreatetime(System.currentTimeMillis());
+		help.setType(Help.TYPE_PUBLIC);
 		helpDao.create(help);
 	}
-
+	@Override
+	public void createPrivate(Help help) {
+		help.setCreatetime(System.currentTimeMillis());
+		help.setType(Help.TYPE_PRIVATE);
+		helpDao.create(help);
+	}
 	@Override
 	public Help find(Integer id) {
 		return helpDao.find(id);
@@ -44,7 +51,7 @@ public class HelpServiceImpl implements IHelpService {
 	}
 
 	@Override
-	public Map<String, Object> findMyHelps(int offset, int recnum) {
+	public Map<String, Object> findMyHelps(int type,int offset, int recnum) {
 		Integer questionerId=null;
 		int questionerType=Help.QUESTIONERTYPE_LENDER;
 		HttpSession session=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
@@ -60,11 +67,23 @@ public class HelpServiceImpl implements IHelpService {
 		}
 		else
 			throw new RuntimeException("不支持的用户类型");
-		int count=helpDao.countPrivateHelps(questionerType, questionerId);
+		int count=helpDao.countPrivateHelps(type,questionerType, questionerId);
 		if(count==0)
 			return Pagination.buildResult(null, count, offset, recnum);
-		List<Help> helps=helpDao.findPrivateHelps(questionerType, questionerId, offset, recnum);
+		List<Help> helps=helpDao.findPrivateHelps(type,questionerType, questionerId, offset, recnum);
 		return Pagination.buildResult(helps, count, offset, recnum);
+	}
+	@Override
+	public Map<String, Object> findPrivateHelps(int type, int offset, int recnum) {
+		int count=helpDao.countPrivateHelps(type, -1, null);
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		List<Help> helps=helpDao.findPrivateHelps(type, -1, null, offset, recnum);
+		return Pagination.buildResult(helps, count, offset, recnum);
+	}
+	@Override
+	public void answer(Integer id, String answer) {
+		helpDao.answer(id, answer, System.currentTimeMillis());
 	}
 
 }

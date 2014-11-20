@@ -8,9 +8,9 @@ public class ActivityRef {
 	private Integer participatorId;
 	private Integer activityId;
 	private long applyTime = System.currentTimeMillis();
-	public static final int APPLYSTATE_YES = 0;
-	public static final int APPLYSTATE_NO = 1;
-	private int applyState = APPLYSTATE_YES;
+	public static final int PARTICIPATE_YES = 0;
+	public static final int PARTICIPATE_NO = 1;
+	private int participate = PARTICIPATE_YES;
 	private String awarddetail;
 	private String description;
 	public Integer getId() {
@@ -43,12 +43,6 @@ public class ActivityRef {
 	public void setApplyTime(long applyTime) {
 		this.applyTime = applyTime;
 	}
-	public int getApplyState() {
-		return applyState;
-	}
-	public void setApplyState(int applyState) {
-		this.applyState = applyState;
-	}
 	public String getAwarddetail() {
 		return awarddetail;
 	}
@@ -60,5 +54,11 @@ public class ActivityRef {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public int getParticipate() {
+		return participate;
+	}
+	public void setParticipate(int participate) {
+		this.participate = participate;
 	}
 }

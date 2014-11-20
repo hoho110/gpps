@@ -91,7 +91,7 @@ create table ActivityRef
    participatorId       Integer not null,
    ActivityId           Integer not null,
    applytime            bigint not null,
-   applystate           int not null comment '0:参加
+   participate           int not null default 0 comment '0:参加
             1：未参加',
    awarddetail          varchar(255),
    description          varchar(255),
@@ -220,6 +220,7 @@ create table Help
    question             varchar(2000),
    answer               mediumtext,
    createtime           bigint not null,
+   answertime bigint,
    primary key (id)
 );
 
@@ -277,6 +278,7 @@ create table Letter
    createtime           bigint not null,
    markRead             int not null default 0 comment '0:未读
             1：已读',
+   readtime bigint,
    primary key (id)
 );
 

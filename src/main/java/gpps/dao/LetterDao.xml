@@ -21,4 +21,7 @@
 		order by createtime desc
 		LIMIT #{offset}, #{recnum}
 	</select>
+	<update id="changeMarkRead">
+		update Letter set markRead=#{markRead} where id=#{id}
+	</update>
 </mapper>

@@ -1,3 +1,6 @@
+var letterDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILetterDao");
+var lettercount = letterDao.countByReceiver(0, 0, cuser.id);
+
 var createProductLine = function(cont, id, title, label1, des1, label2, des2, description, menkan, qixian, rate, style){
 	var container = $(cont).addClass('newProjectItem').addClass('newProjectInfoBox');
 	var row1 = $('<div></div>').addClass('row').css(
@@ -573,6 +576,7 @@ var createSingleProduct2 = function(order){
 var createBorrowerNavLevel2 = function(nav){
 	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
 	if(nav=='bcenter'){
+		
 		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');
 		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
 		
@@ -634,10 +638,11 @@ var createBorrowerNavLevel2 = function(nav){
 var createNavLevel2 = function(nav){
 	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
 	if(nav=='mycenter'){
+		lettercount = letterDao.countByReceiver(0, 0, cuser.id);
 		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');
 		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
-		
-		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-note">系统通知</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="letter-unread-mycenter">站内信('+lettercount+')</a></li>');
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice-view">系统公告</a></li>');
 		
 		
 	//	var li4 = $('<li role="presentation" class="dropdown"></li>');
@@ -649,7 +654,7 @@ var createNavLevel2 = function(nav){
 	//	li4.append(ul2);
 		ul.append(li2);
 		ul.append(li3);
-	//	ul.append(li4);
+		ul.append(li4);
 		ul.append(li5);
 	}else if(nav=='submit'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="submit-all">全部</a></li>');
@@ -690,6 +695,11 @@ var createNavLevel2 = function(nav){
 		ul.append(li2);
 		ul.append(li3);
 		ul.append(li4);
+	}else if(nav='letter'){
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="letter-unread">未读</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="letter-readed">已读</a></li>');
+		ul.append(li1);
+		ul.append(li2);
 	}
 	
 	return ul;

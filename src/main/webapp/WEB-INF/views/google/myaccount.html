@@ -33,7 +33,7 @@
 	<script src="js/plugins/morris/morris.js"></script>
 	<script src="js/jquery.dataTables.js"></script>
 	<script src="js/tool.js"></script>
-	<script src="js/data.js"></script>
+	
 	
 	<script type="text/javascript"
 		src="/resources/EasyServiceClientFullZ.js"></script>
@@ -49,8 +49,16 @@
         src="/easyservice/gpps.service.ISubmitService?json"></script>
     <script type="text/javascript"
         src="/easyservice/gpps.service.IPayBackService?json"></script>
-    <script src="js/myaccount.js"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.ILetterService?json"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.dao.ILetterDao?json"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.INoticeService?json"></script>
     <script src="js/getuser.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/myaccount.js"></script>
+    
     <script type="text/javascript"
         src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
     
@@ -220,6 +228,8 @@ a.accordion-toggle {
 								class="btn nav-first btn-default btn-lg">资金查看</button>
 							<button type="button" id="tools"
 								class="btn nav-first btn-default btn-lg">工具分析</button>
+							<button type="button" id="letter"
+								class="btn nav-first btn-default btn-lg">站内信</button>
 						</div>
 
 					</div>
@@ -287,6 +297,42 @@ a.accordion-toggle {
   </div>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="letterdetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">站内信</h4>
+      </div>
+      <div class="modal-body" id="ldetail">
+      			
+      </div>
+      <div class="modal-footer">
+        <button id="lclose" type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="noticedetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="nlabel">站内信</h4>
+      </div>
+      <div class="modal-body" id="ndetail">
+      			
+      </div>
+      <div class="modal-footer">
+        <button id="nclose" type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
         <script src="js/head.js"></script>
 		<script src="js/foot.js"></script>
 	<script>
@@ -297,12 +343,14 @@ a.accordion-toggle {
 							var fid = getQueryString('fid');
 							var sid = getQueryString('sid');
 
-							var accountDao = EasyServiceClient
-									.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
-
+							var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
+							{
+								
+								$('button#letter').html('站内信('+lettercount+')');
+							}
 							
 							
-							$('#welcome').html(greet() + name);
+							$('#welcome').html(greet() + name+'<a href="javascript:void(0);" id="inner_letter"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>'+lettercount+'</a>');
 							
 
 							var account = accountDao.find(cuser.accountId);
@@ -603,6 +651,9 @@ a.accordion-toggle {
 																	
 																	
 																	
+																	$('button.readletter').click(function(e){
+																		
+																	});
 																	
 																	$('a.submittoafford').click(function(e){
 																		$('#myModal').modal({
@@ -663,6 +714,13 @@ a.accordion-toggle {
 							$('#fail').click(function(e){
 									window.location.href = "myaccount.html?fid=submit&sid=submit-toafford";
 							});
+							
+							$('#inner_letter').click(function(e){
+								$('#mycenter').trigger('click');
+								$('ul.nav-second li a[data-sk="letter-unread-mycenter"]').trigger('click');
+							});
+							
+							
 						});
 	</script>
 </body>

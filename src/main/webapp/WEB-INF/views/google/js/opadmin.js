@@ -165,13 +165,21 @@ var createAdminNavLevel2 = function(nav){
 		ul.append(li6);
 		ul.append(li7);
 		ul.append(li8);
-	}else if(nav=='other'){
+	}else if(nav=='notice'){
+		var li1 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice-write">发布公告</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice-view">公告查看</a></li>');
+		ul.append(li1);
+		ul.append(li2);
+	}
+	else if(nav=='other'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="message">消息管理</a></li>');
-		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="activity">活动管理</a></li>');
-		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="help">帮助信息</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice">公告管理</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="activity">活动管理</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="help">帮助信息</a></li>');
 		ul.append(li1);
 		ul.append(li2);
 		ul.append(li3);
+		ul.append(li4);
 	}
 	
 	return ul;
@@ -1318,7 +1326,156 @@ var orderquit = function(container){
 	ordershow(16, container)
 }
 
+var noticeview = function(container){
+	var nservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INoticeService");
+	var columns = [ {
+		"sTitle" : "公告标题",
+			"code" : "name"
+	}, {
+		"sTitle" : "发布时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "发布对象",
+		"code" : "state"
+	}, {
+		"sTitle" : "紧急程度",
+		"code" : "state"
+	}, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	
+	var userType = {0 : '全部', 1 : '投资方', 2 : '融资方'};
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = nservice.findAll(iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				result.aaData.push([data.title,
+				             formatDate(data.publishtime),
+				             userType[data.usefor],
+				                    data.level,
+				                    "<button class='viewnotice' id='"+data.id+"'>查看</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		$('button.viewnotice').click(function(e){
+			var letterid = $(this).attr('id');
+			var notice = nservice.find(parseInt(letterid));
+			$('#nlabel').html(notice.title);
+			$('#ndetail').html(notice.content);
+			$('#noticedetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
 
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+var noticewrite = function(container){
+	var nservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INoticeService");
+	var total = '<div class="container-fluid" style="width:800px;">';
+		total += '<div class="row" style="margin-bottom:20px; margin-top:20px;padding-left:20px;">';
+	
+	var title = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
+		title+='<label class="control-label col-sm-3" for="inputSuccess3">公告标题</label>';
+		title+='<div class="col-sm-9">';
+		title+='<input type="text" class="form-control" id="notice-title"></div></div>';
+		
+		total += title;
+		
+	var content = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
+	content += '<label class="control-label col-sm-3" for="inputSuccess3">公告内容</label>';
+	content += '<div class="col-sm-9">';
+	content += '<textarea class="form-control" id="notice-content" style="min-height:100px;"></textarea></div></div>';
+	
+	total += content;
+	
+	var usertype = '<div class="form-group has-success" style="margin-top:5px;">';
+	usertype += '<label class="control-label col-sm-3" for="addr"></label>';
+	usertype += '<div class="col-sm-9">';
+	usertype += '<label class="radio-inline"><input type="radio" name="usertype"  checked="checked" value="0"> 全部</label>';
+	usertype += '<label class="radio-inline"><input type="radio" name="usertype" value="1"> 投资方</label>';
+	usertype += '<label class="radio-inline"><input type="radio" name="usertype" value="2"> 融资方</label>';
+	usertype += '</div></div>';
+	
+	total += usertype;
+	
+	var level = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
+	level+='<label class="control-label col-sm-3" for="inputSuccess3">用户级别</label>';
+	level+='<div class="col-sm-9">';
+	level+='<select class="form-control" id="level">';
+	level+='<option value=-1>不限</option>';
+	level+='<option value=0>级别0</option>';
+	level+='<option value=1>级别1</option>';
+	level+='<option value=2>级别2</option>';
+	level+='<option value=3>级别3</option>';
+	level+='<option value=4>级别4</option>';
+	level+='<option value=5>级别5</option>';
+	level+='<option value=6>级别6</option>';
+	level+='</select></div></div>';
+	
+	total += level;
+	
+	total += '<button id="notice-create" class="btn btn-lg btn-success btn-block">创建</button>'
+	
+	total += "</div></div>";
+	
+	container.html(total);
+	
+	$('#notice-create').click(function(e){
+		var title = $('#notice-title').val();
+		var content = $('#notice-content').val();
+		var usertype = $("input[name=usertype]:checked").attr("value");
+		var level = $('#level').val();
+		
+		
+		
+		if(title==null||title==''){
+			alert('公告标题不能为空');
+			return;
+		}else if(content==null||content==''){
+			alert('公告内容不能为空');
+			return;
+		}
+		var notice = {'_t_':'gpps.model.Notice', 'title':title, 'content': content, 'publishtime': (new Date()).getTime(), 'usefor':parseInt(usertype), 'level': parseInt(level)};
+		nservice.create(notice);
+		window.location.href="opadmin.html?fid=notice&sid=notice-view";
+	});
+	
+}
 
 
 var nav2funtion = {
@@ -1343,5 +1500,7 @@ var nav2funtion = {
 		"order-toclose" : ordertoclose,
 		'tohandle-order-toclose' : ordertoclose,
 		"order-closed" : orderclosed,
-		"order-quit" : orderquit
+		"order-quit" : orderquit,
+		"notice-write" : noticewrite,
+		"notice-view" : noticeview
 }

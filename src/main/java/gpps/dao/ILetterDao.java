@@ -11,7 +11,7 @@ public interface ILetterDao {
 	public Letter find(Integer id);
 	public int countByReceiver(@Param("markRead")int markRead,@Param("receivertype")int receivertype,@Param("receiverId")Integer receiverId);
 	public List<Letter> findByReceiver(@Param("markRead")int markRead,@Param("receivertype")int receivertype,@Param("receiverId")Integer receiverId,@Param("offset")int offset,@Param("recnum")int recnum);
-	public void changeMarkRead(@Param("id")Integer id,@Param("marcRead")int marcRead,@Param("readtime")long readtime);
+	public void changeMarkRead(@Param("id")Integer id,@Param("markRead")int markRead,@Param("readtime")long readtime);
 	public int countAll();
 	public List<Letter> findAll(@Param("offset")int offset,@Param("recnum")int recnum);
 }

@@ -35,7 +35,7 @@ public class ActivityRefServiceImpl implements IActivityRefService{
 		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
 		ActivityRef ref=new ActivityRef();
 		ref.setActivityId(activityId);
-		ref.setApplyState(ActivityRef.APPLYSTATE_YES);
+		ref.setParticipate(ActivityRef.PARTICIPATE_YES);
 		ref.setApplyTime(System.currentTimeMillis());
 		if(user instanceof Lender)
 		{

@@ -58,8 +58,9 @@
         src="/easyservice/gpps.service.IProductService?json"></script>
     <script type="text/javascript"
         src="/easyservice/gpps.service.IWaitToDoStatisticsService?json"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.INoticeService?json"></script>
         
-    <script src="js/data.js"></script>
     <script src="js/getuser.js"></script>
     <script src="js/opadmin.js"></script>
 
@@ -104,6 +105,8 @@ a.accordion-toggle {
 								class="btn nav-first btn-default btn-lg">融资管理</button>
 							<button type="button" id="order"
 								class="btn nav-first btn-default btn-lg">订单管理</button>
+							<button type="button" id="notice"
+								class="btn nav-first btn-default btn-lg">公告管理</button>
 							<button type="button" id="other"
 								class="btn nav-first btn-default btn-lg">其他功能</button>
 						</div>
@@ -121,6 +124,24 @@ a.accordion-toggle {
 
 		
 	</div>
+	
+	
+	<!-- Modal -->
+<div class="modal fade" id="noticedetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="nlabel">站内信</h4>
+      </div>
+      <div class="modal-body" id="ndetail">
+      			
+      </div>
+      <div class="modal-footer">
+        <button id="nclose" type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 	<script>
 	

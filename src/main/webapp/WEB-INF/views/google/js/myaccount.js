@@ -956,6 +956,341 @@ var mynote = function(container){
 }
 
 
+var letterreaded = function(container){
+	var letterS = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILetterService");
+	var columns = [ {
+		"sTitle" : "标题",
+			"code" : "time"
+	}, {
+		"sTitle" : "发送者",
+		"code" : "total"
+	}, {
+		"sTitle" : "发送时间",
+		"code" : "bj"
+	}, {
+		"sTitle" : "状态",
+		"code" : "state"
+	}, {
+		"sTitle" : "已读时间",
+		"code" : "lx"
+	}];
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = letterS.findMyLetters(1, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var letters = res.get('result');
+		for(var i=0; i<letters.size(); i++){
+			result.aaData.push(["站内信",
+			                    "管理员",
+			                    formatDate(letters.get(i).createtime), 
+			                    letters.get(i).markRead==0?'未读':'已读',
+			                    formatDate(letters.get(i).readtime)
+			                   ]);
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		
+		
+		$('button.readletter').click(function(e){
+			var letterid = $(this).attr('id');
+			var letter = letterS.find(parseInt(letterid));
+			$('#ldetail').html(letter.content);
+			$('#letterdetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
+		
+		
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+
+var letterunread_center = function(container){
+	var letterS = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILetterService");
+	var columns = [ {
+		"sTitle" : "标题",
+			"code" : "time"
+	}, {
+		"sTitle" : "发送者",
+		"code" : "total"
+	}, {
+		"sTitle" : "发送时间",
+		"code" : "bj"
+	}, {
+		"sTitle" : "状态",
+		"code" : "state"
+	}, {
+		"sTitle" : "操作",
+		"code" : "lx"
+	}];
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = letterS.findMyLetters(0, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var letters = res.get('result');
+		for(var i=0; i<letters.size(); i++){
+			result.aaData.push(["站内信",
+			                    "管理员",
+			                    formatDate(letters.get(i).createtime), 
+			                    letters.get(i).markRead==0?'未读':'已读',
+			                    "<button class='readletter' id='"+letters.get(i).id+"'>阅读</button>"
+			                   ]);
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		
+		
+		$('button.readletter').click(function(e){
+			var letterid = $(this).attr('id');
+			var letter = letterS.find(parseInt(letterid));
+			
+			$('button#letter').html('站内信('+(result.iTotalRecords-1)+')');
+			$('#welcome').html(greet() + name+'<a href="javascript:void(0);" id="inner_letter"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>'+(result.iTotalRecords-1)+'</a>');
+			
+			
+			$('#ldetail').html(letter.content);
+			$('#letterdetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
+		
+		
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+	
+	$('#lclose').unbind('click');
+	$('#lclose').bind('click', function(e){
+		$('#ldetail').html();
+		$('#mycenter').trigger('click');
+		$('ul.nav-second li a[data-sk="letter-unread-mycenter"]').trigger('click');
+	});
+	
+}
+
+var letterunread = function(container){
+	var letterS = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILetterService");
+	var columns = [ {
+		"sTitle" : "标题",
+			"code" : "time"
+	}, {
+		"sTitle" : "发送者",
+		"code" : "total"
+	}, {
+		"sTitle" : "发送时间",
+		"code" : "bj"
+	}, {
+		"sTitle" : "状态",
+		"code" : "state"
+	}, {
+		"sTitle" : "操作",
+		"code" : "lx"
+	}];
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = letterS.findMyLetters(0, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var letters = res.get('result');
+		for(var i=0; i<letters.size(); i++){
+			result.aaData.push(["站内信",
+			                    "管理员",
+			                    formatDate(letters.get(i).createtime), 
+			                    letters.get(i).markRead==0?'未读':'已读',
+			                    "<button class='readletter' id='"+letters.get(i).id+"'>阅读</button>"
+			                   ]);
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		
+		
+		$('button.readletter').click(function(e){
+			var letterid = $(this).attr('id');
+			var letter = letterS.find(parseInt(letterid));
+			
+			$('button#letter').html('站内信('+(result.iTotalRecords-1)+')');
+			$('#welcome').html(greet() + name+'<a href="javascript:void(0);" id="inner_letter"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>'+(result.iTotalRecords-1)+'</a>');
+			
+			
+			$('#ldetail').html(letter.content);
+			$('#letterdetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
+		
+		
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+	
+	$('#lclose').unbind('click');
+	$('#lclose').bind('click', function(e){
+		$('#ldetail').html();
+		$('#letter').trigger('click');
+		$('ul.nav-second li a[data-sk="letter-unread"]').trigger('click');
+	});
+}
+
+
+
+var noticeview = function(container){
+	var nservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INoticeService");
+	var columns = [ {
+		"sTitle" : "公告标题",
+			"code" : "name"
+	}, {
+		"sTitle" : "发布时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "发布对象",
+		"code" : "state"
+	}, {
+		"sTitle" : "用户级别",
+		"code" : "state"
+	}, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	
+	var userType = {0 : '全部', 1 : '投资方', 2 : '融资方'};
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = nservice.findAll(iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				result.aaData.push([data.title,
+				             formatDate(data.publishtime),
+				             userType[data.usefor],
+				                    data.level,
+				                    "<button class='viewnotice' id='"+data.id+"'>查看</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		$('button.viewnotice').click(function(e){
+			var letterid = $(this).attr('id');
+			var notice = nservice.find(parseInt(letterid));
+			$('#nlabel').html(notice.title);
+			$('#ndetail').html(notice.content);
+			$('#noticedetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+
 var nav2funtion = {
 		"my-score" : myscore,
 		"my-activity" : myactivity,
@@ -975,5 +1310,11 @@ var nav2funtion = {
 		"cash-invest" : cashinvest,
 		"cash-receive" : cashreceive,
 		"tools-fluxility" : "tools-fluxility",
-		"tools-receive-statistics" : "tools-receive-statistics"
+		"tools-receive-statistics" : "tools-receive-statistics",
+		
+		
+		"letter-unread-mycenter" : letterunread_center,
+		"letter-unread" : letterunread,
+		"letter-readed" : letterreaded,
+		"notice-view" : noticeview
 }

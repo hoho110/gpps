@@ -2,10 +2,13 @@ package gpps.service.impl;
 
 import gpps.dao.IActivityRefDao;
 import gpps.model.ActivityRef;
-import gpps.model.Borrower;
 import gpps.model.Lender;
 import gpps.service.IActivityRefService;
+import gpps.service.ILenderService;
 import gpps.service.ILoginService;
+import gpps.service.exception.LoginException;
+import gpps.service.exception.ValidateCodeException;
+import gpps.tools.StringUtil;
 
 import java.util.List;
 
@@ -19,6 +22,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class ActivityRefServiceImpl implements IActivityRefService{
 	@Autowired
 	IActivityRefDao activityRefDao;
+	@Autowired
+	ILenderService lenderService;
 	@Override
 	public ActivityRef find(Integer id) {
 		return activityRefDao.find(id);
@@ -45,6 +50,18 @@ public class ActivityRefServiceImpl implements IActivityRefService{
 		else
 			throw new RuntimeException("不支持的用户类型");
 		activityRefDao.create(ref);
+	}
+
+	@Override
+	public void applyActivityByAnonymous(String name, String phone, String email, String messageValidateCode, Integer activityId) throws IllegalArgumentException, ValidateCodeException, LoginException {
+		Lender lender=new Lender();
+		lender.setName(StringUtil.checkNullAndTrim("name", name));
+		lender.setTel(StringUtil.checkNullAndTrim("tel", phone));
+		lender.setEmail(StringUtil.checkNullAndTrim("email", email));
+		lender.setLoginId("L"+lender.getTel());
+		lender.setPassword("L"+lender.getTel());
+		lender=lenderService.register(lender, messageValidateCode);
+		applyActivity(activityId);
 	}
 
 }

@@ -96,4 +96,7 @@
     <select id="findByThirdPartyAccount" parameterType="String" resultType="gpps.model.Lender">
     	select * from Lender where thirdPartyAccount=#{thirdPartyAccount}
     </select>
+    <update id="updateTelAndEmail">
+    	update Lender set email=#{email},tel=#{tel} where id=#{id}
+    </update>
 </mapper>

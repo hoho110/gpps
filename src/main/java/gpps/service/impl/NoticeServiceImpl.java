@@ -42,7 +42,12 @@ public class NoticeServiceImpl implements INoticeService{
 		int level=-1;
 		HttpSession session=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
 		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
-		if(user instanceof Lender)
+		if(user==null)
+		{
+			userfors=new ArrayList<Integer>();
+			userfors.add(Notice.USEFOR_ALL);
+		}
+		else if(user instanceof Lender)
 		{
 			level=((Lender)user).getLevel();
 			userfors=new ArrayList<Integer>();

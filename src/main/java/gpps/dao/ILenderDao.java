@@ -37,4 +37,5 @@ public interface ILenderDao {
 	public List<Lender> findByPrivilegeWithPaging(@Param("privilege")int privilege,@Param("offset")int offset,@Param("recnum")int recnum);
 	public void bindCard(@Param("id")Integer id,@Param("cardId")Integer cardId);
 	public Lender findByThirdPartyAccount(String thirdPartyAccount);
+	public void updateTelAndEmail(@Param("id")Integer id,@Param("tel")String tel,@Param("email")String email);
 }

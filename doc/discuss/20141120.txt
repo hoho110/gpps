@@ -10,5 +10,5 @@
 10.ILetterService把alreadyRead集成到find方法中 yes
 11.INoticeService的findAll去掉userfor,level参数，改为从session中取。匿名用户均为0 yes
 12.ActivityRef的applyState字段改名为participate yes
-13.IActivityRefService增加一个针对匿名用户的applyActivity（name, phone, email）
-14.第三方认证完回调的时候，把手机和邮箱更新成第三方返回的值，判断是否为空
+13.IActivityRefService增加一个针对匿名用户的applyActivity（name, phone, email） yes
+14.第三方认证完回调的时候，把手机和邮箱更新成第三方返回的值，判断是否为空idj yes

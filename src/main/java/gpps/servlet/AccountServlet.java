@@ -140,10 +140,24 @@ public class AccountServlet {
 		String accountType=params.get("AccountType");
 		String loanPlatformAccount=params.get("LoanPlatformAccount");
 		Integer id=Integer.parseInt(loanPlatformAccount.substring(1, loanPlatformAccount.length()));
+		String email=params.get("Email");
+		String tel=params.get("Mobile");
 		if (StringUtil.isEmpty(accountType)) {
 			lenderService.registerThirdPartyAccount(id,thirdPartyAccount);
+			Lender lender=lenderDao.find(id);
+			if(StringUtil.isEmpty(email))
+				email=lender.getEmail();
+			if(StringUtil.isEmpty(tel))
+				tel=lender.getTel();
+			lenderDao.updateTelAndEmail(id, tel, email);
 		} else if (accountType.equals("1")) {
 			borrowerService.registerThirdPartyAccount(id,thirdPartyAccount);
+			Borrower borrower=borrowerDao.find(id);
+			if(StringUtil.isEmpty(email))
+				email=borrower.getEmail();
+			if(StringUtil.isEmpty(tel))
+				tel=borrower.getTel();
+			borrowerDao.updateTelAndEmail(id, tel, email);
 		}
 	}
 

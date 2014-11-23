@@ -107,4 +107,7 @@
     <update id="updateAuthorizeTypeOpen">
     	update borrower set authorizeTypeOpen=#{authorizeTypeOpen} where id=#{id}
     </update>
+    <update id="updateTelAndEmail">
+    	update borrower set email=#{email},tel=#{tel} where id=#{id}
+    </update>
 </mapper>

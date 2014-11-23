@@ -26,12 +26,11 @@
     
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/docs.min.js"></script>
 
     <script src="js/ie-emulation-modes-warning.js"></script>
     
     <script src="js/tool.js"></script>
-	<script src="js/data.js"></script>
+	
 	<script type="text/javascript"
 				src="/resources/EasyServiceClientFullZ.js"></script>
 		<script type="text/javascript"
@@ -46,6 +45,15 @@
 				src="/easyservice/gpps.service.IProductService?json"></script>
 		<script type="text/javascript"
 				src="/easyservice/gpps.dao.ILenderAccountDao?json"></script>
+        <script type="text/javascript"
+        		src="/easyservice/gpps.service.INoticeService?json"></script>
+        <script type="text/javascript"
+        		src="/easyservice/gpps.dao.ILetterDao?json"></script>
+        <script type="text/javascript"
+        		src="/easyservice/gpps.service.INewsService?json"></script>
+        		
+        		
+        
 
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -55,6 +63,7 @@
     <![endif]-->
     
     	<script src="js/getuser.js"></script>
+    	<script src="js/data.js"></script>
   </head>
 
   <body>
@@ -185,7 +194,7 @@
 
 		<ul id="announ" class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a class="announce" data-sk="platform" href="javascript:void(0);">平台公告</a></li>
-        <li role="presentation"><a class="announce" data-sk="company" href="javascript:void(0);">企业资讯</a></li>
+        <li role="presentation"><a class="announce" data-sk="news" href="javascript:void(0);">新闻资讯</a></li>
       </ul>
       <div class="col-md-12" style="padding-left:0px; padding-right:0px;" id="announcement">
 		
@@ -225,6 +234,11 @@ $(document).ready(function () {
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
 	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
+	var noticeService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INoticeService");
+	var newsService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INewsService");
+	
+	
+	
 	if(cuser==null){
 		$('#sider-content').html('<h4>数据中心</h4>');
 		var str = '<p>';
@@ -373,22 +387,45 @@ $(document).ready(function () {
                 	   
                 	   if($(this).attr('data-sk')=='platform'){
                 		   $('div#announcement').html('');
+                		   
+                		   var res = null;
+                			res = noticeService.findAll(0, 6);
+                			var total = res.get('total');
+                			var items = res.get('result');
                            
                            var listgroup = $('<div class="list-group" style="margin-bottom:0px; color:#999;"></div>');
-                           listgroup.append('<a href="intro/announce.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="intro/announce.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="intro/announce.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="intro/announce.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">关于本系统升级的公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           
+                           if(items)
+                        {
+                           for(var i=0; i<items.size(); i++){
+                        	   var content = items.get(i).content;
+                        	   if(content.length>60){
+                        		   content = content.substring(0, 60)+'......';
+                        	   }
+                        	   listgroup.append('<a href="intro/announce.html?nid='+items.get(i).id+'" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">'+items.get(i).title+'</span><span class="publish-time">'+formatDateToDay(items.get(i).publishtime)+'</span><p class="announce-text">'+content+'</p></a>'); 
+                           }
+                        }
                            
                            $('div#announcement').append(listgroup);
                 	   }else{
 							$('div#announcement').html('');
                            
+							var res = null;
+							res = newsService.findAll(0, 6);
+							var total = res.get('total');
+							var items = res.get('result');
+							
                            var listgroup = $('<div class="list-group" style="margin-bottom:0px;"></div>');
-                           listgroup.append('<a href="intro/companyinfo.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="intro/companyinfo.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="intro/companyinfo.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
-                           listgroup.append('<a href="intro/companyinfo.html" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">XXX企业中标政府采购项目公告</span><span class="publish-time">2014-9-29</span><p class="announce-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>');
+                           
+                           if(items){
+                        	   for(var i=0; i<items.size(); i++){
+                        		   var content = items.get(i).content;
+                        		   if(content.length>60){
+                        			   content = content.substring(0,60)+'......';
+                        		   }
+                        		   listgroup.append('<a href="intro/companyinfo.html?nid='+items.get(i).id+'" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">'+items.get(i).title+'</span><span class="publish-time">'+formatDateToDay(items.get(i).publishtime)+'</span><p class="announce-text">'+content+'</p></a>'); 
+                        	   }
+                           }
                            
                            $('div#announcement').append(listgroup);
                 	   }

@@ -170,6 +170,11 @@ var createAdminNavLevel2 = function(nav){
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice-view">公告查看</a></li>');
 		ul.append(li1);
 		ul.append(li2);
+	}else if(nav=='news'){
+		var li1 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="news-write">发布新闻</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="news-view">新闻查看</a></li>');
+		ul.append(li1);
+		ul.append(li2);
 	}
 	else if(nav=='other'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="message">消息管理</a></li>');
@@ -1326,6 +1331,75 @@ var orderquit = function(container){
 	ordershow(16, container)
 }
 
+var newsview = function(container){
+	var newsservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INewsService");
+	var columns = [ {
+		"sTitle" : "新闻标题",
+			"code" : "name"
+	}, {
+		"sTitle" : "发布时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = newsservice.findAll(iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				result.aaData.push([data.title,
+				             formatDate(data.publishtime),
+				                    "<button class='viewnews' id='"+data.id+"'>查看</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		$('button.viewnews').click(function(e){
+			var newsid = $(this).attr('id');
+			var news = newsservice.find(parseInt(newsid));
+			$('#nlabel').html(news.title);
+			$('#ndetail').html(news.content);
+			$('#noticedetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+	
+}
+
 var noticeview = function(container){
 	var nservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INoticeService");
 	var columns = [ {
@@ -1402,6 +1476,51 @@ var noticeview = function(container){
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
 	container.append(content);
 	table.dataTable(mySettings);
+}
+
+var newswrite = function(container){
+	var newsservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INewsService");
+	var total = '<div class="container-fluid" style="width:800px;">';
+		total += '<div class="row" style="margin-bottom:20px; margin-top:20px;padding-left:20px;">';
+	
+	var title = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
+		title+='<label class="control-label col-sm-3" for="inputSuccess3">新闻标题</label>';
+		title+='<div class="col-sm-9">';
+		title+='<input type="text" class="form-control" id="notice-title"></div></div>';
+		
+		total += title;
+		
+	var content = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
+	content += '<label class="control-label col-sm-3" for="inputSuccess3">新闻内容</label>';
+	content += '<div class="col-sm-9">';
+	content += '<textarea class="form-control" id="notice-content" style="min-height:300px;"></textarea></div></div>';
+	
+	total += content;
+	
+	total += '<button id="notice-create" class="btn btn-lg btn-success btn-block">创建</button>'
+	
+	total += "</div></div>";
+	
+	container.html(total);
+	
+	$('#notice-create').click(function(e){
+		var title = $('#notice-title').val();
+		var content = $('#notice-content').val();
+		
+		
+		
+		if(title==null||title==''){
+			alert('新闻标题不能为空');
+			return;
+		}else if(content==null||content==''){
+			alert('新闻内容不能为空');
+			return;
+		}
+		var news = {'_t_':'gpps.model.News', 'title':title, 'content': content, 'publishtime': (new Date()).getTime()};
+		newsservice.create(news);
+		window.location.href="opadmin.html?fid=news&sid=news-view";
+	});
+	
 }
 
 var noticewrite = function(container){
@@ -1502,5 +1621,7 @@ var nav2funtion = {
 		"order-closed" : orderclosed,
 		"order-quit" : orderquit,
 		"notice-write" : noticewrite,
-		"notice-view" : noticeview
+		"notice-view" : noticeview,
+		"news-write" : newswrite,
+		"news-view" : newsview
 }

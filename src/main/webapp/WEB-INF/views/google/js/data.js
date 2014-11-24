@@ -1,5 +1,4 @@
-var letterDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILetterDao");
-var lettercount = letterDao.countByReceiver(0, 0, cuser.id);
+
 
 var createProductLine = function(cont, id, title, label1, des1, label2, des2, description, menkan, qixian, rate, style){
 	var container = $(cont).addClass('newProjectItem').addClass('newProjectInfoBox');

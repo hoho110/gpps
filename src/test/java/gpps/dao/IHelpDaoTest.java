@@ -23,4 +23,9 @@ public class IHelpDaoTest extends TestSupport{
 		help.setAnswer("回答");
 		helpService.createPublic(help);
 	}
+	@Test
+	public void testFindPublicHelps()
+	{
+		helpService.findPublicHelps(-1, 0, 10);
+	}
 }

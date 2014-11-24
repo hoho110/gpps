@@ -13,7 +13,7 @@ public interface IHelpDao {
 	/**翻页获取Public Help
 	 * publicType:-1为不限
 	 */
-	public int countPublicHelps(int publicType);
+	public int countPublicHelps(@Param("publicType")int publicType);
 	public List<Help> findPublicHelps(@Param("publicType")int publicType,@Param("offset")int offset,@Param("recnum")int recnum);
 	/**翻页获取Private Help
 	 * type -1不限 1:未回答 2：已回答

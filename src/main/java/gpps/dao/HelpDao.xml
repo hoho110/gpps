@@ -59,6 +59,6 @@
         LIMIT #{offset}, #{recnum}
     </select>
     <update id="answer">
-    	update Help set answer=#{answer},answertime=#{answer} where id=#{id}
+    	update Help set answer=#{answer}, type=2, answertime=#{answertime} where id=#{id}
     </update>
 </mapper>

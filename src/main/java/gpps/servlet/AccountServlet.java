@@ -135,7 +135,12 @@ public class AccountServlet {
 		String[] signStrs={"AccountType","AccountNumber","Mobile","Email","RealName","IdentificationNo","LoanPlatformAccount",
 				"MoneymoremoreId","PlatformMoneymoremore","AuthFee","AuthState","RandomTimeStamp",
 				"Remark1","Remark2","Remark3","ResultCode"};
-		thirdPaySupportService.checkRollBack(params, signStrs);
+		try {
+			thirdPaySupportService.checkRollBack(params, signStrs);
+		} catch (ResultCodeException e) {
+			if(!e.getResultCode().equals("16"))
+				throw e;
+		}
 		String thirdPartyAccount = params.get("MoneymoremoreId");
 		String accountType=params.get("AccountType");
 		String loanPlatformAccount=params.get("LoanPlatformAccount");

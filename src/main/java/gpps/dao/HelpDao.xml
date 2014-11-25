@@ -14,7 +14,7 @@
         Help(type,publicType,questionerType,questionerId,question,answer,createtime,answertime)
         values(#{type},#{publicType},#{questionerType},#{questionerId},#{question},#{answer},#{createtime},#{answertime})
     </insert>
-    <select id="countPublicHelps" resultType="int">
+    <select id="countPublicHelps" parameterType="int" resultType="int">
         select count(*)
         from Help where type=0
         <if test="publicType != -1">
@@ -30,7 +30,7 @@
 		order by createtime desc
 		LIMIT #{offset}, #{recnum}
 	</select>
-	<select id="countPrivateHelps" resultType="int">
+	<select id="countPrivateHelps"  resultType="int">
         select count(*)
         from Help where 1=1
         <if test="type != -1">
@@ -59,6 +59,6 @@
         LIMIT #{offset}, #{recnum}
     </select>
     <update id="answer">
-    	update Help set answer=#{answer},answertime=#{answer} where id=#{id}
+    	update Help set answer=#{answer}, type=2, answertime=#{answertime} where id=#{id}
     </update>
 </mapper>

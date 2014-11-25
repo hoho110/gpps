@@ -175,6 +175,15 @@ var createAdminNavLevel2 = function(nav){
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="news-view">新闻查看</a></li>');
 		ul.append(li1);
 		ul.append(li2);
+	}else if(nav=='help'){
+		var li1 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="help-write">发布帮助</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="help-view">查看帮助</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="help-question">待回答问题</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="help-answered">已回答问题</a></li>');
+		ul.append(li1);
+		ul.append(li2);
+		ul.append(li3);
+		ul.append(li4);
 	}
 	else if(nav=='other'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="message">消息管理</a></li>');
@@ -1400,6 +1409,250 @@ var newsview = function(container){
 	
 }
 
+var helpquestion = function(container){
+	var helpservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IHelpService");
+	var columns = [ {
+		"sTitle" : "提问问题",
+			"code" : "question"
+	}, {
+		"sTitle" : "提问时间",
+		"code" : "time"
+	}, {
+		"sTitle" : "提问者类型",
+		"code" : "time"
+	}, {
+		"sTitle" : "提问者ID",
+		"code" : "time"
+	}
+	, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = helpservice.findPrivateHelps(1, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				result.aaData.push([data.question,
+				             formatDate(data.createtime),
+				             data.questionerType,
+				             data.questionerId,
+				                    "<button class='answerphelp' id='"+data.id+"'>回答</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		$('button.answerphelp').click(function(e){
+			var helpid = $(this).attr('id');
+			
+			var help = helpservice.find(parseInt(helpid));
+			$('#alabel').html(help.question);
+			
+			$('button#answer').attr('data-sk', helpid);
+			
+			$('#answerdetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+	
+}
+
+var helpanswered = function(container){
+	var helpservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IHelpService");
+	var columns = [ {
+		"sTitle" : "提问问题",
+			"code" : "question"
+	}, {
+		"sTitle" : "提问时间",
+		"code" : "time"
+	}, {
+		"sTitle" : "提问者类型",
+		"code" : "time"
+	}, {
+		"sTitle" : "提问者ID",
+		"code" : "time"
+	}
+	, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = helpservice.findPrivateHelps(2, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				result.aaData.push([data.question,
+				             formatDate(data.createtime),
+				             data.questionerType,
+				             data.questionerId,
+				                    "<button class='viewanswer' id='"+data.id+"'>查看</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		$('button.viewanswer').click(function(e){
+			var helpid = $(this).attr('id');
+			
+			var help = helpservice.find(parseInt(helpid));
+			$('#nlabel').html(help.question);
+			$('#ndetail').html(help.answer);
+			
+			$('#noticedetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+	
+}
+
+var helpview = function(container){
+	var helpservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IHelpService");
+	var columns = [ {
+		"sTitle" : "所属分类",
+		"code" : "category"
+	},{
+		"sTitle" : "帮助标题",
+			"code" : "name"
+	}, {
+		"sTitle" : "发布时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	
+	var cat = {
+			0: '新手帮助',
+			1: '常见问题',
+			2: '交易管理',
+			3: '投资融资',
+			4: '免责声明'
+	}
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = helpservice.findPublicHelps(-1, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				result.aaData.push([cat[data.publicType],
+				                    data.question,
+				             formatDate(data.createtime),
+				                    "<button class='viewhelp' id='"+data.id+"'>查看</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		$('button.viewhelp').click(function(e){
+			var helpid = $(this).attr('id');
+			var help = helpservice.find(parseInt(helpid));
+			$('#nlabel').html(help.question);
+			$('#ndetail').html(help.answer==null?'-':help.answer);
+			$('#noticedetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+	
+}
+
 var noticeview = function(container){
 	var nservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INoticeService");
 	var columns = [ {
@@ -1523,6 +1776,70 @@ var newswrite = function(container){
 	
 }
 
+var helpwrite = function(container){
+	var helpservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IHelpService");
+	var total = '<div class="container-fluid" style="width:800px;">';
+		total += '<div class="row" style="margin-bottom:20px; margin-top:20px;padding-left:20px;">';
+		
+		var category = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
+		category+='<label class="control-label col-sm-3" for="inputSuccess3">帮助类型</label>';
+		category+='<div class="col-sm-9">';
+		category+='<select class="form-control" id="help-category">';
+		category+='<option value=0>新手帮助</option>';
+		category+='<option value=1>常见问题</option>';
+		category+='<option value=2>交易管理</option>';
+		category+='<option value=3>投资融资</option>';
+		category+='<option value=3>免责声明</option>';
+		category+='</select></div></div>';
+		
+		total += category;
+		
+		
+		
+		
+	
+	var title = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
+		title+='<label class="control-label col-sm-3" for="inputSuccess3">帮助标题</label>';
+		title+='<div class="col-sm-9">';
+		title+='<input type="text" class="form-control" id="help-title"></div></div>';
+		
+		total += title;
+		
+	var content = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
+	content += '<label class="control-label col-sm-3" for="inputSuccess3">帮助内容</label>';
+	content += '<div class="col-sm-9">';
+	content += '<textarea class="form-control" id="help-content" style="min-height:100px;"></textarea></div></div>';
+	
+	total += content;
+	
+	total += '<button id="help-create" class="btn btn-lg btn-success btn-block">创建</button>'
+	
+	total += "</div></div>";
+	
+	container.html(total);
+	
+	$('#help-create').click(function(e){
+		var category = $('#help-category').val();
+		var title = $('#help-title').val();
+		var content = $('#help-content').val();
+		
+		
+		
+		if(title==null||title==''){
+			alert('帮助标题不能为空');
+			return;
+		}else if(content==null||content==''){
+			alert('帮助内容不能为空');
+			return;
+		}
+		var help = {'_t_':'gpps.model.Help','type':0, 'publicType':parseInt(category), 'question':title, 'answer': content, 'createtime': (new Date()).getTime()};
+		alert(JSON.stringify(help));
+		helpservice.createPublic(help);
+		window.location.href="opadmin.html?fid=help&sid=help-view";
+	});
+	
+}
+
 var noticewrite = function(container){
 	var nservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INoticeService");
 	var total = '<div class="container-fluid" style="width:800px;">';
@@ -1623,5 +1940,9 @@ var nav2funtion = {
 		"notice-write" : noticewrite,
 		"notice-view" : noticeview,
 		"news-write" : newswrite,
-		"news-view" : newsview
+		"news-view" : newsview,
+		"help-write" : helpwrite,
+		"help-view" : helpview,
+		"help-question" : helpquestion,
+		"help-answered" : helpanswered
 }

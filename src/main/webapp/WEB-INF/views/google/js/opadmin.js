@@ -165,7 +165,8 @@ var createAdminNavLevel2 = function(nav){
 		ul.append(li6);
 		ul.append(li7);
 		ul.append(li8);
-	}else if(nav=='notice'){
+	}
+	else if(nav=='notice'){
 		var li1 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice-write">发布公告</a></li>');
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice-view">公告查看</a></li>');
 		ul.append(li1);
@@ -1653,6 +1654,91 @@ var helpview = function(container){
 	
 }
 
+
+var activity = function(container){
+	var actservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IActivityService");
+	var columns = [ {
+		"sTitle" : "活动标题",
+			"code" : "name"
+	}, {
+		"sTitle" : "申请截止时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "正式活动时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "状态",
+		"code" : "state"
+	}, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	
+	var userType = {0 : '全部', 1 : '投资方', 2 : '融资方'};
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = actservice.findByState(1, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				result.aaData.push([data.name,
+				             formatDate(data.applystarttime),
+				             formatDate(data.starttime),
+				             userType[data.state],
+				              "<button class='viewactivity' id='"+data.id+"'>查看详情</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		$('button.viewnotice').click(function(e){
+			var letterid = $(this).attr('id');
+			var notice = nservice.find(parseInt(letterid));
+			$('#nlabel').html(notice.title);
+			$('#ndetail').html(notice.content);
+			$('#noticedetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append("<div style='float:right; margin-top:10px;'><button id='addactivity'>添加活动</button></div>");
+	container.append(content);
+	table.dataTable(mySettings);
+	
+	$('#addactivity').click(function(e){
+		window.open('addactivity.html');
+	});
+	
+}
+
 var noticeview = function(container){
 	var nservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INoticeService");
 	var columns = [ {
@@ -1944,5 +2030,6 @@ var nav2funtion = {
 		"help-write" : helpwrite,
 		"help-view" : helpview,
 		"help-question" : helpquestion,
-		"help-answered" : helpanswered
+		"help-answered" : helpanswered,
+		"activity" : activity
 }

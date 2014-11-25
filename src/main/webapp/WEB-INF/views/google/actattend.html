@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script type="text/javascript"
+				src="/resources/EasyServiceClientFullZ.js"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.ILenderService?json"></script>
+<!--[if lt IE 9]>
+      <script src="js/cdn/html5shiv.min.js"></script>
+      <script src="js/cdn/respond.min.js"></script>
+<![endif]-->
+
+</head>
+<body>
+	<div class="container">
+	
+	<div class="form-horizontal" role="form" style="width:400px; margin: 0 auto;">
+	
+  		<div style="width:100%" id="message"></div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">我的姓名</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="name">
+			</div>
+		</div>
+		
+			
+			<div class="form-group has-success has-feedback" id="email">
+			<label class="control-label col-sm-3" for="inputSuccess3">我的邮箱</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="email">
+			</div>
+			</div>
+
+			
+			<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputError2">手机号码</label>
+			<div class="col-sm-6">
+				<input type="text" class="form-control" id="phone">
+			</div>
+			<button type="submit" class="btn btn-default" id="sendValCode" style="width:90px;">发送验证码</button>
+			<a href="/messageValidateCode" target="_blank">察看验证码</a>
+			</div>
+			
+			
+			<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">验证码</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="validate">
+			</div>
+			</div>
+			
+			<button id="attend" class="btn btn-lg btn-success btn-block">我要参加</button>
+			
+
+		</div>
+		
+	</div>
+
+</body>
+ <script>
+ 
+ var ok = '<span class="glyphicon glyphicon-ok form-control-feedback"></span>';
+ var error = '<span class="glyphicon glyphicon-remove form-control-feedback"></span>';
+ 
+ function addMessage(title){
+		$('#message').html('');
+		var div = $('<div class="alert alert-warning alert-dismissible" role="alert" style="margin-bottom:2px;"></div>');
+		div.append('<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>');
+		div.append(title);
+		$('#message').append(div);
+}
+
+function removeMessage(){
+	  $('#message').html('');
+}
+
+
+
+ 
+$(document).ready(function() {
+	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+	
+	$('#name').focus();
+    $('#attend').click(function(e){
+			var name = $('input#name').val();
+			var email = $('input#email').val();
+			var phone = $('input#phone').val();
+			var validate = $('input#validate').val();
+			
+			
+			
+			if(name==null||name==''){
+					$('input#name').parent().find('span').remove();
+					$('input#name').parent().append(error);
+					$('input#name').parent().parent().removeClass('has-success').addClass('has-error');
+					addMessage('*请输入姓名');
+					return;
+					}else{
+						$('input#name').parent().find('span').remove();
+						$('input#name').parent().append(ok);
+						$('input#name').parent().parent().removeClass('has-error').addClass('has-success');
+						removeMessage();
+					}
+
+			var emailreg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+			
+			if(email==null||email==''){
+				$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(error);
+				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*请输入邮箱地址');
+				return;
+	        }else if(service.isEmailExist(email)){
+	        	$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(error);
+				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*邮箱已被注册');
+				return;
+			}
+	        else if(!emailreg.test(email)){
+					$('input#email').parent().find('span').remove();
+					$('input#email').parent().append(error);
+					$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+					addMessage('*邮箱格式不正确');
+					return;
+				}
+	        else{
+	        	$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(ok);
+				$('input#email').parent().parent().removeClass('has-error').addClass('has-success');
+				removeMessage();
+	        	}
+
+
+			if(validate==null||validate==''){
+				$('input#validate').parent().find('span').remove();
+				$('input#validate').parent().append(error);
+				$('input#validate').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*请填写验证码');
+				return;
+				}
+				else{
+					$('input#validate').parent().find('span').remove();
+					$('input#validate').parent().append(ok);
+					$('input#validate').parent().parent().removeClass('has-error').addClass('has-success');
+					removeMessage();
+				}
+
+			try{
+				var lender = {"_t_":"gpps.model.Lender", "loginId":'act_'+phone, "password" : '111111', "tel" : phone, "email" : email};
+				service.register(lender, validate);
+				window.location.href="myaccount.html?fid=mycenter&sid=my-activity";
+			}catch(ee){
+				alert(ee.message);
+				$('input#password').val('');
+				$('input#password_r').val('');
+				$('input#validate').val('');
+			}
+			
+			
+			
+        });
+    
+    
+    $('input#email').blur(function(e){
+    	var email = $(this).val();
+    	var emailreg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+        	if(email==null||email==''){
+        }else if(service.isEmailExist(email)){
+        	$('input#email').parent().find('span').remove();
+			$('input#email').parent().append(error);
+			$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+			addMessage('*邮箱已被注册');
+			return;
+		}
+        else if(!emailreg.test(email)){
+				$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(error);
+				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*邮箱格式不正确');
+			}
+        else{
+        	$('input#email').parent().find('span').remove();
+			$('input#email').parent().append(ok);
+			$('input#email').parent().parent().removeClass('has-error').addClass('has-success');
+			removeMessage();
+        		}
+    });
+
+    $('input#name').blur(function(e){
+        var name = $(this).val();
+        if(name==null||name==''){
+        	//$('input#username').parent().find('span').remove();
+			//$('input#username').parent().append(error);
+			//$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
+			//addMessage('*请输入用户名');
+        }
+        else{
+        	$('input#name').parent().find('span').remove();
+			$('input#name').parent().append(ok);
+			$('input#name').parent().parent().removeClass('has-error').addClass('has-success');
+			removeMessage();
+        		}
+        });
+    
+    
+    
+  
+    
+    
+    
+    $('button#sendValCode').click(function(e){
+    	
+    	
+ 	  var phone = $('input#phone').val();
+ 	  
+ 	  var reg=/^1[3-8]+\d{9}$/;
+ 	  
+ 	  if(phone==null || phone==''){
+ 		 $('input#phone').parent().find('span').remove();
+			$('input#phone').parent().append(error);
+			$('input#phone').parent().parent().removeClass('has-success').addClass('has-error');
+			addMessage('*请输入手机号码');
+			return;
+ 	  }else if(!reg.test(phone)){
+ 		 $('input#phone').parent().find('span').remove();
+			$('input#phone').parent().append(error);
+			$('input#phone').parent().parent().removeClass('has-success').addClass('has-error');
+			addMessage('*手机号码格式不对');
+			return;
+ 	  }
+ 	  else if(service.isPhoneNumberExist(phone)){
+ 		 $('input#phone').parent().find('span').remove();
+			$('input#phone').parent().append(error);
+			$('input#phone').parent().parent().removeClass('has-success').addClass('has-error');
+			addMessage('*该手机号码已被注册');
+			return;
+ 	  }else{
+ 		 
+			try{
+ 		  	service.sendMessageValidateCode();
+ 		  	$('input#phone').parent().find('span').remove();
+			$('input#phone').parent().append(ok);
+			$('input#phone').parent().parent().removeClass('has-error').addClass('has-success');
+ 		 	removeMessage();
+ 		 	
+ 		 	
+ 		 	var t = 60;
+ 	    	$('button#sendValCode').attr('disabled', true);
+ 			
+ 			//显示当前的秒数
+ 		    function count(){
+ 		    	t --;
+ 		    	//秒数自减 
+ 		    	if(t >= 0){
+ 		    		$('button#sendValCode').html(t+'秒后重发');
+ 		    		//刷新当前的秒数，重新显示秒数
+ 		    		}else{
+ 		    			$('button#sendValCode').html('发送验证码');
+ 		    			$('button#sendValCode').attr('disabled', false);
+ 		    			clearInterval();
+ 		    			}
+ 		    }
+ 			
+ 		   setInterval(count,1000);  
+			}catch(e){
+				alert(e.message);
+			}
+ 	  }
+    });
+    
+
+    $('input#validate').on('keyup', function(e) {
+
+			var key = e.keyCode;
+			if (key === 13) { // 表示按的是enter键
+				$('#login').click();
+			}
+    });
+	
+})
+</script>
+</html>

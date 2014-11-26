@@ -8,15 +8,15 @@
 	<insert id="create" parameterType="gpps.model.Activity"
         useGeneratedKeys="true" keyProperty="id">
         insert into
-        Activity(name,applystarttime,applyendtime,starttime,question,answer,createtime,state,url)
-        values(#{name},#{applystarttime},#{applyendtime},#{starttime},#{question},#{answer},#{createtime},#{state},#{url})
+        Activity(name,applystarttime,applyendtime,starttime,createtime,state,url)
+        values(#{name},#{applystarttime},#{applyendtime},#{starttime},#{createtime},#{state},#{url})
     </insert>
     <select id="countByState" resultType="int">
         select count(*)
         from Activity where state=#{state}
     </select>
 	<select id="findByState" resultType="gpps.model.Activity">
-		select count(*)
+		select *
         from Activity where state=#{state}
 		order by createtime desc
 		LIMIT #{offset}, #{recnum}

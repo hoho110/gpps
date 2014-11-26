@@ -3,7 +3,13 @@
 function header(title){
 	var divtitle = $('<div style="display:inline;"></div>');
 	divtitle.append('<h2 style="float:left;" class="text-muted">政采贷<small>&nbsp;&nbsp;信用创造价值</small></h2>');
+	var divhelp = $('<div id="help" style="float:left; margin-right:20px; padding-top:30px;"><a href="intro/help.html" target="_blank">帮助中心</a></div>');
 	var divusercontent = $('<div id="usercontent" style="float:right; font-size:14px; color:#333; padding-top:30px;"></div>');
+	
+	var divright = $('<div id="divright" style="min-width:150px; float:right;"></div>');
+	divright.append(divhelp);
+	divright.append(divusercontent);
+	divright.append('<div style="clear:both;"></div>');
 	
 	if(title=='login' || title=='register'){
 		if(cuser!=null)
@@ -36,7 +42,7 @@ function header(title){
 		divusercontent.html('<a href="login.html">登陆</a><span>&nbsp;|&nbsp;</span><a href="register.html">注册</a>');
 	}
 		}
-	divtitle.append(divusercontent);
+	divtitle.append(divright);
 	divtitle.append('<div style="clear:both;"></div>');
 	
 	var navul = $('<ul class="nav nav-justified"></ul>');

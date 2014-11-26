@@ -25,7 +25,7 @@ var defaultSettings = {
 				"iDisplayLength" : 10, //默认每页显示的记录数
 				"aLengthMenu" : [ 10, 15, 25, 50 ],
 				"bFilter" : false, //是否使用搜索 
-				"bJQueryUI" : true, //页面风格使用jQuery.
+				"bJQueryUI" : false, //页面风格使用jQuery.
 				// "sScrollY": 200,//竖向滚动条 tbody区域的高度
 				"sScrollX" : "100%", //横向滚动条 
 				"sScrollXInner" : "100%",
@@ -1704,21 +1704,15 @@ var activity = function(container){
 				             formatDate(data.applystarttime),
 				             formatDate(data.starttime),
 				             userType[data.state],
-				              "<button class='viewactivity' id='"+data.id+"'>查看详情</button>"]);
+				              "<button class='editactivity' id='"+data.id+"'>编辑详情</button>"]);
 			}
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
 		
-		$('button.viewnotice').click(function(e){
-			var letterid = $(this).attr('id');
-			var notice = nservice.find(parseInt(letterid));
-			$('#nlabel').html(notice.title);
-			$('#ndetail').html(notice.content);
-			$('#noticedetail').modal({
-				  keyboard: false,
-				  backdrop: true
-			});
+		$('button.editactivity').click(function(e){
+			var id = $(this).attr('id');
+			window.open('editactivity.html?id='+id);
 		})
 
 		return res;

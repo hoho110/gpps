@@ -4,8 +4,8 @@
 	<insert id="create" parameterType="gpps.model.ActivityRef"
         useGeneratedKeys="true" keyProperty="id">
         insert into
-        ActivityRef(participatorType,participatorId,activityId,applyTime,applyState,awarddetail,description)
-        values(#{participatorType},#{participatorId},#{activityId},#{applyTime},#{applyState},#{awarddetail},#{description})
+        ActivityRef(participatorType,participatorId,activityId,applyTime,participate,awarddetail,description)
+        values(#{participatorType},#{participatorId},#{activityId},#{applyTime},#{participate},#{awarddetail},#{description})
     </insert>
     <select id="find" parameterType="Integer" resultType="gpps.model.ActivityRef">
         select *

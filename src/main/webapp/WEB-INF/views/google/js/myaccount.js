@@ -171,64 +171,6 @@ var myscore = function(container){
 }
 var myactivity = function(container){
 	
-	var content = $('<div></div>');
-	var str = "";
-	str += '<table class="ui-list-invest" style="width:100%">';
-	str += '<tr id="header" style="padding-left:0px; padding-right:0px;">';
-	str += '<td class="color-gray-text text-center">活动名称</td>';
-	str += '<td class="color-gray-text text-center">活动日期</td>';
-	str += '<td class="color-gray-text text-center">活动类型</td>';
-	str += '<td class="color-gray-text text-center">主办方</td>';
-	str += '<td class="color-gray-text text-center">状态</td>';
-	str += '</tr>';
-	
-	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
-	str += '<td class="text-big">';
-	str += '<div style="max-width:150px; overflow:hidden;">';
-	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
-	str += '</td>';
-	str += '<td class="ui-list-field text-center">2014-9-31</td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
-	str += '</tr>';
-	
-	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
-	str += '<td class="text-big">';
-	str += '<div style="max-width:150px; overflow:hidden;">';
-	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
-	str += '</td>';
-	str += '<td class="ui-list-field text-center">2014-9-31</td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
-	str += '</tr>';
-	
-	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
-	str += '<td class="text-big">';
-	str += '<div style="max-width:150px; overflow:hidden;">';
-	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
-	str += '</td>';
-	str += '<td class="ui-list-field text-center">2014-9-31</td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
-	str += '</tr>';
-	
-	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
-	str += '<td class="text-big">';
-	str += '<div style="max-width:150px; overflow:hidden;">';
-	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
-	str += '</td>';
-	str += '<td class="ui-list-field text-center">2014-9-31</td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
-	str += '</tr>';
-	
-	str += '</table>';
-	content.append(str);
-	container.append(content);
 }
 
 var submitall = function(container){

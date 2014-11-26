@@ -127,10 +127,7 @@ var createAdminNavLevel2 = function(nav){
 		ul.append(li4);
 		ul.append(li5);
 	}
-	else if(nav=='lender'){
-		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="lender-view">用户浏览</a></li>');
-		ul.append(li2);
-	}else if(nav=='borrower'){
+	else if(nav=='borrower'){
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="borrower-new">新注册企业</a></li>');
 		var li3 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="borrower-request">申请净调企业</a></li>');
 		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="borrower-pass">审核通过企业</a></li>');
@@ -187,14 +184,10 @@ var createAdminNavLevel2 = function(nav){
 		ul.append(li4);
 	}
 	else if(nav=='other'){
-		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="message">消息管理</a></li>');
-		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice">公告管理</a></li>');
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="lender-view">用户浏览</a></li>');
 		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="activity">活动管理</a></li>');
-		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="help">帮助信息</a></li>');
 		ul.append(li1);
-		ul.append(li2);
 		ul.append(li3);
-		ul.append(li4);
 	}
 	
 	return ul;
@@ -443,11 +436,11 @@ var lenderview = function(container){
 		{
 			for(var i=0; i<items.size(); i++){
 				var data=items.get(i);
-				result.aaData.push([data.name,
+				result.aaData.push([data.name==null?"":data.name,
 				                    data.tel,
-				                    data.identityCard,
+				                    data.identityCard==null?"":data.name,
 				                    data.level,
-				                    data.thirdPartyAccount]);
+				                    data.thirdPartyAccount==null?"":data.thirdPartyAccount]);
 			}
 		}
 		result.sEcho = sEcho;
@@ -1826,7 +1819,7 @@ var newswrite = function(container){
 	var content = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
 	content += '<label class="control-label col-sm-3" for="inputSuccess3">新闻内容</label>';
 	content += '<div class="col-sm-9">';
-	content += '<textarea class="form-control" id="notice-content" style="min-height:300px;"></textarea></div></div>';
+	content += '<textarea class="form-control" id="notice-content" style="min-height:400px;"></textarea></div></div>';
 	
 	total += content;
 	
@@ -1888,7 +1881,7 @@ var helpwrite = function(container){
 	var content = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
 	content += '<label class="control-label col-sm-3" for="inputSuccess3">帮助内容</label>';
 	content += '<div class="col-sm-9">';
-	content += '<textarea class="form-control" id="help-content" style="min-height:100px;"></textarea></div></div>';
+	content += '<textarea class="form-control" id="help-content" style="min-height:400px;"></textarea></div></div>';
 	
 	total += content;
 	
@@ -1935,7 +1928,7 @@ var noticewrite = function(container){
 	var content = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
 	content += '<label class="control-label col-sm-3" for="inputSuccess3">公告内容</label>';
 	content += '<div class="col-sm-9">';
-	content += '<textarea class="form-control" id="notice-content" style="min-height:100px;"></textarea></div></div>';
+	content += '<textarea class="form-control" id="notice-content" style="min-height:400px;"></textarea></div></div>';
 	
 	total += content;
 	

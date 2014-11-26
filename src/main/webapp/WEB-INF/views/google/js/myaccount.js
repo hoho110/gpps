@@ -170,31 +170,79 @@ var myscore = function(container){
 	container.append(content);
 }
 var myactivity = function(container){
+	var actrefservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IActivityRefService");
+	var columns = [ {
+		"sTitle" : "项目信息",
+			"code" : "info"
+	}, {
+		"sTitle" : "状态",
+		"code" : "state"
+	}, {
+		"sTitle" : "购买时间",
+		"code" : "financingEndtime"
+	}, {
+		"sTitle" : "金额",
+		"code" : "amount"
+	}, {
+		"sTitle" : "已回款",
+		"code" : "repayed"
+	}, {
+		"sTitle" : "待回款",
+		"code" : "willBeRepayed"
+	}, {
+		"sTitle" : "合同",
+		"code" : "contract"
+	}];
 	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = submitService.findMyAllSubmitsByProductStates(-1,iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var item=items.get(i);
+				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
+				                    productstate[item.product.state],
+				                    formatDate(item.createtime),
+				                    item.amount.value,
+				                    item.repayedAmount.value,
+				                    item.waitforRepayAmount.value,
+				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
 }
 
 var submitall = function(container){
-//	var content = $('<div></div>');
-//	var str = "";
-//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-//	str += '<thead>';	
-//	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">状态</td><td style="min-width:100px;">投标完成时间</td><td style="min-width:50px;">金额</td><td style="min-width:50px;">已回款</td><td style="min-width:50px;">待回款</td><td style="min-width:50px;">合同</td></tr>';
-//	str += '</thead>';
-//	str += '<tbody>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>回款中</td><td>2014-8-5</td><td>500</td><td>0</td><td>23</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>回款中</td><td>2014-7-31</td><td>200</td><td>0</td><td>9.87</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款3</a></td><td>回款中</td><td>2014-7-16</td><td>300</td><td>0.57</td><td>13</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款4</a></td><td>回款中</td><td>2014-7-3</td><td>1500</td><td>15</td><td>150</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款5</a></td><td>回款中</td><td>2014-6-18</td><td>1000</td><td>20</td><td>123</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款6</a></td><td>投标中</td><td>2014-8-5</td><td>500</td><td>0</td><td>23</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款7</a></td><td>回款中</td><td>2014-7-31</td><td>200</td><td>0</td><td>9.87</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款8</a></td><td>回款中</td><td>2014-7-16</td><td>300</td><td>0.57</td><td>13</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款9</a></td><td>回款中</td><td>2014-7-3</td><td>1500</td><td>15</td><td>150</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款10</a></td><td>回款中</td><td>2014-6-18</td><td>1000</td><td>20</td><td>123</td><td><a href="pdf/001.pdf" target="_blank">合同</a></td></tr>';
-//	str += '</tbody>';
-//	str += '</table>';
-//	content.append(str);
-//	return content;
 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
 	var columns = [ {
 		"sTitle" : "项目信息",
@@ -1233,6 +1281,103 @@ var noticeview = function(container){
 }
 
 
+var questionview = function(container){
+	var helpservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IHelpService");
+	var columns = [ {
+		"sTitle" : "提问问题",
+			"code" : "question"
+	}, {
+		"sTitle" : "提问时间",
+		"code" : "time"
+	}, {
+		"sTitle" : "提问者类型",
+		"code" : "time"
+	}, {
+		"sTitle" : "提问者ID",
+		"code" : "time"
+	}, {
+		"sTitle" : "是否回答",
+		"code" : "time"
+	}
+	, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = helpservice.findMyHelps(-1, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				
+				var datatype = data.type;
+				var answertype = "";
+				var operation = "";
+				if(datatype==1){
+					answertype="未回答";
+					operation = "<button disabled='disabled'>查看</button>";
+				}else{
+					answertype="<font color=orange>已回答</font>";
+					operation = "<button class='viewanswer' id='"+data.id+"'>查看</button>";
+				}
+				
+				result.aaData.push([data.question,
+				             formatDate(data.createtime),
+				             data.questionerType,
+				             data.questionerId,
+				             answertype,
+				                    operation]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		$('button.viewanswer').click(function(e){
+			var helpid = $(this).attr('id');
+			
+			var help = helpservice.find(parseInt(helpid));
+			$('#nlabel').html(help.question);
+			$('#ndetail').html(help.answer);
+			
+			$('#noticedetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+
 var nav2funtion = {
 		"my-score" : myscore,
 		"my-activity" : myactivity,
@@ -1258,5 +1403,6 @@ var nav2funtion = {
 		"letter-unread-mycenter" : letterunread_center,
 		"letter-unread" : letterunread,
 		"letter-readed" : letterreaded,
-		"notice-view" : noticeview
+		"notice-view" : noticeview,
+		"question-view" : questionview
 }

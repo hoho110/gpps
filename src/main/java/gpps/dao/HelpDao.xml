@@ -37,7 +37,7 @@
         	and type=#{type}
         </if>
         <if test="questionerType != -1">
-            and publicType=#{publicType}
+            and questionerType=#{questionerType}
             <if test="questionerId != null">
                 and questionerId=#{questionerId}
             </if>
@@ -50,7 +50,7 @@
         	and type=#{type}
         </if>
         <if test="questionerType != -1">
-            and publicType=#{publicType}
+            and questionerType=#{questionerType}
             <if test="questionerId != null">
                 and questionerId=#{questionerId}
             </if>

@@ -642,6 +642,7 @@ var createNavLevel2 = function(nav){
 		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
 		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="letter-unread-mycenter">站内信('+lettercount+')</a></li>');
 		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice-view">系统公告</a></li>');
+		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="question-view">我的问题</a></li>');
 		
 		
 	//	var li4 = $('<li role="presentation" class="dropdown"></li>');
@@ -655,6 +656,7 @@ var createNavLevel2 = function(nav){
 		ul.append(li3);
 		ul.append(li4);
 		ul.append(li5);
+		ul.append(li6);
 	}else if(nav=='submit'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="submit-all">全部</a></li>');
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="submit-toafford">待支付</a></li>');

@@ -34,4 +34,10 @@ public class ActivityServiceImpl implements IActivityService{
 		return Pagination.buildResult(activities, count, offset, recnum);
 	}
 
+	@Override
+	public void update(Integer id, String name, long applyendtime,
+			long starttime, String url, int state) {
+		activityDao.update(id, name, applyendtime, starttime, url, state);
+	}
+
 }

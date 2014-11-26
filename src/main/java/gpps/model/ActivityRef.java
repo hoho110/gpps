@@ -61,4 +61,13 @@ public class ActivityRef {
 	public void setParticipate(int participate) {
 		this.participate = participate;
 	}
+	
+	
+	private Lender lender;
+	public Lender getLender() {
+		return lender;
+	}
+	public void setLender(Lender lender) {
+		this.lender = lender;
+	}
 }

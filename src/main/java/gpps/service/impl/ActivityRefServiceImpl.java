@@ -1,5 +1,6 @@
 package gpps.service.impl;
 
+import gpps.constant.Pagination;
 import gpps.dao.IActivityRefDao;
 import gpps.model.ActivityRef;
 import gpps.model.Lender;
@@ -10,7 +11,9 @@ import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
 import gpps.tools.StringUtil;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -30,8 +33,17 @@ public class ActivityRefServiceImpl implements IActivityRefService{
 	}
 
 	@Override
-	public List<ActivityRef> findByActivity(Integer activityId) {
-		return activityRefDao.findByActivity(activityId);
+	public Map<String, Object> findByActivity(Integer activityId,int offset,int recnum) {
+		int count=activityRefDao.countByActivity(activityId);
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		List<ActivityRef> refs= activityRefDao.findByActivity(activityId,offset,recnum);
+		for(ActivityRef ref:refs)
+		{
+			if(ref.getParticipatorType()==ActivityRef.PARTICIPATORTYPE_LENDER)
+				ref.setLender(lenderService.find(ref.getParticipatorId()));
+		}
+		return Pagination.buildResult(refs, count, offset, recnum);
 	}
 
 	@Override

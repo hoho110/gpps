@@ -13,6 +13,12 @@
     </select>
 	<select id="findByActivity" resultType="gpps.model.ActivityRef">
 		 select *
-        from ActivityRef where activityId=#{activityId}
+        from ActivityRef where activityId=#{activityId} 
+        order by applyTime desc 
+        LIMIT #{offset}, #{recnum}
 	</select>
+	 <select id="countByActivity" resultType="int">
+        select count(*)
+        from ActivityRef where activityId=#{activityId} 
+    </select>
 </mapper>

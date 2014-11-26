@@ -11,4 +11,5 @@ public interface IActivityDao {
 	public Activity find(Integer id);
 	public int countByState(int state);
 	public List<Activity> findByState(@Param("state")int state,@Param("offset")int offset,@Param("recnum")int recnum);
+	public void update(@Param("id")Integer id,@Param("name")String name,@Param("applyendtime")long applyendtime,@Param("starttime")long starttime,@Param("url")String url,@Param("state")int state);
 }

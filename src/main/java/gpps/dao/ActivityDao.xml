@@ -21,4 +21,8 @@
 		order by createtime desc
 		LIMIT #{offset}, #{recnum}
 	</select>
+	<update id="update">
+	   update Activity set name=#{name},applyendtime=#{applyendtime},starttime=#{starttime},url=#{url},state=#{state}
+	    where id=#{id}
+	</update>
 </mapper>

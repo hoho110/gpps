@@ -7,6 +7,7 @@ import gpps.model.Lender;
 import gpps.service.IActivityRefService;
 import gpps.service.ILenderService;
 import gpps.service.ILoginService;
+import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
 import gpps.tools.StringUtil;
@@ -47,7 +48,7 @@ public class ActivityRefServiceImpl implements IActivityRefService{
 	}
 
 	@Override
-	public void applyActivity(Integer activityId) {
+	public void applyActivity(Integer activityId) throws IllegalOperationException {
 		HttpSession session=((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
 		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
 		ActivityRef ref=new ActivityRef();
@@ -56,6 +57,10 @@ public class ActivityRefServiceImpl implements IActivityRefService{
 		ref.setApplyTime(System.currentTimeMillis());
 		if(user instanceof Lender)
 		{
+			if(isApply(activityId, ((Lender)user).getId()))
+			{
+				throw new IllegalOperationException("该活动您已报名");
+			}
 			ref.setParticipatorType(ActivityRef.PARTICIPATORTYPE_LENDER);
 			ref.setParticipatorId(((Lender)user).getId());
 		}
@@ -73,7 +78,16 @@ public class ActivityRefServiceImpl implements IActivityRefService{
 		lender.setLoginId("L"+lender.getTel());
 		lender.setPassword("L"+lender.getTel());
 		lender=lenderService.register(lender, messageValidateCode);
-		applyActivity(activityId);
+		try {
+			applyActivity(activityId);
+		} catch (IllegalOperationException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public boolean isApply(Integer activityId, Integer lenderId) {
+		return activityRefDao.findByActivityAndLender(activityId, lenderId)==null?false:true;
 	}
 
 }

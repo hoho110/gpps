@@ -21,4 +21,8 @@
         select count(*)
         from ActivityRef where activityId=#{activityId} 
     </select>
+    <select id="findByActivityAndLender" resultType="gpps.model.ActivityRef">
+         select *
+        from ActivityRef where activityId=#{activityId} and participatorType=0 and participatorId=#{lenderId}
+    </select>
 </mapper>

@@ -1683,7 +1683,7 @@ var activity = function(container){
 				iDisplayLength = data.value;
 		}
 		var res = null;
-		res = actservice.findByState(1, iDisplayStart, iDisplayLength);
+		res = actservice.findByState(2, iDisplayStart, iDisplayLength);
 		var result = {};
 		result.iTotalRecords = res.get('total');
 		result.iTotalDisplayRecords = res.get('total');

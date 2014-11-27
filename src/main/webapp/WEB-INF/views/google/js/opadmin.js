@@ -1667,7 +1667,7 @@ var activity = function(container){
 		"code" : "operate"
 	}];
 	
-	var userType = {0 : '全部', 1 : '投资方', 2 : '融资方'};
+	var actstate = {1 : '报名中', 2 : '进行中', 3 : '已结束'};
 	
 	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
 		var sEcho = "";
@@ -1693,10 +1693,10 @@ var activity = function(container){
 		{
 			for(var i=0; i<items.size(); i++){
 				var data=items.get(i);
-				result.aaData.push([data.name,
+				result.aaData.push(['<a href="'+data.url+'" target="_blank">'+data.name+'</a>',
 				             formatDate(data.applystarttime),
 				             formatDate(data.starttime),
-				             userType[data.state],
+				             actstate[data.state],
 				              "<button class='editactivity' id='"+data.id+"'>编辑详情</button>"]);
 			}
 		}

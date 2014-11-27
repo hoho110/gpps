@@ -170,29 +170,22 @@ var myscore = function(container){
 	container.append(content);
 }
 var myactivity = function(container){
-	var actrefservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IActivityRefService");
+	var refservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IActivityRefService");
 	var columns = [ {
-		"sTitle" : "项目信息",
-			"code" : "info"
+		"sTitle" : "活动标题",
+			"code" : "name"
+	}, {
+		"sTitle" : "申请截止时间",
+		"code" : "state"
+	}, {
+		"sTitle" : "正式活动时间",
+		"code" : "state"
 	}, {
 		"sTitle" : "状态",
 		"code" : "state"
-	}, {
-		"sTitle" : "购买时间",
-		"code" : "financingEndtime"
-	}, {
-		"sTitle" : "金额",
-		"code" : "amount"
-	}, {
-		"sTitle" : "已回款",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "待回款",
-		"code" : "willBeRepayed"
-	}, {
-		"sTitle" : "合同",
-		"code" : "contract"
 	}];
+	
+	var actstate = {1 : '报名中', 2 : '进行中', 3 : '已结束'};
 	
 	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
 		var sEcho = "";
@@ -208,7 +201,7 @@ var myactivity = function(container){
 				iDisplayLength = data.value;
 		}
 		var res = null;
-		res = submitService.findMyAllSubmitsByProductStates(-1,iDisplayStart, iDisplayLength);
+		res = refservice.findByLender(cuser.id, iDisplayStart, iDisplayLength);
 		var result = {};
 		result.iTotalRecords = res.get('total');
 		result.iTotalDisplayRecords = res.get('total');
@@ -217,18 +210,20 @@ var myactivity = function(container){
 		if(items)
 		{
 			for(var i=0; i<items.size(); i++){
-				var item=items.get(i);
-				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
-				                    productstate[item.product.state],
-				                    formatDate(item.createtime),
-				                    item.amount.value,
-				                    item.repayedAmount.value,
-				                    item.waitforRepayAmount.value,
-				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
+				var data=items.get(i);
+				result.aaData.push(['<a href="'+data.activity.url+'" target="_blank">'+data.activity.name+'</a>',
+				             formatDate(data.activity.applystarttime),
+				             formatDate(data.activity.starttime),
+				             actstate[data.activity.state]]);
 			}
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
+		
+		$('button.editactivity').click(function(e){
+			var id = $(this).attr('id');
+			window.open('editactivity.html?id='+id);
+		})
 
 		return res;
 	}
@@ -238,8 +233,13 @@ var myactivity = function(container){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append("<div style='float:right; margin-top:10px;'><button id='addactivity'>添加活动</button></div>");
 	container.append(content);
 	table.dataTable(mySettings);
+	
+	$('#addactivity').click(function(e){
+		window.open('addactivity.html');
+	});
 }
 
 var submitall = function(container){

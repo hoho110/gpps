@@ -580,10 +580,12 @@ var createBorrowerNavLevel2 = function(nav){
 		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
 		
 		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-note">系统通知</a></li>');
+		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="question-view">我的问题</a></li>');
 		
 		ul.append(li2);
 		ul.append(li3);
 		ul.append(li5);
+		ul.append(li6);
 	}else if(nav=='request'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="request-all">全部</a></li>');
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="request-tohandle">待处理</a></li>');

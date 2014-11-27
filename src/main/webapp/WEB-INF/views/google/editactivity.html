@@ -155,17 +155,14 @@ var activity = function(){
 		"sTitle" : "手机号",
 		"code" : "phone"
 	},{
+		"sTitle" : "邮箱",
+		"code" : "email"
+	},{
 		"sTitle" : "申请时间",
 		"code" : "time"
 	}, {
 		"sTitle" : "参加状态",
 		"code" : "state"
-	}, {
-		"sTitle" : "获奖情况",
-		"code" : "state"
-	}, {
-		"sTitle" : "操作",
-		"code" : "operate"
 	}];
 	
 	var parti = {0 : '已参加', 1 : '已报名'};
@@ -196,26 +193,14 @@ var activity = function(){
 				var data=items.get(i);
 				result.aaData.push([data.lender.name==null?"":data.lender.name,
 							data.lender.tel,
+							data.lender.email,
 				             formatDate(data.applyTime),
-				             parti[data.participate],
-				             data.awarddetail==null?"":data.awarddetail,
-				              "<button class='viewattend' id='"+data.id+"'>查看详情</button>"]);
+				             parti[data.participate]]);
 			}
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
 		
-		$('button.viewattend').click(function(e){
-			var letterid = $(this).attr('id');
-			var notice = nservice.find(parseInt(letterid));
-			$('#nlabel').html(notice.title);
-			$('#ndetail').html(notice.content);
-			$('#noticedetail').modal({
-				  keyboard: false,
-				  backdrop: true
-			});
-		})
-
 		return res;
 	}
 	var mySettings = $.extend({}, defaultSettings, {

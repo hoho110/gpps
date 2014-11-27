@@ -1494,6 +1494,103 @@ var mynote = function(container){
 }
 
 
+var questionview = function(container){
+	var helpservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IHelpService");
+	var columns = [ {
+		"sTitle" : "提问问题",
+			"code" : "question"
+	}, {
+		"sTitle" : "提问时间",
+		"code" : "time"
+	}, {
+		"sTitle" : "提问者类型",
+		"code" : "time"
+	}, {
+		"sTitle" : "提问者ID",
+		"code" : "time"
+	}, {
+		"sTitle" : "是否回答",
+		"code" : "time"
+	}
+	, {
+		"sTitle" : "操作",
+		"code" : "operate"
+	}];
+	
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = helpservice.findMyHelps(-1, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				
+				var datatype = data.type;
+				var answertype = "";
+				var operation = "";
+				if(datatype==1){
+					answertype="未回答";
+					operation = "<button disabled='disabled'>查看</button>";
+				}else{
+					answertype="<font color=orange>已回答</font>";
+					operation = "<button class='viewanswer' id='"+data.id+"'>查看</button>";
+				}
+				
+				result.aaData.push([data.question,
+				             formatDate(data.createtime),
+				             data.questionerType,
+				             data.questionerId,
+				             answertype,
+				                    operation]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		$('button.viewanswer').click(function(e){
+			var helpid = $(this).attr('id');
+			
+			var help = helpservice.find(parseInt(helpid));
+			$('#nlabel').html(help.question);
+			$('#ndetail').html(help.answer);
+			
+			$('#noticedetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+
 var bnav2funtion = {
 		"my-score" : myscore,
 		"my-activity" : myactivity,
@@ -1518,5 +1615,7 @@ var bnav2funtion = {
 		"order-paying" : orderpaying,
 		"order-toclose" : ordertoclose,
 		"order-closed" : orderclosed,
-		"order-quit" : orderquit
+		"order-quit" : orderquit,
+		
+		"question-view" : questionview
 }

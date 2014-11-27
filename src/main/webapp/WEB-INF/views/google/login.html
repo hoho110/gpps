@@ -150,6 +150,9 @@ $(document).ready(function() {
 			}else{
 				try{
 					bservice.login(username, password, validate);
+					if(rb!=null)
+						window.location.href=rb;
+					else
 					window.location.href="baccount.html";
 				}catch(e){
 					alert(e.message);

@@ -1,6 +1,7 @@
 package gpps.service.impl;
 
 import gpps.constant.Pagination;
+import gpps.dao.IActivityDao;
 import gpps.dao.IActivityRefDao;
 import gpps.model.ActivityRef;
 import gpps.model.Lender;
@@ -28,9 +29,13 @@ public class ActivityRefServiceImpl implements IActivityRefService{
 	IActivityRefDao activityRefDao;
 	@Autowired
 	ILenderService lenderService;
+	@Autowired
+	IActivityDao activityDao;
 	@Override
 	public ActivityRef find(Integer id) {
-		return activityRefDao.find(id);
+		ActivityRef ref= activityRefDao.find(id);
+		ref.setActivity(activityDao.find(ref.getActivityId()));
+		return ref;
 	}
 
 	@Override
@@ -88,6 +93,19 @@ public class ActivityRefServiceImpl implements IActivityRefService{
 	@Override
 	public boolean isApply(Integer activityId, Integer lenderId) {
 		return activityRefDao.findByActivityAndLender(activityId, lenderId)==null?false:true;
+	}
+
+	@Override
+	public Map<String, Object> findByLender(Integer lenderId,int offset,int recnum) {
+		int count=activityRefDao.countByLender(lenderId);
+		if(count==0)
+			return Pagination.buildResult(null, count, offset, recnum);
+		List<ActivityRef> refs=activityRefDao.findByLender(lenderId, offset, recnum);
+		for(ActivityRef ref:refs)
+		{
+			ref.setActivity(activityDao.find(ref.getActivityId()));
+		}
+		return Pagination.buildResult(refs, count, offset, recnum);
 	}
 
 }

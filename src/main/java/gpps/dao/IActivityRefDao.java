@@ -13,4 +13,7 @@ public interface IActivityRefDao {
 	public int countByActivity(Integer activityId);
 	
 	public ActivityRef findByActivityAndLender(@Param("activityId")Integer activityId,@Param("lenderId")Integer lenderId);
+	
+	public int countByLender(Integer lenderId);
+	public List<ActivityRef> findByLender(@Param("lenderId")Integer lenderId,@Param("offset")int offset,@Param("recnum")int recnum);
 }

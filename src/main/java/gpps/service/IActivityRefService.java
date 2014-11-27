@@ -5,7 +5,6 @@ import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
 
-import java.util.List;
 import java.util.Map;
 
 public interface IActivityRefService {
@@ -14,4 +13,5 @@ public interface IActivityRefService {
 	public Map<String, Object> findByActivity(Integer activityId,int offset,int recnum);
 	public void applyActivityByAnonymous(String name, String phone,String email, String messageValidateCode,Integer activityId) throws IllegalArgumentException, ValidateCodeException, LoginException;
 	public boolean isApply(Integer activityId,Integer lenderId);
+	public Map<String, Object> findByLender(Integer lenderId,int offset,int recnum);
 }

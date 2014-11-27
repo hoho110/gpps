@@ -64,10 +64,17 @@ public class ActivityRef {
 	
 	
 	private Lender lender;
+	private Activity activity;
 	public Lender getLender() {
 		return lender;
 	}
 	public void setLender(Lender lender) {
 		this.lender = lender;
+	}
+	public Activity getActivity() {
+		return activity;
+	}
+	public void setActivity(Activity activity) {
+		this.activity = activity;
 	}
 }

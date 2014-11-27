@@ -25,4 +25,14 @@
          select *
         from ActivityRef where activityId=#{activityId} and participatorType=0 and participatorId=#{lenderId}
     </select>
+    <select id="findByLender" resultType="gpps.model.ActivityRef">
+         select *
+        from ActivityRef where participatorType=0 and participatorId=#{lenderId}
+        order by applyTime desc 
+        LIMIT #{offset}, #{recnum}
+    </select>
+     <select id="countByLender" resultType="int">
+        select count(*)
+        from ActivityRef where participatorType=0 and participatorId=#{lenderId} 
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package gpps.servlet;
 
 import gpps.model.ref.Accessory.MimeItem;
+import gpps.service.IActivityService;
 import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IProductService;
@@ -43,6 +44,8 @@ public class AccessoryTransferServlet {
 	IProductService productService;
 	@Autowired
 	IBorrowerService borrowerService;
+	@Autowired
+	IActivityService activityService;
 
 	public Resource getOfficalDir() {
 		return officalDir;
@@ -64,6 +67,7 @@ public class AccessoryTransferServlet {
 	public static final String TYPE_ORDER = "order";
 	public static final String TYPE_PRODUCT = "product";
 	public static final String TYPE_BORROWER = "borrower";
+	public static final String TYPE_ACTIVITY="activity";
 	public static final String FILESEPARATOR = "/";
 
 	/**
@@ -127,6 +131,8 @@ public class AccessoryTransferServlet {
 					productService.addAccessory(id, category, mimeItem);
 				else if (type.equals(TYPE_BORROWER))
 					borrowerService.addAccessory(id, category, mimeItem);
+				else if(type.equals(TYPE_ACTIVITY))
+					activityService.addAccessory(id, mimeItem);
 				else {
 					response.sendError(400, "不支持的上传类型:" + type);
 					return;
@@ -159,6 +165,8 @@ public class AccessoryTransferServlet {
 				items = productService.findMimeItems(id, category);
 			else if (type.equals(TYPE_BORROWER))
 				items = borrowerService.findMimeItems(id, category);
+			else if(type.equals(TYPE_ACTIVITY))
+				item=activityService.findMimeItem(id);
 			else {
 				response.sendError(400, "不支持的下载类型:" + type);
 				return;

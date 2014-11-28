@@ -8,8 +8,8 @@
 	<insert id="create" parameterType="gpps.model.Activity"
         useGeneratedKeys="true" keyProperty="id">
         insert into
-        Activity(name,applystarttime,applyendtime,starttime,createtime,state,url)
-        values(#{name},#{applystarttime},#{applyendtime},#{starttime},#{createtime},#{state},#{url})
+        Activity(name,applystarttime,applyendtime,starttime,createtime,state,url,description)
+        values(#{name},#{applystarttime},#{applyendtime},#{starttime},#{createtime},#{state},#{url},#{description})
     </insert>
     <select id="countByState" resultType="int">
         select count(*)
@@ -31,4 +31,14 @@
 	   update Activity set name=#{name},applyendtime=#{applyendtime},starttime=#{starttime},url=#{url},state=#{state}
 	    where id=#{id}
 	</update>
+	<select id="findAccessory" parameterType="Integer" resultType="String">
+        select accessory
+        from Activity where id=#{id}
+    </select>
+    <update id="updateAccessory">
+        update Activity set
+        accessory=#{accessory}
+        where
+        id=#{id}
+    </update>
 </mapper>

@@ -3,3 +3,5 @@ alter table Letter add(readtime bigint);
 alter table News add(publictype int not null default 0);
 alter table Notice add(publictype int not null default 0);
 alter table Letter add(title varchar(255)); 
+alter table Activity add(description mediumtext);
+alter table Activity add(accessory mediumtext);

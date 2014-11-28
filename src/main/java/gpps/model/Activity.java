@@ -13,6 +13,8 @@ public class Activity {
 	public static final int STATE_FINISH = 2;
 	private int state = STATE_UNPUBLISHED;
 	private String url;
+	private String accessory;
+	private String description;
 	public Integer getId() {
 		return id;
 	}
@@ -60,5 +62,17 @@ public class Activity {
 	}
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	public String getAccessory() {
+		return accessory;
+	}
+	public void setAccessory(String accessory) {
+		this.accessory = accessory;
+	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }

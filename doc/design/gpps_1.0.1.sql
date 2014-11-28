@@ -77,6 +77,8 @@ create table Activity
             2：进行
             3：结束',
    url                  varchar(255),
+   description            mediumtext,
+   accessory            mediumtext,
    primary key (id)
 );
 

@@ -577,13 +577,11 @@ var createBorrowerNavLevel2 = function(nav){
 	if(nav=='bcenter'){
 		
 		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');
-		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
 		
 		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-note">系统通知</a></li>');
 		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="question-view">我的问题</a></li>');
 		
 		ul.append(li2);
-		ul.append(li3);
 		ul.append(li5);
 		ul.append(li6);
 	}else if(nav=='request'){

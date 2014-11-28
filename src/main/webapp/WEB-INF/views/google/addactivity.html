@@ -59,6 +59,13 @@
 			</div>
 
 			
+			<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-12" for="inputSuccess3">活动简介</label>
+			<div class="col-sm-12">
+				<textarea style="width:99%; height:300px;" id="description"></textarea>
+			</div>
+			</div>
+			
 			
 			
 			<button id="create" class="btn btn-lg btn-success btn-block">创建活动</button>
@@ -148,6 +155,8 @@ $(document).ready(function() {
 			var starttime = new Date(Date.parse($('#starttime').val())).getTime();
 			var url = $('input#url').val();
 			
+			var description = $('#description').val();
+			
 			
 			
 			if(title==null||title==''){
@@ -175,10 +184,23 @@ $(document).ready(function() {
 					$('input#url').parent().parent().removeClass('has-error').addClass('has-success');
 					removeMessage();
 				}
+			
+			if(description==null||description==''){
+				$('input#description').parent().find('span').remove();
+				$('input#description').parent().append(error);
+				$('input#description').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*请输入活动简介');
+				return;
+				}else{
+					$('input#description').parent().find('span').remove();
+					$('input#description').parent().append(ok);
+					$('input#description').parent().parent().removeClass('has-error').addClass('has-success');
+					removeMessage();
+				}
 
 
 			try{
-				var act = {"_t_":"gpps.model.Activity", "name":title, "applystarttime" : (new Date()).getTime(), "createtime" : (new Date()).getTime(), "applyendtime" : parseInt(applyendtime), "starttime" : parseInt(starttime), "state" : 1, "url" : url};
+				var act = {"_t_":"gpps.model.Activity", "name":title, "applystarttime" : (new Date()).getTime(), "createtime" : (new Date()).getTime(), "applyendtime" : parseInt(applyendtime), "starttime" : parseInt(starttime), "state" : 1, "url" : url, "description" : description};
 				service.create(act);
 				window.location.href="opadmin.html?fid=other&sid=activity";
 			}catch(ee){

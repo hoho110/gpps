@@ -47,8 +47,8 @@ public class ActivityServiceImpl implements IActivityService{
 
 	@Override
 	public void update(Integer id, String name, long applyendtime,
-			long starttime, String url, int state) {
-		activityDao.update(id, name, applyendtime, starttime, url, state);
+			long starttime, String url, int state, String description) {
+		activityDao.update(id, name, applyendtime, starttime, url, state, description);
 	}
 
 	@Override

@@ -143,67 +143,6 @@ var myscore = function(container){
 	content.append(str1);
 	container.append(content);
 }
-var myactivity = function(container){
-	
-	var content = $('<div></div>');
-	var str = "";
-	str += '<table class="ui-list-invest" style="width:100%">';
-	str += '<tr id="header" style="padding-left:0px; padding-right:0px;">';
-	str += '<td class="color-gray-text text-center">活动名称</td>';
-	str += '<td class="color-gray-text text-center">活动日期</td>';
-	str += '<td class="color-gray-text text-center">活动类型</td>';
-	str += '<td class="color-gray-text text-center">主办方</td>';
-	str += '<td class="color-gray-text text-center">状态</td>';
-	str += '</tr>';
-	
-	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
-	str += '<td class="text-big">';
-	str += '<div style="max-width:150px; overflow:hidden;">';
-	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
-	str += '</td>';
-	str += '<td class="ui-list-field text-center">2014-9-31</td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
-	str += '</tr>';
-	
-	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
-	str += '<td class="text-big">';
-	str += '<div style="max-width:150px; overflow:hidden;">';
-	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
-	str += '</td>';
-	str += '<td class="ui-list-field text-center">2014-9-31</td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
-	str += '</tr>';
-	
-	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
-	str += '<td class="text-big">';
-	str += '<div style="max-width:150px; overflow:hidden;">';
-	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
-	str += '</td>';
-	str += '<td class="ui-list-field text-center">2014-9-31</td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
-	str += '</tr>';
-	
-	str += '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
-	str += '<td class="text-big">';
-	str += '<div style="max-width:150px; overflow:hidden;">';
-	str += '<a href="../activity/index.html" target="_blank">XXXX杯跑步活动</a>';
-	str += '</td>';
-	str += '<td class="ui-list-field text-center">2014-9-31</td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">长跑</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">春蕾资产管理</em></td>';
-	str += '<td class="ui-list-field num text-right pr10"><em class="value">待参加</em></td>';
-	str += '</tr>';
-	
-	str += '</table>';
-	content.append(str);
-	container.append(content);
-}
 
 var requestall = function(container){
 	var bService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
@@ -1432,6 +1371,7 @@ var cashProcessor=function(action,state,container){
 		result.iTotalDisplayRecords = res.get('total');
 		result.aaData = new Array();
 		var cashs = res.get('result');
+		if(cashs){
 		for(var i=0; i<cashs.size(); i++){
 			result.aaData.push([formatDate(cashs.get(i).createtime), 
 			                    (parseFloat(cashs.get(i).chiefamount.value)+parseFloat(cashs.get(i).interest.value)).toFixed(2), 
@@ -1440,6 +1380,7 @@ var cashProcessor=function(action,state,container){
 			                    0, 
 			                    cashstate[cashs.get(i).action], 
 			                    cashs.get(i).description]);
+		}
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
@@ -1593,7 +1534,6 @@ var questionview = function(container){
 
 var bnav2funtion = {
 		"my-score" : myscore,
-		"my-activity" : myactivity,
 		"my-note" : mynote,
 		"request-all" : requestall,
 		"request-tohandle" : requesttohandle,

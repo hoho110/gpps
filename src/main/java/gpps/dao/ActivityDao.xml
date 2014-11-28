@@ -28,7 +28,7 @@
 		LIMIT #{offset}, #{recnum}
 	</select>
 	<update id="update">
-	   update Activity set name=#{name},applyendtime=#{applyendtime},starttime=#{starttime},url=#{url},state=#{state}
+	   update Activity set name=#{name},applyendtime=#{applyendtime},starttime=#{starttime},url=#{url},state=#{state}, description=#{description}
 	    where id=#{id}
 	</update>
 	<select id="findAccessory" parameterType="Integer" resultType="String">

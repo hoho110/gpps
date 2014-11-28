@@ -171,6 +171,7 @@ public class AccessoryTransferServlet {
 				response.sendError(400, "不支持的下载类型:" + type);
 				return;
 			}
+			if(!type.equals(TYPE_ACTIVITY))
 			item = findItem(items, itemID);
 			File downloadFile = new File(officalDir.getFile(), item.getPath());
 			if (item == null || !downloadFile.exists()) {

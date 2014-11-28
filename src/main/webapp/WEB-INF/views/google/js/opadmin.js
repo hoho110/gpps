@@ -1339,6 +1339,9 @@ var newsview = function(container){
 	var columns = [ {
 		"sTitle" : "新闻标题",
 			"code" : "name"
+	},{
+		"sTitle" : "新闻类型",
+		"code" : "category"
 	}, {
 		"sTitle" : "发布时间",
 		"code" : "state"
@@ -1346,6 +1349,8 @@ var newsview = function(container){
 		"sTitle" : "操作",
 		"code" : "operate"
 	}];
+	
+	var categoryType = {0:'行业资讯',1:'财经新闻'};
 	
 	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
 		var sEcho = "";
@@ -1361,7 +1366,7 @@ var newsview = function(container){
 				iDisplayLength = data.value;
 		}
 		var res = null;
-		res = newsservice.findAll(iDisplayStart, iDisplayLength);
+		res = newsservice.findAll(-1, iDisplayStart, iDisplayLength);
 		var result = {};
 		result.iTotalRecords = res.get('total');
 		result.iTotalDisplayRecords = res.get('total');
@@ -1372,6 +1377,7 @@ var newsview = function(container){
 			for(var i=0; i<items.size(); i++){
 				var data=items.get(i);
 				result.aaData.push([data.title,
+				                    categoryType[data.publicType],
 				             formatDate(data.publishtime),
 				                    "<button class='viewnews' id='"+data.id+"'>查看</button>"]);
 			}
@@ -1683,7 +1689,7 @@ var activity = function(container){
 				iDisplayLength = data.value;
 		}
 		var res = null;
-		res = actservice.findByState(2, iDisplayStart, iDisplayLength);
+		res = actservice.findByState(-1, iDisplayStart, iDisplayLength);
 		var result = {};
 		result.iTotalRecords = res.get('total');
 		result.iTotalDisplayRecords = res.get('total');
@@ -1731,6 +1737,9 @@ var noticeview = function(container){
 	var columns = [ {
 		"sTitle" : "公告标题",
 			"code" : "name"
+	},{
+		"sTitle" : "分类",
+		"code" : "category"
 	}, {
 		"sTitle" : "发布时间",
 		"code" : "state"
@@ -1738,7 +1747,7 @@ var noticeview = function(container){
 		"sTitle" : "发布对象",
 		"code" : "state"
 	}, {
-		"sTitle" : "紧急程度",
+		"sTitle" : "用户级别",
 		"code" : "state"
 	}, {
 		"sTitle" : "操作",
@@ -1746,6 +1755,7 @@ var noticeview = function(container){
 	}];
 	
 	var userType = {0 : '全部', 1 : '投资方', 2 : '融资方'};
+	var categoryType = {0 : '平台公告', 1 : '企业公告', 2:'活动公告'};
 	
 	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
 		var sEcho = "";
@@ -1761,7 +1771,7 @@ var noticeview = function(container){
 				iDisplayLength = data.value;
 		}
 		var res = null;
-		res = nservice.findAll(iDisplayStart, iDisplayLength);
+		res = nservice.findAll(-1, iDisplayStart, iDisplayLength);
 		var result = {};
 		result.iTotalRecords = res.get('total');
 		result.iTotalDisplayRecords = res.get('total');
@@ -1772,6 +1782,7 @@ var noticeview = function(container){
 			for(var i=0; i<items.size(); i++){
 				var data=items.get(i);
 				result.aaData.push([data.title,
+				                    categoryType[data.publicType],
 				             formatDate(data.publishtime),
 				             userType[data.usefor],
 				                    data.level,
@@ -1816,6 +1827,19 @@ var newswrite = function(container){
 		
 		total += title;
 		
+		
+		
+		var category = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
+		category+='<label class="control-label col-sm-3" for="inputSuccess3">新闻类型</label>';
+		category+='<div class="col-sm-9">';
+		category+='<select class="form-control" id="news-category">';
+		category+='<option value=0>行业资讯</option>';
+		category+='<option value=1>财经新闻</option>';
+		category+='</select></div></div>';
+		
+		total += category;
+	
+		
 	var content = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
 	content += '<label class="control-label col-sm-3" for="inputSuccess3">新闻内容</label>';
 	content += '<div class="col-sm-9">';
@@ -1832,6 +1856,7 @@ var newswrite = function(container){
 	$('#notice-create').click(function(e){
 		var title = $('#notice-title').val();
 		var content = $('#notice-content').val();
+		var category = parseInt($('#news-category').val());
 		
 		
 		
@@ -1842,7 +1867,7 @@ var newswrite = function(container){
 			alert('新闻内容不能为空');
 			return;
 		}
-		var news = {'_t_':'gpps.model.News', 'title':title, 'content': content, 'publishtime': (new Date()).getTime()};
+		var news = {'_t_':'gpps.model.News', 'title':title, 'content': content, 'publishtime': (new Date()).getTime(), 'publicType' : category};
 		newsservice.create(news);
 		window.location.href="opadmin.html?fid=news&sid=news-view";
 	});
@@ -1862,7 +1887,7 @@ var helpwrite = function(container){
 		category+='<option value=1>常见问题</option>';
 		category+='<option value=2>交易管理</option>';
 		category+='<option value=3>投资融资</option>';
-		category+='<option value=3>免责声明</option>';
+		category+='<option value=4>免责声明</option>';
 		category+='</select></div></div>';
 		
 		total += category;
@@ -1925,6 +1950,19 @@ var noticewrite = function(container){
 		
 		total += title;
 		
+		
+		var category = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
+		category+='<label class="control-label col-sm-3" for="inputSuccess3">公告类型</label>';
+		category+='<div class="col-sm-9">';
+		category+='<select class="form-control" id="notice-category">';
+		category+='<option value=0>平台公告</option>';
+		category+='<option value=1>企业公告</option>';
+		category+='<option value=2>活动公告</option>';
+		category+='</select></div></div>';
+		
+		total += category;
+		
+		
 	var content = '<div class="form-group has-success has-feedback" style="margin-top:5px;">';
 	content += '<label class="control-label col-sm-3" for="inputSuccess3">公告内容</label>';
 	content += '<div class="col-sm-9">';
@@ -1968,6 +2006,9 @@ var noticewrite = function(container){
 		var title = $('#notice-title').val();
 		var content = $('#notice-content').val();
 		var usertype = $("input[name=usertype]:checked").attr("value");
+		
+		var noticecategory = parseInt($('#notice-category').val());
+		
 		var level = $('#level').val();
 		
 		
@@ -1979,7 +2020,7 @@ var noticewrite = function(container){
 			alert('公告内容不能为空');
 			return;
 		}
-		var notice = {'_t_':'gpps.model.Notice', 'title':title, 'content': content, 'publishtime': (new Date()).getTime(), 'usefor':parseInt(usertype), 'level': parseInt(level)};
+		var notice = {'_t_':'gpps.model.Notice', 'title':title, 'content': content, 'publishtime': (new Date()).getTime(), 'usefor':parseInt(usertype), 'level': parseInt(level), 'publicType':noticecategory};
 		nservice.create(notice);
 		window.location.href="opadmin.html?fid=notice&sid=notice-view";
 	});

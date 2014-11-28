@@ -12,13 +12,13 @@ public class CreateLetter {
 	protected static ApplicationContext context =new FileSystemXmlApplicationContext(SPRINGCONFIGPATH);
 	public static void main(String args[]){
 		ILetterService lservice = context.getBean(ILetterService.class);
-		for(int i=0; i<20; i++)
+		for(int i=0; i<5; i++)
 		{
 		Letter letter = new Letter();
 		letter.setContent("你好啊小美女"+i+"！");
 		letter.setCreatetime((new Date()).getTime());
 		letter.setMarkRead(0);
-		letter.setReceiverId(260);
+		letter.setReceiverId(1);
 		letter.setReceivertype(Letter.RECEIVERTYPE_LENDER);
 		lservice.create(letter);
 		}

@@ -389,7 +389,7 @@ $(document).ready(function () {
                 		   $('div#announcement').html('');
                 		   
                 		   var res = null;
-                			res = noticeService.findAll(0, 6);
+                			res = noticeService.findAll(-1, 0, 6);
                 			var total = res.get('total');
                 			var items = res.get('result');
                            
@@ -411,7 +411,7 @@ $(document).ready(function () {
 							$('div#announcement').html('');
                            
 							var res = null;
-							res = newsService.findAll(0, 6);
+							res = newsService.findAll(-1, 0, 6);
 							var total = res.get('total');
 							var items = res.get('result');
 							

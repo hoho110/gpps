@@ -8,11 +8,21 @@
 <!-- Bootstrap core CSS -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
 <link type="text/css" href="css/jquery-ui-1.9.2.custom.min.css" rel="stylesheet" />
+
+<link href="js/uploadify2/uploadify.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" id="spi-render-css-css"
+	href="css/image/render.css" type="text/css" media="all" />
+<link rel="stylesheet" type="text/css"
+	href="css/image/default.include.b2676e.css" media="all" />
+
 <script src="js/jquery.min.js"></script>
 <script src="js/tool.js"></script>
 <script src="js/jquery.dataTables.js"></script>
 <script src="js/jquery-ui-1.9.2.custom.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/uploadify2/jquery.uploadify.min.js"></script>
+
+
 <script type="text/javascript"
 				src="/resources/EasyServiceClientFullZ.js"></script>
 <script type="text/javascript"
@@ -81,8 +91,27 @@
 
 			</div>
 		</div>
+		
+		
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-12" for="inputSuccess3">活动简介</label>
+			<div class="col-sm-12">
+				<textarea style="width:99%; height:300px;" id="description"></textarea>
+			</div>
+			</div>
+		
+		
 		</div>
 		
+		
+		<div class="row" style="border: #eee solid 1px;">
+			<div id="fileQueue" class="col-md-12">
+				<input type="file" name="uploadify" id="uploadify" /> 
+				<button id="upload">上传</button><button id="clearall">清空列表</button>
+			</div>
+		</div>
+		<div class="row" id="category_0" data-desk="0" style="border: #eee solid 1px; min-height:50px;">
+		</div>
 		
 		
 		<div class="row" style="margin-bottom:20px; margin-top:20px;padding-left:20px;">
@@ -121,8 +150,44 @@
 		$('#starttime').val(formatDateToDay(act.starttime));
 		$('#url').val(act.url);
 		$('#state').val(act.state);
+		$('#description').val(act.description);
 	}
 
+ 
+ 
+ function refreshActAccessory(){
+	    var actId=id;
+	    
+	    
+	    var item=service.findMimeItem(id);
+	    
+	    $("#category_0").empty();
+	    
+	    if(item)
+	    {
+	    	
+	    	$("#category_0").append('<div class="col-md-12">活动展示图片:</div>');
+	              var url="/download/activity/"+id+"/1/"+item.id;
+	              var viewurl="/imageview/activity/"+id+"/1/"+item.id;
+	              
+	              var single = $("<div class='col-md-4'></div>");
+	              single.append("<div><a class='sit-preview' href='"+viewurl+"' target='_blank'><img src='"+url+"' data-preview-url='"+url+"' style='width:200px; height:150px;'/></a></div>");
+	              var div = $('<div></div>');
+	              var a = $("<a class='btn btn-warning btn-lg' href='#' style='width:200px;' id='"+item.id+"' data-desk='1'>删除</a>");
+	              a.click(function(e){
+	            	  deleteActivityAccessory(id,$(this).attr('id'));
+	              })
+	              div.append(a);
+	              single.append(div);
+	              
+	              $("#category_0").append(single);
+	    }
+	    
+	}
+	function deleteActivityAccessory(actId,itemId){
+		service.delAccessory(actId,itemId);
+		refreshActAccessory();
+	}
  
  
  
@@ -264,6 +329,15 @@ $(document).ready(function() {
 		
 		refreshInfo();
 		activity();
+		
+		
+		$('#upload').click(function(e){
+			$('#uploadify').uploadify('settings','uploader','/upload/activity/'+id+'/1');
+			$('#uploadify').uploadify('upload','*')
+		});
+		$('#clearall').click(function(e){
+			$('#uploadify').uploadify('cancel', '*');
+		});
 	
 	
     $('#save').click(function(e){
@@ -272,6 +346,7 @@ $(document).ready(function() {
 			var starttime = new Date(Date.parse($('#starttime').val())).getTime();
 			var state = $('#state').val();
 			var url = $('input#url').val();
+			var description = $('#description').val();
 			
 			
 			
@@ -300,12 +375,26 @@ $(document).ready(function() {
 					$('input#url').parent().parent().removeClass('has-error').addClass('has-success');
 					removeMessage();
 				}
+			
+			
+			if(description==null||description==''){
+				$('input#description').parent().find('span').remove();
+				$('input#description').parent().append(error);
+				$('input#description').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*请输入活动简介');
+				return;
+				}else{
+					$('input#description').parent().find('span').remove();
+					$('input#description').parent().append(ok);
+					$('input#description').parent().parent().removeClass('has-error').addClass('has-success');
+					removeMessage();
+				}
 
 			
 			
 
 			try{
-				service.update(id,title, applyendtime,starttime,url,parseInt(state));
+				service.update(id,title, applyendtime,starttime,url,parseInt(state),description);
 				alert('活动详情保存成功！');
 			}catch(ee){
 				alert(ee.message);
@@ -314,6 +403,27 @@ $(document).ready(function() {
 			
 			
         });
+    
+    
+    
+    refreshActAccessory();
+    $("#uploadify").uploadify({
+            'swf'       : 'js/uploadify2/uploadify.swf',   
+            'uploader'         : '',//servlet的路径或者.jsp 这是访问servlet 'scripts/uploadif' 
+            'auto'     : false,
+            'removeCompleted' : true,
+            'progressData' : 'percentage',
+            'buttonText' : '选择上传文件',
+            'fileSizeLimit' : '1GB',
+            'fileTypeExts' : '*.*',
+            'multi'    : true,
+            'requeueErrors' : true,
+            'cancelImg'      : 'js/uploadify2/uploadify-cancel.png',   
+            'queueID'        : 'fileQueue',
+            'onUploadComplete'  :function(event,queueId,fileObj,response,data){
+            	refreshActAccessory();
+            }
+        }); 
 	
 })
 </script>

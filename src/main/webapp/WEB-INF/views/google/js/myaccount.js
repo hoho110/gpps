@@ -1237,7 +1237,7 @@ var noticeview = function(container){
 				iDisplayLength = data.value;
 		}
 		var res = null;
-		res = nservice.findAll(iDisplayStart, iDisplayLength);
+		res = nservice.findAll(-1, iDisplayStart, iDisplayLength);
 		var result = {};
 		result.iTotalRecords = res.get('total');
 		result.iTotalDisplayRecords = res.get('total');

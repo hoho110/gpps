@@ -10,6 +10,7 @@ public class Notice {
 	public static final int USEFOR_BORROWER = 2;
 	private int usefor =USEFOR_ALL;//0 ：All,1:lender 2：borrower
 	private int level = 0;
+	private int publicType;
 	public Integer getId() {
 		return id;
 	}
@@ -45,5 +46,11 @@ public class Notice {
 	}
 	public void setLevel(int level) {
 		this.level = level;
+	}
+	public int getPublicType() {
+		return publicType;
+	}
+	public void setPublicType(int publicType) {
+		this.publicType = publicType;
 	}
 }

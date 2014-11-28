@@ -25,11 +25,11 @@ public class NewsServiceImpl implements INewsService{
 	}
 
 	@Override
-	public Map<String, Object> findAll(int offset, int recnum) {
-		int count=newsDao.count();
+	public Map<String, Object> findAll(int publicType,int offset, int recnum) {
+		int count=newsDao.count(publicType);
 		if(count==0)
 			return Pagination.buildResult(null, count, offset, recnum);
-		List<News> news=newsDao.findAll(offset, recnum);
+		List<News> news=newsDao.findAll(publicType,offset, recnum);
 		return Pagination.buildResult(news, count, offset, recnum);
 	}
 

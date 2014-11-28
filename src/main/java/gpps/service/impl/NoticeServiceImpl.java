@@ -36,7 +36,7 @@ public class NoticeServiceImpl implements INoticeService{
 	}
 
 	@Override
-	public Map<String, Object> findAll(int offset,
+	public Map<String, Object> findAll(int publicType,int offset,
 			int recnum) {
 		List<Integer> userfors=null;
 		int level=-1;
@@ -60,10 +60,10 @@ public class NoticeServiceImpl implements INoticeService{
 			userfors.add(Notice.USEFOR_ALL);
 			userfors.add(Notice.USEFOR_BORROWER);
 		}
-		int count=noticeDao.count(userfors, level);
+		int count=noticeDao.count(publicType,userfors, level);
 		if(count==0)
 			return Pagination.buildResult(null, count, offset, recnum);
-		List<Notice> notices=noticeDao.findAll(userfors, level, offset, recnum);
+		List<Notice> notices=noticeDao.findAll(publicType,userfors, level, offset, recnum);
 		return Pagination.buildResult(notices, count, offset, recnum);
 	}
 

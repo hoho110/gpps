@@ -292,6 +292,7 @@ create table News
             1:private',
    content              mediumtext,
    publishtime          bigint not null,
+   publictype int not null default 0,
    primary key (id)
 );
 
@@ -309,6 +310,7 @@ create table Notice
             0：lender
             1：borrower',
    level                int not null default -1 comment '-1：不限，to不为-1时启用',
+   publictype int not null default 0,
    primary key (id)
 );
 

@@ -7,5 +7,12 @@ import java.util.Map;
 public interface INewsService {
 	public void create(News news);
 	public News find(Integer id);
-	public Map<String,Object> findAll(int offset,int recnum);
+	/**
+	 * 
+	 * @param publicType -1为不限
+	 * @param offset
+	 * @param recnum
+	 * @return
+	 */
+	public Map<String,Object> findAll(int publicType,int offset,int recnum);
 }

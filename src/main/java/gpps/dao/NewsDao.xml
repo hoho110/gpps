@@ -8,16 +8,22 @@
 	<insert id="create" parameterType="gpps.model.News"
         useGeneratedKeys="true" keyProperty="id">
         insert into
-        News(title,content,publishtime)
-        values(#{title},#{content},#{publishtime})
+        News(title,content,publishtime,publicType)
+        values(#{title},#{content},#{publishtime},#{publicType})
     </insert>
-    <select id="count" resultType="int">
+    <select id="count" parameterType="int" resultType="int">
         select count(*)
-        from News
+        from News 
+        <if test="publicType != -1">
+            where publicType=#{publicType}
+        </if>
     </select>
 	<select id="findAll" resultType="gpps.model.News">
 		select *
         from News
+        <if test="publicType != -1">
+            where publicType=#{publicType}
+        </if>
 		order by publishtime desc
 		LIMIT #{offset}, #{recnum}
 	</select>

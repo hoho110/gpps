@@ -5,6 +5,7 @@ public class News {
 	private String title;
 	private String content;
 	private long publishtime = System.currentTimeMillis();
+	private int publicType;
 	public Integer getId() {
 		return id;
 	}
@@ -28,5 +29,11 @@ public class News {
 	}
 	public void setPublishtime(long publishtime) {
 		this.publishtime = publishtime;
+	}
+	public int getPublicType() {
+		return publicType;
+	}
+	public void setPublicType(int publicType) {
+		this.publicType = publicType;
 	}
 }

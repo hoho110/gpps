@@ -13,11 +13,17 @@
     </insert>
     <select id="countByState" resultType="int">
         select count(*)
-        from Activity where state=#{state}
+        from Activity
+        <if test="state != -1">
+            where state=#{state}
+        </if>
     </select>
 	<select id="findByState" resultType="gpps.model.Activity">
 		select *
-        from Activity where state=#{state}
+        from Activity 
+        <if test="state != -1">
+            where state=#{state}
+        </if>
 		order by createtime desc
 		LIMIT #{offset}, #{recnum}
 	</select>

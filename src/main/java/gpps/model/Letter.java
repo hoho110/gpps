@@ -2,6 +2,7 @@ package gpps.model;
 
 public class Letter {
 	private Integer id;
+	private String title;
 	public static final int RECEIVERTYPE_LENDER=0;
 	public static final int RECEIVERTYPE_BORROWER=1;
 	private int receivertype;
@@ -17,6 +18,12 @@ public class Letter {
 	}
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
 	}
 	public int getReceivertype() {
 		return receivertype;

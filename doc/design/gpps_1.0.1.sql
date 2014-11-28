@@ -271,6 +271,7 @@ create table LenderAccount
 create table Letter
 (
    id                   integer not null auto_increment,
+   title                varchar(255),
    receivertype         int not null default 0 comment '0:lender
             1:borrower',
    receiverId           Integer not null,

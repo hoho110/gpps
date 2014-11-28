@@ -2,3 +2,4 @@ alter table Help add(answertime bigint);
 alter table Letter add(readtime bigint);
 alter table News add(publictype int not null default 0);
 alter table Notice add(publictype int not null default 0);
+alter table Letter add(title varchar(255)); 

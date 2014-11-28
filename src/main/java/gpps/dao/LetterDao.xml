@@ -8,8 +8,8 @@
 	<insert id="create" parameterType="gpps.model.Letter"
         useGeneratedKeys="true" keyProperty="id">
         insert into
-        Letter(receivertype,receiverId,content,createtime,markRead,readtime)
-        values(#{receivertype},#{receiverId},#{content},#{createtime},#{markRead},#{readtime})
+        Letter(title,receivertype,receiverId,content,createtime,markRead,readtime)
+        values(#{title},#{receivertype},#{receiverId},#{content},#{createtime},#{markRead},#{readtime})
     </insert>
     <select id="countByReceiver" resultType="int">
         select count(*)

@@ -91,15 +91,32 @@ function removeMessage(){
 
 
 
+function getQueryString(name) { 
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+	var r = window.parent.location.search.substr(1).match(reg); 
+	if (r != null) return decodeURI(r[2]); return null; 
+	}
+
+
+
  
 $(document).ready(function() {
 	var refservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IActivityRefService");
 	var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 	
 	var user = service.getCurrentUser();
+	
+	var idstr = getQueryString('id');
+	if(idstr==null){
+		alert('无法获得活动ID！');
+		return;
+	}
+	
+	var id = parseInt(idstr);
+	
 	if(user!=null){
 		
-		var isattend = refservice.isApply(1, user.id);
+		var isattend = refservice.isApply(id, user.id);
 		
 		$('#attendmessage').html('您好，用户'+user.loginId+':<br><br><br><br>');
 		
@@ -107,7 +124,7 @@ $(document).ready(function() {
 		$('#attendmessage').append('<button id="uattend" class="btn btn-lg btn-success btn-block">我要报名</button>');
 		$('#uattend').click(function(e){
 			try{
-				refservice.applyActivity(1);
+				refservice.applyActivity(id);
 				window.parent.location.href="myaccount.html?fid=mycenter&sid=my-activity";
 			}catch(ee){
 				alert(ee.message);
@@ -185,7 +202,7 @@ $(document).ready(function() {
 				}
 
 			try{
-				refservice.applyActivityByAnonymous(name, phone,email, validate,1);
+				refservice.applyActivityByAnonymous(name, phone,email, validate,id);
 				window.parent.location.href="myaccount.html?fid=mycenter&sid=my-activity";
 			}catch(ee){
 				alert(ee.message);

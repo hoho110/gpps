@@ -1699,7 +1699,7 @@ var activity = function(container){
 		{
 			for(var i=0; i<items.size(); i++){
 				var data=items.get(i);
-				result.aaData.push(['<a href="'+data.url+'" target="_blank">'+data.name+'</a>',
+				result.aaData.push(['<a href="'+data.url+'?id='+data.id+'" target="_blank">'+data.name+'</a>',
 				             formatDate(data.applystarttime),
 				             formatDate(data.starttime),
 				             actstate[data.state],

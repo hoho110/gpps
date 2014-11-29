@@ -211,7 +211,7 @@ var myactivity = function(container){
 		{
 			for(var i=0; i<items.size(); i++){
 				var data=items.get(i);
-				result.aaData.push(['<a href="'+data.activity.url+'" target="_blank">'+data.activity.name+'</a>',
+				result.aaData.push(['<a href="'+data.activity.url+'?id='+data.activity.id+'" target="_blank">'+data.activity.name+'</a>',
 				             formatDate(data.activity.applystarttime),
 				             formatDate(data.activity.starttime),
 				             actstate[data.activity.state]]);
@@ -233,13 +233,8 @@ var myactivity = function(container){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append("<div style='float:right; margin-top:10px;'><button id='addactivity'>添加活动</button></div>");
 	container.append(content);
 	table.dataTable(mySettings);
-	
-	$('#addactivity').click(function(e){
-		window.open('addactivity.html');
-	});
 }
 
 var submitall = function(container){

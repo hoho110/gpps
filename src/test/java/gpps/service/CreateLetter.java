@@ -18,8 +18,8 @@ public class CreateLetter {
 		letter.setContent("你好啊小美女"+i+"！");
 		letter.setCreatetime((new Date()).getTime());
 		letter.setMarkRead(0);
-		letter.setReceiverId(1);
-		letter.setReceivertype(Letter.RECEIVERTYPE_LENDER);
+		letter.setReceiverId(340);
+		letter.setReceivertype(Letter.RECEIVERTYPE_BORROWER);
 		lservice.create(letter);
 		}
 		System.exit(0);

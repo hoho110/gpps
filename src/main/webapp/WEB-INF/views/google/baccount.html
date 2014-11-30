@@ -59,6 +59,10 @@
         src="/easyservice/gpps.service.IProductService?json"></script>
     <script type="text/javascript"
         src="/easyservice/gpps.service.IHelpService?json"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.ILetterService?json"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.INoticeService?json"></script>
 	<script type="text/javascript"
         src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
 	<script src="js/baccount.js"></script>
@@ -308,13 +312,31 @@ a.accordion-toggle {
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title" id="nlabel">站内信</h4>
+        <h4 class="modal-title" id="nlabel"></h4>
       </div>
       <div class="modal-body" id="ndetail">
       			
       </div>
       <div class="modal-footer">
         <button id="nclose" type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="letterdetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">站内信</h4>
+      </div>
+      <div class="modal-body" id="ldetail">
+      			
+      </div>
+      <div class="modal-footer">
+        <button id="lclose" type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
       </div>
     </div>
   </div>

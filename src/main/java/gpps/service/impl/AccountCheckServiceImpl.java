@@ -20,6 +20,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,10 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 	private ILenderDao lenderDao;
 	private static final int DEFAULT_RECNUM=100;
 	private static final String NEWLINE="\r\n";
+	@PostConstruct
+	public void init() {
+		checkAccount();
+	}
 	@Override
 	public void checkAccount() {
 		if (future != null && !future.isDone())
@@ -65,7 +71,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							continue;
 						}
 						LenderAccount account=lenderAccountDao.find(lender.getAccountId());
-						String[] thirdAccount=text.split("|");
+						String[] thirdAccount=text.split("\\|");
 						if(!compareAccount(thirdAccount[0], account.getUsable())||!compareAccount(thirdAccount[2], account.getFreeze()))
 						{
 							appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), 
@@ -97,7 +103,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 						actions.add(CashStream.ACTION_PAY);
 						actions.add(CashStream.ACTION_REPAY);
 						sum=cashStreamDao.sumCashStream(lender.getAccountId(), null, actions);
-						if(account.getUsed().compareTo(sum.getChiefAmount())!=0)
+						if(account.getUsed().negate().compareTo(sum.getChiefAmount())!=0)
 						{
 							appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "已用金额与现金流验证错误,已用金额:"+account.getFreeze().toString()+",现金流:"+sum.getChiefAmount());
 						}

@@ -671,12 +671,14 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		RsaHelper rsa = RsaHelper.getInstance();
 		String signInfo=rsa.signData(sBuilder.toString(), privateKey);
 		params.put("SignInfo", signInfo);
-		try {
-			params.put("LoanNoList",URLEncoder.encode(params.get("LoanJsonList"),"UTF-8"));
-		} catch (UnsupportedEncodingException e) {
+		String body=null;
+		try
+		{
+			body=httpClientService.post(getBaseUrl(ACTION_BALANCEQUERY), params);
+		}catch(Throwable e)
+		{
 			e.printStackTrace();
 		}
-		String body=httpClientService.post(getBaseUrl(ACTION_BALANCEQUERY), params);
 		return body;
 	}
 }

@@ -309,7 +309,7 @@ var createSingleProduct = function(pro){
 	
 	var str = '<tr class="ui-list-item" id="header" style="padding-left:0px; padding-right:0px;">';
 	str += '<td class="text-big">';
-	str += '<div style="max-width:150px; overflow:hidden;">';
+	str += '<div style="max-width:200px; overflow:hidden;">';
 	str += '<a class="producttitle" href="productdetail.html?pid='+pro.id+'" target="_blank" title="'+order.title+'">'+order.title+'</a>';
 	str += '</div>';
 	str += '</td>';

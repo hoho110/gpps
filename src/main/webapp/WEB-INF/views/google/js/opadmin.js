@@ -121,11 +121,14 @@ var createAdminNavLevel2 = function(nav){
 		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-financing">待审核融资订单<font color=red>('+tof+')</font></a></li>');
 		var tclo = res.waitingCloseOrderCount;
 		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-toclose">待关闭订单<font color=red>('+tclo+')</font></a></li>');
+		
+		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-repay">待审核还款<font color=red>(0)</font></a></li>');
 		ul.append(li1);
 		ul.append(li2);
 		ul.append(li3);
 		ul.append(li4);
 		ul.append(li5);
+		ul.append(li6);
 	}
 	else if(nav=='borrower'){
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="borrower-new">新注册企业</a></li>');

@@ -153,7 +153,7 @@
       
       
       <div class="row" style="margin-top:5px;">
-      <div class="col-md-8" style="padding-right:0px;">
+      <div class="col-md-12">
       
       
       
@@ -189,29 +189,33 @@
       
       
       </div>
-      <div class="col-md-4">
-
-
-		<ul id="announ" class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a class="announce" data-sk="platform" href="javascript:void(0);">平台公告</a></li>
-        <li role="presentation"><a class="announce" data-sk="news" href="javascript:void(0);">新闻资讯</a></li>
-      </ul>
-      <div class="col-md-12" style="padding-left:0px; padding-right:0px;" id="announcement">
+      
 		
+		<div class="col-md-6">
+		<div class="col-md-12" style="padding-bottom:5px; border-bottom: 3px solid grey;"><a class="announce" data-sk="platform" href="javascript:void(0);"><span style="font-size:18px; font-weight:bold;">平台公告</span></a>
 		</div>
-
-
-
-
-
-
+      	<div class="col-md-12" style="padding-left:0px; padding-right:0px;" id="notice">
 		</div>
+		</div>
+		
+		
+		<div class="col-md-6">
+      	<div class="col-md-12" style="padding-bottom:5px; border-bottom: 3px solid grey;"><a class="news" data-sk="platform" href="javascript:void(0);"><span style="font-size:18px; font-weight:bold;">新闻资讯</span></a>
+		</div>
+      	<div class="col-md-12" style="padding-left:0px; padding-right:0px;" id="news">
+		</div>
+		</div>
+		
+		
+		
+		
+		
       </div>
       
       
       
       
-	<div class="row foot" id="footer" style="border: #eee solid 1px; background:#eee; height:120px; font-size:13px; margin-top:5px; margin-left: 0px; margin-right:0px;">
+	<div class="row foot" id="footer" style="border: #eee solid 1px; background:#eee; height:120px; font-size:13px; margin-top:25px; margin-left: 0px; margin-right:0px;">
 
 	</div>
 	
@@ -381,56 +385,53 @@ $(document).ready(function () {
                    
                    
                    
-                   $('a.announce').click(function(e){
-                	   $(this).parent().parent().find('li').removeClass('active');
-                	   $(this).parent().addClass('active');
-                	   
-                	   if($(this).attr('data-sk')=='platform'){
-                		   $('div#announcement').html('');
-                		   
-                		   var res = null;
-                			res = noticeService.findAll(-1, 0, 6);
-                			var total = res.get('total');
-                			var items = res.get('result');
-                           
-                           var listgroup = $('<div class="list-group" style="margin-bottom:0px; color:#999;"></div>');
-                           
-                           if(items)
-                        {
-                           for(var i=0; i<items.size(); i++){
-                        	   var content = items.get(i).content;
-                        	   if(content.length>60){
-                        		   content = content.substring(0, 60)+'......';
-                        	   }
-                        	   listgroup.append('<a href="intro/announce.html?nid='+items.get(i).id+'" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">'+items.get(i).title+'</span><span class="publish-time">'+formatDateToDay(items.get(i).publishtime)+'</span><p class="announce-text">'+content+'</p></a>'); 
-                           }
-                        }
-                           
-                           $('div#announcement').append(listgroup);
-                	   }else{
-							$('div#announcement').html('');
-                           
-							var res = null;
-							res = newsService.findAll(-1, 0, 6);
-							var total = res.get('total');
-							var items = res.get('result');
-							
-                           var listgroup = $('<div class="list-group" style="margin-bottom:0px;"></div>');
-                           
-                           if(items){
-                        	   for(var i=0; i<items.size(); i++){
-                        		   var content = items.get(i).content;
-                        		   if(content.length>60){
-                        			   content = content.substring(0,60)+'......';
-                        		   }
-                        		   listgroup.append('<a href="intro/companyinfo.html?nid='+items.get(i).id+'" target="_blank" title="察看详情" class="list-group-item"><span class="announce-title">'+items.get(i).title+'</span><span class="publish-time">'+formatDateToDay(items.get(i).publishtime)+'</span><p class="announce-text">'+content+'</p></a>'); 
-                        	   }
-                           }
-                           
-                           $('div#announcement').append(listgroup);
-                	   }
-                   });
-                   $('ul#announ').find('li.active').find('a.announce').trigger('click');
+                   
+                   {
+
+            		   $('div#notice').html('');
+            		   
+            		   var res = null;
+            			res = noticeService.findAll(-1, 0, 6);
+            			var total = res.get('total');
+            			var items = res.get('result');
+                       
+                       var listgroup = $('<div class="row" style="margin-bottom:0px; color:#999;"></div>');
+                       
+                       if(items)
+                    {
+                       for(var i=0; i<items.size(); i++){
+                    	  
+                    	   listgroup.append('<div class="col-md-12" style="font-size:14px; margin-top:15px;"><span class="glyphicon glyphicon-play"></span> <a href="intro/announce.html?nid='+items.get(i).id+'" target="_blank" title="察看详情"><span style="color:grey; font-size:16px;">'+items.get(i).title+'</span></a><span class="publish-time">'+formatDateToDay(items.get(i).publishtime)+'</span></div>'); 
+                       }
+                    }
+                       
+                       $('div#notice').append(listgroup);
+                   }
+                   
+                   
+                   {
+
+						$('div#news').html('');
+                      
+						var res = null;
+						res = newsService.findAll(-1, 0, 6);
+						var total = res.get('total');
+						var items = res.get('result');
+						
+                      var listgroup = $('<div class="row" style="margin-bottom:0px; color:#999;"></div>');
+                      
+                      if(items){
+                   	   for(var i=0; i<items.size(); i++){
+                   		listgroup.append('<div class="col-md-12" style="font-size:14px; margin-top:15px;"><span class="glyphicon glyphicon-play"></span> <a href="intro/news.html?nid='+items.get(i).id+'" target="_blank" title="察看详情"><span style="color:grey; font-size:16px;">'+items.get(i).title+'</span></a><span class="publish-time">'+formatDateToDay(items.get(i).publishtime)+'</span></div>'); 
+                   	   }
+                      }
+                      
+                      $('div#news').append(listgroup);
+                   }
+                   
+                   
+                   
+                   
                    
                    
                    

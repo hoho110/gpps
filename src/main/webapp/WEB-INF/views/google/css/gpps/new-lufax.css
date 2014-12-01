@@ -21,7 +21,7 @@
 	
 }
 .list-nav-wrap LI {
-	BORDER-BOTTOM: #fb7d04 1px solid; POSITION: relative; TEXT-ALIGN: center; BORDER-LEFT: #eaeaea 1px solid; BACKGROUND-COLOR: #fafafa; WIDTH: 190px; FLOAT: left; HEIGHT: 45px; MARGIN-LEFT: -1px; BORDER-TOP: #eaeaea 1px solid; BORDER-RIGHT: #eaeaea 1px solid
+	BORDER-BOTTOM: #fb7d04 1px solid; POSITION: relative; TEXT-ALIGN: center; BORDER-LEFT: #eaeaea 1px solid; BACKGROUND-COLOR: #fafafa; WIDTH: 210px; FLOAT: left; HEIGHT: 45px; MARGIN-LEFT: -1px; BORDER-TOP: #eaeaea 1px solid; BORDER-RIGHT: #eaeaea 1px solid
 }
 .list-nav-wrap LI.last-col {
 	WIDTH: 194px; MARGIN-RIGHT: 0px
@@ -91,7 +91,7 @@
 	BORDER-BOTTOM: transparent 4px solid; BORDER-LEFT: #8d909a 4px solid; LINE-HEIGHT: 0; WIDTH: 0px; DISPLAY: inline-block; HEIGHT: 0px; MARGIN-LEFT: 5px; FONT-SIZE: 0px; VERTICAL-ALIGN: middle; BORDER-TOP: transparent 4px solid; BORDER-RIGHT: transparent 4px solid
 }
 .service-intro .service-intro-con {
-	LINE-HEIGHT: 50px; PADDING-LEFT: 10px; WIDTH: 850px; FLOAT: left; HEIGHT: 50px
+	LINE-HEIGHT: 50px; PADDING-LEFT: 10px; FLOAT: left; HEIGHT: 50px
 }
 .list-content {
 	WIDTH: 670px; FLOAT: left

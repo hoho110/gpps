@@ -144,6 +144,11 @@ $(document).ready(function() {
 	
 	var thirdPartyAccount = cuser.thirdPartyAccount;
 	
+	if(cuser.name!=null)
+		{
+			$('#name').val(cuser.name);
+		}
+	
 	$('#name').focus();
 		$('#skip').click(function(e){
 			window.parent.toward("myaccount");

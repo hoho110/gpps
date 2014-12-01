@@ -52,4 +52,5 @@ public interface IThirdPaySupportService {
 	public void checkBuyProcessor(Map<String,String> params) throws SignatureException, ResultCodeException;
 	public void repayProcessor(Map<String,String> params) throws SignatureException, ResultCodeException;
 	public void checkCash(Integer cashStreamId) throws IllegalOperationException;
+	public String balanceQuery(String thirdPartyAccount);
 }

@@ -109,4 +109,21 @@
 			and action=#{action}
 		</if>
     </select>
+	<select id="sumCashStream" resultType="gpps.service.CashStreamSum">
+		select sum(chiefamount) chiefAmount,sum(interest) interest from CashStream
+		where (state=2 or state=8)
+		<if test="lenderAccountId != null">
+		  and lenderAccountId=#{lenderAccountId}
+		</if>
+		<if test="borrowerAccountId != null">
+		  and borrowerAccountId=#{borrowerAccountId}
+		</if>
+		<if test="actions != null">
+		  and action in
+            <foreach item="item" index="index" collection="actions" open="("
+                separator="," close=")">
+                #{item}
+            </foreach>
+		</if>
+	</select>
 </mapper>

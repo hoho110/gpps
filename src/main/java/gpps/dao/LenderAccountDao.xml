@@ -44,4 +44,11 @@
 	<delete id="delete">
 	   delete from LenderAccount where id=#{accountId}
 	</delete>
+	<select id="countAll" resultType="int">
+	   select count(*) from LenderAccount
+	</select>
+	<select id="findAll" resultType="gpps.model.LenderAccount">
+       select * from LenderAccount
+       LIMIT #{offset}, #{recnum}
+    </select>
 </mapper>

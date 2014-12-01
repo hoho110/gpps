@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import gpps.model.CashStream;
 import gpps.model.PayBack;
+import gpps.service.CashStreamSum;
 import gpps.service.PayBackDetail;
 
 public interface ICashStreamDao {
@@ -43,4 +44,6 @@ public interface ICashStreamDao {
 	 * @return
 	 */
 	public List<CashStream> findSuccessByActionAndLoanNo(@Param("action")int action,@Param("loanNo")String loanNo);
+	
+	public CashStreamSum sumCashStream(@Param("lenderAccountId")Integer lenderAccountId,@Param("borrowerAccountId")Integer borrowerAccountId,@Param("actions")List<Integer> actions);
 }

@@ -1,6 +1,7 @@
 package gpps.dao;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -9,6 +10,8 @@ import gpps.model.LenderAccount;
 public interface ILenderAccountDao {
 	public void create(LenderAccount lenderAccount);
 	public LenderAccount find(Integer accountId);
+	public int countAll();
+	public List<LenderAccount> findAll(@Param("offset")int offset,@Param("recnum")int recnum);
 	/**
 	 * 充值
 	 * total=total+amount

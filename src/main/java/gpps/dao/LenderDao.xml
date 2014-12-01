@@ -4,6 +4,10 @@
 	<select id="countAll" resultType="int">  <!-- 查询表中记录总数 -->
 		select count(*) c from lender;
 	</select>
+	<select id="findAll" resultType="gpps.model.Lender">
+	   select * from Lender 
+	   LIMIT #{offset}, #{recnum}	   
+	</select>
 	<select id="find" parameterType="Integer" resultType="gpps.model.Lender">
 		select *
 		from Lender where id=#{id}

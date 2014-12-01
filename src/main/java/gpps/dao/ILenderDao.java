@@ -9,6 +9,7 @@ import gpps.model.Lender;
 
 public interface ILenderDao {
 	public int countAll();
+	public List<Lender> findAll(@Param("offset")int offset,@Param("recnum")int recnum);
 	public Lender find(Integer id);
 	public Lender findByLoginId(String loginId);
 	public Lender findByLoginIdAndPassword(@Param("loginId") String loginId,@Param("password") String password);

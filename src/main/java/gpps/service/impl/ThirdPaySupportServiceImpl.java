@@ -64,6 +64,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	public static final String ACTION_CASH="5";
 	public static final String ACTION_AUTHORIZE="6";
 	public static final String ACTION_ORDERQUERY="7";
+	public static final String ACTION_BALANCEQUERY="8";
 	private static Map<String, String> urls=new HashMap<String, String>();
 	static {
 		urls.put(ACTION_REGISTACCOUNT, "/loan/toloanregisterbind.action");
@@ -74,6 +75,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		urls.put(ACTION_CASH, "/loan/toloanwithdraws.action");
 		urls.put(ACTION_AUTHORIZE, "/loan/toloanauthorize.action");
 		urls.put(ACTION_ORDERQUERY, "/loan/loanorderquery.action");
+		urls.put(ACTION_BALANCEQUERY, "/loan/balancequery.action");
 	}
 	private String url="";
 	private String platformMoneymoremore="p401";
@@ -472,7 +474,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 				temp.clear();
 				sendRepay(params,baseUrl);
 				//测试
-				sendRepayRollback(LoanJsonList,params.get("NotifyURL"));
+//				sendRepayRollback(LoanJsonList,params.get("NotifyURL"));
 			}
 		}
 		if(temp.size()>0)
@@ -656,5 +658,25 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		} catch (IllegalConvertException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public String balanceQuery(String thirdPartyAccount) {
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("PlatformId", thirdPartyAccount);
+		params.put("PlatformMoneymoremore", platformMoneymoremore);
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append(thirdPartyAccount);
+		sBuilder.append(platformMoneymoremore);
+		RsaHelper rsa = RsaHelper.getInstance();
+		String signInfo=rsa.signData(sBuilder.toString(), privateKey);
+		params.put("SignInfo", signInfo);
+		try {
+			params.put("LoanNoList",URLEncoder.encode(params.get("LoanJsonList"),"UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		String body=httpClientService.post(getBaseUrl(ACTION_BALANCEQUERY), params);
+		return body;
 	}
 }

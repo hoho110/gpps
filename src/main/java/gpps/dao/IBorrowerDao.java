@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 public interface IBorrowerDao {
 	public int countAll();
+	public List<Borrower> findAll(@Param("offset")int offset,@Param("recnum")int recnum);
 	public Borrower find(Integer id);
 	public Borrower findByLoginId(String loginId);
 	public Borrower findByLoginIdAndPassword(@Param("loginId") String loginId,@Param("password") String password);

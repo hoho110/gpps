@@ -2,6 +2,7 @@ package gpps.model;
 
 public class HandleLog {
 	private Integer id;
+	public static final int HANDLERTYPE_ANONYMOUS=-1;
 	public static final int HANDLERTYPE_LENDER=0;
 	public static final int HANDLERTYPE_BORROWER=1;
 	public static final int HANDLERTYPE_ADMIN=2;

@@ -237,28 +237,29 @@ public class HttpTransport {
 				try {
 					HttpSession session=req.getHttpParse().getRequest().getSession();
 					Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
-					if(user!=null)
-					{
-						HandleLog handleLog=new HandleLog();
-						if(user instanceof Lender)
-						{
-							handleLog.setHandlerId(((Lender)user).getId());
-							handleLog.setHandlertype(HandleLog.HANDLERTYPE_LENDER);
-						}
-						else if(user instanceof Borrower)
-						{
-							handleLog.setHandlerId(((Borrower)user).getId());
-							handleLog.setHandlertype(HandleLog.HANDLERTYPE_BORROWER);
-						}else if(user instanceof Admin)
-						{
-							handleLog.setHandlerId(((Admin)user).getId());
-							handleLog.setHandlertype(HandleLog.HANDLERTYPE_ADMIN);
-						}
-						handleLog.setCallmethod(req.getMethod().getName());
-						handleLog.setCallService(req.getInterfacClass().getName());
-						handleLog.setCallparam(eJsonIOManager.getSerializer(req.getArgs()).serialize(req.getArgs()));
-						handleLogService.create(handleLog);
+					HandleLog handleLog=new HandleLog();
+					if(user==null){
+						handleLog.setHandlerId(-1);
+						handleLog.setHandlertype(HandleLog.HANDLERTYPE_ANONYMOUS);
 					}
+					else if(user instanceof Lender)
+					{
+						handleLog.setHandlerId(((Lender)user).getId());
+						handleLog.setHandlertype(HandleLog.HANDLERTYPE_LENDER);
+					}
+					else if(user instanceof Borrower)
+					{
+						handleLog.setHandlerId(((Borrower)user).getId());
+						handleLog.setHandlertype(HandleLog.HANDLERTYPE_BORROWER);
+					}else if(user instanceof Admin)
+					{
+						handleLog.setHandlerId(((Admin)user).getId());
+						handleLog.setHandlertype(HandleLog.HANDLERTYPE_ADMIN);
+					}
+					handleLog.setCallmethod(req.getMethod().getName());
+					handleLog.setCallService(req.getInterfacClass().getName());
+					handleLog.setCallparam(eJsonIOManager.getSerializer(req.getArgs()).serialize(req.getArgs()));
+					handleLogService.create(handleLog);
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}

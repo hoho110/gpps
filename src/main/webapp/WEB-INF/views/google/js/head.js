@@ -52,27 +52,27 @@ function header(title){
 	navul.append('<li id="activity"><a href="activity.html">活动中心</a></li>');
 	navul.append('<li id="loan"><a href="loan.html">我要融资</a></li>');
 	
-	var navDiv = $('<div class="hidden-sm hidden-xs col-md-12" style="padding-left:0px; padding-right:0px;"></div>');
+	var navDiv = $('<div class="col-md-12" style="padding-left:0px; padding-right:0px;"></div>');
 	navDiv.append(navul);
 	
 	$('div#header').html('');
 	$('#header').append(divtitle);
 	$('#header').append(navDiv);
 	
-	var navSMDiv = $('<div class="navbar navbar-fixed-top"></div>');
-	navSMDiv.append('<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>');
-	var navuldiv = $('<div class="nav-collapse collapse"></div>');
-	var navsmul = $('<ul id="nav-list" class="nav pull-right"></ul>');
-	navsmul.append('<li><a href="#home">活动概况</a></li>');
-	navsmul.append('<li><a href="#about">详细介绍</a></li>');
-	navsmul.append('<li><a href="#updates">行程安排</a></li>');
-	navsmul.append('<li><a href="#rule">规则介绍</a></li>');
-	navsmul.append('<li><a href="#screenshots">相关图片</a></li>');
-	navsmul.append('<li><a href="#contact">我要报名</a></li>');
-	navuldiv.append(navsmul);
-	navSMDiv.append(navuldiv);
-	
-	$('#header').append(navSMDiv);
+//	var navSMDiv = $('<div class="navbar navbar-fixed-top"></div>');
+//	navSMDiv.append('<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>');
+//	var navuldiv = $('<div class="nav-collapse collapse"></div>');
+//	var navsmul = $('<ul id="nav-list" class="nav pull-right"></ul>');
+//	navsmul.append('<li><a href="#home">活动概况</a></li>');
+//	navsmul.append('<li><a href="#about">详细介绍</a></li>');
+//	navsmul.append('<li><a href="#updates">行程安排</a></li>');
+//	navsmul.append('<li><a href="#rule">规则介绍</a></li>');
+//	navsmul.append('<li><a href="#screenshots">相关图片</a></li>');
+//	navsmul.append('<li><a href="#contact">我要报名</a></li>');
+//	navuldiv.append(navsmul);
+//	navSMDiv.append(navuldiv);
+//	
+//	$('#header').append(navSMDiv);
 	
 	$('li[id="'+title+'"]').addClass('active');
 }

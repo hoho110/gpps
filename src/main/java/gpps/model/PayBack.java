@@ -15,6 +15,7 @@ public class PayBack {
 	public static int STATE_FINISHREPAY=2;
 	public static int STATE_DELAY=3;
 	public static int STATE_INVALID=4;
+	public static int STATE_WAITFORCHECK=5;
 	private int state;
 	private BigDecimal chiefAmount=BigDecimal.ZERO;
 	private BigDecimal interest=BigDecimal.ZERO;

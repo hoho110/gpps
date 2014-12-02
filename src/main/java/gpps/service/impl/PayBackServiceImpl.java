@@ -524,33 +524,9 @@ public class PayBackServiceImpl implements IPayBackService {
 		}
 		Integer cashStreamId = accountService.freezeBorrowerAccount(payBack.getBorrowerAccountId(), payBack.getChiefAmount().add(payBack.getInterest()), payBack.getId(), "冻结");
 		log.debug("还款：amount=" + payBack.getChiefAmount().add(payBack.getInterest()) + ",cashStreamId=" + cashStreamId);
-		CashStream cashStream = cashStreamDao.find(cashStreamId);
-		// 增加还款任务
-		Task task = new Task();
-		task.setCreateTime(System.currentTimeMillis());
-		task.setPayBackId(cashStream.getPaybackId());
-		task.setProductId(payBack.getProductId());
-		task.setState(Task.STATE_INIT);
-		task.setType(Task.TYPE_REPAY);
-		taskService.submit(task);
+//		CashStream cashStream = cashStreamDao.find(cashStreamId);
 		accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-		accountService.unfreezeBorrowerAccount(cashStream.getBorrowerAccountId(), cashStream.getChiefamount(), cashStream.getPaybackId(), "解冻");
-		changeState(cashStream.getPaybackId(), PayBack.STATE_FINISHREPAY);
-		if (payBack.getType() == PayBack.TYPE_LASTPAY) {
-			// TODO 金额正确，设置产品状态为还款完毕
-			productService.finishRepay(payBack.getProductId());
-			Product product = productService.find(payBack.getProductId());
-			List<Product> allProducts = productService.findByGovermentOrder(product.getGovermentorderId());
-			boolean isAllRepay = true;
-			for (Product pro : allProducts) {
-				if (pro.getState() != Product.STATE_FINISHREPAY) {
-					isAllRepay = false;
-					break;
-				}
-			}
-			if (isAllRepay)
-				orderService.closeFinancing(product.getGovermentorderId());
-		}
+		changeState(payBack.getId(), PayBack.STATE_WAITFORCHECK);
 	}
 	private void changeBorrowerPayBackLimit(PayBack payBack,Product product)
 	{
@@ -563,5 +539,42 @@ public class PayBackServiceImpl implements IPayBackService {
 			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
 			payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
 		}
+	}
+
+	@Override
+	public void check(Integer payBackId) throws IllegalConvertException {
+		PayBack payback=payBackDao.find(payBackId);
+		if(payback==null||payback.getState()!=PayBack.STATE_WAITFORCHECK)
+			return;
+		// 增加还款任务
+		Task task = new Task();
+		task.setCreateTime(System.currentTimeMillis());
+		task.setPayBackId(payback.getId());
+		task.setProductId(payback.getProductId());
+		task.setState(Task.STATE_INIT);
+		task.setType(Task.TYPE_REPAY);
+		taskService.submit(task);
+		accountService.unfreezeBorrowerAccount(payback.getBorrowerAccountId(),payback.getChiefAmount().add(payback.getInterest()), payback.getId(), "解冻");
+		changeState(payback.getId(), PayBack.STATE_FINISHREPAY);
+		if (payback.getType() == PayBack.TYPE_LASTPAY) {
+			// TODO 金额正确，设置产品状态为还款完毕
+			productService.finishRepay(payback.getProductId());
+			Product product = productService.find(payback.getProductId());
+			List<Product> allProducts = productService.findByGovermentOrder(product.getGovermentorderId());
+			boolean isAllRepay = true;
+			for (Product pro : allProducts) {
+				if (pro.getState() != Product.STATE_FINISHREPAY) {
+					isAllRepay = false;
+					break;
+				}
+			}
+			if (isAllRepay)
+				orderService.closeFinancing(product.getGovermentorderId());
+		}
+	}
+
+	@Override
+	public List<PayBack> findWaitforCheckPayBacks() {
+		return payBackDao.findByProductsAndState(null, PayBack.STATE_WAITFORCHECK);
 	}
 }

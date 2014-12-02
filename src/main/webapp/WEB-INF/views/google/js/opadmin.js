@@ -122,7 +122,7 @@ var createAdminNavLevel2 = function(nav){
 		var tclo = res.waitingCloseOrderCount;
 		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-toclose">待关闭订单<font color=red>('+tclo+')</font></a></li>');
 		
-		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-repay">待审核还款<font color=red>(0)</font></a></li>');
+		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-toaudit">待审核还款<font color=red>(0)</font></a></li>');
 		ul.append(li1);
 		ul.append(li2);
 		ul.append(li3);
@@ -1189,6 +1189,66 @@ var orderpaying = function(container){
 	ordershow(4, container)
 }
 
+
+var paybacktoaudit = function(container){
+
+	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
+	var columns = [ {
+		"sTitle" : "项目信息",
+			"code" : "product"
+	}, {
+		"sTitle" : "还款额",
+		"code" : "total"
+	}, {
+		"sTitle" : "本金",
+		"code" : "bj"
+	}, {
+		"sTitle" : "利息",
+		"code" : "lx"
+	}, {
+		"sTitle" : "还款时间",
+		"code" : "time"
+	},{
+		"sTitle" : "操作",
+		"code" : "operate"
+	}
+	];
+	var datas = null;
+	datas = paybackService.findWaitforCheckPayBacks();
+	var aaData = new Array();
+	for(var i=0; i<datas.size(); i++){
+		var data=datas.get(i);
+		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+	                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
+	                    data.chiefAmount.value,
+	                    data.interest.value,
+	                    formatDateToDay(data.deadline),
+	                    "<button class='audit' id='"+data.id+"'>审核通过</button>"]);
+	}
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+	
+	$('button.audit').click(function(e){
+		if(confirm('确认还款无误，审核通过？')){
+			var paybackid = parseInt($(this).attr('id'));
+			try{
+			paybackService.check(paybackid);
+			alert('还款审核通过，开始执行还款！');
+			window.location.href="opadmin.html?fid=tohandle&sid=payback-toaudit";
+			}catch(e){
+				alert(e.message);
+			}
+		}
+	})
+}
+
+
 var ordertoclose = function(container){
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
 	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
@@ -2052,6 +2112,7 @@ var nav2funtion = {
 		"order-paying" : orderpaying,
 		"order-toclose" : ordertoclose,
 		'tohandle-order-toclose' : ordertoclose,
+		"payback-toaudit" : paybacktoaudit,
 		"order-closed" : orderclosed,
 		"order-quit" : orderquit,
 		"notice-write" : noticewrite,

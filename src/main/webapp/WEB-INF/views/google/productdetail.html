@@ -10,10 +10,11 @@
     <link href="css/index/justified-nav.css" rel="stylesheet">
     
     <link href="css/plist/a.css" rel="stylesheet">
-    
     <link rel="stylesheet" type="text/css" href="css/gpps/lufax-main.css">
     <link rel="stylesheet" type="text/css" href="css/gpps/new-lufax.css">
     <link rel="stylesheet" type="text/css" href="css/gpps/detail/productDetail.css">
+    <link href="css/mine.css" rel="stylesheet">
+    
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/ie-emulation-modes-warning.js"></script>
@@ -340,7 +341,7 @@
 </div>
 
 
-<div class="row foot" id="footer" style="border: #eee solid 1px; background:#eee; height:120px; font-size:13px; margin-top:0px;">
+<div class="row foot" id="footer" style="border: #eee solid 1px; background:#eee; min-height:120px; font-size:13px; margin-top:0px;">
 
 	</div>
 
@@ -370,7 +371,7 @@
 <script src="js/foot.js"></script>
  <script>
  
- var paybackState={0: '待还款', 1 : '正在还款', 2: '已还款', 3: '延期'};
+ var paybackState={0: '待还款', 1 : '正在还款', 2: '已还款', 3: '延期', 5: '待审核'};
  var actionState={1:'正常', 2:'顺利', 3:'有风险', 4:'严重问题'};
  
   $(document).ready(function () {
@@ -490,7 +491,7 @@
  		{
  		if(cuser==null && buser==null){
  			if(confirm('登录后才能购买产品，现在登录？')){
- 				window.location.href = "login.html?rb=productdetail.html%3Fpid="+pid;
+ 				window.location.href = "login.html?rb=productdetail.html?pid="+pid;
  			}
  			return;
  		}else if(cuser==null){
@@ -648,9 +649,9 @@
         	 
         	 
      if(cuser==null && buser==null){
-    	 $('p#loginstatus').html('<a href="login.html?rb=productdetail.html%3Fpid='+pid+'" style="margin-right:20px;">登录</a>您尚未登录');
+    	 $('p#loginstatus').html('<a href="login.html?rb=productdetail.html?pid='+pid+'" style="margin-right:20px;">登录</a>您尚未登录');
      }else if(cuser==null){
-    	 $('p#loginstatus').html('<a href="quit.html?rb=productdetail.html%3Fpid='+pid+'" style="margin-right:20px;">退出</a>企业用户无法投资');
+    	 $('p#loginstatus').html('<a href="quit.html" style="margin-right:20px;">退出</a>企业用户无法投资');
      }
      else{
     	 var account = accountDao.find(cuser.accountId);

@@ -420,7 +420,7 @@ var submitpayback = function(container){
 		"code" : "contract"
 	}];
 	
-	var paybackState={0: '待还款', 1 : '正在还款', 2: '已还款', 3: '延期'};
+	var paybackState={0: '待还款', 1 : '正在还款', 2: '已还款', 3: '延期' , 5: '待审核'};
 	
 	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
 		var sEcho = "";

@@ -91,7 +91,7 @@
 	BORDER-BOTTOM: transparent 4px solid; BORDER-LEFT: #8d909a 4px solid; LINE-HEIGHT: 0; WIDTH: 0px; DISPLAY: inline-block; HEIGHT: 0px; MARGIN-LEFT: 5px; FONT-SIZE: 0px; VERTICAL-ALIGN: middle; BORDER-TOP: transparent 4px solid; BORDER-RIGHT: transparent 4px solid
 }
 .service-intro .service-intro-con {
-	LINE-HEIGHT: 50px; PADDING-LEFT: 10px; FLOAT: left; HEIGHT: 50px
+	LINE-HEIGHT: 50px; PADDING-LEFT: 10px; min-HEIGHT: 50px
 }
 .list-content {
 	WIDTH: 670px; FLOAT: left

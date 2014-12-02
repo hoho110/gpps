@@ -575,6 +575,18 @@ public class PayBackServiceImpl implements IPayBackService {
 
 	@Override
 	public List<PayBack> findWaitforCheckPayBacks() {
-		return payBackDao.findByProductsAndState(null, PayBack.STATE_WAITFORCHECK);
+		List<PayBack> paybacks = payBackDao.findByProductsAndState(null, PayBack.STATE_WAITFORCHECK);
+		for(PayBack payBack:paybacks)
+		{
+			Product product=productDao.find(payBack.getProductId());
+			
+			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+			payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+			
+			payBack.setProduct(product);
+			product.setGovermentOrder(govermentOrderDao.find(product.getGovermentorderId()));
+			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
+		}
+		return paybacks;
 	}
 }

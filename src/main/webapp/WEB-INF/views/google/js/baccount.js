@@ -1218,7 +1218,71 @@ var paybackcanapply = function(container){
 		window.location.href="baccount.html?fid=payback&sid=payback-canpay";
 	});
 }
+var paybacktoaudit = function(container){
+	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
+	var columns = [ {
+		"sTitle" : "项目信息",
+			"code" : "product"
+	}, {
+		"sTitle" : "还款额",
+		"code" : "total"
+	}, {
+		"sTitle" : "本金",
+		"code" : "bj"
+	}, {
+		"sTitle" : "利息",
+		"code" : "lx"
+	}, {
+		"sTitle" : "还款时间",
+		"code" : "time"
+	}];
+	
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = paybackService.findBorrowerPayBacks(5, -1, -1, iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var datas = res.get('result');
+		if(datas)
+		{
+			for(var i=0; i<datas.size(); i++){
+				var data=datas.get(i);
+				result.aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
+			                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
+			                    data.chiefAmount.value,
+			                    data.interest.value,
+			                    formatDateToDay(data.deadline)]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
 
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+	
+}
 var paybackhave = function(container){
 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
 	var columns = [ {
@@ -1691,6 +1755,7 @@ var bnav2funtion = {
 		"payback-canapply" : paybackcanapply,
 		"payback-to" : paybackto,
 		"payback-have" : paybackhave,
+		"payback-toaudit" : paybacktoaudit,
 		"cash-all" : cashall,
 		"cash-recharge" : cashrecharge,
 		"cash-withdraw" : cashwithdraw,

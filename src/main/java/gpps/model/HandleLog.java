@@ -11,6 +11,7 @@ public class HandleLog {
 	private String callService;
 	private String callmethod;
 	private String callparam;
+	private long handletime=System.currentTimeMillis();
 	public Integer getId() {
 		return id;
 	}
@@ -46,5 +47,11 @@ public class HandleLog {
 	}
 	public void setCallparam(String callparam) {
 		this.callparam = callparam;
+	}
+	public long getHandletime() {
+		return handletime;
+	}
+	public void setHandletime(long handletime) {
+		this.handletime = handletime;
 	}
 }

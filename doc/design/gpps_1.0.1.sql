@@ -529,6 +529,7 @@ create table handlelog
    callService          varchar(255),
    callmethod           varchar(255),
    callparam            mediumtext,
+   handletime 			bigint default 0 not null,
    primary key (id)
 );
 

@@ -5,3 +5,5 @@ alter table Notice add(publictype int not null default 0);
 alter table Letter add(title varchar(255)); 
 alter table Activity add(description mediumtext);
 alter table Activity add(accessory mediumtext);
+
+alter table handlelog add(handletime bigint default 0 not null);

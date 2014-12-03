@@ -3,6 +3,7 @@ package gpps.service;
 import gpps.model.Product;
 import gpps.model.ProductAction;
 import gpps.model.ref.Accessory.MimeItem;
+import gpps.service.exception.CheckException;
 import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 
@@ -62,8 +63,8 @@ public interface IProductService {
 	
 	public void changeBuyLevel(Integer productId,int buyLevel);
 	
-	public void startRepaying(Integer productId)throws IllegalConvertException,ExistWaitforPaySubmitException;//启动还款
-	public void quitFinancing(Integer productId)throws IllegalConvertException, ExistWaitforPaySubmitException;//放弃融资（流标）
+	public void startRepaying(Integer productId)throws IllegalConvertException,ExistWaitforPaySubmitException, CheckException;//启动还款
+	public void quitFinancing(Integer productId)throws IllegalConvertException, ExistWaitforPaySubmitException, CheckException;//放弃融资（流标）
 	public void delayRepay(Integer productId)throws IllegalConvertException;//延期还款
 	public void finishRepay(Integer productId)throws IllegalConvertException;//还款完毕
 	public void applyToClose(Integer productId)throws IllegalConvertException;//申请关闭

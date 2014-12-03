@@ -3,6 +3,7 @@ package gpps.service.impl;
 import static gpps.tools.ObjectUtil.checkNullObject;
 import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.IBorrowerDao;
+import gpps.dao.ICashStreamDao;
 import gpps.dao.IGovermentOrderDao;
 import gpps.dao.IPayBackDao;
 import gpps.dao.IProductActionDao;
@@ -11,6 +12,7 @@ import gpps.dao.IProductSeriesDao;
 import gpps.dao.IStateLogDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
+import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.PayBack;
 import gpps.model.Product;
@@ -22,10 +24,12 @@ import gpps.model.Task;
 import gpps.model.ref.Accessory;
 import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
+import gpps.service.CashStreamSum;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IPayBackService;
 import gpps.service.IProductService;
 import gpps.service.ITaskService;
+import gpps.service.exception.CheckException;
 import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.tools.StringUtil;
@@ -70,6 +74,8 @@ public class ProductServiceImpl implements IProductService {
 	IStateLogDao stateLogDao;
 	@Autowired
 	ISubmitDao submitDao;
+	@Autowired
+	ICashStreamDao cashStreamDao;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	Logger logger=Logger.getLogger(this.getClass());
 	@Override
@@ -246,7 +252,7 @@ public class ProductServiceImpl implements IProductService {
 	
 	@Override
 	@Transactional
-	public void startRepaying(Integer productId) throws IllegalConvertException,ExistWaitforPaySubmitException {
+	public void startRepaying(Integer productId) throws IllegalConvertException,ExistWaitforPaySubmitException,CheckException {
 		// 验证是否有待付款的Submit
 		int count=submitDao.countByProductAndStateWithPaged(productId, Submit.STATE_WAITFORPAY);
 		if(count>0)
@@ -255,6 +261,10 @@ public class ProductServiceImpl implements IProductService {
 		checkNullObject("productId", productId);
 		Product product=productDao.find(productId);
 		checkNullObject(Product.class, product);
+		//校验 Product实际融资额=所有Lender的支付资金流之和
+		CashStreamSum sum=cashStreamDao.sumProduct(productId, CashStream.ACTION_FREEZE);
+		if(sum.getChiefAmount().compareTo(product.getRealAmount())!=0)
+			throw new CheckException("冻结提交总金额与产品实际融资金额不符");
 		GovermentOrder order=null;
 		try {
 			changeState(productId, Product.STATE_REPAYING);
@@ -274,7 +284,7 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	@Transactional
-	public void quitFinancing(Integer productId) throws IllegalConvertException, ExistWaitforPaySubmitException {
+	public void quitFinancing(Integer productId) throws IllegalConvertException, ExistWaitforPaySubmitException, CheckException {
 		// 验证是否有待付款的Submit
 		int count=submitDao.countByProductAndStateWithPaged(productId, Submit.STATE_WAITFORPAY);
 		if(count>0)
@@ -283,6 +293,10 @@ public class ProductServiceImpl implements IProductService {
 		checkNullObject("productId", productId);
 		Product product=productDao.find(productId);
 		checkNullObject(Product.class, product);
+		//校验 Product实际融资额=所有Lender的支付资金流之和
+		CashStreamSum sum=cashStreamDao.sumProduct(productId, CashStream.ACTION_FREEZE);
+		if(sum.getChiefAmount().compareTo(product.getRealAmount())!=0)
+			throw new CheckException("冻结提交总金额与产品实际融资金额不符");
 		GovermentOrder order=null;
 		try {
 			changeState(productId, Product.STATE_QUITFINANCING);

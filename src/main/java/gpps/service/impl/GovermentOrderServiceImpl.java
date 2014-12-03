@@ -3,12 +3,13 @@
  */
 package gpps.service.impl;
 
+import static gpps.tools.ObjectUtil.checkNullObject;
 import gpps.constant.Pagination;
 import gpps.dao.IBorrowerDao;
+import gpps.dao.ICashStreamDao;
 import gpps.dao.IFinancingRequestDao;
 import gpps.dao.IGovermentOrderDao;
 import gpps.dao.IProductDao;
-import gpps.dao.IProductSeriesDao;
 import gpps.dao.IStateLogDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
@@ -22,21 +23,21 @@ import gpps.model.Task;
 import gpps.model.ref.Accessory;
 import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
+import gpps.service.CashStreamSum;
 import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IProductService;
 import gpps.service.ITaskService;
+import gpps.service.exception.CheckException;
 import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.tools.StringUtil;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
@@ -48,8 +49,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.easyservice.xml.EasyObjectXMLTransformerImpl;
 import com.easyservice.xml.IEasyObjectXMLTransformer;
 import com.easyservice.xml.XMLParseException;
-
-import static gpps.tools.ObjectUtil.*;
 
 /**
  * @author wangm
@@ -75,6 +74,8 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	IProductService productService;
 	@Autowired
 	ISubmitDao submitDao;
+	@Autowired
+	ICashStreamDao cashStreamDao;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	static int[] orderStates={
 		GovermentOrder.STATE_UNPUBLISH,
@@ -226,7 +227,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	}
 	@Override
 	@Transactional
-	public void startRepaying(Integer orderId) throws IllegalConvertException,IllegalOperationException, ExistWaitforPaySubmitException {
+	public void startRepaying(Integer orderId) throws IllegalConvertException,IllegalOperationException, ExistWaitforPaySubmitException, CheckException {
 		GovermentOrder order=null;
 		try
 		{
@@ -246,6 +247,10 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 						int count=submitDao.countByProductAndStateWithPaged(product.getId(), Submit.STATE_WAITFORPAY);
 						if(count>0)
 							throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始还款");
+						//校验 Product实际融资额=所有Lender的支付资金流之和
+						CashStreamSum sum=cashStreamDao.sumProduct(product.getId(), CashStream.ACTION_FREEZE);
+						if(sum.getChiefAmount().negate().compareTo(product.getRealAmount())!=0)
+							throw new CheckException("冻结提交总金额与产品实际融资金额不符");
 						//从竞标缓存中移除
 						productDao.changeState(product.getId(), Product.STATE_REPAYING,System.currentTimeMillis());
 						product=order.findProductById(product.getId());
@@ -267,7 +272,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		}
 	}
 	@Override
-	public void quitFinancing(Integer orderId) throws IllegalConvertException, IllegalOperationException, ExistWaitforPaySubmitException {
+	public void quitFinancing(Integer orderId) throws IllegalConvertException, IllegalOperationException, ExistWaitforPaySubmitException, CheckException {
 		GovermentOrder order=null;
 		try
 		{
@@ -284,6 +289,11 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 						int count=submitDao.countByProductAndStateWithPaged(product.getId(), Submit.STATE_WAITFORPAY);
 						if(count>0)
 							throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始流标");
+						//校验 Product实际融资额=所有Lender的支付资金流之和
+						CashStreamSum sum=cashStreamDao.sumProduct(product.getId(), CashStream.ACTION_FREEZE);
+						if(sum.getChiefAmount().negate().compareTo(product.getRealAmount())!=0)
+							throw new CheckException("冻结提交总金额与产品实际融资金额不符");
+						
 						productDao.changeState(product.getId(), Product.STATE_QUITFINANCING,System.currentTimeMillis());
 						order.getProducts().remove(product);
 						product.setState(Product.STATE_QUITFINANCING);

@@ -126,4 +126,13 @@
             </foreach>
 		</if>
 	</select>
+	<select id="sumProduct" resultType="gpps.service.CashStreamSum">
+		select sum(a.chiefamount) chiefAmount,sum(a.interest) interest from
+		CashStream a,Submit b
+		where a.submitId=b.id and
+		b.productId=#{productId} and a.state=2
+		<if test="action != -1">
+			and a.action=#{action}
+		</if>
+	</select>
 </mapper>

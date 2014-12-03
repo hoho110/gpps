@@ -33,81 +33,110 @@
 	<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
       
       </div>
-	<div class="form-horizontal" role="form" style="width:400px; margin: 10px auto;">
-		<div class="form-group" id="message">
-    		<label class="col-sm-4 control-label"></label>
-    		<div class="col-sm-8">
-      			<p class="form-control-static">我已经是企业用户?&nbsp;<a href="login.html">登录</a>&nbsp;|&nbsp;<a href="index.html">取消</a></p>
-    		</div>
+	<div class="row" style="max-width:500px; margin: 0 auto; background-color : #eee;">
+		<div class="col-md-12">
+      		<p class="form-control-static" style="float:right;">我已经是企业用户?&nbsp;<a href="login.html">登录</a>&nbsp;|&nbsp;<a href="index.html">取消</a></p>
+    		<div style="clear:both;"></div>
   		</div>
-  		<div style="width:100%" id="message"></div>
+  		<div class="col-md-12" id="message"></div>
 		
 	
-		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-4" for="inputSuccess3">用户名</label>
-			<div class="col-sm-8">
-				<input type="text" class="form-control" id="username">
+		<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-3" style="padding-right:0px;">
+			<label class="control-label" for="inputSuccess3">用户名</label>
 			</div>
+			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+				<input type="text" class="form-control" id="username" style="padding-left:1px; padding-right:1px;" placeholder="请输入用户名" required>
+			</div>
+			<div style="clear:both;"></div>
 		</div>
 		
-		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-4" for="inputSuccess3">密码</label>
-			<div class="col-sm-8">
-				<input type="password" class="form-control" id="password">
+		<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-3" style="padding-right:0px;">
+			<label class="control-label" for="inputSuccess3">密码</label>
 			</div>
+			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+				<input type="password" class="form-control" id="password" style="padding-left:1px; padding-right:1px;" placeholder="请输入密码" required>
+			</div>
+			<div style="clear:both;"></div>
 		</div>
 		
-		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-4" for="inputSuccess3">确认密码</label>
-			<div class="col-sm-8">
-				<input type="password" class="form-control" id="password_r">
+		<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-3" style="padding-right:0px;">
+			<label class="control-label" for="inputSuccess3">确认密码</label>
 			</div>
+			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+				<input type="password" class="form-control" id="password_r" style="padding-left:1px; padding-right:1px;" placeholder="请再次输入密码" required>
+			</div>
+			<div style="clear:both;"></div>
 		</div>
 		
-		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-4" for="inputSuccess3">企业名称</label>
-			<div class="col-sm-8">
-				<input type="text" class="form-control" id="companyname">
+		<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-3" style="padding-right:0px;">
+			<label class="control-label" for="inputSuccess3">企业名称</label>
 			</div>
+			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+				<input type="text" class="form-control" id="companyname" style="padding-left:1px; padding-right:1px;" placeholder="请输入企业名称" required>
+			</div>
+			<div style="clear:both;"></div>
 		</div>
 		
-		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-4" for="inputSuccess3">营业执照号码</label>
-			<div class="col-sm-8">
-				<input type="text" class="form-control" id="license">
+		<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-3" style="padding-right:0px;">
+			<label class="control-label" for="inputSuccess3">营业执照号码</label>
 			</div>
+			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+				<input type="text" class="form-control" id="license" style="padding-left:1px; padding-right:1px;" placeholder="请输入营业执照号码" required>
+			</div>
+			<div style="clear:both;"></div>
 		</div>
 		
-		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-4" for="inputSuccess3">中标订单名称</label>
-			<div class="col-sm-8">
-				<input type="text" class="form-control" id="ordertitle">
+		<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-3">
+			<label class="control-label" for="inputSuccess3">中标订单名称</label>
 			</div>
+			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+				<input type="text" class="form-control" id="ordertitle" style="padding-left:1px; padding-right:1px;" placeholder="请输入中标订单名称" required>
+			</div>
+			<div style="clear:both;"></div>
 		</div>
 		
-		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-4" for="inputSuccess3">申请融资额度</label>
-			<div class="col-sm-8">
-				<input type="text" class="form-control" id="amount">
+		<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-3">
+			<label class="control-label" for="inputSuccess3">申请融资额度</label>
 			</div>
+			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+				<input type="text" class="form-control" id="amount" style="padding-left:1px; padding-right:1px;" placeholder="申请融资额度" required>
+			</div>
+			<div style="clear:both;"></div>
 		</div>
 		
 			
-			<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-4" for="inputError2">联系人手机</label>
-			<div class="col-sm-5">
-				<input type="text" class="form-control" id="phone">
+			<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-3">
+			<label class="control-label" for="inputError2">联系人手机</label>
 			</div>
-			<button type="submit" class="btn btn-default" id="sendValCode" style="width:90px;">发送验证码</button>
+			<div class="col-xs-7 col-sm-7 col-md-5 col-lg-5">
+				<input type="text" class="form-control" id="phone" style="padding-left:1px; padding-right:1px;" placeholder="请输入手机号码" required>
+			</div>
+			<div class="col-xs-5 col-sm-5 col-md-4 col-lg-4">
+			<button type="submit" class="form-control btn-warning" id="sendValCode">发送验证码</button>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="text-align:right;">
 			<a href="/messageValidateCode" target="_blank">察看验证码</a>
 			</div>
-			
-			
-			<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-4" for="inputSuccess3">验证码</label>
-			<div class="col-sm-8">
-				<input type="text" class="form-control" id="validate">
+			<div style="clear:both;"></div>
 			</div>
+			
+			
+			<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-3">
+			<label class="control-label" for="inputSuccess3">验证码</label>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+				<input type="text" class="form-control" id="validate" style="padding-left:1px; padding-right:1px;" placeholder="请输入验证码" required>
+			</div>
+			<div style="clear:both;"></div>
 			</div>
 			
 			<button id="login" class="btn btn-lg btn-success btn-block">申请融资</button>

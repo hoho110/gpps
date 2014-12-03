@@ -2,12 +2,10 @@
 
 function header(title){
 	var divtitle = $('<div style="display:inline;"></div>');
-	divtitle.append('<h2 style="float:left;" class="text-muted">政采贷<small>&nbsp;&nbsp;信用创造价值</small></h2>');
-	var divhelp = $('<div id="help" style="float:left; margin-right:20px; padding-top:30px;"><a href="intro/help.html" target="_blank">帮助中心</a></div>');
+	divtitle.append('<h2 style="float:left;" class="text-muted">春蕾投资<small>&nbsp;&nbsp;信用创造价值</small></h2>');
 	var divusercontent = $('<div id="usercontent" style="float:right; font-size:14px; color:#333; padding-top:30px;"></div>');
 	
 	var divright = $('<div id="divright" style="min-width:150px; float:right;"></div>');
-	divright.append(divhelp);
 	divright.append(divusercontent);
 	divright.append('<div style="clear:both;"></div>');
 	
@@ -52,27 +50,91 @@ function header(title){
 	navul.append('<li id="activity"><a href="activity.html">活动中心</a></li>');
 	navul.append('<li id="loan"><a href="loan.html">我要融资</a></li>');
 	
+	
+	var navulstr = '<nav class="navbar navbar-default" role="navigation">';
+	navulstr += '<div class="container-fluid">';
+	navulstr += '<div class="navbar-header">';
+	navulstr += '<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">';
+	navulstr += '<span class="sr-only">Toggle navigation</span>';
+	navulstr += '<span class="icon-bar"></span>';
+	navulstr += '<span class="icon-bar"></span>';
+	navulstr += '<span class="icon-bar"></span>';
+	navulstr += '</button>';
+	navulstr += '<span class="navbar-brand" href="#">政采贷</span>';
+	navulstr += '</div>';
+	navulstr += '<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">';
+	navulstr += '<ul class="nav navbar-nav">';
+	navulstr += '<li id="index" class="active"><a href="index.html">首页</a></li>';
+	navulstr += '<li id="productlist"><a href="productlist.html">我要理财</a></li>';
+	navulstr += '<li id="myaccount"><a href="myaccount.html">我的账户</a></li>';
+	navulstr += '<li id="activity"><a href="activity.html">活动中心</a></li>';
+	navulstr += '<li id="loan"><a href="loan.html">我要融资</a></li>';
+	navulstr += '</ul>';
+	navulstr += '<ul class="nav navbar-nav navbar-right">';
+	navulstr += '<li><a href="#">导航</a></li>';
+	navulstr += '<li class="dropdown">';
+	navulstr += '<a href="#" class="dropdown-toggle" data-toggle="dropdown">帮助<span class="caret"></span></a>';
+	navulstr += '<ul class="dropdown-menu" role="menu">';
+	navulstr += '<li><a href="#">新手帮助</a></li>';
+	navulstr += '<li><a href="#">平台公告</a></li>';
+	navulstr += '<li><a href="#">新闻资讯</a></li>';
+	navulstr += '<li class="divider"></li>';
+	navulstr += '<li><a href="#">常见问题</a></li>';
+	navulstr += '<li class="divider"></li>';
+	navulstr += '<li><a href="#">等等等等</a></li>';
+	navulstr += '</ul>';
+	navulstr += '</li>';
+	navulstr += '</ul>';
+	navulstr += '</div><!-- /.navbar-collapse -->';
+	navulstr += '</div><!-- /.container-fluid -->';
+	navulstr += '</nav>';
+	
+	
+		
+	  
+	      
+	      
+	    
+
+	    
+	      
+	        
+	        
+	        
+	        
+	        
+	        
+	      
+	      
+	        
+	        
+	          
+	          
+	            
+	            
+	            
+	            
+	            
+	            
+	            
+	          
+	        
+	      
+	    
+	  
+	
+	
+	
+	
+	
+	
+	
 	var navDiv = $('<div class="col-md-12" style="padding-left:0px; padding-right:0px;"></div>');
-	navDiv.append(navul);
+	navDiv.append(navulstr);
 	
 	$('div#header').html('');
 	$('#header').append(divtitle);
 	$('#header').append(navDiv);
-	
-//	var navSMDiv = $('<div class="navbar navbar-fixed-top"></div>');
-//	navSMDiv.append('<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></a>');
-//	var navuldiv = $('<div class="nav-collapse collapse"></div>');
-//	var navsmul = $('<ul id="nav-list" class="nav pull-right"></ul>');
-//	navsmul.append('<li><a href="#home">活动概况</a></li>');
-//	navsmul.append('<li><a href="#about">详细介绍</a></li>');
-//	navsmul.append('<li><a href="#updates">行程安排</a></li>');
-//	navsmul.append('<li><a href="#rule">规则介绍</a></li>');
-//	navsmul.append('<li><a href="#screenshots">相关图片</a></li>');
-//	navsmul.append('<li><a href="#contact">我要报名</a></li>');
-//	navuldiv.append(navsmul);
-//	navSMDiv.append(navuldiv);
-//	
-//	$('#header').append(navSMDiv);
-	
+	$('li').removeClass('active');
 	$('li[id="'+title+'"]').addClass('active');
 }

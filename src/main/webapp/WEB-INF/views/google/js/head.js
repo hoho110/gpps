@@ -28,7 +28,7 @@ function header(title){
 		}else if(buser!=null){
 			divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;|&nbsp;信用级别:<a href="baccount.html?fid=bcenter">level'+buser.level+'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="baccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
 		}else{
-			divusercontent.html('<a href="login.html">登陆</a><span>&nbsp;|&nbsp;</span><a href="register.html">注册</a>');
+			divusercontent.html('<a href="login.html" style="color:orange; font-size:20px;">登陆</a><span style="color:orange; font-size:20px; margin-left:15px; margin-right:15px;">|</span><a href="register.html" style="color:orange; font-size:20px;">注册</a>');
 		}
 	}
 	else{
@@ -37,7 +37,7 @@ function header(title){
 	}else if(buser!=null){
 		divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;|&nbsp;信用级别:<a href="baccount.html?fid=bcenter">level'+buser.level+'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="baccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
 	}else{
-		divusercontent.html('<a href="login.html">登陆</a><span>&nbsp;|&nbsp;</span><a href="register.html">注册</a>');
+		divusercontent.html('<a href="login.html" style="color:orange; font-size:20px;">登陆</a><span style="color:orange; font-size:20px; margin-left:15px; margin-right:15px;">|</span><a href="register.html" style="color:orange; font-size:20px;">注册</a>');
 	}
 		}
 	divtitle.append(divright);

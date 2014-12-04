@@ -35,32 +35,35 @@
 <script src="js/getuser.js"></script>
 </head>
 <body>
-<div class="container-fluid">
+<div class="container">
 
 <div class="row" id="header" style="margin-left:0px; margin-right:0px;">
       
 </div>
 
-<div class="row" style="margin-top:5px;">
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+<div class="row" style="margin-top:5px; margin-left:0px; margin-right:0px; padding-left:0px; padding-right:0px;">
 
-<img src="img/move.jpg" style="width:100%; height:300px;"></img>
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:20px; margin-top:10px; padding-left:0px; padding-right:0px;">
+<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8" id="showdetail" style="margin-right:0px; padding-left:0px; padding-right:2px;">
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-left:0px; padding-right:0px;">
+	<img src="img/move.jpg" class="img-responsive"></img>
+</div>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:15px;">
+
+
 </div>
 
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom:20px; margin-top:10px;">
-<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8" id="showdetail" style="margin-right:0px;">
-
-<div style="padding:5px 0 5px 0; border-bottom: dotted 1px;">
-<a href="#" style="float:right;">更多>>>>></a>
-<div style="clear:both;"></div>
 </div>
+<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" style="padding-left:2px; padding-right:0px;">
 
+<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
+<img src="img/actlogo.jpg" style="width:100%;"></img>
 </div>
-<div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" style="padding-left:0px; margin-top:10px;">
-
-<div class="panel panel-success" style="height:200px; margin-right:-15px;">
-<div class="panel-body">
-春蕾活动简介: <br>
+<div class="col-md-2">
+<img src="img/actintro.jpg" class="img-responsive" style="min-width:50px;"></img>
+</div>
+<div class="col-md-10" style="padding-top:15px; padding-bottom:10px; margin-bottom:5px; border-bottom: dotted 1px grey">
 春蕾活动由春蕾资产管理公司主办，旨在干什么什么什么什么什么事是<br><br>
 联系方式：<br>
 客服电话：13811111111<br>
@@ -68,28 +71,25 @@ QQ号：11111111111<br>
 邮箱地址：wangd@calis.eud.cn
 </div>
 
+
+
+
+<div class="col-md-12" style="padding-left:0px; padding-right:0px; padding-top:5px;">
+<div class="col-md-2">
+<img src="img/actrule.png" class="img-responsive" style="min-width:50px;"></img>
 </div>
-
-
-
-<div class="panel panel-success" style="height:360px; margin-right:-15px;">
-<div class="panel-body">
-活动规则: <br>
+<div class="col-md-10" style="padding-top:15px; padding-bottom:10px; margin-bottom:5px; border-bottom: dotted 1px grey">
 春蕾活动由春蕾资产管理公司主办，旨在干什么什么什么什么什么事是<br><br>
 联系方式：<br>
 客服电话：13811111111<br>
 QQ号：11111111111<br>
 邮箱地址：wangd@calis.eud.cn
 </div>
-
 </div>
 
-<div class="panel panel-success" style="height:100px; margin-right:-15px;">
-<div class="panel-body">
+<div class="col-md-12" style="margin-bottom:10px; padding-bottom:5px; padding-left:0px; padding-right:0px; border-bottom: dotted 1px grey;">
 我要赞助: <br>
 春蕾活动由春蕾资产管理公司主办，旨在干什么什么什么什么什么事是<br>
-</div>
-
 </div>
 
 
@@ -127,20 +127,20 @@ $(document).ready(function() {
 			if(item!=null)
 			url = "/download/activity/"+data.id+"/1/"+item.id;
 			
-			var temp = '<div style="padding:5px 0 5px 0; border-bottom: dotted 1px;">';
+			var temp = '<div style="padding:5px 5px 5px 5px; margin: 5px 10px 5px 10px; border-bottom: dotted 1px;">';
 			temp += '<div style="font-size:14px;margin:0 0 5px 0; font-weight:600;">';
 			
 			if(data.state==1)
-				temp += '<a href="'+data.url+'?id='+data.id+'" target="_blank">'+data.name+' </a><span style="float:right;" class="orange">'+formatDateToDay(data.applystarttime)+'-'+formatDateToDay(data.applyendtime)+'火热报名中</span>';
+				temp += '<a href="'+data.url+'?id='+data.id+'" target="_blank"><span class="grey" style="font-size:18px;">'+data.name+'</span> </a><span style="float:right;" class="orange">'+formatDateToDay(data.applystarttime)+'-'+formatDateToDay(data.applyendtime)+'火热报名中<img src="img/join.png"></img></span>';
 			else if(data.state==2)
-				temp += '<a href="'+data.url+'?id='+data.id+'" target="_blank">'+data.name+' </a><span style="float:right;" class="orange">活动进行中，开始时间：'+formatDateToDay(data.starttime)+'</span>';
+				temp += '<a href="'+data.url+'?id='+data.id+'" target="_blank"><span class="grey" style="font-size:18px;">'+data.name+'</span> </a><span style="float:right;" class="orange">活动进行中，开始时间：'+formatDateToDay(data.starttime)+'</span>';
 			else{
-				temp += '<a href="'+data.url+'?id='+data.id+'" target="_blank">'+data.name+' </a><span style="float:right;" class="grey">活动结束</span>';
+				temp += '<a href="'+data.url+'?id='+data.id+'" target="_blank"><span class="grey" style="font-size:18px;">'+data.name+'</span> </a><span style="float:right;" class="grey">活动结束</span>';
 			}
-			
+			temp += '<div class="clear"></div>';
 			temp += '</div>';
 			temp += '<div style="color:#777777; font-size:12px;">';
-			temp += '<img src="'+url+'" width="150" height="100" style="float:left;margin-right:8px;"/>';
+			temp += '<img src="'+url+'" width="150" height="200" style="float:left;margin-right:8px;"/>';
 			temp += data.description;
 		    temp += '<div class="clear"></div></div></div>';
 		    

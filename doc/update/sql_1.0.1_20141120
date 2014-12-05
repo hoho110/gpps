@@ -7,3 +7,8 @@ alter table Activity add(description mediumtext);
 alter table Activity add(accessory mediumtext);
 
 alter table handlelog add(handletime bigint default 0 not null);
+alter table payback add(checktime bigint default 0 not null);
+alter table payback add(checkResult int default 0 not null);
+
+alter table lender add(accountNumber varchar(255));
+alter table borrower add(accountNumber varchar(255));

@@ -8,7 +8,7 @@ public class PayBack {
 	private Integer borrowerAccountId;
 	private Integer productId;
 	/**
-	 * 0：待还款 1：正在还款 2:已还款 3：延期(待确定) 4:失效
+	 * 0：待还款 1：正在还款 2:已还款 3：延期(待确定) 4:失效 5 待审核
 	 */
 	public static int STATE_WAITFORREPAY=0;
 	public static int STATE_REPAYING=1;
@@ -21,9 +21,14 @@ public class PayBack {
 	private BigDecimal interest=BigDecimal.ZERO;
 	private long deadline;//还款时间
 	private long realtime;//实际还款时间
+	private long checktime;//验证时间
 	public static final int TYPE_INTERESTANDCHIEF=0;
 	public static final int TYPE_LASTPAY=1;
 	private int type;//还款方式 0:利息和本息;1:一次性本金
+	public static final int CHECK_NOT=0;
+	public static final int CHECK_SUCCESS=1;
+	public static final int CHECK_FAIL=2;
+	private int checkResult=CHECK_NOT;
 //	private Integer paybackId;
 //	/**
 //	 * 0：正常还款 1：新增（指向延期）
@@ -77,12 +82,28 @@ public class PayBack {
 	public void setRealtime(long realtime) {
 		this.realtime = realtime;
 	}
+	public long getChecktime() {
+		return checktime;
+	}
+	public void setChecktime(long checktime) {
+		this.checktime = checktime;
+	}
 	public int getType() {
 		return type;
 	}
 	public void setType(int type) {
 		this.type = type;
 	}
+	public int getCheckResult() {
+		return checkResult;
+	}
+	public void setCheckResult(int checkResult) {
+		this.checkResult = checkResult;
+	}
+
+
+
+
 	//辅助
 	private Product product;
 	public Product getProduct() {

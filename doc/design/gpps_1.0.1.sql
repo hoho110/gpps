@@ -131,6 +131,7 @@ create table Borrower
    brange               varchar(255),
    cardBindingId        integer,
    authorizeTypeOpen    int not null default 0,
+   accountNumber		varchar(255),
    primary key (id)
 );
 
@@ -249,6 +250,7 @@ create table Lender
    thirdPartyAccount    varchar(255),
    annualIncome         varchar(255),
    cardbindingId        integer,
+   accountNumber		varchar(255),
    primary key (id)
 );
 
@@ -548,7 +550,9 @@ create table payback
    chiefamount          decimal(12,2) not null,
    deadline             bigint not null,
    interest             decimal(12,2) not null,
-   realtime             bigint not null,
+   realtime             bigint default 0 not null,
+   checktime			bigint default 0 not null,
+   checkResult				int not null default 0;
    primary key (ID)
 );
 

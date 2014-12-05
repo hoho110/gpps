@@ -34,4 +34,6 @@ public interface IPayBackDao {
 	public PayBackDetail sumBorrowerRepayedPayBacks(@Param("borrowerAccountId")Integer borrowerAccountId,@Param("states")List<Integer> states,@Param("starttime")long starttime);
 	
 	public List<PayBack> findBorrowerWaitForRepayed(Integer borrowerAccountId);
+	
+	public void changeCheckResult(@Param("id")Integer id,@Param("checkResult")int checkResult);
 }

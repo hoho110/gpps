@@ -31,6 +31,7 @@ public class Borrower {
 	public static final int AUTHORIZETYPEOPEN_RECHARGE=1<<1;//还款授权
 	public static final int AUTHORIZETYPEOPEN_SECORD=1<<2;//二次分配授权
 	private int authorizeTypeOpen=0;
+	private String accountNumber;
 	public Integer getId() {
 		return id;
 	}
@@ -164,6 +165,14 @@ public class Borrower {
 	public void setBrange(String brange) {
 		this.brange = brange;
 	}
+	
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+	
 	public Integer getCardBindingId() {
 		return cardBindingId;
 	}

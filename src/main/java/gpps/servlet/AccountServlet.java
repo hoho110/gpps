@@ -144,11 +144,12 @@ public class AccountServlet {
 		String thirdPartyAccount = params.get("MoneymoremoreId");
 		String accountType=params.get("AccountType");
 		String loanPlatformAccount=params.get("LoanPlatformAccount");
+		String accountNumber=params.get("AccountNumber");
 		Integer id=Integer.parseInt(loanPlatformAccount.substring(1, loanPlatformAccount.length()));
 		String email=params.get("Email");
 		String tel=params.get("Mobile");
 		if (StringUtil.isEmpty(accountType)) {
-			lenderService.registerThirdPartyAccount(id,thirdPartyAccount);
+			lenderService.registerThirdPartyAccount(id,thirdPartyAccount,accountNumber);
 			Lender lender=lenderDao.find(id);
 			if(StringUtil.isEmpty(email))
 				email=lender.getEmail();
@@ -156,7 +157,7 @@ public class AccountServlet {
 				tel=lender.getTel();
 			lenderDao.updateTelAndEmail(id, tel, email);
 		} else if (accountType.equals("1")) {
-			borrowerService.registerThirdPartyAccount(id,thirdPartyAccount);
+			borrowerService.registerThirdPartyAccount(id,thirdPartyAccount,accountNumber);
 			Borrower borrower=borrowerDao.find(id);
 			if(StringUtil.isEmpty(email))
 				email=borrower.getEmail();

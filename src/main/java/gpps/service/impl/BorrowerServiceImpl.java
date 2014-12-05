@@ -350,9 +350,9 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	}
 
 	@Override
-	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount) {
+	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount,String accountNumber) {
 		thirdPartyAccount=checkNullAndTrim("thirdPartyAccount", thirdPartyAccount);
-		borrowerDao.registerThirdPartyAccount(id, thirdPartyAccount);
+		borrowerDao.registerThirdPartyAccount(id, thirdPartyAccount,accountNumber);
 		Borrower borrower=getCurrentUser();
 		if(borrower!=null)
 			borrower.setThirdPartyAccount(thirdPartyAccount);

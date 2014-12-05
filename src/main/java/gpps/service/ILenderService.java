@@ -55,7 +55,7 @@ public interface ILenderService extends ILoginService{
 	 */
 	public Lender getCurrentUser();
 	
-	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount);
+	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount,String accountNumber);
 	
 	public boolean isIdentityAuthentication();
 	public boolean isThirdPartyAuthentication();

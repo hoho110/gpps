@@ -4,8 +4,8 @@
 	<insert id="create" parameterType="gpps.model.PayBack"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
-		PayBack(borrowerAccountId,productId,state,chiefAmount,interest,deadline,realtime,type)
-		values(#{borrowerAccountId},#{productId},#{state},#{chiefAmount},#{interest},#{deadline},#{realtime},#{type})
+		PayBack(borrowerAccountId,productId,state,chiefAmount,interest,deadline,realtime,type,checktime,checkresult)
+		values(#{borrowerAccountId},#{productId},#{state},#{chiefAmount},#{interest},#{deadline},#{realtime},#{type},#{checktime},#{checkresult})
 	</insert>
 	<select id="findAllByProduct" resultType="gpps.model.PayBack">
 	   <![CDATA[
@@ -23,6 +23,9 @@
 		PayBack set state=#{state}
 		<if test="state == 2">
 			,realtime=#{datetime}
+		</if>
+		<if test="state == 5">
+			,checktime=#{datetime}
 		</if>
 		where id=#{id}
 	</update>
@@ -123,4 +126,9 @@
         from PayBack a,Product b where a.borrowerAccountId=#{borrowerAccountId} and a.state=0 and a.productId=b.id and b.state=2 
         order by a.deadline asc
     </select>
+    <update id="changeCheckResult">
+    	update
+		PayBack set checkResult=#{checkResult} 
+		where id=#{id}
+    </update>
 </mapper>

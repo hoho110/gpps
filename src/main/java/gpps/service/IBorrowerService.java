@@ -118,7 +118,7 @@ public interface IBorrowerService extends ILoginService {
 	 */
 	public Map<String, Object> findAllFinancingRequests(int state,int offset, int recnum);
 	
-	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount);
+	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount,String accountNumber);
 	public boolean isThirdPartyAuthentication();
 	/**
 	 * 查找借款人

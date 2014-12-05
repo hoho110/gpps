@@ -80,7 +80,7 @@
     </update>
     <update id="registerThirdPartyAccount">
         update Borrower set
-        thirdPartyAccount=#{thirdPartyAccount}
+        thirdPartyAccount=#{thirdPartyAccount},accountNumber=#{accountNumber}
         where id=#{id}
     </update>
     <select id="countByPrivilege" resultType="int">  <!-- 查询表中记录总数 -->

@@ -68,7 +68,7 @@
 	</update>
 	<update id="registerThirdPartyAccount">
 		update Lender set
-		thirdPartyAccount=#{thirdPartyAccount}
+		thirdPartyAccount=#{thirdPartyAccount},accountNumber=#{accountNumber}
 		where id=#{id}
 	</update>
 	<delete id="delete">

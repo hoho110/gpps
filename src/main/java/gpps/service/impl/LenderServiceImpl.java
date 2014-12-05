@@ -162,9 +162,9 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	}
 
 	@Override
-	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount) {
+	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount,String accountNumber) {
 		thirdPartyAccount=checkNullAndTrim("thirdPartyAccount", thirdPartyAccount);
-		lenderDao.registerThirdPartyAccount(id, thirdPartyAccount);
+		lenderDao.registerThirdPartyAccount(id, thirdPartyAccount,accountNumber);
 		Lender lender=getCurrentUser();
 		if(lender!=null)
 			lender.setThirdPartyAccount(thirdPartyAccount);

@@ -25,7 +25,7 @@ var defaultSettings = {
 				"iDisplayLength" : 10, //默认每页显示的记录数
 				"aLengthMenu" : [ 10, 15, 25, 50 ],
 				"bFilter" : false, //是否使用搜索 
-				"bJQueryUI" : true, //页面风格使用jQuery.
+				"bJQueryUI" : false, //页面风格使用jQuery.
 				// "sScrollY": 200,//竖向滚动条 tbody区域的高度
 				"sScrollX" : "100%", //横向滚动条 
 				"sScrollXInner" : "100%",
@@ -52,7 +52,7 @@ var defaultSettings_noCallBack = {
 		"iDisplayLength" : 10, //默认每页显示的记录数
 		"aLengthMenu" : [ 10, 15, 25, 50 ],
 		"bFilter" : false, //是否使用搜索 
-		"bJQueryUI" : true, //页面风格使用jQuery.
+		"bJQueryUI" : false, //页面风格使用jQuery.
 		// "sScrollY": 200,//竖向滚动条 tbody区域的高度
 		"sScrollX" : "100%", //横向滚动条 
 		"sScrollXInner" : "100%",
@@ -233,7 +233,7 @@ var myactivity = function(container){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
+	container.append(table);
 	table.dataTable(mySettings);
 }
 
@@ -601,36 +601,6 @@ var submitdone = function(container){
 }
 
 var paybackall = function(container){
-//	var content = $('<div></div>');
-//	var str = "";
-//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-//	str += '<thead>';	
-//	str += '<tr><td style="min-width:100px;">已回款统计</td><th style="min-width:50px;">最近一年</th><th style="min-width:100px;">最近半年</th><th style="min-width:50px;">最近三个月</th><th style="min-width:50px;">最近两个月</th><th style="min-width:50px;">最近一个月</th></tr>';
-//	str += '</thead>';
-//	str += '<tbody>';
-//	str += '<tr><td>本金</td><td>30000</td><td>20000</td><td>15000</td><td>10000</td><td>5000</td></tr>';
-//	str += '<tr><td>利息</td><td>6000</td><td>4000</td><td>3000</td><td>2000</td><td>1000</td></tr>';
-//	str += '<tr><td>总计</td><td>36000</td><td>24000</td><td>18000</td><td>12000</td><td>6000</td></tr>';
-//	str += '</tbody>';
-//	str += '</table>';
-//	
-//	str += '<br>';
-//	str += '<br>';
-//	
-//	
-//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-//	str += '<thead>';	
-//	str += '<tr><td style="min-width:100px;">待回款统计</td><th style="min-width:50px;">未来一年</th><th style="min-width:100px;">未来半年</th><th style="min-width:50px;">未来三个月</th><th style="min-width:50px;">未来两个月</th><th style="min-width:50px;">未来一个月</th></tr>';
-//	str += '</thead>';
-//	str += '<tbody>';
-//	str += '<tr><td>本金</td><td>30000</td><td>20000</td><td>15000</td><td>10000</td><td>5000</td></tr>';
-//	str += '<tr><td>利息</td><td>6000</td><td>4000</td><td>3000</td><td>2000</td><td>1000</td></tr>';
-//	str += '<tr><td>总计</td><td>36000</td><td>24000</td><td>18000</td><td>12000</td><td>6000</td></tr>';
-//	str += '</tbody>';
-//	str += '</table>';
-//	
-//	content.append(str);
-//	return content;
 	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
 	var repayedDetail=account.getLenderRepayedDetail();
 	var willBeRepayedDetail=account.getLenderWillBeRepayedDetail();
@@ -687,30 +657,11 @@ var paybackall = function(container){
 	str += '</table>';
 	
 	content.append(str);
-	container.append(content);
+	container.append(str);
 }
 
 
 var paybackhave = function(container){
-//	var content = $('<div></div>');
-//	var str = "";
-//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-//	str += '<thead>';	
-//	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">还款额</td><td>本金</td><td>利息</td><td style="min-width:100px;">还款时间</td></tr>';
-//	str += '</thead>';
-//	str += '<tbody>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>300</td><td>250</td><td>50</td><td>2014-8-5</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>500</td><td>400</td><td>100</td><td>2014-7-31</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款3</a></td><td>2000</td><td>2000</td><td>0</td><td>2014-7-16</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款4</a></td><td>12000</td><td>11900</td><td>100</td><td>2014-7-3</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款5</a></td><td>20</td><td>0</td><td>20</td><td>2014-6-18</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款7</a></td><td>17</td><td>0</td><td>17</td><td>2014-7-31</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款8</a></td><td>700</td><td>700</td><td>0</td><td>2014-7-16</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款9</a></td><td>90</td><td>0</td><td>90</td><td>2014-7-3</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款10</a></td><td>12</td><td>0</td><td>12</td><td>2014-6-18</td></tr>';
-//	str += '</tbody>';
-//	str += '</table>';
-//	content.append(str);
 	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
 	var columns = [ {
 		"sTitle" : "项目信息",
@@ -771,32 +722,12 @@ var paybackhave = function(container){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
+	container.append(table);
 	table.dataTable(mySettings);
 }
 
 
 var paybackto = function(container){
-//	var content = $('<div></div>');
-//	var str = "";
-//	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-//	str += '<thead>';	
-//	str += '<tr><td style="min-width:100px;">项目信息</td><td style="min-width:50px;">还款额</td><td>本金</td><td>利息</td><td style="min-width:100px;">预计还款时间</td></tr>';
-//	str += '</thead>';
-//	str += '<tbody>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款</a></td><td>300</td><td>250</td><td>50</td><td>2014-8-5</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款2</a></td><td>500</td><td>400</td><td>100</td><td>2014-7-31</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款3</a></td><td>2000</td><td>2000</td><td>0</td><td>2014-7-16</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款4</a></td><td>12000</td><td>11900</td><td>100</td><td>2014-7-3</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款5</a></td><td>20</td><td>0</td><td>20</td><td>2014-6-18</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款7</a></td><td>17</td><td>0</td><td>17</td><td>2014-7-31</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款8</a></td><td>700</td><td>700</td><td>0</td><td>2014-7-16</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款9</a></td><td>90</td><td>0</td><td>90</td><td>2014-7-3</td></tr>';
-//	str += '<tr><td><a href="productdetail.html" target="_blank">电脑工程企业经营借款10</a></td><td>12</td><td>0</td><td>12</td><td>2014-6-18</td></tr>';
-//	str += '</tbody>';
-//	str += '</table>';
-//	content.append(str);
-//	return content;
 	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
 	var columns = [ {
 		"sTitle" : "项目信息",
@@ -831,7 +762,7 @@ var paybackto = function(container){
 	});
 	var content = $('<div></div>');
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
+	container.append(table);
 	table.dataTable(mySettings);
 }
 var cashProcessor=function(action,state,container){

@@ -138,10 +138,8 @@
     </div><!-- /.carousel -->
     </div>
     
-    <div class="col-lg-3 col-md-3" style="padding-left:0px; padding-right:0px;">
-    <div id="sider-content" class="sidebar-module sidebar-module-inset" style="height:250px;">
-            
-          </div>
+    <div class="col-xs-12 col-sm-12 col-lg-3 col-md-3 sidebar-module sidebar-module-inset" id="sider-content" style="min-height:250px">
+    
     </div>
     
     </div>
@@ -253,15 +251,14 @@ $(document).ready(function () {
 	
 	
 	if(cuser==null){
-		$('#sider-content').html('<h4>数据中心</h4>');
-		var str = '<p>';
-		str += '<div><span class="glyphicon glyphicon-pencil"></span>总募集资金50,000,000元</div>';
-		str += '<div><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>投资人次25,471次</div>';
-		str += '<div><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>获得收益6,000,000元</div>';
-		str += '<div><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已注册人数10548人</div>';
-		str += '</p>';
+		$('#sider-content').html('<div class="col-md-12" style="text-align:center; font-size:20px; font-weight:bold; color:orange;">数据中心</div>');
+		var str = '';
+		str += '<div class="col-md-12" style="margin-top:15px;"><span class="glyphicon glyphicon-pencil"></span>总募集资金50,000,000元</div>';
+		str += '<div class="col-md-12" style="margin-top:5px;"><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>投资人次25,471次</div>';
+		str += '<div class="col-md-12" style="margin-top:5px;"><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>获得收益6,000,000元</div>';
+		str += '<div class="col-md-12" style="margin-top:5px;"><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已注册人数10548人</div>';
 		$('#sider-content').append(str);
-		var usercontent = $('<div id="user_content" style="width:100%; margin-top:30px;"></div>');
+		var usercontent = $('<div id="user_content" class="col-md-12" style="margin-top:15px;"></div>');
 		usercontent.html('<a href="register.html" class="btn btn-warning" style="width:100%;">立刻注册</a>');
 		$('#sider-content').append(usercontent);
 	}else{
@@ -270,22 +267,22 @@ $(document).ready(function () {
 		
 		var account = accountDao.find(cuser.accountId);
 		var total = account.total;
-		tot = (parseFloat(total.value)+0.09).toFixed(0);
+		tot = total.value;
 
 		var usable = account.usable;
-		usa = (parseFloat(usable.value)+0.09).toFixed(0);
+		usa = usable.value;
 
 		var freeze = account.freeze;
-		fre = (parseFloat(freeze.value)+0.09).toFixed(0);
+		fre = freeze.value;
 
 		var used = account.used;
-		uu = (parseFloat(used.value)+0.09).toFixed(0);
+		uu = used.value;
 		
 		var freeze = account.freeze;
-		fre = (parseFloat(freeze.value)+0.09).toFixed(0);
+		fre = freeze.value;
 
 		var totalincome = account.totalincome;
-		income = (parseFloat(totalincome.value)+0.09).toFixed(0);
+		income = totalincome.value;
 		
 		$('#sider-content').html('<h4>您好:'+name+'</h4>');
 		var str = '<p>';

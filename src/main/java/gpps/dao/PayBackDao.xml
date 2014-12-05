@@ -5,7 +5,7 @@
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
 		PayBack(borrowerAccountId,productId,state,chiefAmount,interest,deadline,realtime,type,checktime,checkresult)
-		values(#{borrowerAccountId},#{productId},#{state},#{chiefAmount},#{interest},#{deadline},#{realtime},#{type},#{checktime},#{checkresult})
+		values(#{borrowerAccountId},#{productId},#{state},#{chiefAmount},#{interest},#{deadline},#{realtime},#{type},#{checktime},#{checkResult})
 	</insert>
 	<select id="findAllByProduct" resultType="gpps.model.PayBack">
 	   <![CDATA[

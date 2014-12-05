@@ -543,7 +543,7 @@ public class PayBackServiceImpl implements IPayBackService {
 
 	@Override
 	public void check(Integer payBackId) throws IllegalConvertException, IllegalOperationException {
-		PayBack payback=payBackDao.find(payBackId);
+		PayBack payback=find(payBackId);
 		if(payback==null||payback.getState()!=PayBack.STATE_WAITFORCHECK)
 			return;
 		if(payback.getCheckResult()!=PayBack.CHECK_SUCCESS)

@@ -552,7 +552,7 @@ create table payback
    interest             decimal(12,2) not null,
    realtime             bigint default 0 not null,
    checktime			bigint default 0 not null,
-   checkResult				int not null default 0;
+   checkResult			int not null default 0,
    primary key (ID)
 );
 

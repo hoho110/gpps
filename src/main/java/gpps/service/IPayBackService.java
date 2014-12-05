@@ -62,6 +62,7 @@ public interface IPayBackService {
 	public boolean canRepayInAdvance(Integer payBackId);
 	
 	public void repay(Integer payBackId) throws IllegalStateException, IllegalOperationException, InsufficientBalanceException, IllegalConvertException;
-	public void check(Integer payBackId) throws IllegalConvertException;
+	public void check(Integer payBackId) throws IllegalConvertException, IllegalOperationException;
+	public void checkoutPayBack(Integer payBackId);
 	public List<PayBack> findWaitforCheckPayBacks();
 }

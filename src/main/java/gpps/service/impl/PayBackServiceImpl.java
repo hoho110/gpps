@@ -542,10 +542,12 @@ public class PayBackServiceImpl implements IPayBackService {
 	}
 
 	@Override
-	public void check(Integer payBackId) throws IllegalConvertException {
-		PayBack payback=payBackDao.find(payBackId);
+	public void check(Integer payBackId) throws IllegalConvertException, IllegalOperationException {
+		PayBack payback=find(payBackId);
 		if(payback==null||payback.getState()!=PayBack.STATE_WAITFORCHECK)
 			return;
+		if(payback.getCheckResult()!=PayBack.CHECK_SUCCESS)
+			throw new IllegalOperationException("请先验证成功再审核");
 		// 增加还款任务
 		Task task = new Task();
 		task.setCreateTime(System.currentTimeMillis());
@@ -588,5 +590,10 @@ public class PayBackServiceImpl implements IPayBackService {
 			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
 		}
 		return paybacks;
+	}
+
+	@Override
+	public void checkoutPayBack(Integer payBackId) {
+		payBackDao.changeCheckResult(payBackId, PayBack.CHECK_SUCCESS);
 	}
 }

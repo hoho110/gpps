@@ -36,6 +36,8 @@ public class AdminServiceImpl extends AbstractLoginServiceImpl implements IAdmin
 			String messageValidateCode) throws LoginException,ValidateCodeException {
 		Admin admin=adminDao.findByLoginId(loginId);
 		if(admin==null)
+			admin=adminDao.findByTel(loginId);
+		if(admin==null)
 			throw new LoginException("LoginId is not existed");
 		adminDao.changePassword(admin.getId(), getProcessedPassword(checkNullAndTrim("password", password)+PASSWORDSEED));
 	}

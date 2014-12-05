@@ -76,6 +76,8 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		checkMessageValidateCode(messageValidateCode);
 		Borrower borrower = borrowerDao.findByLoginId(loginId);
 		if (borrower == null)
+			borrower=borrowerDao.findByTel(loginId);
+		if(borrower==null)
 			throw new LoginException("LoginId is not existed");
 		borrowerDao.changePassword(borrower.getId(), getProcessedPassword(checkNullAndTrim("password", password) + PASSWORDSEED));
 	}

@@ -29,7 +29,7 @@ public interface ILoginService {
 	public void login(String loginId,String password,String graphValidateCode) throws LoginException,ValidateCodeException;
 	/**
 	 * 用户修改密码
-	 * @param loginId 登录ID
+	 * @param loginId 登录ID/手机号
 	 * @param password 修改密码
 	 * @param messageValidateCode 短信验证码
 	 * @throws LoginException 

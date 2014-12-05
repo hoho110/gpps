@@ -46,10 +46,10 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 	private static final int DEFAULT_RECNUM=100;
 	private static final String NEWLINE="\r\n";
 	Logger logger=Logger.getLogger(AccountCheckServiceImpl.class);
-	@PostConstruct
-	public void init() {
-		checkAccount();
-	}
+//	@PostConstruct
+//	public void init() {
+//		checkAccount();
+//	}
 	@Override
 	public void checkAccount() {
 		if (future != null && !future.isDone())

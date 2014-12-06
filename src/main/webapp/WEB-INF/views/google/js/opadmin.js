@@ -1209,8 +1209,11 @@ var paybacktoaudit = function(container){
 		"sTitle" : "还款时间",
 		"code" : "time"
 	},{
+		"sTitle" : "审核",
+		"code" : "check"
+	},{
 		"sTitle" : "操作",
-		"code" : "operate"
+		"code" : "audit"
 	}
 	];
 	var datas = null;
@@ -1218,12 +1221,26 @@ var paybacktoaudit = function(container){
 	var aaData = new Array();
 	for(var i=0; i<datas.size(); i++){
 		var data=datas.get(i);
+		var ischecked = data.checkResult;
+		var checkedstr = null;
+		var auditstr = null;
+		if(ischecked==0){
+			checkedstr = "<button class='check' id='"+data.id+"'>审核</button>";
+			auditstr = "<button class='audit' id='"+data.id+"' disabled='disabled'>执行还款</button>";
+		}else if(ischecked==1){
+			checkedstr = "审核通过";
+			auditstr = "<button class='audit' id='"+data.id+"'>执行还款</button>";
+		}else if(ischecked==2){
+			checkedstr = "审核未通过";
+			auditstr = "<button class='audit' id='"+data.id+"' disabled='disabled'>执行还款</button>";
+		}
 		aaData.push(["<a href='productdetail.html?pid="+data.product.id+"' target='_blank'>"+data.product.govermentOrder.title+"("+data.product.productSeries.title+")</a>",
 	                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 	                    data.chiefAmount.value,
 	                    data.interest.value,
 	                    formatDateToDay(data.deadline),
-	                    "<button class='audit' id='"+data.id+"'>审核通过</button>"]);
+	                    checkedstr,
+	                    auditstr]);
 	}
 	var mySettings = $.extend({}, defaultSettings_noCallBack, {
 		"aoColumns" : columns,
@@ -1233,6 +1250,16 @@ var paybacktoaudit = function(container){
 	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
 	container.append(content);
 	table.dataTable(mySettings);
+	
+	$('button.check').click(function(e){
+		var paybackid = parseInt($(this).attr('id'));
+		try{
+			paybackService.checkoutPayBack(paybackid);
+			window.location.href="opadmin.html?fid=tohandle&sid=payback-toaudit";
+		}catch(e){
+			alert(e.message);
+		}
+	});
 	
 	$('button.audit').click(function(e){
 		if(confirm('确认还款无误，审核通过？')){
@@ -1245,7 +1272,7 @@ var paybacktoaudit = function(container){
 				alert(e.message);
 			}
 		}
-	})
+	});
 }
 
 

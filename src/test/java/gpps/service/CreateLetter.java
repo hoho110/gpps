@@ -16,6 +16,7 @@ public class CreateLetter {
 		{
 		Letter letter = new Letter();
 		letter.setContent("你好啊小美女"+i+"！");
+		letter.setTitle("管理员发送的站内信");
 		letter.setCreatetime((new Date()).getTime());
 		letter.setMarkRead(0);
 		letter.setReceiverId(340);

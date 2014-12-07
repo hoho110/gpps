@@ -2,7 +2,7 @@
 
 function header(title){
 	var divtitle = $('<div style="display:inline;"></div>');
-	divtitle.append('<h2 style="float:left;" class="text-muted">春蕾投资<small>&nbsp;&nbsp;信用创造价值</small></h2>');
+	divtitle.append('<h2 style="float:left;" class="text-muted">政采贷<small>&nbsp;&nbsp;信用创造价值</small></h2>');
 	var divusercontent = $('<div id="usercontent" style="float:right; font-size:14px; color:#333; padding-top:30px;"></div>');
 	
 	var divright = $('<div id="divright" style="min-width:150px; float:right;"></div>');
@@ -60,7 +60,7 @@ function header(title){
 	navulstr += '<span class="icon-bar"></span>';
 	navulstr += '<span class="icon-bar"></span>';
 	navulstr += '</button>';
-	navulstr += '<span class="navbar-brand" href="#">政采贷</span>';
+	navulstr += '<span class="navbar-brand">政采贷</span>';
 	navulstr += '</div>';
 	navulstr += '<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">';
 	navulstr += '<ul class="nav navbar-nav">';

@@ -46,6 +46,8 @@
 				src="/easyservice/gpps.service.ILenderService?json"></script>
 <script type="text/javascript"
 				src="/easyservice/gpps.service.IBorrowerService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IHelpService?json"></script>
 <script src="js/getuser.js"></script>
 </head>
  
@@ -145,38 +147,9 @@
                 </a>
  
                 <div class="news-notice-body">
-                    <ul class="news-notice-list faq-list" data-sk="稳健型-FAQ">
-                                     <li>
-                <b></b><a href="#" title="平安养老险发行的“富盈人生养老保障管理产品”介绍" target="_blank">稳健型产品XXXXXXXXXX介绍</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="“稳健型”项目本金和预期收益率有保证吗？" target="_blank">“稳健型”项目本金和预期收益率有保证吗？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="“稳健型”项目投资本息如何返还？" target="_blank">“稳健型”项目投资本息如何返还？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="投资人可以提前收回投资或提前解约吗？" target="_blank">投资人可以提前收回投资或提前解约吗？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="如何计算我的预期收益？" target="_blank">如何计算我的预期收益？</a>
-            </li>
-            <li>
-                <b></b><a href="#" title="平安养老险发行的“富盈人生养老保障管理产品”介绍" target="_blank">稳健型产品XXXXXXXXXX介绍</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="“稳健型”项目本金和预期收益率有保证吗？" target="_blank">“稳健型”项目本金和预期收益率有保证吗？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="“稳健型”项目投资本息如何返还？" target="_blank">“稳健型”项目投资本息如何返还？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="投资人可以提前收回投资或提前解约吗？" target="_blank">投资人可以提前收回投资或提前解约吗？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="如何计算我的预期收益？" target="_blank">如何计算我的预期收益？</a>
-            </li>
-                            </ul>
+                    <ul class="news-notice-list faq-list" id="cjquestion">
+                                     
+                     </ul>
                 </div>
             </div>
             
@@ -190,37 +163,8 @@
                 </a>
  
                 <div class="news-notice-body">
-                    <ul class="news-notice-list faq-list" data-sk="稳健型-FAQ">
-                                     <li>
-                <b></b><a href="#" title="平安养老险发行的“富盈人生养老保障管理产品”介绍" target="_blank">稳健型产品XXXXXXXXXX介绍</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="“稳健型”项目本金和预期收益率有保证吗？" target="_blank">“稳健型”项目本金和预期收益率有保证吗？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="“稳健型”项目投资本息如何返还？" target="_blank">“稳健型”项目投资本息如何返还？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="投资人可以提前收回投资或提前解约吗？" target="_blank">投资人可以提前收回投资或提前解约吗？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="如何计算我的预期收益？" target="_blank">如何计算我的预期收益？</a>
-            </li>
-            <li>
-                <b></b><a href="#" title="平安养老险发行的“富盈人生养老保障管理产品”介绍" target="_blank">稳健型产品XXXXXXXXXX介绍</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="“稳健型”项目本金和预期收益率有保证吗？" target="_blank">“稳健型”项目本金和预期收益率有保证吗？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="“稳健型”项目投资本息如何返还？" target="_blank">“稳健型”项目投资本息如何返还？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="投资人可以提前收回投资或提前解约吗？" target="_blank">投资人可以提前收回投资或提前解约吗？</a>
-            </li>
-                    <li>
-                <b></b><a href="#" title="如何计算我的预期收益？" target="_blank">如何计算我的预期收益？</a>
-            </li>
+                    <ul class="news-notice-list faq-list" id="newhelp">
+                                     
                             </ul>
                 </div>
             </div>
@@ -258,6 +202,7 @@
         	 
         	 var seriesDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IProductSeriesDao");
         	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
+        	 var helpService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IHelpService");
         	 var series = seriesDao.findAll();
         	 var li1 = $('<li class="active"></li>');
         	 var a1 = $('<a href="javascript:void(0);" data-sk="all"><span class="min-price">全部</span></a>');
@@ -320,6 +265,30 @@
         		 
         		 
         	 }
+        	 
+        	 
+        	 var cjquestions = helpService.findPublicHelps(1,0,10);
+        	 var questions = cjquestions.get('result');
+        	 if(questions){
+        		 for(var i=0; i<questions.size(); i++)
+        			 {
+        		 		$('#cjquestion').append('<li><b></b><a href="#" target="_blank">'+questions.get(i).question+'</a></li>');
+        			 }
+        	 }
+        	 
+        	 var newhelps = helpService.findPublicHelps(0,0,10);
+        	 var nhelps = newhelps.get('result');
+        	 if(nhelps){
+        		 for(var i=0; i<nhelps.size(); i++){
+        			 $('#newhelp').append('<li><b></b><a href="#" target="_blank">'+nhelps.get(i).question+'</a></li>');
+        		 }
+        	 }
+        	 
+        	 
+        	 
+        	 
+        	 
+        	 
         	 
         	 //a1.trigger('click');
         	 if(sid==null){

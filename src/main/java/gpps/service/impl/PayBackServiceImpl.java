@@ -616,7 +616,8 @@ public class PayBackServiceImpl implements IPayBackService {
 		Product product=productDao.find(payBack.getProductId());
 		BigDecimal totalChiefAmount=payBack.getChiefAmount();
 		BigDecimal totalInterest=payBack.getInterest();
-		List<BigDecimal> amounts=new ArrayList<BigDecimal>();
+		List<BigDecimal> chiefAmounts=new ArrayList<BigDecimal>();
+		List<BigDecimal> interestAmounts=new ArrayList<BigDecimal>();
 		loop:for(int i=0;i<submits.size();i++)
 		{
 			Submit submit=submits.get(i);
@@ -641,16 +642,24 @@ public class PayBackServiceImpl implements IPayBackService {
 			lenderInterest=payBack.getInterest().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
 			totalChiefAmount=totalChiefAmount.subtract(lenderChiefAmount);
 			totalInterest=totalInterest.subtract(lenderInterest);
-			amounts.add(lenderChiefAmount.add(lenderInterest));
+			chiefAmounts.add(lenderChiefAmount);
+			interestAmounts.add(lenderInterest);
 		}
-		BigDecimal change=totalChiefAmount.add(totalInterest);
-		amounts.add(change);
+		chiefAmounts.add(totalChiefAmount);
+		interestAmounts.add(totalInterest);
 		BigDecimal total=BigDecimal.ZERO;
-		for(BigDecimal amount:amounts)
+		for(BigDecimal amount:chiefAmounts)
 		{
 			total=total.add(amount);
 		}
-		if(total.compareTo(payBack.getChiefAmount().add(payBack.getInterest()))!=0)
+		if(total.compareTo(payBack.getChiefAmount())!=0)
+			new CheckException("金额计算不符");
+		total=BigDecimal.ZERO;
+		for(BigDecimal amount:interestAmounts)
+		{
+			total=total.add(amount);
+		}
+		if(total.compareTo(payBack.getInterest())!=0)
 			new CheckException("金额计算不符");
 		payBackDao.changeCheckResult(payBackId, PayBack.CHECK_SUCCESS);
 	}

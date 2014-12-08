@@ -11,6 +11,7 @@ import gpps.model.CashStream;
 import gpps.model.Lender;
 import gpps.model.PayBack;
 import gpps.model.Task;
+import gpps.service.exception.CheckException;
 import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
@@ -67,6 +68,9 @@ public class BorrowerHandle {
 		} catch (ExistWaitforPaySubmitException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (CheckException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	//产品流标
@@ -78,6 +82,9 @@ public class BorrowerHandle {
 		} catch (IllegalConvertException e) {
 			e.printStackTrace();
 		} catch (ExistWaitforPaySubmitException e) {
+			e.printStackTrace();
+		} catch (CheckException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -91,6 +98,9 @@ public class BorrowerHandle {
 		} catch (IllegalOperationException e) {
 			e.printStackTrace();
 		} catch (ExistWaitforPaySubmitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CheckException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

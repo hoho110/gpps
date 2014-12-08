@@ -1,20 +1,25 @@
 package gpps.service.impl;
 
 import gpps.constant.Pagination;
+import gpps.dao.IBorrowerDao;
 import gpps.dao.ICashStreamDao;
 import gpps.dao.IGovermentOrderDao;
+import gpps.dao.ILenderDao;
 import gpps.dao.IPayBackDao;
 import gpps.dao.IProductDao;
 import gpps.dao.IProductSeriesDao;
 import gpps.dao.IStateLogDao;
+import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
 import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
+import gpps.model.Lender;
 import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.ProductSeries;
 import gpps.model.StateLog;
+import gpps.model.Submit;
 import gpps.model.Task;
 import gpps.service.IAccountService;
 import gpps.service.IBorrowerService;
@@ -22,10 +27,12 @@ import gpps.service.IGovermentOrderService;
 import gpps.service.IPayBackService;
 import gpps.service.IProductService;
 import gpps.service.ITaskService;
+import gpps.service.exception.CheckException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.UnSupportRepayInAdvanceException;
+import gpps.service.thirdpay.Transfer.LoanJson;
 import gpps.tools.StringUtil;
 
 import java.io.IOException;
@@ -65,6 +72,12 @@ public class PayBackServiceImpl implements IPayBackService {
 	ITaskService taskService;
 	@Autowired
 	IGovermentOrderService orderService;
+	@Autowired
+	IBorrowerDao borrowerDao;
+	@Autowired
+	ISubmitDao submitDao;
+	@Autowired
+	ILenderDao lenderDao;
 	Logger log=Logger.getLogger(PayBackServiceImpl.class);
 	@Override
 	public void create(PayBack payback) {
@@ -542,6 +555,7 @@ public class PayBackServiceImpl implements IPayBackService {
 	}
 
 	@Override
+	@Transactional
 	public void check(Integer payBackId) throws IllegalConvertException, IllegalOperationException {
 		PayBack payback=find(payBackId);
 		if(payback==null||payback.getState()!=PayBack.STATE_WAITFORCHECK)
@@ -549,6 +563,7 @@ public class PayBackServiceImpl implements IPayBackService {
 		if(payback.getCheckResult()!=PayBack.CHECK_SUCCESS)
 			throw new IllegalOperationException("请先验证成功再审核");
 		// 增加还款任务
+		changeState(payback.getId(), PayBack.STATE_REPAYING);
 		Task task = new Task();
 		task.setCreateTime(System.currentTimeMillis());
 		task.setPayBackId(payback.getId());
@@ -557,7 +572,6 @@ public class PayBackServiceImpl implements IPayBackService {
 		task.setType(Task.TYPE_REPAY);
 		taskService.submit(task);
 		accountService.unfreezeBorrowerAccount(payback.getBorrowerAccountId(),payback.getChiefAmount().add(payback.getInterest()), payback.getId(), "解冻");
-		changeState(payback.getId(), PayBack.STATE_FINISHREPAY);
 		if (payback.getType() == PayBack.TYPE_LASTPAY) {
 			// TODO 金额正确，设置产品状态为还款完毕
 			productService.finishRepay(payback.getProductId());
@@ -591,9 +605,53 @@ public class PayBackServiceImpl implements IPayBackService {
 		}
 		return paybacks;
 	}
-
 	@Override
-	public void checkoutPayBack(Integer payBackId) {
+	public void checkoutPayBack(Integer payBackId) throws CheckException {
+		PayBack payBack=payBackDao.find(payBackId);
+		if(payBack==null)
+			return;
+		List<Submit> submits=submitDao.findAllByProductAndState(payBack.getProductId(), Submit.STATE_COMPLETEPAY);
+		if(submits==null||submits.size()==0)
+			return;
+		Product product=productDao.find(payBack.getProductId());
+		BigDecimal totalChiefAmount=payBack.getChiefAmount();
+		BigDecimal totalInterest=payBack.getInterest();
+		List<BigDecimal> amounts=new ArrayList<BigDecimal>();
+		loop:for(int i=0;i<submits.size();i++)
+		{
+			Submit submit=submits.get(i);
+			BigDecimal lenderChiefAmount=null;
+			BigDecimal lenderInterest=null;
+			if(payBack.getType()==PayBack.TYPE_LASTPAY)
+			{
+				List<CashStream> cashStreams=cashStreamDao.findRepayCashStream(submit.getId(), null);
+				BigDecimal repayedChiefAmount=BigDecimal.ZERO;
+				if(cashStreams!=null&&cashStreams.size()>0)
+				{
+					for(CashStream cashStream:cashStreams)
+					{
+						repayedChiefAmount=repayedChiefAmount.add(cashStream.getChiefamount());
+					}
+				}
+				lenderChiefAmount=submit.getAmount().subtract(repayedChiefAmount);
+			}
+			else {
+				lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
+			}
+			lenderInterest=payBack.getInterest().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
+			totalChiefAmount=totalChiefAmount.subtract(lenderChiefAmount);
+			totalInterest=totalInterest.subtract(lenderInterest);
+			amounts.add(lenderChiefAmount.add(lenderInterest));
+		}
+		BigDecimal change=totalChiefAmount.add(totalInterest);
+		amounts.add(change);
+		BigDecimal total=BigDecimal.ZERO;
+		for(BigDecimal amount:amounts)
+		{
+			total=total.add(amount);
+		}
+		if(total.compareTo(payBack.getChiefAmount().add(payBack.getInterest()))!=0)
+			new CheckException("金额计算不符");
 		payBackDao.changeCheckResult(payBackId, PayBack.CHECK_SUCCESS);
 	}
 }

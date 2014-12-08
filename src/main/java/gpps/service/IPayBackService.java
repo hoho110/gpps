@@ -2,6 +2,7 @@ package gpps.service;
 
 import gpps.model.PayBack;
 import gpps.model.ProductSeries;
+import gpps.service.exception.CheckException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
@@ -63,6 +64,6 @@ public interface IPayBackService {
 	
 	public void repay(Integer payBackId) throws IllegalStateException, IllegalOperationException, InsufficientBalanceException, IllegalConvertException;
 	public void check(Integer payBackId) throws IllegalConvertException, IllegalOperationException;
-	public void checkoutPayBack(Integer payBackId);
+	public void checkoutPayBack(Integer payBackId) throws CheckException;
 	public List<PayBack> findWaitforCheckPayBacks();
 }

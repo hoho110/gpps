@@ -310,6 +310,7 @@ public class TaskServiceImpl implements ITaskService {
 			loanJsons.add(loadJson);
 		}
 		thirdPaySupportService.repay(loanJsons);
+		payBackService.changeState(payBack.getId(), PayBack.STATE_FINISHREPAY);
 		logger.info("还款任务["+task.getId()+"]完毕，涉及Submit"+submits.size()+"个");
 	}
 	@Override

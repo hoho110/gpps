@@ -21,6 +21,7 @@ import gpps.model.LenderAccount;
 import gpps.model.Product;
 import gpps.model.ProductSeries;
 import gpps.model.Submit;
+import gpps.service.exception.CheckException;
 import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
@@ -205,6 +206,9 @@ public class BuyProductProcessTest extends TestSupport{
 		} catch (IllegalConvertException e) {
 			Assert.fail(e.getMessage());
 		} catch (ExistWaitforPaySubmitException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CheckException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

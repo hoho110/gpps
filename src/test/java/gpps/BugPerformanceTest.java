@@ -89,8 +89,8 @@ public class BugPerformanceTest extends TestSupport{
 		
 		Random random=new Random();
 		long currenttime=System.currentTimeMillis();
-		int lenderNum=50;
-		int buyNum=4;
+		int lenderNum=1000;
+		int buyNum=1;
 		try
 		{
 			List<Lender> lenders=new ArrayList<Lender>();
@@ -122,7 +122,7 @@ public class BugPerformanceTest extends TestSupport{
 			order.setIncomeStarttime(currenttime+24L*3*3600*1000);
 			orderService.create(order);
 			Product product=new Product();
-			product.setExpectAmount(new BigDecimal(1000*10000));
+			product.setExpectAmount(new BigDecimal(100*10000));
 			product.setGovermentorderId(order.getId());
 			product.setIncomeEndtime(currenttime+24L*(3+90)*3600*1000);
 			product.setLevelToBuy(0);
@@ -139,20 +139,28 @@ public class BugPerformanceTest extends TestSupport{
 			List<FutureTask<List<Long>>> futures=new ArrayList<FutureTask<List<Long>>>();
 			for(Lender lender:lenders)
 			{
-				FutureTask<List<Long>> future = new FutureTask<List<Long>>(new BuyThread(buyNum,lender,product));
+				FutureTask<List<Long>> future = new FutureTask<List<Long>>(new BuyThread(buyNum,lender,product, System.currentTimeMillis()));
 				new Thread(future).start();
 				futures.add(future);
 			}
 			long totalCost=0;
+			long maxCost = 0;
+			long minCost = 0;
 			long num=0;
 			for(FutureTask<List<Long>> future:futures)
 			{
 				List<Long> costs=future.get();
 				num=num+costs.size();
 				for(long cost:costs)
+				{
 					totalCost=totalCost+cost;
+					if(cost>maxCost)
+						maxCost=cost;
+					if(cost<minCost)
+						minCost=cost;
+				}
 			}
-			logger.info("共购买"+num+"次，平均耗时："+totalCost/num);
+			logger.info("共购买"+num+"次，平均耗时："+totalCost/num+", 最大耗时："+maxCost+", 最小耗时： "+minCost);
 			System.exit(-1);
 		}catch(Throwable e){
 			e.printStackTrace();
@@ -163,11 +171,14 @@ public class BugPerformanceTest extends TestSupport{
 		int buyNum;
 		Lender lender;
 		Product product;
-		public BuyThread(int buyNum,Lender lender,Product product)
+		long createtime;
+		
+		public BuyThread(int buyNum,Lender lender,Product product, long createtime)
 		{
 			this.buyNum=buyNum;
 			this.lender=lender;
 			this.product=product;
+			this.createtime = createtime;
 		}
 		@Override
 		public List<Long> call() throws Exception
@@ -179,14 +190,20 @@ public class BugPerformanceTest extends TestSupport{
 				long currenttime=System.currentTimeMillis();
 				for(int i=0;i<buyNum;i++)
 				{
+					try{
 					mockLogin(lender);
-					Integer submitId=submitService.buy(product.getId(), 1);
+					Integer submitId=submitService.buy(product.getId(), 1200);
 					Integer cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), new BigDecimal(1), submitId, "购买");
 					submitService.confirmBuy(submitId);
 		//			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
 					accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-					long cost=System.currentTimeMillis()-currenttime;
-					logger.info("lender,id="+lender.getId()+"执行第"+i+"次购买，耗时:"+cost+"ms");
+					}catch(Exception e){
+						logger.error(e.getMessage());
+					}
+//					long cost=System.currentTimeMillis()-currenttime;
+					long cost=System.currentTimeMillis()-createtime;
+					long executetime = System.currentTimeMillis()-currenttime;
+					logger.info("lender,id="+lender.getId()+"执行第"+i+"次购买，调度耗时:"+cost+"ms"+", 本次执行耗时："+executetime);
 					costs.add(cost);
 					currenttime=System.currentTimeMillis();
 				}

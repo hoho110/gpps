@@ -83,7 +83,7 @@ A.calculator-link {
 	BACKGROUND: url(img/detail-status-left.jpg) no-repeat 0px 0px;
 }
 .product-detail-status-inner {
-	POSITION: relative; MIN-HEIGHT: 90%; WIDTH: 100%; BORDER-TOP: #ff7e00 3px solid
+	POSITION: relative; MIN-HEIGHT: 90%; WIDTH: 100%; BORDER-TOP: #ff7e00 3px solid;
 }
 .detail-content {
 	BORDER-BOTTOM: #e4e4e4 1px solid; BORDER-LEFT: #e4e4e4 1px solid; BORDER-TOP: #7f79d1 3px solid; BORDER-RIGHT: #e4e4e4 1px solid

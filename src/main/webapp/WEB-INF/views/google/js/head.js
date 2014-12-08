@@ -1,13 +1,12 @@
 
 
 function header(title){
-	var divtitle = $('<div style="display:inline;"></div>');
-	divtitle.append('<h2 style="float:left;" class="text-muted">政采贷<small>&nbsp;&nbsp;信用创造价值</small></h2>');
-	var divusercontent = $('<div id="usercontent" style="float:right; font-size:14px; color:#333; padding-top:30px;"></div>');
 	
-	var divright = $('<div id="divright" style="min-width:150px; float:right;"></div>');
-	divright.append(divusercontent);
-	divright.append('<div style="clear:both;"></div>');
+	var divusercontent = $('<div class="col-md-12" id="usercontent" style="background-color:black; color:white; min-height:35px; padding-top:5px;"></div>');
+	
+	
+	var divtitle = $('<div style="padding: 30px 10px 10px 10px;"></div>');
+	divtitle.append('<h2 style="margin-left:15px;" class="text-muted">政采贷<small>&nbsp;&nbsp;信用创造价值</small></h2>');
 	
 	if(title=='login' || title=='register'){
 		if(cuser!=null)
@@ -26,29 +25,20 @@ function header(title){
 		if(cuser!=null){
 			window.location.href="myaccount.html";
 		}else if(buser!=null){
-			divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;|&nbsp;信用级别:<a href="baccount.html?fid=bcenter">level'+buser.level+'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="baccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
+			divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
 		}else{
-			divusercontent.html('<a href="login.html" style="color:orange; font-size:20px;">登陆</a><span style="color:orange; font-size:20px; margin-left:15px; margin-right:15px;">|</span><a href="register.html" style="color:orange; font-size:20px;">注册</a>');
+			divusercontent.html('');
 		}
 	}
 	else{
 	if(cuser!=null){
-		divusercontent.html(greet()+cuser.loginId+'&nbsp;|&nbsp;会员级别:<a href="myaccount.html?fid=mycenter">level'+cuser.level+'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="myaccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
+		divusercontent.html(greet()+cuser.loginId+'&nbsp;&nbsp;<a style="color:white;" href="myaccount.html?fid=mycenter&sid=letter-unread-mycenter" id="inner_letter"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>'+lettercount+'</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
 	}else if(buser!=null){
-		divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;|&nbsp;信用级别:<a href="baccount.html?fid=bcenter">level'+buser.level+'</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="baccount.html">我的账户</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html">退出</a>');
+		divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="font-color:white;">退出</a>');
 	}else{
-		divusercontent.html('<a href="login.html" style="color:orange; font-size:20px;">登陆</a><span style="color:orange; font-size:20px; margin-left:15px; margin-right:15px;">|</span><a href="register.html" style="color:orange; font-size:20px;">注册</a>');
+		divusercontent.html('');
 	}
 		}
-	divtitle.append(divright);
-	divtitle.append('<div style="clear:both;"></div>');
-	
-	var navul = $('<ul class="nav nav-justified"></ul>');
-	navul.append('<li id="index"><a class="active" href="index.html">首页</a></li>');
-	navul.append('<li id="productlist"><a href="productlist.html">我要理财</a></li>');
-	navul.append('<li id="myaccount"><a href="myaccount.html">我的帐户</a></li>');
-	navul.append('<li id="activity"><a href="activity.html">活动中心</a></li>');
-	navul.append('<li id="loan"><a href="loan.html">我要融资</a></li>');
 	
 	
 	var navulstr = '<nav class="navbar navbar-default" role="navigation">';
@@ -71,7 +61,11 @@ function header(title){
 	navulstr += '<li id="loan"><a href="loan.html">我要融资</a></li>';
 	navulstr += '</ul>';
 	navulstr += '<ul class="nav navbar-nav navbar-right">';
-	navulstr += '<li><a href="#">导航</a></li>';
+	if(cuser==null && buser==null)
+		{
+			navulstr += '<li><a href="login.html">登录</a></li>';
+			navulstr += '<li><a href="register.html">注册</a></li>';
+		}
 	navulstr += '<li class="dropdown">';
 	navulstr += '<a href="#" class="dropdown-toggle" data-toggle="dropdown">帮助<span class="caret"></span></a>';
 	navulstr += '<ul class="dropdown-menu" role="menu">';
@@ -90,49 +84,13 @@ function header(title){
 	navulstr += '</nav>';
 	
 	
-		
-	  
-	      
-	      
-	    
-
-	    
-	      
-	        
-	        
-	        
-	        
-	        
-	        
-	      
-	      
-	        
-	        
-	          
-	          
-	            
-	            
-	            
-	            
-	            
-	            
-	            
-	          
-	        
-	      
-	    
-	  
-	
-	
-	
-	
-	
-	
 	
 	var navDiv = $('<div class="col-md-12" style="padding-left:0px; padding-right:0px;"></div>');
 	navDiv.append(navulstr);
 	
 	$('div#header').html('');
+	$('div#header').css('background-color', 'white');
+	$('#header').append(divusercontent);
 	$('#header').append(divtitle);
 	$('#header').append(navDiv);
 	$('li').removeClass('active');

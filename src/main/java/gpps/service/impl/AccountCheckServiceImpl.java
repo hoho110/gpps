@@ -68,24 +68,31 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							continue;
 						for(Lender lender:lenders)
 						{
-							if(StringUtil.isEmpty(lender.getThirdPartyAccount()))
-								continue;
+//							if(StringUtil.isEmpty(lender.getThirdPartyAccount()))
+//								continue;
 							//与第三方验证
 							//网贷平台子账户可用余额|总可用余额(子账户可用余额+公共账户可用余额)|子账户冻结余额”（例:100.00|200.00|10.00）
-							String text=thirdPaySupportService.balanceQuery(lender.getThirdPartyAccount());
-							if(StringUtil.isEmpty(text))
-							{
-								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "从第三方支付平台获取账户信息失败.");
-								continue;
+//							String text=thirdPaySupportService.balanceQuery(lender.getThirdPartyAccount());
+//							if(StringUtil.isEmpty(text))
+//							{
+//								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "从第三方支付平台获取账户信息失败.");
+//								continue;
+//							}
+							
+							try{
+								Thread.sleep(10);
+							}catch(Exception e){
+								
 							}
+							
 							LenderAccount account=lenderAccountDao.find(lender.getAccountId());
-							String[] thirdAccount=text.split("\\|");
-							if(!compareAccount(thirdAccount[0], account.getUsable())||!compareAccount(thirdAccount[2], account.getFreeze()))
-							{
-								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), 
-										"本地账户与第三方支付平台不符,本地可用|冻结金额为"+account.getUsable().toString()+"|"+account.getFreeze().toString()+";"
-										+"第三方可用|冻结金额为"+thirdAccount[0]+"|"+thirdAccount[2]);
-							}
+//							String[] thirdAccount=text.split("\\|");
+//							if(!compareAccount(thirdAccount[0], account.getUsable())||!compareAccount(thirdAccount[2], account.getFreeze()))
+//							{
+//								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), 
+//										"本地账户与第三方支付平台不符,本地可用|冻结金额为"+account.getUsable().toString()+"|"+account.getFreeze().toString()+";"
+//										+"第三方可用|冻结金额为"+thirdAccount[0]+"|"+thirdAccount[2]);
+//							}
 							//验证：总金额=可用金额+冻结金额+已投资金额
 							if(account.getFreeze().add(account.getUsable()).add(account.getUsed()).compareTo(account.getTotal())!=0)
 							{
@@ -104,7 +111,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							actions.add(CashStream.ACTION_UNFREEZE);
 							sum=cashStreamDao.sumCashStream(lender.getAccountId(), null, actions);
 							sum=(sum==null)?new CashStreamSum():sum;
-							if(account.getFreeze().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
+							if(account.getFreeze().negate().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
 							{
 								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "冻结金额与现金流验证错误,冻结金额:"+account.getFreeze().toString()+",现金流:"+sum);
 							}
@@ -138,24 +145,24 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							continue;
 						for(Borrower borrower:borrowers)
 						{
-							if(StringUtil.isEmpty(borrower.getThirdPartyAccount()))
-								continue;
+//							if(StringUtil.isEmpty(borrower.getThirdPartyAccount()))
+//								continue;
 							//与第三方验证
 							//网贷平台子账户可用余额|总可用余额(子账户可用余额+公共账户可用余额)|子账户冻结余额”（例:100.00|200.00|10.00）
-							String text=thirdPaySupportService.balanceQuery(borrower.getThirdPartyAccount());
-							if(StringUtil.isEmpty(text))
-							{
-								appendMsg(sBuilder, Lender.class, borrower.getId(), borrower.getThirdPartyAccount(), "从第三方支付平台获取账户信息失败.");
-								continue;
-							}
+//							String text=thirdPaySupportService.balanceQuery(borrower.getThirdPartyAccount());
+//							if(StringUtil.isEmpty(text))
+//							{
+//								appendMsg(sBuilder, Lender.class, borrower.getId(), borrower.getThirdPartyAccount(), "从第三方支付平台获取账户信息失败.");
+//								continue;
+//							}
 							BorrowerAccount account=borrowerAccountDao.find(borrower.getAccountId());
-							String[] thirdAccount=text.split("\\|");
-							if(!compareAccount(thirdAccount[0], account.getUsable())||!compareAccount(thirdAccount[2], account.getFreeze()))
-							{
-								appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), 
-										"本地账户与第三方支付平台不符,本地可用|冻结金额为"+account.getUsable().toString()+"|"+account.getFreeze().toString()+";"
-										+"第三方可用|冻结金额为"+thirdAccount[0]+"|"+thirdAccount[2]);
-							}
+//							String[] thirdAccount=text.split("\\|");
+//							if(!compareAccount(thirdAccount[0], account.getUsable())||!compareAccount(thirdAccount[2], account.getFreeze()))
+//							{
+//								appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), 
+//										"本地账户与第三方支付平台不符,本地可用|冻结金额为"+account.getUsable().toString()+"|"+account.getFreeze().toString()+";"
+//										+"第三方可用|冻结金额为"+thirdAccount[0]+"|"+thirdAccount[2]);
+//							}
 							//验证：总金额=可用金额+冻结金额
 							if(account.getFreeze().add(account.getUsable()).compareTo(account.getTotal())!=0)
 							{

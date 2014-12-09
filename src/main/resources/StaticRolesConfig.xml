@@ -3,20 +3,65 @@
 	<!--匿名用户(未登陆)角色,privilege为-1
 		limitedType:受限类型,1:不受限;0:部分许可;-1:全部受限
 	-->
+	<!--全部用户类型：
+		Lender 
+			0：非正式用户；1：正式用户(暂未用)
+		Borrower
+			10：有查看权限的企业用户；11：申请融资权限的企业用户 ；12：有融资权限的企业用户；14：审核未通过
+		Admin 
+			20:查看权限; 21:所有权限
+	 -->
 	<!-- 匿名用户 -->
 	<Role privilege = "-1" limitedType="0">
 		<permissionRules>
-			<PermissionRule  entityLimitType="gpps.service.ILenderService" operations="register;registerSecondStep;getCurrentUser;login;sendMessageValidateCode"/>
+			<PermissionRule  entityLimitType="gpps.service.ILenderService" operations="register;registerSecondStep;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel"/>
+			<PermissionRule  entityLimitType="gpps.service.IBorrowerService" operations="register;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel"/>
+			<PermissionRule  entityLimitType="gpps.service.IGovermentOrderService" operations="findByStates;findByBorrowerIdAndStates;findGovermentOrderByProductSeries;findByStatesByPage;findGovermentOrderByProduct;findMimeItems;"/>
+			<PermissionRule  entityLimitType="gpps.service.IProductService" operations="find;findByGovermentOrder;findByStates;findByProductSeriesAndStates;findByProductId;findMimeItems"/>
 		</permissionRules>
 	</Role>
-	<!-- 未完成认证的贷款人 -->
+	<!-- ******************************Lender********************************* -->
 	<Role privilege = "0" limitedType="0">
+        <permissionRules>
+        	<PermissionRule  entityLimitType="gpps.service.ILenderService"/>
+        	<PermissionRule  entityLimitType="gpps.service.IGovermentOrderService" operations="findByStates;findByBorrowerIdAndStates;findGovermentOrderByProductSeries;findByStatesByPage;findGovermentOrderByProduct;findMimeItems;"/>
+			<PermissionRule  entityLimitType="gpps.service.IProductService" operations="find;findByGovermentOrder;findByStates;findByProductSeriesAndStates;findByProductId;findMimeItems"/>
+			<PermissionRule  entityLimitType="gpps.service.ISubmitService"/>
+        </permissionRules>
+    </Role>
+<!--     <Role privilege = "1" limitedType="0"> -->
+<!--         <permissionRules> -->
+        	
+<!--         </permissionRules> -->
+<!--     </Role> -->
+	<!-- ******************************Borrower********************************* -->
+	<Role privilege = "10" limitedType="0">
         <permissionRules>
         
         </permissionRules>
     </Role>
-    <!-- 完成认证的贷款人 -->
-	<Role privilege = "1" limitedType="0">
+    <Role privilege = "11" limitedType="0">
+        <permissionRules>
+        
+        </permissionRules>
+    </Role>
+    <Role privilege = "12" limitedType="0">
+        <permissionRules>
+        
+        </permissionRules>
+    </Role>
+    <Role privilege = "14" limitedType="0">
+        <permissionRules>
+        
+        </permissionRules>
+    </Role>
+    <!-- ******************************管理员********************************* -->
+    <!-- 所有权限 -->
+	<Role privilege = "21" limitedType="1">
+		<permissionRules>
+		</permissionRules>
+	</Role>
+	<Role privilege = "20" limitedType="0">
 		<permissionRules>
 		</permissionRules>
 	</Role>

@@ -1,5 +1,5 @@
  .ui_complex_pagination {
-	BORDER-BOTTOM: #d9d9d9 1px solid; BORDER-LEFT: #d9d9d9 1px solid; LINE-HEIGHT: 49px; HEIGHT: 49px; BORDER-TOP: medium none; BORDER-RIGHT: #d9d9d9 1px solid
+	LINE-HEIGHT: 49px; HEIGHT: 49px; BORDER-TOP: medium none;
 }
 .list-table .product-status {
 	PADDING-BOTTOM: 0px; PADDING-LEFT: 10px; PADDING-RIGHT: 0px; FLOAT: left; PADDING-TOP: 15px
@@ -105,7 +105,7 @@
 }
 
 .list-table {
-	BACKGROUND-COLOR: #fff; FONT-FAMILY: "Microsoft Yahei", "Î¢ÈíÑÅºÚ", Tahoma, Arial, Helvetica, STHeiti; COLOR: #333; FONT-SIZE: 12px
+	BACKGROUND-COLOR: #fff; FONT-FAMILY: "Microsoft Yahei", "Î¢ï¿½ï¿½ï¿½Åºï¿½", Tahoma, Arial, Helvetica, STHeiti; COLOR: #333; FONT-SIZE: 12px
 }
 .list-table a {
 	OUTLINE-STYLE: none; OUTLINE-COLOR: invert; OUTLINE-WIDTH: 0px; COLOR: #2438cd; TEXT-DECORATION: none

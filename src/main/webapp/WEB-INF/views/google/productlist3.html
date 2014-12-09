@@ -19,11 +19,8 @@
     <link rel="stylesheet" type="text/css" href="css/gpps/new-lufax.css">
     <link rel="stylesheet" type="text/css" href="css/gpps/productlist.css">
     
+    <link href="css/plist/a.css" rel="stylesheet">
     <link href="css/mine.css" rel="stylesheet">
-    
-    <link href="css/plist/b.css" rel="stylesheet">
-    <link href="css/plist/creditlevel.css" rel="stylesheet">
-    <link href="css/plist/progressbar.css" rel="stylesheet">
     
     
     <script src="js/jquery.min.js"></script>
@@ -73,7 +70,7 @@
     	
     	
     	
-    	<nav class="navbar navbar-default" role="navigation" style="margin-bottom:0px;">
+    	<nav class="navbar navbar-default" role="navigation">
     	<div class="container-fluid">
     	<div class="navbar-header">
     	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
@@ -101,7 +98,7 @@
 		
 		
 		
-		<div class="service-intro clearfix row" style="margin-left:0px; margin-right:0px; border-left:solid 1px #d9d9d9; border-right:solid 1px #d9d9d9; border-bottom:dotted 1px #d9d9d9;">
+		<div class="service-intro clearfix row" style="margin-left:0px; margin-right:0px;">
 		<div class="hidden-xs hidden-sm col-md-1 col-lg-1">
     		<p class="service-intro-title">
        			 服务介绍<b></b>
@@ -114,22 +111,30 @@
         
         
         
-        <div class="row" style="margin-left:0px; margin-right:0px;  border-left:solid 1px #d9d9d9; border-right:solid 1px #d9d9d9; border-bottom:solid 1px #d9d9d9;">
-        <div class="col-md-12" style="color:orange; font-size:18px; font-weight:bold; margin-bottom:15px;">
-        	<span class="glyphicon glyphicon-play" style="color : #c7d78c;"></span>项目列表
-        </div>
-        <div class="col-md-12">
-        	<div class="table-responsive" id="orderlist" style="padding-top:10px;">
-			</div>
-        </div>
-        <div class="col-md-12 cpagination ui_complex_pagination">
+        
+        
+            <div class="table-title-wrap clearfix">
+                <span class="table-title">项目列表</span>
+                <div class="table-product-event">
+                                    </div>
+            </div>
+            <div class="list-table-wrap" id="list-table-wrap">
+                <ul class="list-table">
+                </ul>
+ 
+			
+                <div class="cpagination ui_complex_pagination">
                 <span class="btns disabled btn_page btn_small prev"><span class="caret">&lt;</span> 上一页</span>
  
                 <p class="pageNum">第1页/共1页</p>
                 <a class="btns disabled btn_page btn_small next" href="javascript:void(0)" id="nextPage">下一页<span
                         class="caret">&gt;</span></a>
-         </div>
-        </div>
+            </div>
+                
+ 
+            </div>
+            
+ 
         </div>
         <div class="hidden-xs hidden-sm col-md-3 col-lg-3" style="padding-right:0px; padding-left:15px; margin-top:40px;">
  
@@ -173,146 +178,21 @@
 
 </div>
 
-
-<textarea style="display:none;" id="orderlist_template">
-
-<table class="ui-list-invest" id="products" style="width:98%;">
-
-<tr id="header" style="padding-left:0px; padding-right:0px; margin-bottom:10px;">
-      				<td class="color-gray-text text-center" style="min-width:150px;"></td>
-      				<td class="color-gray-text text-center" style="min-width:50px;"></td>
-      				<td class="color-gray-text text-center" style="min-width:50px;"></td>
-      				<td class="color-gray-text text-center" style="min-width:120px;"></td>
-      				<td class="color-gray-text text-center" style="min-width:80px;"></td>
-      				<td class="color-gray-text text-center" style="min-width:50px;"></td>
-      				<td class="color-gray-text text-center" style="min-width:100px;"></td>
-    				</tr>
-
-<!--#
-	var orders = res.get('result');
-	for(var i=0; i<orders.size(); i++)
-	{
-	var order = orders.get(i);
-	var products = order.products;
-	
-	
-	for(var t=0; t<products.size(); t++)
-	{
-	
-	var product = products.get(t);
-	var rate = parseInt(parseFloat(product.rate.value)*100);
-	
-	var seriesname = '稳健';
-	var seriesclss = 'A';
-	if(product.productseriesId==2){
-		seriesname='均衡';
-		seriesclss='B';
-	}else if(product.productseriesId==3){
-		seriesname='进取';
-		seriesclss='C';
-	}
-	
-	var days = parseInt((product.incomeEndtime-order.incomeStarttime+23*3600*1000)/(24*3600*1000)+'');
-	var percent = parseInt(parseInt(product.realAmount.value)*100/parseInt(product.expectAmount.value));
-	
-	var state = order.state;
-	var state_a_cls = '';
-	var state_span = '';
-	if(state==1)
-		{
-		if(parseInt(product.expectAmount.value)==parseInt(product.realAmount.value))
-		{
-			state_a_cls = 'ui-list-invest-button-FIRST_READY';
-			state_span = '<span class="READY FIRST_READY">已满标</span>'
-			}
-		else
-		{
-			state_a_cls = 'ui-list-invest-button-OPEN';
-			state_span = '<span class="OPEN">投标中</span>';
-			}
-		}
-	else if(state==2)
-	{
-		state_a_cls = 'ui-list-invest-button-FIRST_APPLY';
-		state_span = '<span class="FIRST_APPLY">预发布</span> ';
-		}
-	else if(state==4)
-	{
-		state_a_cls = 'ui-list-invest-button-IN_PROGRESS';
-		state_span = '<span class="IN_PROGRESS">还款中</span>'
-		}
-	else if(state==8)
-	{
-		state_a_cls = 'ui-list-invest-button-OVER_DUE';
-		state_span = '<span class="OVER_DUE">待关闭</span>';
-		}
-	else if(state==32)
-	{
-		state_a_cls = 'ui-list-invest-button-CLOSED';
-		state_span = '<span class="CLOSED">已关闭</span>';
-		}
-	else if(state==16)
-	{
-		state_a_cls = 'ui-list-invest-button-BAD_DEBT';
-		state_span = '<span class="BAD_DEBT">流标</span>';
-		}
-#-->
-
-<tr class="ui-list-item" id="header"
-	style="padding-left: 0px; padding-right: 0px;">
-	
-	<!--# 
-	if(t==0)
-	{
-	 #-->
-	<td class="text-big" style="max-width:200px;" rowspan=+-products.size()-+>
-		<div style="display:inline;">
-			<a class="producttitle" style="font-size:16px;" href="productdetail.html?pid=+-product.id-+"
-				target="_blank" title="+-order.title-+">+-order.title-+</a>
-		</div>
-	</td>
-	<!--# 
-	}
-	 #-->
-
-	<td class="ui-list-field text-center"><a
-		class="ui-creditlevel +-seriesclss-+ snow">+-seriesname-+</a></td>
-	<td class="ui-list-field num text-right pr10"><em class="value">+-rate-+</em>%</td>
-	<td class="ui-list-field num text-right pr10"><em class="value">+-parseInt(product.expectAmount.value)-+</em>元</td>
-	<td class="ui-list-field num text-right pr10"><em class="value">+-days-+</em>天</td>
-
-	<td class="ui-list-field"><strong
-		class="ui-progressbar-mid ui-progressbar-mid-+-percent-+"><em>+-percent-+</em>%</strong>
-	</td>
-
-	<td class="ui-list-field text-right">
-		<a class="ui-button ui-button-mid ui-button-blue ui-list-invest-button +-state_a_cls-+" href="productdetail.html?pid=+-product.id-+" target="_blank"> 
-			+-state_span-+
-		</a>
-	</td>
-</tr>
-
-<!--# 
-		}
-	}
- #-->
-
-</table>
-</textarea>
-
-
 <script src="js/head.js"></script>
 <script src="js/foot.js"></script>
  	<script>
  	var seriesname = {};
- 	var ctx = new EasyServiceClient.newContext();
  	function refreshList(orders){
- 		
- 		ctx.res = orders;
- 		ejs.renderComplexNode("#orderlist_template", "#orderlist", ctx);
- 		
  		var total = orders.get('total');
     	var rst = orders.get('result');
+    	
+    	$('ul.list-table li').remove();
+    	$('ul.list-table').append('<li class="clearfix"></li>');
+    	for(var i=0; i<rst.size(); i++){
+    	
+    	$('ul.list-table').append(createProduct2(rst.get(i)));
+    	
+    	}
  	}
  	
          $(document).ready(function () {

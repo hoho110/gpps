@@ -2,10 +2,12 @@ package gpps.service.impl;
 
 import gpps.dao.ICardBindingDao;
 import gpps.dao.ICashStreamDao;
+import gpps.dao.IPayBackDao;
 import gpps.model.Borrower;
 import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.Lender;
+import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.Submit;
 import gpps.service.IAccountService;
@@ -101,7 +103,8 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	ICardBindingDao cardBindingDao;
 	@Autowired
 	ICashStreamDao cashStreamDao;
-
+	@Autowired
+	IPayBackDao payBackDao;
 	private Logger log=Logger.getLogger(ThirdPaySupportServiceImpl.class);
 	public String getPublicKey() {
 		return publicKey;
@@ -408,6 +411,13 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			cardBinding=cardBindingDao.find(lender.getCardBindingId());
 		}else if(currentUser instanceof Borrower){
 			Borrower borrower=(Borrower)currentUser;
+			// 验证是否有正在还款的payback
+			List<Integer> states=new ArrayList();
+			states.add(PayBack.STATE_REPAYING);
+			states.add(PayBack.STATE_WAITFORCHECK);
+			int count=payBackDao.countByBorrowerAndState(borrower.getAccountId(), states, -1,-1);
+			if(count>0)
+				throw new IllegalOperationException("存在正在进行的还款，请等待还款结束再提现.");
 			cash.setWithdrawMoneymoremore(borrower.getThirdPartyAccount());
 			cashStreamId = accountService.cashBorrowerAccount(borrower.getAccountId(), BigDecimal.valueOf(Double.valueOf(amount)), "提现");
 			cardBinding=cardBindingDao.find(borrower.getCardBindingId());

@@ -89,13 +89,15 @@ public class BugPerformanceTest extends TestSupport{
 		
 		Random random=new Random();
 		long currenttime=System.currentTimeMillis();
-		int lenderNum=5;
+		int lenderNum=1000;
 		int buyNum=1;
 		try
 		{
 			List<Lender> lenders=new ArrayList<Lender>();
 			for(int i=0;i<lenderNum;i++)
 			{
+				if(i%100==0)
+					System.out.println("创建用户"+i+"个");
 				//创建Lender、充值100w
 				Lender lender=createLender(""+currenttime+i);
 //				logger.info("createLender耗时"+(System.currentTimeMillis()-currenttime));
@@ -446,100 +448,6 @@ public class BugPerformanceTest extends TestSupport{
 			}
 			return costs;
 		}
-	}
-	public void buyProductProcess() throws Exception{
-		Random random=new Random();
-		long currenttime=System.currentTimeMillis();
-		//创建Lender、充值100w
-		Lender lender=createLender(""+currenttime+random.nextInt(2));
-		accountService.changeCashStreamState(accountService.rechargeLenderAccount(lender.getAccountId(), new BigDecimal(100*10000), "充值"),CashStream.STATE_SUCCESS);
-		//创建Borrower、充值100w
-		Borrower borrower=createBorrower(""+currenttime+random.nextInt(2));
-		accountService.changeCashStreamState(accountService.rechargeBorrowerAccount(borrower.getAccountId(), new BigDecimal(100*10000), "充值"),CashStream.STATE_SUCCESS);
-		
-		FinancingRequest financingRequest=new FinancingRequest();
-		financingRequest.setApplyFinancingAmount(1000000);
-		financingRequest.setGovermentOrderName("申请融资订单");
-		mockLogin(borrower);
-		borrowerService.applyFinancing(financingRequest);
-		GovermentOrder order=new GovermentOrder();
-		order.setBorrowerId(borrower.getId());
-		order.setFinancingRequestId(financingRequest.getId());
-		order.setTitle("融资订单1");
-		order.setFinancingStarttime(currenttime+24L*3600*1000);
-		order.setFinancingEndtime(currenttime+24L*2*3600*1000);
-		order.setIncomeStarttime(currenttime+24L*3*3600*1000);
-		orderService.create(order);
-		Product product=new Product();
-		product.setExpectAmount(new BigDecimal(100*10000));
-		product.setGovermentorderId(order.getId());
-		product.setIncomeEndtime(currenttime+24L*(3+90)*3600*1000);
-		product.setLevelToBuy(0);
-		product.setMiniAdd(1);
-		product.setMinimum(1);
-		product.setProductseriesId(1);
-		product.setRate(new BigDecimal(0.08));
-		productService.create(product);
-		borrowerService.passFinancingRequest(financingRequest.getId());
-		orderService.startFinancing(order.getId());
-		
-		//购买
-		mockLogin(lender);
-		Integer submitId=submitService.buy(product.getId(), 10*10000);
-		Integer cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), new BigDecimal(10*10000), submitId, "购买");
-		submitService.confirmBuy(submitId);
-//		cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
-		accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-//		
-
-		submitId=submitService.buy(product.getId(), 20*10000);
-		cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), new BigDecimal(20*10000), submitId, "购买");
-		submitService.confirmBuy(submitId);
-//		cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
-		accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-		
-		
-		startRepaying(order.getId());
-		
-		List<PayBack> payBacks=payBackService.findAll(product.getId());
-		Assert.assertEquals(3, payBacks.size());
-		//对照网上的计算器http://finance.sina.com.cn/calc/money_loan.html
-		for(int i=0;i<payBacks.size();i++)
-		{
-			PayBack payBack=payBacks.get(i);
-			switch(i)
-			{
-				case 0:
-					Assert.assertEquals("99336.27", payBack.getChiefAmount().toString());
-					Assert.assertEquals("2000.01", payBack.getInterest().toString());
-					break;
-				case 1:
-					Assert.assertEquals("99998.52", payBack.getChiefAmount().toString());
-					Assert.assertEquals("1337.76", payBack.getInterest().toString());
-					break;
-				case 2:
-					Assert.assertEquals("100665.21", payBack.getChiefAmount().toString());
-					Assert.assertEquals("671.10", payBack.getInterest().toString());
-					break;
-			}
-			mockLogin(borrower);
-			payBackService.repay(payBack.getId());
-			payBackDao.changeCheckResult(payBack.getId(), PayBack.CHECK_SUCCESS);
-			checkAndRepay(payBack.getId());
-		}
-		orderService.closeComplete(order.getId());
-		
-		LenderAccount lenderAccount=lenderAccountDao.find(lender.getAccountId());
-		Assert.assertEquals(0, lenderAccount.getFreeze().compareTo(BigDecimal.ZERO));
-		Assert.assertEquals(0, lenderAccount.getUsed().compareTo(BigDecimal.ZERO));
-		Assert.assertEquals("1004008.87", lenderAccount.getTotal().toString());
-		Assert.assertEquals("4008.87", lenderAccount.getTotalincome().toString());
-		Assert.assertEquals("1004008.87", lenderAccount.getUsable().toString());
-		
-		BorrowerAccount borrowerAccount=borrowerAccountDao.find(borrower.getAccountId());
-		Assert.assertEquals(0, borrowerAccount.getFreeze().compareTo(BigDecimal.ZERO));
-		Assert.assertEquals("995991.13", borrowerAccount.getTotal().toString());
-		Assert.assertEquals("995991.13", borrowerAccount.getUsable().toString());
 	}
 	public static void startRepaying(Integer orderId) throws IllegalConvertException,IllegalOperationException, ExistWaitforPaySubmitException, CheckException {
 		GovermentOrder order=null;

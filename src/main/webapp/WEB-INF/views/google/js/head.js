@@ -17,17 +17,17 @@ function header(title){
 		}
 		else
 			{
-		divusercontent.html('');
+		divusercontent.css('display', 'none');
 			}
 	}else if(title=='myaccount'){
-		divusercontent.html('');
+		divusercontent.css('display', 'none');
 	}else if(title=='loan'){
 		if(cuser!=null){
 			window.location.href="myaccount.html";
 		}else if(buser!=null){
 			divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
 		}else{
-			divusercontent.html('');
+			divusercontent.html('<a href="login.html" style="color:white;">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="register.html" style="color:white;">注册</a>');
 		}
 	}
 	else{
@@ -36,7 +36,7 @@ function header(title){
 	}else if(buser!=null){
 		divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="font-color:white;">退出</a>');
 	}else{
-		divusercontent.html('');
+		divusercontent.html('<a href="login.html" style="color:white;">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="register.html" style="color:white;">注册</a>');
 	}
 		}
 	

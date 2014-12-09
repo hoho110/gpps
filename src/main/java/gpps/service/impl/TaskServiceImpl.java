@@ -276,7 +276,12 @@ public class TaskServiceImpl implements ITaskService {
 					lenderChiefAmount=submit.getAmount().subtract(repayedChiefAmount);
 				}
 				else {
-					lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
+					if(i==(submits.size()-1))
+					{
+						lenderChiefAmount=totalChiefAmount;
+					}
+					else
+						lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_UP);
 				}
 				lenderInterest=payBack.getInterest().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
 				totalChiefAmount=totalChiefAmount.subtract(lenderChiefAmount);
@@ -300,7 +305,7 @@ public class TaskServiceImpl implements ITaskService {
 		if(change.compareTo(BigDecimal.ZERO)>0)
 		{
 			//有余额则放入自有账户中
-			Integer cashStreamId=accountService.storeChange(payBack.getBorrowerAccountId(),payBack.getId(),change, "存零");
+			Integer cashStreamId=accountService.storeChange(payBack.getBorrowerAccountId(),payBack.getId(),totalChiefAmount,totalInterest, "存零");
 			LoanJson loadJson=new LoanJson();
 			loadJson.setLoanOutMoneymoremore(borrower.getThirdPartyAccount());
 			loadJson.setLoanInMoneymoremore(thirdPaySupportService.getPlatformMoneymoremore());

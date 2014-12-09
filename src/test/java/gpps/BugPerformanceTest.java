@@ -89,7 +89,7 @@ public class BugPerformanceTest extends TestSupport{
 		
 		Random random=new Random();
 		long currenttime=System.currentTimeMillis();
-		int lenderNum=1000;
+		int lenderNum=5;
 		int buyNum=1;
 		try
 		{
@@ -122,7 +122,7 @@ public class BugPerformanceTest extends TestSupport{
 			order.setIncomeStarttime(currenttime+24L*3*3600*1000);
 			orderService.create(order);
 			Product product=new Product();
-			product.setExpectAmount(new BigDecimal(100*10000));
+			product.setExpectAmount(new BigDecimal(1000*10000));
 			product.setGovermentorderId(order.getId());
 			product.setIncomeEndtime(currenttime+24L*(3+90)*3600*1000);
 			product.setLevelToBuy(0);
@@ -161,9 +161,242 @@ public class BugPerformanceTest extends TestSupport{
 				}
 			}
 			logger.info("共购买"+num+"次，平均耗时："+totalCost/num+", 最大耗时："+maxCost+", 最小耗时： "+minCost);
+			
+			/*******************************流标********************************/
+//			quitFinancing(order.getId());
+			/*******************************流标********************************/
+			
+			/*******************************还款********************************/
+			startRepaying(order.getId());
+			List<PayBack> payBacks=payBackService.findAll(product.getId());
+			for(int i=0;i<payBacks.size();i++)
+			{
+				PayBack payBack=payBacks.get(i);
+				mockLogin(borrower);
+				payBackService.repay(payBack.getId());
+				payBackDao.changeCheckResult(payBack.getId(), PayBack.CHECK_SUCCESS);
+				checkAndRepay(payBack.getId());
+			}
+			orderService.closeComplete(order.getId());
+			checkPayBack(product);
+			/*******************************还款********************************/
+			
+			
+			System.out.println("所有用户的深层校验结果："+accountCheck());
+			
 			System.exit(-1);
 		}catch(Throwable e){
 			e.printStackTrace();
+		}
+	}
+	public static void checkPayBack(Product product) throws CheckException
+	{
+		BigDecimal amount=BigDecimal.ZERO;
+		List<PayBack> payBacks=payBackService.findAll(product.getId());
+		for(PayBack pb:payBacks)
+		{
+			if(pb.getState()==PayBack.STATE_REPAYING)
+				throw new CheckException("之前还有执行中的还款");
+			if(pb.getState()!=PayBack.STATE_FINISHREPAY)
+				continue;
+			CashStreamSum sum=cashStreamDao.sumPayBack(pb.getId());
+			if(sum.getChiefAmount().compareTo(pb.getChiefAmount())!=0||sum.getInterest().compareTo(pb.getInterest())!=0)
+				throw new CheckException("还款[id:"+pb.getId()+"]金额计算不符");
+			amount.add(pb.getChiefAmount());
+		}
+		if(amount.compareTo(product.getRealAmount())!=0)
+			throw new CheckException("还款总额与产品不符");
+	}
+	public static String accountCheck()
+	{
+		StringBuilder sBuilder=new StringBuilder();
+		try
+		{
+			int total=lenderDao.countAll();
+			int DEFAULT_RECNUM=100;
+			for(int i=0;i<(total/DEFAULT_RECNUM+(total%DEFAULT_RECNUM==0?0:1));i++)
+			{
+				List<Lender> lenders=lenderDao.findAll(i*DEFAULT_RECNUM, DEFAULT_RECNUM);
+				if(lenders==null||lenders.size()==0)
+					continue;
+				for(Lender lender:lenders)
+				{
+//					if(StringUtil.isEmpty(lender.getThirdPartyAccount()))
+//						continue;
+					//与第三方验证
+					//网贷平台子账户可用余额|总可用余额(子账户可用余额+公共账户可用余额)|子账户冻结余额”（例:100.00|200.00|10.00）
+//					String text=thirdPaySupportService.balanceQuery(lender.getThirdPartyAccount());
+//					if(StringUtil.isEmpty(text))
+//					{
+//						appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "从第三方支付平台获取账户信息失败.");
+//						continue;
+//					}
+					
+					try{
+						Thread.sleep(10);
+					}catch(Exception e){
+						
+					}
+					
+					LenderAccount account=lenderAccountDao.find(lender.getAccountId());
+//					String[] thirdAccount=text.split("\\|");
+//					if(!compareAccount(thirdAccount[0], account.getUsable())||!compareAccount(thirdAccount[2], account.getFreeze()))
+//					{
+//						appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), 
+//								"本地账户与第三方支付平台不符,本地可用|冻结金额为"+account.getUsable().toString()+"|"+account.getFreeze().toString()+";"
+//								+"第三方可用|冻结金额为"+thirdAccount[0]+"|"+thirdAccount[2]);
+//					}
+					//验证：总金额=可用金额+冻结金额+已投资金额
+					if(account.getFreeze().add(account.getUsable()).add(account.getUsed()).compareTo(account.getTotal())!=0)
+					{
+						appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "账户金额错误,总金额不等于可用金额+冻结金额+已投资金额");
+					}
+					//可用金额=所有现金流之和
+					CashStreamSum sum=cashStreamDao.sumCashStream(lender.getAccountId(), null, null);
+					sum=(sum==null)?new CashStreamSum():sum;
+					if(account.getUsable().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
+					{
+						appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "可用金额与现金流验证错误,可用金额:"+account.getUsable().toString()+",现金流:"+sum);
+					}
+					//冻结金额=冻结+解冻
+					List<Integer> actions=new ArrayList<Integer>();
+					actions.add(CashStream.ACTION_FREEZE);
+					actions.add(CashStream.ACTION_UNFREEZE);
+					sum=cashStreamDao.sumCashStream(lender.getAccountId(), null, actions);
+					sum=(sum==null)?new CashStreamSum():sum;
+					if(account.getFreeze().negate().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
+					{
+						appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "冻结金额与现金流验证错误,冻结金额:"+account.getFreeze().toString()+",现金流:"+sum);
+					}
+					//已投资金额=购买+回款（本金）
+					actions=new ArrayList<Integer>();
+					actions.add(CashStream.ACTION_PAY);
+					actions.add(CashStream.ACTION_REPAY);
+					sum=cashStreamDao.sumCashStream(lender.getAccountId(), null, actions);
+					sum=(sum==null)?new CashStreamSum():sum;
+					if(account.getUsed().negate().compareTo(sum.getChiefAmount())!=0)
+					{
+						appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "已用金额与现金流验证错误,已用金额:"+account.getFreeze().toString()+",现金流:"+sum.getChiefAmount());
+					}
+					//利息=回款（利息）
+					actions=new ArrayList<Integer>();
+					actions.add(CashStream.ACTION_REPAY);
+					sum=cashStreamDao.sumCashStream(lender.getAccountId(), null, actions);
+					sum=(sum==null)?new CashStreamSum():sum;
+					if(account.getTotalincome().compareTo(sum.getInterest())!=0)
+					{
+						appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "已收益金额与现金流验证错误,已收益金额:"+account.getTotalincome().toString()+",现金流:"+sum.getInterest());
+					}
+				}
+			}
+			
+			total=borrowerDao.countAll();
+			for(int i=0;i<(total/DEFAULT_RECNUM+(total%DEFAULT_RECNUM==0?0:1));i++)
+			{
+				List<Borrower> borrowers=borrowerDao.findAll(i*DEFAULT_RECNUM, DEFAULT_RECNUM);
+				if(borrowers==null||borrowers.size()==0)
+					continue;
+				for(Borrower borrower:borrowers)
+				{
+//					if(StringUtil.isEmpty(borrower.getThirdPartyAccount()))
+//						continue;
+					//与第三方验证
+					//网贷平台子账户可用余额|总可用余额(子账户可用余额+公共账户可用余额)|子账户冻结余额”（例:100.00|200.00|10.00）
+//					String text=thirdPaySupportService.balanceQuery(borrower.getThirdPartyAccount());
+//					if(StringUtil.isEmpty(text))
+//					{
+//						appendMsg(sBuilder, Lender.class, borrower.getId(), borrower.getThirdPartyAccount(), "从第三方支付平台获取账户信息失败.");
+//						continue;
+//					}
+					BorrowerAccount account=borrowerAccountDao.find(borrower.getAccountId());
+//					String[] thirdAccount=text.split("\\|");
+//					if(!compareAccount(thirdAccount[0], account.getUsable())||!compareAccount(thirdAccount[2], account.getFreeze()))
+//					{
+//						appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), 
+//								"本地账户与第三方支付平台不符,本地可用|冻结金额为"+account.getUsable().toString()+"|"+account.getFreeze().toString()+";"
+//								+"第三方可用|冻结金额为"+thirdAccount[0]+"|"+thirdAccount[2]);
+//					}
+					//验证：总金额=可用金额+冻结金额
+					if(account.getFreeze().add(account.getUsable()).compareTo(account.getTotal())!=0)
+					{
+						appendMsg(sBuilder, Lender.class, borrower.getId(), borrower.getThirdPartyAccount(), "账户金额错误,总金额不等于可用金额+冻结金额");
+					}
+				}
+			}
+		}catch(Throwable e)
+		{
+			logger.error(e.getMessage(),e);
+			sBuilder.append(e.getMessage());
+		}
+		return sBuilder.toString();
+	}
+	private static void appendMsg(StringBuilder sBuilder,Class cls,Integer id,String thirdPartyAccount,String msg)
+	{
+		sBuilder.append(cls.getSimpleName()).append("[").append("id:").append(id).append(",")
+		.append("thirdPartyAccount:").append(thirdPartyAccount).append("]").append(" ").append(msg).append("\r\n");
+	}
+	public static void quitFinancing(Integer orderId) throws IllegalConvertException, IllegalOperationException, ExistWaitforPaySubmitException, CheckException {
+		GovermentOrder order=null;
+		try
+		{
+			order=orderService.applyFinancingOrder(orderId);
+			if(order!=null)
+			{
+				List<Product> products=order.getProducts();
+				if(products!=null&&products.size()>0)
+				{
+					List<Product> temp=new ArrayList<Product>();
+					temp.addAll(products);
+					for(Product product:temp)
+					{
+						int count=submitDao.countByProductAndStateWithPaged(product.getId(), Submit.STATE_WAITFORPAY);
+						if(count>0)
+							throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始流标");
+						//校验 Product实际融资额=所有Lender的支付资金流之和
+						CashStreamSum sum=cashStreamDao.sumProduct(product.getId(), CashStream.ACTION_FREEZE);
+						if(sum.getChiefAmount().negate().compareTo(product.getRealAmount())!=0)
+							throw new CheckException("冻结提交总金额与产品实际融资金额不符");
+						
+						productDao.changeState(product.getId(), Product.STATE_QUITFINANCING,System.currentTimeMillis());
+						order.getProducts().remove(product);
+						product.setState(Product.STATE_QUITFINANCING);
+
+						executeQuitFinancingTask(product);
+					}
+				}
+				orderDao.changeState(orderId, GovermentOrder.STATE_QUITFINANCING,System.currentTimeMillis());
+//				order=financingOrders.remove(orderId.toString());
+				order.setState(GovermentOrder.STATE_QUITFINANCING);
+			}
+		}finally
+		{
+			orderService.releaseFinancingOrder(order);
+		}
+	}
+	public static void executeQuitFinancingTask(Product product) throws IllegalConvertException
+	{
+		List<Submit> submits=submitDao.findAllByProductAndState(product.getId(), Submit.STATE_COMPLETEPAY);
+		if(submits==null||submits.size()==0)
+			return;
+		GovermentOrder order=orderService.findGovermentOrderByProduct(product.getId());
+		Borrower borrower=borrowerService.find(order.getBorrowerId());
+		loop:for(Submit submit:submits)
+		{
+			CashStream freezeCS=null;
+			List<CashStream> cashStreams=cashStreamDao.findSubmitCashStream(submit.getId());
+			for(CashStream cashStream:cashStreams)
+			{
+				if(cashStream.getAction()==CashStream.ACTION_PAY&&cashStream.getState()==CashStream.STATE_SUCCESS)
+				{
+					continue loop;
+				}
+				if(cashStream.getAction()==CashStream.ACTION_FREEZE&&cashStream.getState()==CashStream.STATE_SUCCESS)
+					freezeCS=cashStream;
+			}
+			if(freezeCS==null)
+				continue;
+			accountService.unfreezeLenderAccount(freezeCS.getLenderAccountId(),freezeCS.getChiefamount().negate(),freezeCS.getSubmitId(), "解冻");
+			
 		}
 	}
 	static class BuyThread implements Callable<List<Long>>
@@ -192,8 +425,8 @@ public class BugPerformanceTest extends TestSupport{
 				{
 					try{
 					mockLogin(lender);
-					Integer submitId=submitService.buy(product.getId(), 1200);
-					Integer cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), new BigDecimal(1), submitId, "购买");
+					Integer submitId=submitService.buy(product.getId(), 100);
+					Integer cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), new BigDecimal(100), submitId, "购买");
 					submitService.confirmBuy(submitId);
 		//			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
 					accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
@@ -308,7 +541,7 @@ public class BugPerformanceTest extends TestSupport{
 		Assert.assertEquals("995991.13", borrowerAccount.getTotal().toString());
 		Assert.assertEquals("995991.13", borrowerAccount.getUsable().toString());
 	}
-	private void startRepaying(Integer orderId) throws IllegalConvertException,IllegalOperationException, ExistWaitforPaySubmitException, CheckException {
+	public static void startRepaying(Integer orderId) throws IllegalConvertException,IllegalOperationException, ExistWaitforPaySubmitException, CheckException {
 		GovermentOrder order=null;
 		try
 		{
@@ -351,7 +584,7 @@ public class BugPerformanceTest extends TestSupport{
 			orderService.releaseFinancingOrder(order);
 		}
 	}
-	private void executePayTask(Product product) throws IllegalConvertException
+	public static void executePayTask(Product product) throws IllegalConvertException
 	{
 		List<Submit> submits=submitDao.findAllByProductAndState(product.getId(), Submit.STATE_COMPLETEPAY);
 		if(submits==null||submits.size()==0)
@@ -377,7 +610,7 @@ public class BugPerformanceTest extends TestSupport{
 			
 		}
 	}
-	private void checkAndRepay(Integer payBackId) throws Exception
+	public static void checkAndRepay(Integer payBackId) throws Exception
 	{
 		PayBack payback=payBackService.find(payBackId);
 		if(payback==null||payback.getState()!=PayBack.STATE_WAITFORCHECK)
@@ -403,7 +636,7 @@ public class BugPerformanceTest extends TestSupport{
 				orderService.closeFinancing(product.getGovermentorderId());
 		}
 	}
-	private void executeRepayTask(PayBack payBack) throws Exception
+	public static void executeRepayTask(PayBack payBack) throws Exception
 	{
 		List<Submit> submits=submitDao.findAllByProductAndState(payBack.getProductId(), Submit.STATE_COMPLETEPAY);
 		if(submits==null||submits.size()==0)
@@ -445,7 +678,12 @@ public class BugPerformanceTest extends TestSupport{
 				lenderChiefAmount=submit.getAmount().subtract(repayedChiefAmount);
 			}
 			else {
-				lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
+				if(i==(submits.size()-1))
+				{
+					lenderChiefAmount=totalChiefAmount;
+				}
+				else
+					lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_UP);
 			}
 			lenderInterest=payBack.getInterest().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
 			totalChiefAmount=totalChiefAmount.subtract(lenderChiefAmount);
@@ -457,7 +695,7 @@ public class BugPerformanceTest extends TestSupport{
 		if(change.compareTo(BigDecimal.ZERO)>0)
 		{
 			//有余额则放入自有账户中
-			Integer cashStreamId=accountService.storeChange(payBack.getBorrowerAccountId(),payBack.getId(),change, "存零");
+			Integer cashStreamId=accountService.storeChange(payBack.getBorrowerAccountId(),payBack.getId(),totalChiefAmount,totalInterest, "存零");
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		}
 	}

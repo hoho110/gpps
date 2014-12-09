@@ -605,12 +605,13 @@ public class AccountServiceImpl implements IAccountService {
 	}
 
 	@Override
-	public Integer storeChange(Integer borrowerAccountId,Integer paybackId, BigDecimal amount,
+	public Integer storeChange(Integer borrowerAccountId,Integer paybackId,BigDecimal chiefamount,BigDecimal interest,
 			String description) {
 		CashStream cashStream=new CashStream();
 		cashStream.setAction(CashStream.ACTION_STORECHANGE);
 		cashStream.setPaybackId(paybackId);
-		cashStream.setChiefamount(amount);
+		cashStream.setChiefamount(chiefamount);
+		cashStream.setInterest(interest);
 		cashStream.setDescription(description);
 		cashStream.setBorrowerAccountId(borrowerAccountId);
 		cashStreamDao.create(cashStream);

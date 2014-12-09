@@ -135,4 +135,8 @@
 			and a.action=#{action}
 		</if>
 	</select>
+	<select id="sumPayBack" resultType="gpps.service.CashStreamSum">
+		select sum(chiefamount) chiefAmount,sum(interest) interest from
+		CashStream where paybackId=#{paybackId}  and state=2
+	</select>
 </mapper>

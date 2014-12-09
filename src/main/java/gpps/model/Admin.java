@@ -8,8 +8,8 @@ public class Admin {
 	private String loginId;
 	private String password;
 	private long  createtime;
-	public static final int PRIVILEGE_VIEW=0;
-	public static final int PRIVILEGE_ALL=1;
+	public static final int PRIVILEGE_VIEW=20;
+	public static final int PRIVILEGE_ALL=21;
 	private int   privilege=PRIVILEGE_VIEW;
 	public Integer getId() {
 		return id;

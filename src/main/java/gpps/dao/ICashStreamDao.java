@@ -47,4 +47,5 @@ public interface ICashStreamDao {
 	
 	public CashStreamSum sumCashStream(@Param("lenderAccountId")Integer lenderAccountId,@Param("borrowerAccountId")Integer borrowerAccountId,@Param("actions")List<Integer> actions);
 	public CashStreamSum sumProduct(@Param("productId")Integer productId,@Param("action")int action);
+	public CashStreamSum sumPayBack(@Param("paybackId")Integer paybackId);
 }

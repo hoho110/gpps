@@ -21,6 +21,7 @@ import gpps.model.ProductSeries;
 import gpps.model.StateLog;
 import gpps.model.Submit;
 import gpps.model.Task;
+import gpps.service.CashStreamSum;
 import gpps.service.IAccountService;
 import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
@@ -653,14 +654,35 @@ public class PayBackServiceImpl implements IPayBackService {
 			total=total.add(amount);
 		}
 		if(total.compareTo(payBack.getChiefAmount())!=0)
-			new CheckException("金额计算不符");
+			throw new CheckException("当前还款金额计算不符");
 		total=BigDecimal.ZERO;
 		for(BigDecimal amount:interestAmounts)
 		{
 			total=total.add(amount);
 		}
 		if(total.compareTo(payBack.getInterest())!=0)
-			new CheckException("金额计算不符");
+			throw new CheckException("当前还款金额计算不符");
+		// 最后一次验证,验证之前的payback是否符合
+		if(payBack.getType()==PayBack.TYPE_LASTPAY)
+		{
+			BigDecimal amount=BigDecimal.ZERO;
+			List<PayBack> payBacks=findAll(payBack.getProductId());
+			for(PayBack pb:payBacks)
+			{
+				if(pb.getType()==PayBack.TYPE_LASTPAY)
+					continue;
+				if(pb.getState()==PayBack.STATE_REPAYING)
+					throw new CheckException("之前还有执行中的还款");
+				if(pb.getState()!=PayBack.STATE_FINISHREPAY)
+					continue;
+				CashStreamSum sum=cashStreamDao.sumPayBack(pb.getId());
+				if(sum.getChiefAmount().compareTo(pb.getChiefAmount())!=0||sum.getInterest().compareTo(pb.getInterest())!=0)
+					throw new CheckException("还款[id:"+pb.getId()+"]金额计算不符");
+				amount.add(pb.getChiefAmount());
+			}
+			if(amount.add(payBack.getChiefAmount()).compareTo(product.getRealAmount())!=0)
+				throw new CheckException("还款总额与产品不符");
+		}
 		payBackDao.changeCheckResult(payBackId, PayBack.CHECK_SUCCESS);
 	}
 }

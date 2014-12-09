@@ -102,16 +102,16 @@ public class BuyProductProcessTest extends TestSupport{
 		//创建Borrower、充值100w
 		Borrower borrower=createBorrower(""+currenttime+random.nextInt(2));
 		accountService.changeCashStreamState(accountService.rechargeBorrowerAccount(borrower.getAccountId(), new BigDecimal(100*10000), "充值"),CashStream.STATE_SUCCESS);
-		
+		//流标
 		FinancingRequest financingRequest=new FinancingRequest();
 		financingRequest.setApplyFinancingAmount(1000000);
-		financingRequest.setGovermentOrderName("申请融资订单");
+		financingRequest.setGovermentOrderName("申请融资订单(流标)");
 		mockLogin(borrower);
 		borrowerService.applyFinancing(financingRequest);
 		GovermentOrder order=new GovermentOrder();
 		order.setBorrowerId(borrower.getId());
 		order.setFinancingRequestId(financingRequest.getId());
-		order.setTitle("融资订单1");
+		order.setTitle("融资订单1(流标)");
 		order.setFinancingStarttime(currenttime+24L*3600*1000);
 		order.setFinancingEndtime(currenttime+24L*2*3600*1000);
 		order.setIncomeStarttime(currenttime+24L*3*3600*1000);
@@ -131,8 +131,52 @@ public class BuyProductProcessTest extends TestSupport{
 		
 		//购买
 		mockLogin(lender);
-		Integer submitId=submitService.buy(product.getId(), 10*10000);
-		Integer cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), new BigDecimal(10*10000), submitId, "购买");
+		Integer submitId=submitService.buy(product.getId(), 30*10000);
+		Integer cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), new BigDecimal(30*10000), submitId, "购买");
+		submitService.confirmBuy(submitId);
+//				cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
+		accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+		
+		quitFinancing(order.getId());
+		LenderAccount lenderAccount=lenderAccountDao.find(lender.getAccountId());
+		Assert.assertEquals(0, lenderAccount.getFreeze().compareTo(BigDecimal.ZERO));
+		Assert.assertEquals(0, lenderAccount.getUsed().compareTo(BigDecimal.ZERO));
+		Assert.assertEquals("1000000.00", lenderAccount.getTotal().toString());
+		Assert.assertEquals("0.00", lenderAccount.getTotalincome().toString());
+		Assert.assertEquals("1000000.00", lenderAccount.getUsable().toString());
+		
+		
+		//还款
+		financingRequest=new FinancingRequest();
+		financingRequest.setApplyFinancingAmount(1000000);
+		financingRequest.setGovermentOrderName("申请融资订单");
+		mockLogin(borrower);
+		borrowerService.applyFinancing(financingRequest);
+		order=new GovermentOrder();
+		order.setBorrowerId(borrower.getId());
+		order.setFinancingRequestId(financingRequest.getId());
+		order.setTitle("融资订单1");
+		order.setFinancingStarttime(currenttime+24L*3600*1000);
+		order.setFinancingEndtime(currenttime+24L*2*3600*1000);
+		order.setIncomeStarttime(currenttime+24L*3*3600*1000);
+		orderService.create(order);
+		product=new Product();
+		product.setExpectAmount(new BigDecimal(100*10000));
+		product.setGovermentorderId(order.getId());
+		product.setIncomeEndtime(currenttime+24L*(3+90)*3600*1000);
+		product.setLevelToBuy(0);
+		product.setMiniAdd(1);
+		product.setMinimum(1);
+		product.setProductseriesId(1);
+		product.setRate(new BigDecimal(0.08));
+		productService.create(product);
+		borrowerService.passFinancingRequest(financingRequest.getId());
+		orderService.startFinancing(order.getId());
+		
+		//购买
+		mockLogin(lender);
+		submitId=submitService.buy(product.getId(), 10*10000);
+		cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), new BigDecimal(10*10000), submitId, "购买");
 		submitService.confirmBuy(submitId);
 //		cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
 		accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
@@ -175,7 +219,7 @@ public class BuyProductProcessTest extends TestSupport{
 		}
 		orderService.closeComplete(order.getId());
 		
-		LenderAccount lenderAccount=lenderAccountDao.find(lender.getAccountId());
+		lenderAccount=lenderAccountDao.find(lender.getAccountId());
 		Assert.assertEquals(0, lenderAccount.getFreeze().compareTo(BigDecimal.ZERO));
 		Assert.assertEquals(0, lenderAccount.getUsed().compareTo(BigDecimal.ZERO));
 		Assert.assertEquals("1004008.87", lenderAccount.getTotal().toString());
@@ -186,6 +230,90 @@ public class BuyProductProcessTest extends TestSupport{
 		Assert.assertEquals(0, borrowerAccount.getFreeze().compareTo(BigDecimal.ZERO));
 		Assert.assertEquals("995991.13", borrowerAccount.getTotal().toString());
 		Assert.assertEquals("995991.13", borrowerAccount.getUsable().toString());
+		
+		checkPayBack(product);
+	}
+	public static void checkPayBack(Product product) throws CheckException
+	{
+		BigDecimal amount=BigDecimal.ZERO;
+		List<PayBack> payBacks=payBackService.findAll(product.getId());
+		for(PayBack pb:payBacks)
+		{
+			if(pb.getState()==PayBack.STATE_REPAYING)
+				throw new CheckException("之前还有执行中的还款");
+			if(pb.getState()!=PayBack.STATE_FINISHREPAY)
+				continue;
+			CashStreamSum sum=cashStreamDao.sumPayBack(pb.getId());
+			if(sum.getChiefAmount().compareTo(pb.getChiefAmount())!=0||sum.getInterest().compareTo(pb.getInterest())!=0)
+				throw new CheckException("还款[id:"+pb.getId()+"]金额计算不符");
+			amount.add(pb.getChiefAmount());
+		}
+		if(amount.compareTo(product.getRealAmount())!=0)
+			throw new CheckException("还款总额与产品不符");
+	}
+	public void quitFinancing(Integer orderId) throws IllegalConvertException, IllegalOperationException, ExistWaitforPaySubmitException, CheckException {
+		GovermentOrder order=null;
+		try
+		{
+			order=orderService.applyFinancingOrder(orderId);
+			if(order!=null)
+			{
+				List<Product> products=order.getProducts();
+				if(products!=null&&products.size()>0)
+				{
+					List<Product> temp=new ArrayList<Product>();
+					temp.addAll(products);
+					for(Product product:temp)
+					{
+						int count=submitDao.countByProductAndStateWithPaged(product.getId(), Submit.STATE_WAITFORPAY);
+						if(count>0)
+							throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始流标");
+						//校验 Product实际融资额=所有Lender的支付资金流之和
+						CashStreamSum sum=cashStreamDao.sumProduct(product.getId(), CashStream.ACTION_FREEZE);
+						if(sum.getChiefAmount().negate().compareTo(product.getRealAmount())!=0)
+							throw new CheckException("冻结提交总金额与产品实际融资金额不符");
+						
+						productDao.changeState(product.getId(), Product.STATE_QUITFINANCING,System.currentTimeMillis());
+						order.getProducts().remove(product);
+						product.setState(Product.STATE_QUITFINANCING);
+
+						executeQuitFinancingTask(product);
+					}
+				}
+				orderDao.changeState(orderId, GovermentOrder.STATE_QUITFINANCING,System.currentTimeMillis());
+//				order=financingOrders.remove(orderId.toString());
+				order.setState(GovermentOrder.STATE_QUITFINANCING);
+			}
+		}finally
+		{
+			orderService.releaseFinancingOrder(order);
+		}
+	}
+	private void executeQuitFinancingTask(Product product) throws IllegalConvertException
+	{
+		List<Submit> submits=submitDao.findAllByProductAndState(product.getId(), Submit.STATE_COMPLETEPAY);
+		if(submits==null||submits.size()==0)
+			return;
+		GovermentOrder order=orderService.findGovermentOrderByProduct(product.getId());
+		Borrower borrower=borrowerService.find(order.getBorrowerId());
+		loop:for(Submit submit:submits)
+		{
+			CashStream freezeCS=null;
+			List<CashStream> cashStreams=cashStreamDao.findSubmitCashStream(submit.getId());
+			for(CashStream cashStream:cashStreams)
+			{
+				if(cashStream.getAction()==CashStream.ACTION_PAY&&cashStream.getState()==CashStream.STATE_SUCCESS)
+				{
+					continue loop;
+				}
+				if(cashStream.getAction()==CashStream.ACTION_FREEZE&&cashStream.getState()==CashStream.STATE_SUCCESS)
+					freezeCS=cashStream;
+			}
+			if(freezeCS==null)
+				continue;
+			accountService.unfreezeLenderAccount(freezeCS.getLenderAccountId(),freezeCS.getChiefamount().negate(),freezeCS.getSubmitId(), "解冻");
+			
+		}
 	}
 	private void startRepaying(Integer orderId) throws IllegalConvertException,IllegalOperationException, ExistWaitforPaySubmitException, CheckException {
 		GovermentOrder order=null;
@@ -324,7 +452,12 @@ public class BuyProductProcessTest extends TestSupport{
 				lenderChiefAmount=submit.getAmount().subtract(repayedChiefAmount);
 			}
 			else {
-				lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
+				if(i==(submits.size()-1))
+				{
+					lenderChiefAmount=totalChiefAmount;
+				}
+				else
+					lenderChiefAmount=payBack.getChiefAmount().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_UP);
 			}
 			lenderInterest=payBack.getInterest().multiply(submit.getAmount()).divide(product.getRealAmount(), 2, BigDecimal.ROUND_DOWN);
 			totalChiefAmount=totalChiefAmount.subtract(lenderChiefAmount);
@@ -336,7 +469,7 @@ public class BuyProductProcessTest extends TestSupport{
 		if(change.compareTo(BigDecimal.ZERO)>0)
 		{
 			//有余额则放入自有账户中
-			Integer cashStreamId=accountService.storeChange(payBack.getBorrowerAccountId(),payBack.getId(),change, "存零");
+			Integer cashStreamId=accountService.storeChange(payBack.getBorrowerAccountId(),payBack.getId(),totalChiefAmount,totalInterest, "存零");
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		}
 	}

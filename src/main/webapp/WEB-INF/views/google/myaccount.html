@@ -186,7 +186,7 @@ a.accordion-toggle {
 									<div class="grey" id="idcard" style="margin-bottom:0px;"></div>
 									</div>
 									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
-									<button id="bindidcard" style="width:100%; height:100%">马上绑定</button>
+									<button id="bindidcard" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%;">马上绑定</button>
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
@@ -197,7 +197,7 @@ a.accordion-toggle {
 									<span class="grey" id="tpaccount"></span>
 									</div>
 									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
-									<button id="loginmmm" style="width:100%;">登录</button>
+									<button id="loginmmm" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%;">登录</button>
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
@@ -208,7 +208,7 @@ a.accordion-toggle {
 									<span class="grey" id="bankcard"></span>
 									</div>
 									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
-									<button id="rebind" style="width:100%;">绑定</button>
+									<button id="rebind" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%;">绑定</button>
 									</div>
 									
 								</div>
@@ -268,30 +268,78 @@ a.accordion-toggle {
 					</div>
 				</div>
 
-
 				<div class="row" style="margin-top:35px;">
-					<div class="col-xs-12 col-md-2">
+				<nav class="navbar navbar-default" role="navigation">
+	<div class="container-fluid">
+	<div class="navbar-header">
+	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+	<span class="sr-only">Toggle navigation</span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+	</button>
+	<span class="navbar-brand">功能</span>
+	</div>
+	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+	<ul class="nav navbar-nav">
+	<li class="dropdown">
+	<a class="firstnav" class="dropdown-toggle" data-sk="投资查看" data-toggle="dropdown">投资查看<span class="caret"></span></a>
+	<ul class="dropdown-menu" role="menu">
+	<li><a class="secondnav" id="submit-all">全部</a></li>
+	<li><a class="secondnav" id="submit-toafford">待支付</a></li>
+	<li><a class="secondnav" id="submit-payback">还款中</a></li>
+	<li><a class="secondnav" id="submit-done">还款完毕</a></li>
+	<li><a class="secondnav" id="submit-retreat">已退订</a></li>
+	</ul>
+	</li>
+	<li class="dropdown">
+	<a class="firstnav" class="dropdown-toggle" data-sk="回款查看" data-toggle="dropdown">回款查看<span class="caret"></span></a>
+	<ul class="dropdown-menu" role="menu">
+	<li><a class="secondnav" id="payback-all">总览</a></li>
+	<li><a class="secondnav" id="payback-to">待回款</a></li>
+	<li><a class="secondnav" id="payback-have">已回款</a></li>
+	</ul>
+	</li>
+	<li class="dropdown">
+	<a class="firstnav" class="dropdown-toggle" data-sk="资金查看" data-toggle="dropdown">资金查看<span class="caret"></span></a>
+	<ul class="dropdown-menu" role="menu">
+	<li><a class="secondnav" id="cash-all">全部</a></li>
+	<li><a class="secondnav" id="cash-recharge">充值</a></li>
+	<li><a class="secondnav" id="cash-withdraw">提现</a></li>
+	<li><a class="secondnav" id="cash-invest">投标</a></li>
+	<li><a class="secondnav" id="cash-receive">回款</a></li>
+	</ul>
+	</li>
+	<li class="dropdown">
+	<a class="firstnav" class="dropdown-toggle" data-sk="站内信" data-toggle="dropdown">站内信<span class="caret"></span></a>
+	<ul class="dropdown-menu" role="menu">
+	<li><a class="secondnav" id="letter-unread">未读</a></li>
+	<li><a class="secondnav" id="letter-readed">已读</a></li>
+	</ul>
+	</li>
+	</ul>
+	<ul class="nav navbar-nav navbar-right">
+	<li class="dropdown">
+	<a class="firstnav" class="dropdown-toggle" data-sk="会员中心" data-toggle="dropdown">会员中心<span class="caret"></span></a>
+	<ul class="dropdown-menu" role="menu">
+	<li><a class="secondnav" id="my-score">积分等级</a></li>
+	<li><a class="secondnav" id="my-activity">我的活动</a></li>
+	<li><a class="secondnav" id="letter-unread-mycenter">站内信</a></li>
+	<li><a class="secondnav" id="question-view">我的问题</a></li>
+	<li class="divider"></li>
+	<li><a class="secondnav" id="notice-view">系统公告</a></li>
+	</ul>
+	</li>
+	</ul>
+	</div><!-- /.navbar-collapse -->
+	</div><!-- /.container-fluid -->
+	</nav>
+				</div>
 
 
-						<div class="btn-group-vertical"
-							style="width: 100%; margin-top: 42px;">
-							<button type="button" id="mycenter"
-								class="btn nav-first btn-default btn-lg">会员中心</button>
-							<button type="button" id="submit"
-								class="btn nav-first btn-default btn-lg">投资查看</button>
-							<button type="button" id="payback"
-								class="btn nav-first btn-default btn-lg">回款查看</button>
-							<button type="button" id="cash"
-								class="btn nav-first btn-default btn-lg">资金查看</button>
-							
-							<button type="button" id="letter"
-								class="btn nav-first btn-default btn-lg">站内信</button>
-						</div>
-
-					</div>
-					<div class="col-xs-12 col-md-10" style="padding-left: 0px;">
-						<div class="col-xs-12 col-md-12" id="nav_level2"></div>
-
+				<div class="row" style="margin-top:5px;">
+					<div class="col-xs-12 col-md-12" id="navpath" style="margin-bottom:10px; color:#999;"></div>
+					<div class="col-xs-12 col-md-12">
 						<div class="table-responsive" id="content"
 							style="min-height: 400px; border: #eee solid 1px;"></div>
 
@@ -557,99 +605,67 @@ a.accordion-toggle {
 							}
 							
 							
-							
-							$('button.nav-first').click(function(e) {
-												$('button.nav-first').removeClass(
-														'active');
-												$(this).addClass('active');
-												var content = createNavLevel2($(
-														this).attr('id'));
-												content.css('float', 'right');
-												content.css('margin-right',
-														'-15px');
-												$('#nav_level2').html('');
-												$('#nav_level2')
-														.append(content);
-												$('#nav_level2')
-														.append(
-																'<div style="clear:both;"></div>');
-
-												$('ul.nav-second li a').on('click',function(e) {
-																	$('ul.nav-second li')
-																			.removeClass(
-																					'active');
-																	$(this)
-																			.parent()
-																			.addClass(
-																					'active');
-
-																	var ff = nav2funtion[$(this).attr('data-sk')];
-
-																	if (ff == null) {
-																		$('div#content').html($(this).attr('data-sk'));
-																	} else if (typeof (ff) == "function") {
-																		$('div#content').html('');
-																		ff($('div#content'));
-																	} 
-																	
-																	
-																	
-																	
-																	$('button.readletter').click(function(e){
-																		
-																	});
-																	
-																	$('a.submittoafford').click(function(e){
-																		$('#myModal').modal({
-																			  keyboard: false,
-																			  backdrop: false
-																		});
-																		
-																		
-																		
-																		
-																		try{
-																			var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
-																	 		var submit = submitService.find(parseInt($(this).attr('id')));
-																	 		
-																	 		
-																	 		var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
-																	        var transfer=service.getTransferToBuy(submit.id,''+submit.productId);
-																	        var content="<form id='buyform' action='"+transfer.baseUrl+"'method='post' target='_blank'>";
-																	        for(var o in transfer)
-																	       	{
-																	            if(o=="baseUrl")
-																	           	{
-																	            	continue;
-																	           	}
-																	            var len = o.length;
-																	            var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
-																	            content+="<input id='"+name+"' name='"+name+"' value='"+transfer[o]+"'/> ";
-																	       	}
-																	        content+="</form>";
-																	        $('#buyformdiv').html(content);
-																	        $('#buyform').submit();
-																	 		
-																	 		}catch(e){
-																	 			alert(e.message);
-																	 		}
-																	});
-																	
-																	
-																	
-																});
-													$('ul.nav-second li a').first().trigger('click');
-											});
-							if(fid!=null){
-								$('#'+fid).trigger('click');
-								if(sid!=null)
-									$('ul.nav-second li a[data-sk="'+sid+'"]').trigger('click');
-								else
-									$('ul.nav-second li a').first().trigger('click');
+							$('.secondnav').click(function(e){
 								
-							}else{
-								$('#submit').trigger('click');
-							}
+								var first = $(this).parents('li.dropdown').find('a.firstnav');
+								$('#navpath').html('<span class="glyphicon glyphicon-play" style="color:orange;"></span>&nbsp;'+first.attr('data-sk')+'->'+$(this).html());
+								
+								var ff = nav2funtion[$(this).attr('id')];
+
+								if (ff == null) {
+									$('div#content').html($(this).attr('id'));
+								} else if (typeof (ff) == "function") {
+									$('div#content').html('');
+									ff($('div#content'));
+								} 
+								
+								
+								
+								
+								$('button.readletter').click(function(e){
+									
+								});
+								
+								$('a.submittoafford').click(function(e){
+									$('#myModal').modal({
+										  keyboard: false,
+										  backdrop: false
+									});
+									
+									try{
+										var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
+								 		var submit = submitService.find(parseInt($(this).attr('id')));
+								 		
+								 		
+								 		var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+								        var transfer=service.getTransferToBuy(submit.id,''+submit.productId);
+								        var content="<form id='buyform' action='"+transfer.baseUrl+"'method='post' target='_blank'>";
+								        for(var o in transfer)
+								       	{
+								            if(o=="baseUrl")
+								           	{
+								            	continue;
+								           	}
+								            var len = o.length;
+								            var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
+								            content+="<input id='"+name+"' name='"+name+"' value='"+transfer[o]+"'/> ";
+								       	}
+								        content+="</form>";
+								        $('#buyformdiv').html(content);
+								        $('#buyform').submit();
+								 		
+								 		}catch(e){
+								 			alert(e.message);
+								 		}
+								});
+							});
+							
+							
+							if(sid!=null)
+								$('#'+sid).trigger('click');
+							else
+								$('#submit-all').trigger('click');
+							
 							
 							$('#success').click(function(e){
 									window.location.href = "myaccount.html?fid=submit&sid=submit-toafford";
@@ -660,8 +676,7 @@ a.accordion-toggle {
 							});
 							
 							$('#inner_letter').click(function(e){
-								$('#mycenter').trigger('click');
-								$('ul.nav-second li a[data-sk="letter-unread-mycenter"]').trigger('click');
+								$('#letter-unread-mycenter').trigger('click');
 							});
 							
 							

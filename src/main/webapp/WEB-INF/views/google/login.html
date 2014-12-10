@@ -40,17 +40,17 @@
 		
 		<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
       
-      </div>
+      	</div>
 		
 		<div class="row">
 		<div class="hidden-xs hidden-sm col-md-8 col-lg-8">
-		<img src="img/loginimg.png"></img>
+		<img src="img/loginimg.png" style="width:95%; height:250px;"></img>
 		</div>
-      <div class="form-signin col-xs-12 col-sm-12 col-md-4 col-lg-4">
+      <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4" style="padding-left:30px; padding-right:30px;">
       	<div class="row">
       	<div style="width:100%" id="message"></div>
-        <input type="text" id="J-input-user" class="form-control" placeholder="请输入用户名或手机号" required autofocus style="margin-bottom:10px;">
-        <input type="password" id="password_input" class="form-control" placeholder="请输入密码" required>
+        <input type="text" id="J-input-user" class="form-control" placeholder="请输入用户名或手机号" style="height:50px; margin-bottom:10px;" required autofocus>
+        <input type="password" id="password_input" class="form-control" placeholder="请输入密码" style="height:50px;" required>
         </div>
         <div class="row">
           <label>
@@ -61,14 +61,14 @@
           <a href="register.html" style="float:right;">立即注册</a>
         </div>
         <div class="row">
-        <div class="col-md-5" style="padding-left:0px; padding-right:0px;">
-        <input class="form-control col-md-5" id="J-input-checkcode" type="text" style="height:50px;"></input>
+        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="padding-left:0px; padding-right:0px;">
+        <input class="form-control" id="J-input-checkcode" type="text" style="height:50px;"></input>
         </div>
-        <div class="col-md-7" style="padding-left:0px; padding-right:0px;">
-        <img class="form-control col-md-7" style="height:50px;" id="J-checkcode-img" src="../../login/graphValidateCode?t=100" title="点击图片刷新验证码" alt="点击图片刷新验证码"></img>
+        <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7" style="padding-left:0px; padding-right:0px;">
+        <img class="form-control" style="height:50px;" id="J-checkcode-img" src="../../login/graphValidateCode?t=100" title="点击图片刷新验证码" alt="点击图片刷新验证码"></img>
         </div>
         </div>
-        <div class="row">
+        <div class="row" style="margin-top:10px;">
         <button id="J-login-btn" class="btn btn-lg btn-success btn-block">登陆</button>
         </div>
       </div>

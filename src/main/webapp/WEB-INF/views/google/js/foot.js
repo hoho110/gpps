@@ -18,7 +18,7 @@ function foot(){
 //	str += '</div>';
 	str += '</div>';
 	
-	$('div#footer').html(str);
+	$('div#footer').css('min-height', '50px').html(str);
 }
 
 

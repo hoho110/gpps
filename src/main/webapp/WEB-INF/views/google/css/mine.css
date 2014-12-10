@@ -288,3 +288,12 @@ ul.news li{
 	COLOR: #999;
 	FONT-SIZE: 13px;
 }
+
+.firstnav {
+		cursor: pointer;
+		text-decoration:none;
+	}
+.secondnav {
+		cursor: pointer;
+		text-decoration:none;
+	}

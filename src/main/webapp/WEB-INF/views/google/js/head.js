@@ -2,12 +2,12 @@
 
 function header(title){
 	
-	var divusercontent = $('<div class="col-md-12" id="usercontent" style="background-color:black; color:white; min-height:35px; padding-top:5px;"></div>');
+	var divusercontent = $('<div class="col-md-12" id="usercontent" style="background-color:#999; color:white; min-height:35px; padding-top:5px;"></div>');
 	
 	
 	var divtitle = $('<div style="padding: 30px 10px 10px 10px;"></div>');
-	divtitle.append('<h2 style="margin-left:15px;" class="text-muted">政采贷<small>&nbsp;&nbsp;信用创造价值</small></h2>');
-	
+//	divtitle.append('<font style="font-size:30px; font-weight:bold; margin-left:15px; color:orange; font-family:SimHei" class="text-muted">政采贷</font><font>&nbsp;&nbsp;信用创造价值</font>');
+	divtitle.append('<img src="img/logo.png"></img>');
 	if(title=='login' || title=='register'){
 		if(cuser!=null)
 		{
@@ -32,9 +32,9 @@ function header(title){
 	}
 	else{
 	if(cuser!=null){
-		divusercontent.html(greet()+cuser.loginId+'&nbsp;&nbsp;<a style="color:white;" href="myaccount.html?fid=mycenter&sid=letter-unread-mycenter" id="inner_letter"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>'+lettercount+'</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
+		divusercontent.html(greet()+cuser.loginId+'&nbsp;&nbsp;<a style="color:white;" href="myaccount.html?fid=mycenter&sid=letter-unread-mycenter" id="inner_letter"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>&nbsp;'+lettercount+'</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
 	}else if(buser!=null){
-		divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="font-color:white;">退出</a>');
+		divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
 	}else{
 		divusercontent.html('<a href="login.html" style="color:white;">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="register.html" style="color:white;">注册</a>');
 	}
@@ -57,15 +57,16 @@ function header(title){
 	navulstr += '<li id="index" class="active"><a href="index.html">首页</a></li>';
 	navulstr += '<li id="productlist"><a href="productlist.html">我要理财</a></li>';
 	navulstr += '<li id="myaccount"><a href="myaccount.html">我的账户</a></li>';
-	navulstr += '<li id="activity"><a href="activity.html">活动中心</a></li>';
+//	navulstr += '<li id="activity"><a href="activity.html">活动中心</a></li>';
 	navulstr += '<li id="loan"><a href="loan.html">我要融资</a></li>';
 	navulstr += '</ul>';
 	navulstr += '<ul class="nav navbar-nav navbar-right">';
-	if(cuser==null && buser==null)
-		{
-			navulstr += '<li><a href="login.html">登录</a></li>';
-			navulstr += '<li><a href="register.html">注册</a></li>';
-		}
+//	if(cuser==null && buser==null)
+//		{
+//			navulstr += '<li><a href="login.html">登录</a></li>';
+//			navulstr += '<li><a href="register.html">注册</a></li>';
+//		}
+	navulstr += '<li id="activity"><a href="activity.html">活动中心</a></li>';
 	navulstr += '<li class="dropdown">';
 	navulstr += '<a href="#" class="dropdown-toggle" data-toggle="dropdown">帮助<span class="caret"></span></a>';
 	navulstr += '<ul class="dropdown-menu" role="menu">';

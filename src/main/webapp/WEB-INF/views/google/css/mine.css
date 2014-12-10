@@ -241,7 +241,7 @@ a.productline:hover{
 	PADDING-BOTTOM: 20px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; PADDING-TOP: 10px
 }
 .rechargeNO INPUT {
-	BORDER-BOTTOM: #ddd 1px solid; BORDER-LEFT: #ddd 1px solid; LINE-HEIGHT: 24px; FONT-FAMILY: "Î¢ÈíÑÅºÚ", "ËÎÌå"; HEIGHT: 24px; FONT-SIZE: 20px; BORDER-TOP: #ddd 1px solid; FONT-WEIGHT: bold; BORDER-RIGHT: #ddd 1px solid
+	BORDER-BOTTOM: #ddd 1px solid; BORDER-LEFT: #ddd 1px solid; LINE-HEIGHT: 24px; FONT-FAMILY: "Î¢ï¿½ï¿½ï¿½Åºï¿½", "ï¿½ï¿½ï¿½ï¿½"; HEIGHT: 24px; FONT-SIZE: 20px; BORDER-TOP: #ddd 1px solid; FONT-WEIGHT: bold; BORDER-RIGHT: #ddd 1px solid
 }
 
 .confirmAndCancel {
@@ -265,7 +265,7 @@ ul.news li{
 	margin-left:5px;
 }
 .orange{
-	COLOR: #ea5404;
+	COLOR: #f0ad4e;
 	FONT-SIZE: 14px;
 	FONT-WEIGHT: bold;
 }

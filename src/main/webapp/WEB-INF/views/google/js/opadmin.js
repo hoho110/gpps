@@ -453,6 +453,60 @@ var lenderview = function(container){
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
+		
+		
+		$('button.sendletter').click(function(e){
+			var id = $(this).attr('id');
+			
+			
+			var ntr = $(this).parents('tr').next('tr');
+			if(ntr.prop("className")=='information'){
+				ntr.remove();
+				return;
+			}
+			
+			var letterdiv1 = $('<div class="row" style="max-width:500px;"></div>');
+			letterdiv1.append('<div class="col-md-3">站内信标题</div>');
+			letterdiv1.append('<div class="col-md-9"><input type="text" id="lettertitle" style="width:100%"></input></div>');
+			var letterdiv2 = $('<div class="row" style="max-width:500px;"></div>');
+			letterdiv2.append('<div class="col-md-3">站内信内容</div>');
+			letterdiv2.append('<div class="col-md-9"><textarea id="lettercontent" style="width:100%; min-height:300px;"></textarea></div>');
+			var letterdiv3 = $('<div class="row" style="max-width:500px;"></div>');
+			var button = $('<button style="width:100%;">发送</button>');
+			letterdiv3.append(button);
+			button.click(function(){
+				
+				var title = $(this).parent().parent().find('input#lettertitle').val();
+				var content = $(this).parent().parent().find('textarea#lettercontent').val();
+				if(title==null || title==''){
+					alert('站内信标题不能为空！');
+					return;
+				}else if(content==null || content==''){
+					alert('站内信内容不能为空！');
+					return;
+				}
+				try{
+					var letter = {'_t_':'gpps.model.Letter', 'title':title, 'content':content, 'markRead':0, 'receiverId':parseInt(id), 'receivertype':0}
+					letterService.create(letter);
+					alert("站内信已成功发送");
+					var fftr = $(this).parents('tr');
+					fftr.remove();
+				}catch(e){
+					alert(e.message);
+				}
+				
+			})
+			
+			
+			var ftr = $('<tr class="information"></tr>');
+			var ftd = $('<td align=center colspan=6></td>');
+			ftr.append(ftd);
+			ftd.append(letterdiv1);
+			ftd.append(letterdiv2);
+			ftd.append(letterdiv3);
+			
+			$(this).parents('tr').after(ftr);
+		});
 
 		return res;
 	}
@@ -465,58 +519,7 @@ var lenderview = function(container){
 	container.append(content);
 	table.dataTable(mySettings);
 	
-	$('button.sendletter').click(function(e){
-		var id = $(this).attr('id');
-		
-		
-		var ntr = $(this).parents('tr').next('tr');
-		if(ntr.prop("className")=='information'){
-			ntr.remove();
-			return;
-		}
-		
-		var letterdiv1 = $('<div class="row" style="max-width:500px;"></div>');
-		letterdiv1.append('<div class="col-md-3">站内信标题</div>');
-		letterdiv1.append('<div class="col-md-9"><input type="text" id="lettertitle" style="width:100%"></input></div>');
-		var letterdiv2 = $('<div class="row" style="max-width:500px;"></div>');
-		letterdiv2.append('<div class="col-md-3">站内信内容</div>');
-		letterdiv2.append('<div class="col-md-9"><textarea id="lettercontent" style="width:100%; min-height:300px;"></textarea></div>');
-		var letterdiv3 = $('<div class="row" style="max-width:500px;"></div>');
-		var button = $('<button style="width:100%;">发送</button>');
-		letterdiv3.append(button);
-		button.click(function(){
-			
-			var title = $(this).parent().parent().find('input#lettertitle').val();
-			var content = $(this).parent().parent().find('textarea#lettercontent').val();
-			if(title==null || title==''){
-				alert('站内信标题不能为空！');
-				return;
-			}else if(content==null || content==''){
-				alert('站内信内容不能为空！');
-				return;
-			}
-			try{
-				var letter = {'_t_':'gpps.model.Letter', 'title':title, 'content':content, 'markRead':0, 'receiverId':parseInt(id), 'receivertype':0}
-				letterService.create(letter);
-				alert("站内信已成功发送");
-				var fftr = $(this).parents('tr');
-				fftr.remove();
-			}catch(e){
-				alert(e.message);
-			}
-			
-		})
-		
-		
-		var ftr = $('<tr class="information"></tr>');
-		var ftd = $('<td align=center colspan=6></td>');
-		ftr.append(ftd);
-		ftd.append(letterdiv1);
-		ftd.append(letterdiv2);
-		ftd.append(letterdiv3);
-		
-		$(this).parents('tr').after(ftr);
-	});
+	
 }
 
 var handlerequest = function(state, container){

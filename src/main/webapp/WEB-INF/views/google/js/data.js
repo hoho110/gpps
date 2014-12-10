@@ -642,11 +642,11 @@ var createNavLevel2 = function(nav){
 	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
 	if(nav=='mycenter'){
 		lettercount = letterDao.countByReceiver(0, 0, cuser.id);
-		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');
-		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
-		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="letter-unread-mycenter">站内信('+lettercount+')</a></li>');
-		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice-view">系统公告</a></li>');
-		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="question-view">我的问题</a></li>');
+		var li2 = $('<li role="presentation" class="active"><a class="btn btn-default" href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');
+		var li3 = $('<li role="presentation"><a class="btn btn-default" href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
+		var li4 = $('<li role="presentation"><a class="btn btn-default" href="javascript:void(0)" data-sk="letter-unread-mycenter">站内信('+lettercount+')</a></li>');
+		var li5 = $('<li role="presentation"><a class="btn btn-default" href="javascript:void(0)" data-sk="notice-view">系统公告</a></li>');
+		var li6 = $('<li role="presentation"><a class="btn btn-default" href="javascript:void(0)" data-sk="question-view">我的问题</a></li>');
 		
 		
 	//	var li4 = $('<li role="presentation" class="dropdown"></li>');

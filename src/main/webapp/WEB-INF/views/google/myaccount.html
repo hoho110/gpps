@@ -100,76 +100,124 @@ a.accordion-toggle {
 
 
 </head>
-<body>
+<body style="background-color: #f5f5f5">
 	
-	<div id="whole" class="container-fluid">
+	<div id="whole" class="container">
 	
-	<div class="row" id="header" style="padding-left:15px; padding-right:15px;">
+	<div class="row" id="header" style="padding-left:0px; padding-right:0px;">
       
       </div>
 	
-		<div class="row" style="margin-top:5px;">
+		<div class="row" style="margin-top:0px; padding-top:0px; background-color:white;">
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 
 
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div id="account_total" class="col-xs-12 col-sm-12 col-md-8"
-							style="BACKGROUND-COLOR: #fef9f1; padding-top: 10px;">
+						<div id="account_total" class="col-xs-12 col-sm-12 col-md-9"
+							style="padding-top: 10px;">
 							
-							<div class="col-xs-12 col-md-7" style="padding-left:0px; padding-right:0px;">
+							<div class="col-xs-12 col-md-12" style="padding-top:5px; padding-left:0px; padding-right:0px; background-color: #CCFFFF; height:30px;">
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="padding-left:0px; padding-right:0px;">
-									<strong id="welcome"></strong>
+									<span id="welcome" style="padding-left:15px;"></span>
 								</div>
-								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="padding-left:0px; padding-right:0px;">
-									<a href="resetpsw.html">修改密码</a> 
-									<a style="margin-left: 20px;" href="quit.html">退出</a>
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="padding-left:0px; padding-right:15px; text-align:right">
+									<a href="resetpsw.html" style="color:#999;">修改密码</a> 
+									<a style="margin-left: 20px; color:#999;" href="quit.html">退出</a>
 								</div>
+							</div>
+							
+							<div class="col-xs-12 col-md-7" style="padding-left:15px; padding-right:0px;">
+								
 
 								<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="margin-top:5px; padding-left:0px; padding-right:0px;">
-									<span class="grey">总资产 ： <span class="green" id="total"></span>元</span>
+									<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">总资产 </span>
+									</div>
+									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px #999; padding-right:5px;">
+									<span class="green" id="total"></span>元
+									</div>
 								</div>
 								<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="margin-top:5px; padding-left:0px; padding-right:0px;">
-									<span class="grey">可用余额：<span class="green" id="usable"></span>元</span>
+									<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">可用余额 </span>
+									</div>
+									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px #999; padding-right:5px;">
+									<span class="green" id="usable"></span>元
+									</div>
 								</div>
 
 
 								<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="margin-top:5px; padding-left:0px; padding-right:0px;">
-									<span class="grey">冻结金额：<span class="freeze" id="freeze"></span>元</span>
+									<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">冻结金额 </span>
+									</div>
+									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px #999; padding-right:5px;">
+									<span class="freeze" id="freeze"></span>元
+									</div>
 								</div>
 								<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="margin-top:5px; padding-left:0px; padding-right:0px;">
-									<span class="grey">已投金额：<span class="orange" id="used"></span>元</span>
+									<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">已投金额</span>
+									</div>
+									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px #999; padding-right:5px;">
+									<span class="orange" id="used"></span>元
+									</div>
 								</div>
 
 
-								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
-									<span class="grey">已获利息：<span class="orange" id="totalincome"></span>元</span>
+								<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6" style="margin-top:5px; padding-left:0px; padding-right:0px;">
+									<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">已获利息</span>
+									</div>
+									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px #999; padding-right:5px;">
+									<span class="orange" id="totalincome"></span>元
+									</div>
 								</div>
 								
 								</div>
 								
-							<div class="col-xs-12 col-md-5" style="padding-left:0px; padding-right:0px;">
-								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
-									<span class="grey">身份证号：<span class="grey" id="idcard"></span></span>
-									<button id="bindidcard" style="float:right;">身份证绑定</button>
-									<div style="clear:both;"></div>
+							<div class="col-xs-12 col-md-5" style="padding-left:15px; padding-right:0px;">
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px; vertical-align : center;">
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">身份证号</span>
+									</div>
+									<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border:solid 1px #999; padding-left:2px; padding-right:2px;">
+									<div class="grey" id="idcard" style="margin-bottom:0px;"></div>
+									</div>
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
+									<button id="bindidcard" style="width:100%; height:100%">马上绑定</button>
+									</div>
 								</div>
 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
-									<span class="grey">钱多多账户：<span class="grey" id="tpaccount"></span>
-									</span><button id="loginmmm" style="float:right;">登录钱多多</button>
-									<div style="clear:both;"></div>
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">钱多多号</span>
+									</div>
+									<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border:solid 1px #999; padding-left:2px; padding-right:2px;">
+									<span class="grey" id="tpaccount"></span>
+									</div>
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
+									<button id="loginmmm" style="width:100%;">登录</button>
+									</div>
 								</div>
 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
-									<span class="grey">绑定银行卡：<span class="grey" id="bankcard"></span>
-									</span><button id="rebind" style="float:right;">绑定</button>
-									<div style="clear:both;"></div>
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">银行卡</span>
+									</div>
+									<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border:solid 1px #999; padding-left:2px; padding-right:2px;">
+									<span class="grey" id="bankcard"></span>
+									</div>
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
+									<button id="rebind" style="width:100%;">绑定</button>
+									</div>
+									
 								</div>
 							</div>
 							<div class="col-xs-12 col-md-12">
 								<div class="btn-group btn-group-lg  btn-group-justified"
 									style="padding-bottom: 5px; margin-top: 10px;">
 									<div class="btn-group">
-										<a class="btn btn-success btn-lg" href="recharge.html" target="_blank" id="recharge">充值</a>
+										<a class="btn btn-warning btn-lg" href="recharge.html" target="_blank" id="recharge">充值</a>
 									</div>
 									<div class="btn-group">
 										<a class="btn btn-default btn-lg" href="cashout.html" target="_blank" id="cashout">提现</a>
@@ -178,33 +226,39 @@ a.accordion-toggle {
 							</div>
 						</div>
 						
-						<div class="hidden-xs hidden-sm col-md-4 col-lg-4">
-							<div class="col-xs-4 col-md-3" style="padding-top: 20px;">
-								<img src="img/phone.jpg" style="width: 80px; height: 100px;"></img>
+						<div class="hidden-xs hidden-sm col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
+							<div class="col-xs-12 col-md-12" style="padding-top: 10px; text-align:center; font-size:20px; font-weight:bold; color:#999;">
+								投资前准备
+							</div>
+							<div class="col-xs-4 col-md-4" style="padding-top: 10px;">
+								<img src="img/people.png" style="width: 40px; height: 40px;"></img>
 								<div
 									style="color: green; font-size: 12px; font-weight: bold; margin-top: 5px; z-index: 1000">
-									<span class="glyphicon glyphicon-ok"></span> 手机已绑定
+									 平台注册
 								</div>
 							</div>
-							<div class="col-xs-4 col-md-3" style="padding-top: 20px;">
+							<div class="col-xs-4 col-md-4" style="padding-top: 10px;">
 								<a id="identity" title="点击绑定身份证" href="register2.html"><img
-									id="identity" src="img/people.png"
-									style="width: 80px; height: 100px;"></img></a>
+									id="identity" src="img/identity.jpg"
+									style="width: 40px; height: 40px;"></img></a>
 								<div id="identity"
 									style="color: red; font-size: 12px; font-weight: bold; margin-top: 5px;">
-									<span class="glyphicon glyphicon-remove"></span> 身份证未绑定
+									身份证绑定
 								</div>
 							</div>
-							<div class="col-xs-4 col-md-3" style="padding-top: 20px;">
+							<div class="col-xs-4 col-md-4" style="padding-top: 10px;">
 								<a id="spsw" title="点击开通第三方账户" href="#" data-sk='none'><img
-									id="spsw" src="img/sanfang_n.jpg"
-									style="width: 80px; height: 100px;"></img></a>
+									id="spsw" src="img/qdd.jpg"
+									style="width: 40px; height: 40px;"></img></a>
 								<div id="spsw"
 									style="color: red; font-size: 12px; font-weight: bold; margin-top: 5px;">
-									<span class="glyphicon glyphicon-remove"></span> 第三方账户未开通
+									 开通第三方
 								</div>
 								<div id="spswformdiv" style="display:none">
 								</div>
+							</div>
+							<div class="col-xs-12 col-md-12" style="padding-top: 35px; text-align:center;">
+								<a class="btn btn-warning btn-lg" href="productlist.html" id="invest" style="width:80%">马上投资</a>
 							</div>
 							
 							<div id="cardBindingformdiv" style="display:none;"></div>
@@ -215,7 +269,7 @@ a.accordion-toggle {
 				</div>
 
 
-				<div class="row">
+				<div class="row" style="margin-top:35px;">
 					<div class="col-xs-12 col-md-2">
 
 
@@ -253,7 +307,7 @@ a.accordion-toggle {
 		</div>
 		
 		
-		<div class="row foot" id="footer" style="border: #eee solid 1px; background:#eee; min-height:120px; font-size:13px; margin-top:5px; margin-left: 0px; margin-right:0px;">
+		<div class="row foot" id="footer" style="border: #eee solid 1px; background:#eee; min-height:120px; font-size:13px; margin-top:5px; padding-left:0px; padding-right:0px;">
 
 	</div>
 		
@@ -352,7 +406,7 @@ a.accordion-toggle {
 							}
 							
 							
-							$('#welcome').html(greet() + name+'<a href="javascript:void(0);" id="inner_letter"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>'+lettercount+'</a>');
+							$('#welcome').html(greet() + name+'<a href="javascript:void(0);" id="inner_letter" style="color:#999;"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>'+lettercount+'</a>');
 							
 
 							var account = accountDao.find(cuser.accountId);
@@ -392,12 +446,11 @@ a.accordion-toggle {
 								$('#idcard').html(identity);
 								$('#bindidcard').html('已绑定');
 								$('#bindidcard').attr('disabled', 'disabled');
-								$('img#identity').attr('src', 'img/people.jpg').attr('title', '身份证已绑定').attr('disabled', 'disabled');
+								$('img#identity').attr('src', 'img/identity.png').attr('title', '身份证已绑定').attr('disabled', 'disabled');
 								$('a#identity').attr('href', '#');
 								$('div#identity')
 										.css('color', 'green')
-										.html(
-												'<span class="glyphicon glyphicon-ok"></span>身份证已绑定')
+										.html('身份证绑定')
 							}else{
 								$('#idcard').html('暂未绑定');
 								$('#bindidcard').click(function(){
@@ -412,13 +465,13 @@ a.accordion-toggle {
 								$('#loginmmm').click(function(e){
 									window.open('http://218.4.234.150:88/main');
 								})
-								$('img#spsw').attr('src', 'img/sanfang.jpg').attr('title', '第三方账户已开通').attr('disabled', 'disabled');
+								$('img#spsw').attr('src', 'img/qdd.png').attr('title', '第三方账户已开通').attr('disabled', 'disabled');
 								$('a#spsw').attr('href', '#').attr('data-sk',
 										'done');
 								$('div#spsw')
 										.css('color', 'green')
 										.html(
-												'<span class="glyphicon glyphicon-ok"></span>第三方账户已开通')
+												'开通第三方')
 							}else{
 								$('#tpaccount').html("暂未开通");
 								$('#loginmmm').html('马上注册');

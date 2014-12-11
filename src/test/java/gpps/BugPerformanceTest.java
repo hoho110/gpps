@@ -86,7 +86,13 @@ public class BugPerformanceTest extends TestSupport{
 		submitDao=context.getBean(ISubmitDao.class);
 		payBackService=context.getBean(IPayBackService.class);
 		payBackDao=context.getBean(IPayBackDao.class);
-		
+//		createLender(10000);
+//		all();
+		System.out.println("所有用户的深层校验结果："+accountCheck());
+		System.exit(-1);
+	}
+	public static void all()
+	{
 		Random random=new Random();
 		long currenttime=System.currentTimeMillis();
 		int lenderNum=1000;
@@ -185,10 +191,18 @@ public class BugPerformanceTest extends TestSupport{
 			
 			
 			System.out.println("所有用户的深层校验结果："+accountCheck());
-			
-			System.exit(-1);
 		}catch(Throwable e){
 			e.printStackTrace();
+		}
+	}
+	public static void createLender(int lenderNum)
+	{
+		long currenttime=System.currentTimeMillis();
+		for(int i=0;i<lenderNum;i++)
+		{
+			if(i%100==0)
+				System.out.println("创建用户"+i+"个");
+			Lender lender=createLender(""+currenttime+i);
 		}
 	}
 	public static void checkPayBack(Product product) throws CheckException

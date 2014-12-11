@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface ISubmitDao {
+	public int countAll();
 	public void create(Submit submit);
 	public List<Submit> findAllByLender(@Param("lenderId")Integer lenderId,@Param("offset")int offset,@Param("recnum")int recnum);
 	public int countByLender(Integer lenderId);

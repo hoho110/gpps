@@ -30,12 +30,12 @@ public class StatisticsServiceImpl implements IStatisticsService{
 		actions.add(CashStream.ACTION_PAY);
 		CashStreamSum sum=cashStreamDao.sumCashStream(null, null, actions);
 		if(sum!=null)
-			totalStatistics.setRaiseAmount(sum.getChiefAmount());
+			totalStatistics.setRaiseAmount(sum.getChiefAmount().negate());
 		actions.clear();
 		actions.add(CashStream.ACTION_REPAY);
 		sum=cashStreamDao.sumCashStream(null, null, actions);
 		if(sum!=null)
-			totalStatistics.setRaiseAmount(sum.getInterest());
+			totalStatistics.setIncomeAmount(sum.getInterest());
 		return totalStatistics;
 	}
 	

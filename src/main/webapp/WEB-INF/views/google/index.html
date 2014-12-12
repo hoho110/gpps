@@ -55,6 +55,8 @@
         		src="/easyservice/gpps.dao.ILetterDao?json"></script>
         <script type="text/javascript"
         		src="/easyservice/gpps.service.INewsService?json"></script>
+        <script type="text/javascript"
+        		src="/easyservice/gpps.service.IStatisticsService?json"></script>
         		
         		
         
@@ -202,10 +204,10 @@
  <textarea style="display:none;" id="sider-content-template">
  
  		<div class="col-md-12" style="text-align:center; font-size:20px; font-weight:bold; color:orange;">数据中心</div>
-		<div class="col-md-12" style="margin-top:15px;"><span class="glyphicon glyphicon-pencil"></span>总募集资金50,000,000元</div>
-		<div class="col-md-12" style="margin-top:5px;"><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>投资人次25,471次</div>
-		<div class="col-md-12" style="margin-top:5px;"><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>获得收益6,000,000元</div>
-		<div class="col-md-12" style="margin-top:5px;"><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已注册人数10548人
+		<div class="col-md-12" style="margin-top:15px;"><span class="glyphicon glyphicon-pencil"></span>总募集资金+-sta.raiseAmount.value-+元</div>
+		<div class="col-md-12" style="margin-top:5px;"><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>投资人次+-sta.investment-+次</div>
+		<div class="col-md-12" style="margin-top:5px;"><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>获得收益+-sta.incomeAmount.value-+元</div>
+		<div class="col-md-12" style="margin-top:5px;"><span class="glyphicon glyphicon-pencil" style="margin-top:10px;"></span>已注册人数+-sta.lenderNum-+人
 		
 		<!--# 
 		if(cuser==null && buser==null)
@@ -225,12 +227,27 @@
  
  
  <textarea style="display:none;" id="projectList_template">
-			<div class="col-sm-12 col-md-12" style="margin-top:20px; text-align:center; font-size:20px; color:#999; font-weight:bold">
+ 			<!--# 
+ 			var pic = 'wj.png';
+ 			if(series.type==1){
+ 			pic = 'jh.png';
+ 			}else if(series.type==2){
+ 			pic = 'jq.png';
+ 			}
+ 			 #-->
+ 			<div class="row">
+ 			<div class="col-xs-3 col-sm-3 col-md-3" style="padding-left: 5px; padding-top:5px;">
+ 			<img src="img/+-pic-+" class="img-responsive"></img>
+ 			</div>
+ 			<div class="col-xs-9 col-sm-9 col-md-9">
+			<div class="col-sm-12 col-md-12" style="margin-top:20px; font-size:20px; color:#999; font-weight:bold">
 			+-series.title-+
 			</div>
 			<div class="col-sm-12 col-md-12" style="margin-top:10px; margin-bottom:20px; text-align:center;">
 			<span style="cursor:pointer; color:orange; margin-right:5px;" title="+-series.tagCol.items.get(0).description-+">+-series.tagCol.items.get(0).title-+</span>
 			<span style="cursor:pointer; color:orange; margin-right:5px;" title="+-series.tagCol.items.get(1).description-+">+-series.tagCol.items.get(1).title-+</span>
+			</div>
+			</div>
 			</div>
 			<div class="col-xs-4 col-sm-4 col-md-4">
 				投标门槛
@@ -390,6 +407,7 @@ $(document).ready(function () {
 	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
 	var noticeService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INoticeService");
 	var newsService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INewsService");
+	var statisticService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IStatisticsService");
 	
 	
 	var ctx = new EasyServiceClient.newContext();
@@ -397,6 +415,7 @@ $(document).ready(function () {
 	
 		ctx.cuser = cuser;
 		ctx.buser = buser;
+		ctx.sta = statisticService.getTotalStatistics();
 		ejs.renderComplexNode("#sider-content-template", "#sider-content", ctx);
 	
 	

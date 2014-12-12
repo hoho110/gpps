@@ -87,8 +87,8 @@ public class BugPerformanceTest extends TestSupport{
 		payBackService=context.getBean(IPayBackService.class);
 		payBackDao=context.getBean(IPayBackDao.class);
 //		createLender(10000);
-//		all();
-		System.out.println("所有用户的深层校验结果："+accountCheck());
+		all();
+//		System.out.println("所有用户的深层校验结果："+accountCheck());
 		System.exit(-1);
 	}
 	public static void all()
@@ -171,22 +171,22 @@ public class BugPerformanceTest extends TestSupport{
 			logger.info("共购买"+num+"次，平均耗时："+totalCost/num+", 最大耗时："+maxCost+", 最小耗时： "+minCost);
 			
 			/*******************************流标********************************/
-//			quitFinancing(order.getId());
+			quitFinancing(order.getId());
 			/*******************************流标********************************/
 			
 			/*******************************还款********************************/
-			startRepaying(order.getId());
-			List<PayBack> payBacks=payBackService.findAll(product.getId());
-			for(int i=0;i<payBacks.size();i++)
-			{
-				PayBack payBack=payBacks.get(i);
-				mockLogin(borrower);
-				payBackService.repay(payBack.getId());
-				payBackDao.changeCheckResult(payBack.getId(), PayBack.CHECK_SUCCESS);
-				checkAndRepay(payBack.getId());
-			}
-			orderService.closeComplete(order.getId());
-			checkPayBack(product);
+//			startRepaying(order.getId());
+//			List<PayBack> payBacks=payBackService.findAll(product.getId());
+//			for(int i=0;i<payBacks.size();i++)
+//			{
+//				PayBack payBack=payBacks.get(i);
+//				mockLogin(borrower);
+//				payBackService.repay(payBack.getId());
+//				payBackDao.changeCheckResult(payBack.getId(), PayBack.CHECK_SUCCESS);
+//				checkAndRepay(payBack.getId());
+//			}
+//			orderService.closeComplete(order.getId());
+//			checkPayBack(product);
 			/*******************************还款********************************/
 			
 			
@@ -195,6 +195,7 @@ public class BugPerformanceTest extends TestSupport{
 			e.printStackTrace();
 		}
 	}
+	
 	public static void createLender(int lenderNum)
 	{
 		long currenttime=System.currentTimeMillis();
@@ -223,6 +224,12 @@ public class BugPerformanceTest extends TestSupport{
 		if(amount.compareTo(product.getRealAmount())!=0)
 			throw new CheckException("还款总额与产品不符");
 	}
+	
+	public static String productCheck(){
+		return null;
+//		checkPayBack(product);
+	}
+	
 	public static String accountCheck()
 	{
 		StringBuilder sBuilder=new StringBuilder();

@@ -7,7 +7,7 @@ function header(title){
 	
 	var divtitle = $('<div style="padding: 30px 10px 10px 10px;"></div>');
 //	divtitle.append('<font style="font-size:30px; font-weight:bold; margin-left:15px; color:orange; font-family:SimHei" class="text-muted">政采贷</font><font>&nbsp;&nbsp;信用创造价值</font>');
-	divtitle.append('<img src="img/logo.png"></img>');
+	divtitle.append('<img src="img/logo.png" style="max-width:95%;"></img>');
 	if(title=='login' || title=='register'){
 		if(cuser!=null)
 		{

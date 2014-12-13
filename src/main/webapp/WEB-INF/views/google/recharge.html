@@ -43,10 +43,9 @@
       
 </div>
 
-<div class="row" style="padding-left:5px; padding-right:5px; margin-top:5px;">
+<div class="row" style="padding-left:0px; padding-right:0px; margin-top:5px;">
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-			<div style="border: #eee solid 1px; padding: 5px 10px 5px 10px; BACKGROUND-COLOR: #fef9f1;">
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="border: #eee solid 1px; padding: 5px 10px 5px 10px; BACKGROUND-COLOR: #fef9f1;">
 				提示：<br/>
                 1.投资人充值过程全程免费，手续费由网站垫付；<br />
                 2.最低充值金额应大于等于 100 元；<br />
@@ -54,19 +53,20 @@
                 4.严禁利用充值功能进行信用卡套现、转账、洗钱等行为，一经发现，将封停账号30天；<br />
                 5.充值期间，请勿关闭浏览器，待充值成功并返回首页后，所充资金才能入账，如有疑问，请联系客服；<br />
                 6.充值需开通银行卡网上支付功能，如有疑问请咨询开户行客服；<br />
-                7.支付限额请参照 <a href="http://www.chinapnr.com/helpcenter_zfsm.html" target="_blank">支付说明</a>。
+                7.支付限额请参照 <a href="#" target="_blank">支付说明</a>。
+     </div>
                 
-               </div>
-                
-                <div style="padding-top:20px; padding-left:300px;">
-                 <div class="rechargeBoxTitle">
-               		 请输入充值金额</div>
+     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="text-align:center;">
+         <div class="rechargeBoxTitle">请输入充值金额</div>
             <div class="rechargeNO">
-                <input name="txtAccount" type="text" id="txtAccount" style="height:35px;"/><span
-                    id="msg" style="color: #b94a48; font-weight: bold;"></span></div>
-            <div class="confirmAndCancel">
+                <input name="txtAccount" type="text" id="txtAccount" style="height:35px;"/>
+            </div>
+            <div>
+            	<span id="msg" style="color: #b94a48; font-weight: bold;"></span>
+            </div>
+            <div>
                 <input type="button" name="btnSub" value="确 认" id="rechargeConfirm" class="confirmAndCancelBtn" />
-                <input type="button" class="confirmAndCancelBtn" value="重 置" />
+                <input type="button" class="confirmAndCancelBtn" id="reset" value="重 置" />
             </div>
             <div id="rechargeformdiv" style="display:none">
 			</div>
@@ -76,44 +76,6 @@
 
 </div>
 </div>
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">充值</h4>
-      </div>
-      <div class="modal-body">
-       充值完成前请不要关闭该对话框，在充值完毕后点击相应的操作以完成充值。
-      </div>
-      <div class="modal-footer">
-        <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">充值成功</button>
-        <button id="fail" type="button" class="btn btn-default">充值失败</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-	    <!-- Modal -->
-<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">第三方认证</h4>
-      </div>
-      <div class="modal-body">
-      			完成第三方认证才能充值, 认证完成前请不要关闭该对话框，在认证完毕后点击相应的操作以完成认证。
-      </div>
-      <div class="modal-footer">
-        <button id="success2" type="button" class="btn btn-primary" data-dismiss="modal">认证成功</button>
-        <button id="fail2" type="button" class="btn btn-default">认证失败</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script src="js/head.js"></script>
@@ -186,6 +148,12 @@ $(document).ready(function() {
 			}else{
 				document.getElementById('msg').innerHTML='';
 				};
+	});
+	
+	
+	$('#reset').click(function(e){
+		document.getElementById('msg').innerHTML='';
+		$('#txtAccount').val('');
 	});
 	
 	$('#rechargeConfirm').click(function(e){

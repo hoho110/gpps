@@ -9,7 +9,7 @@ function foot(){
 //	str += '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="text-align:center; color:#999;">';
 	str += '政采贷  Copyright © 2013-2014. All rights reserved<br>';
 //	str += '地址：北京市海淀区中关村大街18号8层05-555';
-	str += '京ICP备14055121号';
+	str += '京ICP备14055121号&nbsp;&nbsp;|&nbsp;&nbsp;京公网安备11010802016768号';
 //	str += '</div>';
 //	str += '<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">';
 //	str += '<img src="img/cx.jpg"></img>';

@@ -248,7 +248,7 @@ a.productline:hover{
 	ZOOM: 1; OVERFLOW: hidden
 }
 .confirmAndCancelBtn {
-	BORDER-BOTTOM: #ddd 1px solid; BORDER-LEFT: #ddd 1px solid; PADDING-BOTTOM: 5px; PADDING-LEFT: 20px; PADDING-RIGHT: 20px; DISPLAY: block; BACKGROUND: #eee; FLOAT: left; FONT-SIZE: 14px; OVERFLOW: hidden; BORDER-TOP: #ddd 1px solid; FONT-WEIGHT: bold; MARGIN-RIGHT: 20px; BORDER-RIGHT: #ddd 1px solid; PADDING-TOP: 5px
+	BORDER-BOTTOM: #ddd 1px solid; BORDER-LEFT: #ddd 1px solid; PADDING-BOTTOM: 5px; PADDING-LEFT: 20px; PADDING-RIGHT: 20px; DISPLAY: inline; BACKGROUND: #eee; FONT-SIZE: 14px; OVERFLOW: hidden; BORDER-TOP: #ddd 1px solid; FONT-WEIGHT: bold; MARGIN-RIGHT: 20px; BORDER-RIGHT: #ddd 1px solid; PADDING-TOP: 5px
 }
 
 ul.news li{

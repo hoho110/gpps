@@ -366,7 +366,9 @@ public class SubmitServiceImpl implements ISubmitService {
 		List<Submit> submits=submitDao.findAllByProductAndStateWithPaged(productId, Submit.STATE_COMPLETEPAY, offset, recnum);
 		for(Submit submit:submits)
 		{
-			submit.setLenderName(lenderService.find(submit.getLenderId()).getName());
+			String lenderName = lenderService.find(submit.getLenderId()).getName();
+			lenderName = "***"+lenderName.substring(lenderName.length()-1);
+			submit.setLenderName(lenderName);
 		}
 		return Pagination.buildResult(submits, count, offset, recnum);
 	}

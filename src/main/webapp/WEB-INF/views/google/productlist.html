@@ -259,22 +259,43 @@
 		}
 #-->
 
-<tr class="ui-list-item" id="header"
-	style="padding-left: 0px; padding-right: 0px;">
+
+	<!--# 
+	if(t==(products.size()-1))
+	{
+	 #-->
+	 <tr class="ui-list-item" id="header"
+		style="padding-left: 0px; padding-right: 0px; border-bottom:solid #d9d9d9 1px;">
+	 
+	 <!--# 
+	 }else{
+	  #-->
+	<tr class="ui-list-item" id="header"
+		style="padding-left: 0px; padding-right: 0px;">
+	
+	<!--# 
+	}
+	 #-->
+	
 	
 	<!--# 
 	if(t==0)
 	{
 	 #-->
-	<td class="text-big" style="max-width:200px;" rowspan=+-products.size()-+>
+	<td class="text-big" style="max-width:200px; border-bottom:solid #d9d9d9 1px;" rowspan=+-products.size()-+>
 		<div style="display:inline;">
 			<a class="producttitle" style="font-size:16px;" href="productdetail.html?pid=+-product.id-+"
 				target="_blank" title="+-order.title-+">+-order.title-+</a>
 		</div>
 	</td>
 	<!--# 
-	}
+	}else{
 	 #-->
+	 
+	 
+	 <!--# 
+	 }
+	  #-->
 
 	<td class="ui-list-field text-center"><a
 		class="ui-creditlevel +-seriesclss-+ snow">+-seriesname-+</a></td>

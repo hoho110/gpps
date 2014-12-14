@@ -89,7 +89,7 @@
 	borrower = bservice.find(order.borrowerId);
 	series = seriesService.find(product.productseriesId);
 	
-	submits = submitService.findPayedSubmitsByProduct(product.id, 0, 10);
+	submits = submitService.findPayedSubmitsByProduct(product.id, 0, 5);
 	
 	var allseries = seriesService.findAll();
 	for(var i=0; i<allseries.size(); i++){
@@ -296,13 +296,16 @@
 		</div>
 		</div>
 		</nav>
-        <div class="detail-content-body">
+        <div class="detail-content-body" style="min-height:310px;">
         </div>
     </div>
  
     <div class="col-sm-12 col-md-3" style="padding-right:0px; padding-left:2px;">
                     <div class="invest-record">
-                                    <div class="invest-record-title" style="padding-left:10px;">投资记录</div>
+                    <div class="invest-record-title" style="padding-left:10px;">
+                    		投资记录<div style="float:right; font-weight:normal; color:#999; padding-right:10px;" id="count"></div>
+                    		<div style="clear:both;"></div>
+                    </div>
                     <table class="invest-record-list">
                         <tbody id="invest-record">
                         <tr>
@@ -486,8 +489,10 @@
  		$('#init-add').css('display', 'none');
  		$('#dt_div').css('display', 'none');
  	}
- 	
+ 	var total = submits.get('total');
+ 	$('#count').html('已投'+total+'笔');
  	var subs = submits.get('result');
+ 	
  	if(subs!=null)
  		{
  	for(var i=0; i<subs.size(); i++){

@@ -164,7 +164,7 @@ A.calculator-link {
 	WIDTH: 260px; FLOAT: right
 }
 .invest-record {
-	BORDER-BOTTOM: #e4e4e4 1px solid; BORDER-LEFT: #e4e4e4 1px solid; MARGIN: 0px 0px 10px; MAX-HEIGHT: 260px; BORDER-TOP: #e4e4e4 1px solid; BORDER-RIGHT: #e4e4e4 1px solid; overflow:hidden;
+	BORDER-BOTTOM: #e4e4e4 1px solid; BORDER-LEFT: #e4e4e4 1px solid; MARGIN: 0px 0px 10px; MAX-HEIGHT: 350px; BORDER-TOP: #e4e4e4 1px solid; BORDER-RIGHT: #e4e4e4 1px solid; overflow:hidden;
 }
 .invest-record .invest-record-title {
 	BORDER-BOTTOM: #e4e4e4 1px solid; PADDING-BOTTOM: 0px; LINE-HEIGHT: 30px; BACKGROUND-COLOR: #f5f5f5; PADDING-LEFT: 20px; PADDING-RIGHT: 0px; HEIGHT: 30px; FONT-SIZE: 14px; FONT-WEIGHT: bold; PADDING-TOP: 0px

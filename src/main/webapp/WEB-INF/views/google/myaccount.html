@@ -186,7 +186,7 @@ a.accordion-toggle {
 									<div class="grey" id="idcard" style="margin-bottom:0px;"></div>
 									</div>
 									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
-									<button id="bindidcard" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%;">马上绑定</button>
+									<button id="bindidcard" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%; padding-left:0px; padding-right:0px;">马上绑定</button>
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
@@ -197,7 +197,7 @@ a.accordion-toggle {
 									<span class="grey" id="tpaccount"></span>
 									</div>
 									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
-									<button id="loginmmm" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%;">登录</button>
+									<button id="loginmmm" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%; padding-left:0px; padding-right:0px;">登录</button>
 									</div>
 								</div>
 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
@@ -208,7 +208,7 @@ a.accordion-toggle {
 									<span class="grey" id="bankcard"></span>
 									</div>
 									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
-									<button id="rebind" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%;">绑定</button>
+									<button id="rebind" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%; padding-left:0px; padding-right:0px;">绑定</button>
 									</div>
 									
 								</div>
@@ -454,7 +454,7 @@ a.accordion-toggle {
 							}
 							
 							
-							$('#welcome').html(greet() + name+'<a href="javascript:void(0);" id="inner_letter" style="color:#999;"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>'+lettercount+'</a>');
+							$('#welcome').html(greet() + name+'<a href="javascript:void(0);" id="inner_letter" style="color:#999;"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>&nbsp;'+lettercount+'</a>');
 							
 
 							var account = accountDao.find(cuser.accountId);
@@ -506,12 +506,12 @@ a.accordion-toggle {
 								});
 							}
 
-							var spsw = cuser.thirdPartyAccount;
+							var spsw = cuser.accountNumber;
 							
 							if (spsw != null && spsw != "") {
 								$('#tpaccount').html(spsw);
 								$('#loginmmm').click(function(e){
-									window.open('http://218.4.234.150:88/main');
+									window.open('http://218.4.234.150:88/main?accountname='+spsw);
 								})
 								$('img#spsw').attr('src', 'img/qdd.png').attr('title', '第三方账户已开通').attr('disabled', 'disabled');
 								$('a#spsw').attr('href', '#').attr('data-sk',

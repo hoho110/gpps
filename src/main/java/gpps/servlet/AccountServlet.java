@@ -195,7 +195,9 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/recharge/response" })
 	public void completeRecharge(HttpServletRequest req, HttpServletResponse resp) {
-		String message=null;
+		Map<String,String> params=getAllParams(req);
+		String amount = params.get("Amount");
+		String message="充值已成功， 充值额度"+amount;
 		try {
 			completeRechargeProcessor(req, resp);
 		} catch (SignatureException e) {
@@ -288,7 +290,10 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/cash/response" })
 	public void completeCash(HttpServletRequest req, HttpServletResponse resp) {
-		String message=null;
+		Map<String,String> params=getAllParams(req);
+		String amount = params.get("Amount");
+		String fee = params.get("FeeWithdraws");
+		String message="您的资金申请提取成功， 申请提取额度"+amount+"，手续费"+fee+". 到账时间以所在银行为准！";
 		try {
 			completeCashProcessor(req,resp);
 		} catch (SignatureException e) {
@@ -402,6 +407,7 @@ public class AccountServlet {
 
 	@RequestMapping(value = { "/account/buy/response" })
 	public void completeBuy(HttpServletRequest req, HttpServletResponse resp) {
+		Map<String,String> params=getAllParams(req);
 		String message=null;
 		try {
 			completeBuyProcessor(req, resp);
@@ -418,9 +424,11 @@ public class AccountServlet {
 			return;
 		}
 		if (!StringUtil.isEmpty(pid))
-			write(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/productdetail.html?pid=" + pid + "'>继续购买</a></p><a href='/myaccount.html'>返回我的帐户</a></div>");
+		{
+			writeMsg(resp,null,"/buyresponse.html?pid="+pid);
+		}
 		else {
-			write(resp, "<div style='width:100%; text-align:center; margin-top:20px; color:#0697da;'><h3>第三方平台付款</h3>购买成功，<p><a href='/myaccount.html'>返回我的帐户</a></p></div>");
+			writeMsg(resp,message,"/myaccount.html?fid=submit&sid=submit-all");
 		}
 //			log.debug("购买失败");
 //			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_FAIL);

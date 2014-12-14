@@ -64,7 +64,8 @@
  	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
  	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
  	var productActionService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductActionService");
-     
+ 	
+ 	
 	var pid = getQueryString('pid');
  	
  	var order = null;
@@ -297,6 +298,7 @@
     			<li class=""><a href="javascript: void(0);" data-sk="payback"><span class="min-price">还款计划</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="resource"><span class="min-price">相关资料</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="action"><span class="min-price">项目进程</span></a></li>
+    			<li class=""><a href="javascript: void(0);" data-sk="addaction"><span class="min-price">添加进程</span></a></li>
     			
 		</ul>
 		
@@ -310,7 +312,7 @@
     </div>
  
     <div class="col-sm-12 col-md-3" style="padding-right:0px; padding-left:2px;">
-                    <div class="invest-record" style="min-height:400px;">
+                    <div class="invest-record" style="min-height:350px;">
                                     <div class="invest-record-title" style="padding-left:10px;">投资记录<a href="javascript:void(0);" id="checkallsubmit" style="float:right; text-decoration:none; margin-right:20px;">查看所有</a></div>
                     <table class="invest-record-list">
                         <tbody id="invest-record">
@@ -538,7 +540,58 @@
         			}
         			$('.detail-content-body').html('');
         			$('.detail-content-body').append(table);
-        		}else if($(this).attr('data-sk')=='resource'){
+        		}else if($(this).attr('data-sk')=='addaction'){
+        			str= '<div class="row" style="max-width:500px;">';
+        			
+        			str+= '<div class="row">';
+        			str+= '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-right:10px; text-align:right;">进程状态</div>';
+        			str+= '<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">';
+        			str+= '<select id="orderstate" style="width:100%;">';
+        			for(var t in actionState)
+        				{
+        				str+= '<option value='+t+'>'+actionState[t];
+        				}
+        			str+= '</select></div>';
+        			str+= '</div>';
+        			
+        			str+= '<div class="row" style="margin-top:10px;">';
+        			str+= '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-right:10px; text-align:right;">进程标题</div><div class="col-xs-9 col-sm-9 col-md-9 col-lg-9"><input type="text" id="title" style="width:100%;"></input></div>';
+        			str+= '</div>';
+        			
+        			
+        			str+= '<div class="row" style="margin-top:10px;">';
+        			str+= '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-right:10px; text-align:right;">进程说明</div><div class="col-xs-9 col-sm-9 col-md-9 col-lg-9"><textarea id="detail" style="width:100%; height:200px;"></textarea></div>';
+        			str+= '</div>';
+        			
+        			str+= '<div class="row" style="margin-top:10px;">';
+        			str+= '<div class="col-md-12" style="text-align:center" style="padding-right:10px; text-align:right;"><button class="btn btn-large btn-warning" id="add">添加</button></div>';
+        			str+= '</div>';
+        			
+        			str+= '</div>';
+        			$('.detail-content-body').html(str);
+        			
+        			$('button#add').click(function(e){
+        				var title = $('#title').val();
+        				var detail = $('#detail').val();
+        				if(title==null || title==''){
+        					alert('项目进程标题不能为空！');
+        					return;
+        				}
+        				if(detail==null || detail==''){
+        					alert('项目进程详情不能为空！');
+        					return;
+        				}
+        				try{
+        				var action = {'_t_': 'gpps.model.ProductAction','title': $('#title').val(), 'detail': $('#detail').val(), 'productId':parseInt(pid), 'type':parseInt($('#orderstate').val()), 'createtime':(new java.util.Date()).getTime()};
+        				productActionService.create(action);
+        				alert('添加成功！');
+        				 $('a[data-sk=action]').trigger('click');
+        				}catch(e){
+        					alert(e.message);
+        				}
+        			})
+        		}
+        		else if($(this).attr('data-sk')=='resource'){
         			$('.detail-content-body').html('');
         			
         			var bitems0 = bservice.findMimeItems(order.borrowerId,0);

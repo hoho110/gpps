@@ -23,6 +23,7 @@ function header(title){
 		divusercontent.css('display', 'none');
 	}else if(title=='loan'){
 		if(cuser!=null){
+			alert('个人用户无法申请融资，请您先退出再申请！');
 			window.location.href="myaccount.html";
 		}else if(buser!=null){
 			divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');

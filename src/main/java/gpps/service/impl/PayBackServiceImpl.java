@@ -509,6 +509,8 @@ public class PayBackServiceImpl implements IPayBackService {
 		if((borrower.getAuthorizeTypeOpen()&Borrower.AUTHORIZETYPEOPEN_RECHARGE)==0)
 			throw new IllegalOperationException("请先授权还款权限，然后再执行还款");
 		PayBack payBack = find(payBackId);
+		if(payBack.getState()!=PayBack.STATE_WAITFORREPAY)
+			return;
 		Product currentProduct = productService.find(payBack.getProductId());
 		if (currentProduct.getState() != Product.STATE_REPAYING) 
 			throw new IllegalStateException("该产品尚未进入还款阶段");

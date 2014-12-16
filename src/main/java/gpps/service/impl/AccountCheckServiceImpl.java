@@ -167,7 +167,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							//验证：总金额=可用金额+冻结金额
 							if(account.getFreeze().add(account.getUsable()).compareTo(account.getTotal())!=0)
 							{
-								appendMsg(sBuilder, Lender.class, borrower.getId(), borrower.getThirdPartyAccount(), "账户金额错误,总金额不等于可用金额+冻结金额");
+								appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), "账户金额错误,总金额不等于可用金额+冻结金额");
 							}
 							//可用金额=(充值、取现、冻结、解冻)现金流之和+（支付、还款、存零）现金流之和取反
 							List<Integer> actions=new ArrayList<Integer>();
@@ -187,7 +187,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							sum.setInterest(sum.getInterest().add(sum2.getInterest().negate()));
 							if(account.getUsable().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
 							{
-								appendMsg(sBuilder, Lender.class, borrower.getId(), borrower.getThirdPartyAccount(), "可用金额与现金流验证错误,可用金额:"+account.getUsable().toString()+",现金流:"+sum);
+								appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), "可用金额与现金流验证错误,可用金额:"+account.getUsable().toString()+",现金流:"+sum);
 							}
 							
 							//冻结金额=冻结+解冻
@@ -198,7 +198,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							sum=(sum==null)?new CashStreamSum():sum;
 							if(account.getFreeze().negate().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
 							{
-								appendMsg(sBuilder, Lender.class, borrower.getId(), borrower.getThirdPartyAccount(), "冻结金额与现金流验证错误,冻结金额:"+account.getFreeze().toString()+",现金流:"+sum);
+								appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), "冻结金额与现金流验证错误,冻结金额:"+account.getFreeze().toString()+",现金流:"+sum);
 							}
 						}
 					}

@@ -87,8 +87,8 @@ public class BugPerformanceTest extends TestSupport{
 		payBackService=context.getBean(IPayBackService.class);
 		payBackDao=context.getBean(IPayBackDao.class);
 //		createLender(10000);
-		all();
-//		System.out.println("所有用户的深层校验结果："+accountCheck());
+//		all();
+		System.out.println("所有用户的深层校验结果："+accountCheck());
 		System.exit(-1);
 	}
 	public static void all()
@@ -342,7 +342,38 @@ public class BugPerformanceTest extends TestSupport{
 					//验证：总金额=可用金额+冻结金额
 					if(account.getFreeze().add(account.getUsable()).compareTo(account.getTotal())!=0)
 					{
-						appendMsg(sBuilder, Lender.class, borrower.getId(), borrower.getThirdPartyAccount(), "账户金额错误,总金额不等于可用金额+冻结金额");
+						appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), "账户金额错误,总金额不等于可用金额+冻结金额");
+					}
+					//可用金额=(充值、取现、冻结、解冻)现金流之和+（支付、还款、存零）现金流之和取反
+					List<Integer> actions=new ArrayList<Integer>();
+					actions.add(CashStream.ACTION_FREEZE);
+					actions.add(CashStream.ACTION_UNFREEZE);
+					actions.add(CashStream.ACTION_CASH);
+					actions.add(CashStream.ACTION_RECHARGE);
+					CashStreamSum sum=cashStreamDao.sumCashStream(null, borrower.getAccountId(), actions);
+					sum=(sum==null)?new CashStreamSum():sum;
+					actions=new ArrayList<Integer>();
+					actions.add(CashStream.ACTION_PAY);
+					actions.add(CashStream.ACTION_REPAY);
+					actions.add(CashStream.ACTION_STORECHANGE);
+					CashStreamSum sum2=cashStreamDao.sumCashStream(null, borrower.getAccountId(), actions);
+					sum2=(sum2==null)?new CashStreamSum():sum2;
+					sum.setChiefAmount(sum.getChiefAmount().add(sum2.getChiefAmount().negate()));
+					sum.setInterest(sum.getInterest().add(sum2.getInterest().negate()));
+					if(account.getUsable().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
+					{
+						appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), "可用金额与现金流验证错误,可用金额:"+account.getUsable().toString()+",现金流:"+sum);
+					}
+					
+					//冻结金额=冻结+解冻
+					actions=new ArrayList<Integer>();
+					actions.add(CashStream.ACTION_FREEZE);
+					actions.add(CashStream.ACTION_UNFREEZE);
+					sum=cashStreamDao.sumCashStream(null, borrower.getAccountId(), actions);
+					sum=(sum==null)?new CashStreamSum():sum;
+					if(account.getFreeze().negate().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
+					{
+						appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), "冻结金额与现金流验证错误,冻结金额:"+account.getFreeze().toString()+",现金流:"+sum);
 					}
 				}
 			}

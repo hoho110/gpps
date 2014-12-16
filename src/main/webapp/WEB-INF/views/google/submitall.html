@@ -36,11 +36,13 @@
 				src="/easyservice/gpps.service.IBorrowerService?json"></script>
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.ISubmitService?json"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.IMyAccountService?json"></script>
 		<script src="js/tool.js"></script>
 		<script src="js/getuser.js"></script>
 		
 		<script>
-		if(buser==null){
+		if(usertype!='borrower'){
 			window.location.href="login.html";
 		}
 		</script>

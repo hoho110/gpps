@@ -7,8 +7,8 @@ _defaultDataTableOLanguage = {
 		"sInfoEmpty" : " ",
 		"sSearch" : "查找： ",
 		"oPaginate" : {
-			"sFirst" : "首页",
-			"sLast" : "末页",
+			"sFirst" : "",
+			"sLast" : "",
 			"sNext" : "下一页",
 			"sPrevious" : "上一页"
 		},
@@ -27,7 +27,7 @@ var defaultSettings = {
 				"bFilter" : false, //是否使用搜索 
 				"bJQueryUI" : true, //页面风格使用jQuery.
 				// "sScrollY": 200,//竖向滚动条 tbody区域的高度
-				"sScrollX" : "100%", //横向滚动条 
+				"sScrollX" : "500px", //横向滚动条 
 				"sScrollXInner" : "100%",
 				"bScrollCollapse" : true,
 				"aoColumns" : [],
@@ -174,15 +174,19 @@ var myactivity = function(container){
 	var refservice = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IActivityRefService");
 	var columns = [ {
 		"sTitle" : "活动标题",
+		"sWidth" : "180px",
 			"code" : "name"
 	}, {
 		"sTitle" : "申请截止时间",
+		"sWidth" : "180px",
 		"code" : "state"
 	}, {
 		"sTitle" : "正式活动时间",
+		"sWidth" : "180px",
 		"code" : "state"
 	}, {
 		"sTitle" : "状态",
+		"sWidth" : "50px",
 		"code" : "state"
 	}];
 	

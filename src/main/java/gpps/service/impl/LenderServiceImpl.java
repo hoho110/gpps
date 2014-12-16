@@ -167,7 +167,10 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 		lenderDao.registerThirdPartyAccount(id, thirdPartyAccount,accountNumber);
 		Lender lender=getCurrentUser();
 		if(lender!=null)
+		{
 			lender.setThirdPartyAccount(thirdPartyAccount);
+			lender.setAccountNumber(accountNumber);
+		}
 	}
 
 	@Override

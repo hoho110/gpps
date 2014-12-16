@@ -355,7 +355,10 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		borrowerDao.registerThirdPartyAccount(id, thirdPartyAccount,accountNumber);
 		Borrower borrower=getCurrentUser();
 		if(borrower!=null)
+		{
 			borrower.setThirdPartyAccount(thirdPartyAccount);
+			borrower.setAccountNumber(accountNumber);
+		}
 	}
 
 	@Override

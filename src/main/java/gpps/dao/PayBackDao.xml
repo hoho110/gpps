@@ -97,6 +97,20 @@
             <![CDATA[and deadline <= #{endtime}]]>
 		</if>
 	</select>
+	<select id="countByBorrowerAndState2" resultType="int">
+		select count(*)
+		from PayBack where
+		borrowerAccountId=#{borrowerAccountId}
+		<if test="state != -1">
+			<![CDATA[and state >= #{state}]]>
+		</if>
+		<if test="starttime != -1">
+            <![CDATA[and deadline >= #{starttime}]]>
+		</if>
+		<if test="endtime != -1">
+            <![CDATA[and deadline <= #{endtime}]]>
+		</if>
+	</select>
 	<select id="sumBorrowerWillBeRepayedPayBacks" resultType="gpps.service.PayBackDetail">
 		select sum(a.chiefamount*b.realAmount/100000) chiefAmount,sum(a.interest*b.realAmount/100000) interest from  PayBack a,Product b where a.productId=b.id
 		and a.borrowerAccountId=#{borrowerAccountId} and b.state=2

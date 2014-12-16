@@ -9,11 +9,11 @@ function header(title){
 //	divtitle.append('<font style="font-size:30px; font-weight:bold; margin-left:15px; color:orange; font-family:SimHei" class="text-muted">政采贷</font><font>&nbsp;&nbsp;信用创造价值</font>');
 	divtitle.append('<img src="img/logo.png" style="max-width:95%;"></img>');
 	if(title=='login' || title=='register'){
-		if(cuser!=null)
+		if(usertype=='lender')
 		{
 			window.location.href="myaccount.html";
-		}else if(buser!=null){
-			window.location.href="index.html";
+		}else if(usertype=='borrower'){
+			window.location.href="baccount.html";
 		}
 		else
 			{
@@ -22,20 +22,20 @@ function header(title){
 	}else if(title=='myaccount'){
 		divusercontent.css('display', 'none');
 	}else if(title=='loan'){
-		if(cuser!=null){
+		if(usertype=='lender'){
 			alert('个人用户无法申请融资，请您先退出再申请！');
 			window.location.href="myaccount.html";
-		}else if(buser!=null){
-			divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
+		}else if(usertype=='borrower'){
+			divusercontent.html(greet()+"企业用户"+user.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
 		}else{
 			divusercontent.html('<a href="login.html" style="color:white;">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="register.html" style="color:white;">注册</a>');
 		}
 	}
 	else{
-	if(cuser!=null){
-		divusercontent.html(greet()+cuser.loginId+'&nbsp;&nbsp;<a style="color:white;" href="myaccount.html?fid=mycenter&sid=letter-unread-mycenter" id="inner_letter"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>&nbsp;'+lettercount+'</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
-	}else if(buser!=null){
-		divusercontent.html(greet()+"企业用户"+buser.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
+	if(usertype=='lender'){
+		divusercontent.html(greet()+user.loginId+'&nbsp;&nbsp;<a style="color:white;" href="myaccount.html?fid=mycenter&sid=letter-unread-mycenter" id="inner_letter"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>&nbsp;'+lettercount+'</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
+	}else if(usertype=='borrower'){
+		divusercontent.html(greet()+"企业用户"+user.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
 	}else{
 		divusercontent.html('<a href="login.html" style="color:white;">登录</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="register.html" style="color:white;">注册</a>');
 	}

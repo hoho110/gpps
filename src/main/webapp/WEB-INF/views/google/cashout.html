@@ -36,6 +36,8 @@
 <script type="text/javascript"
 		src="/easyservice/gpps.dao.IBorrowerAccountDao?json"></script>
 <script type="text/javascript"
+				src="/easyservice/gpps.service.IMyAccountService?json"></script>
+<script type="text/javascript"
         src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
 <script src="js/getuser.js"></script>
 </head>
@@ -93,17 +95,17 @@ $(document).ready(function() {
 	
 	var accountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.ILenderAccountDao");
 	var baccountDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IBorrowerAccountDao");
-	if(cuser==null && buser==null){
+	if(usertype!='lender' && usertype!='borrower'){
 		window.location.href="login.html"; 
 		return;
 	}
 	
 	
 	
-	if(cuser!=null){
-		var thirdPartyAccount = cuser.thirdPartyAccount;
-		var identityCard = cuser.identityCard;
-		var cardbinding = cuser.cardBinding;
+	if(usertype=='lender'){
+		var thirdPartyAccount = user.thirdPartyAccount;
+		var identityCard = user.identityCard;
+		var cardbinding = user.cardBinding;
 		
 		if(identityCard==null || identityCard==''){
 			if(confirm("您尚未实名认证，马上认证?")){
@@ -141,10 +143,10 @@ $(document).ready(function() {
 				window.close();
 			}
 		}
-	}else if(buser!=null){
-		var privilege = buser.privilege;
-		var thirdPartyAccount = buser.thirdPartyAccount;
-		var cardbinding = buser.cardBinding;
+	}else if(usertype=='borrower'){
+		var privilege = user.privilege;
+		var thirdPartyAccount = user.thirdPartyAccount;
+		var cardbinding = user.cardBinding;
 		if(privilege==10){
 			if(confirm("您尚未申请实地净调，马上申请?")){
 				window.location.href="baccount.html";
@@ -189,15 +191,15 @@ $(document).ready(function() {
 	var name="";
 	var cashoutAmount = 0;
 	
-	if(cuser!=null){
-		name = cuser.name==null?cuser.loginId:cuser.name;
-		var account = accountDao.find(cuser.accountId);
+	if(usertype=='lender'){
+		name = user.name==null?user.loginId:user.name;
+		var account = accountDao.find(user.accountId);
 		
 		var usable = account.usable;
 		cashoutAmount = usable.value;
-	}else if(buser!=null){
-		name = buser.name==null?buser.loginId:buser.name;
-		var baccount = baccountDao.find(buser.accountId);
+	}else if(usertype=='borrower'){
+		name = user.loginId;
+		var baccount = baccountDao.find(user.accountId);
 		
 		var usable = baccount.usable;
 		cashoutAmount = usable.value;

@@ -3,19 +3,31 @@ package gpps.service.impl;
 import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.IBorrowerDao;
 import gpps.dao.ICashStreamDao;
+import gpps.dao.IFinancingRequestDao;
+import gpps.dao.IGovermentOrderDao;
+import gpps.dao.IHelpDao;
 import gpps.dao.ILenderAccountDao;
 import gpps.dao.ILenderDao;
+import gpps.dao.ILetterDao;
+import gpps.dao.IPayBackDao;
+import gpps.model.Admin;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
 import gpps.model.CardBinding;
+import gpps.model.CashStream;
 import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
+import gpps.model.Help;
+import gpps.model.Lender;
+import gpps.model.Letter;
 import gpps.model.PayBack;
 import gpps.service.IAccountService;
 import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IHelpService;
+import gpps.service.ILenderService;
 import gpps.service.ILetterService;
+import gpps.service.ILoginService;
 import gpps.service.IMyAccountService;
 import gpps.service.INoticeService;
 import gpps.service.IPayBackService;
@@ -24,10 +36,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 @Service
 public class MyAccountServiceImpl implements IMyAccountService {
+	@Autowired
+	ILenderService lenderService;
 	@Autowired
 	ILenderDao lenderDao;
 	@Autowired
@@ -39,15 +55,49 @@ public class MyAccountServiceImpl implements IMyAccountService {
 	@Autowired
 	IBorrowerAccountDao borrowerAccountDao;
 	@Autowired
-	ILetterService letterService;
+	ILetterDao letterDao;
 	@Autowired
 	IHelpService helpService;
+	@Autowired
+	IHelpDao helpDao;
 	@Autowired
 	IGovermentOrderService orderService;
 	@Autowired
 	IPayBackService paybackService;
 	@Autowired
+	IPayBackDao paybackDao;
+	@Autowired
 	IAccountService accountService;
+	@Autowired
+	IFinancingRequestDao requestDao;
+	@Autowired
+	ICashStreamDao cashStreamDao;
+	
+	
+	@Override
+	public Map<String, Object> getCurrentUser(){
+		Map<String, Object> res = new HashMap<String, Object>();
+		HttpSession session=lenderService.getCurrentSession();
+		if(session==null)
+			return null;
+		Object user=session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+		
+		if(user instanceof Lender){
+			res.put("usertype", "lender");
+			res.put("letter", letterDao.countByReceiver(Letter.MARKREAD_NO, Letter.RECEIVERTYPE_LENDER, ((Lender)user).getId()));
+			
+		}else if(user instanceof Borrower){
+			res.put("usertype", "borrower");
+			res.put("letter", letterDao.countByReceiver(Letter.MARKREAD_NO, Letter.RECEIVERTYPE_BORROWER, ((Borrower)user).getId()));
+		}else if(user instanceof Admin){
+			res.put("usertype", "admin");
+		}else{
+			res.put("usertype", null);
+		}
+		res.put("value", user);
+		
+		return res;
+	}
 	
 	@Override
 	public Map<String, Object> getBAccountMessage() {
@@ -76,71 +126,51 @@ public class MyAccountServiceImpl implements IMyAccountService {
 		message.put("score", borrower.getCreditValue());
 		message.put("level", borrower.getLevel());
 		
-		Map<String, Object> res = letterService.findMyLetters(0, 0, 1);
-		message.put("letters", res.get("total"));
+		message.put("letters", letterDao.countByReceiver(Letter.MARKREAD_NO, Letter.RECEIVERTYPE_BORROWER, borrower.getId()));
+		
+		message.put("helps",  helpDao.countPrivateHelps(-1, Help.QUESTIONERTYPE_BORROWER, borrower.getId()));
 		
 		
-		Map<String, Object> reshelp = helpService.findMyHelps(-1, 0, 1);
-		message.put("helps",  reshelp.get("total"));
 		
 		
-		List<FinancingRequest> requests_init = borrowerService.findMyFinancingRequests(FinancingRequest.STATE_INIT);
-		message.put("request_init", requests_init.size());
+		message.put("request_init", requestDao.findByBorrowerAndState(borrower.getId(), FinancingRequest.STATE_INIT).size());
 		
-		List<FinancingRequest> request_processed = borrowerService.findMyFinancingRequests(FinancingRequest.STATE_PROCESSED);
-		message.put("request_processed", request_processed.size());
+		message.put("request_processed", requestDao.findByBorrowerAndState(borrower.getId(), FinancingRequest.STATE_PROCESSED).size());
 		
-		List<FinancingRequest> request_refused = borrowerService.findMyFinancingRequests(FinancingRequest.STATE_REFUSE);
-		message.put("request_refused", request_refused.size());
+		message.put("request_refused", requestDao.findByBorrowerAndState(borrower.getId(), FinancingRequest.STATE_REFUSE).size());
 		
-		message.put("request_all", requests_init.size()+request_processed.size()+request_refused.size());
+		message.put("request_all", requestDao.findByBorrowerAndState(borrower.getId(), -1).size());
+		
+		
 		
 		List<GovermentOrder> orders_prepublish = orderService.findBorrowerOrderByStates(GovermentOrder.STATE_PREPUBLISH);
-		if(orders_prepublish==null){
-			message.put("orders_prepublish", 0);
-		}else{
-			message.put("orders_prepublish", orders_prepublish.size());
-		}
+		message.put("orders_prepublish", orders_prepublish.size());
 		
 		List<GovermentOrder> orders_financing = orderService.findBorrowerOrderByStates(GovermentOrder.STATE_FINANCING);
-		if(orders_financing==null){
-			message.put("orders_financing", 0);
-		}else{
-			message.put("orders_financing", orders_financing.size());
-		}
+		message.put("orders_financing", orders_financing.size());
 		
 		List<GovermentOrder> orders_repaying = orderService.findBorrowerOrderByStates(GovermentOrder.STATE_REPAYING);
-		if(orders_repaying==null){
-			message.put("orders_repaying", 0);
-		}else{
-			message.put("orders_repaying", orders_repaying.size());
-		}
+		message.put("orders_repaying", orders_repaying.size());
 		
 		List<GovermentOrder> orders_waitingclose = orderService.findBorrowerOrderByStates(GovermentOrder.STATE_WAITINGCLOSE);
-		if(orders_waitingclose==null){
-			message.put("orders_waitingclose", 0);
-		}else{
-			message.put("orders_waitingclose", orders_waitingclose.size());
-		}
+		message.put("orders_waitingclose", orders_waitingclose.size());
 		
 		List<GovermentOrder> orders_close = orderService.findBorrowerOrderByStates(GovermentOrder.STATE_CLOSE);
-		if(orders_waitingclose==null){
-			message.put("orders_close", 0);
-		}else{
-			message.put("orders_close", orders_close.size());
-		}
+		message.put("orders_close", orders_close.size());
 		
-		message.put("pbs_waitforrepay", paybackService.findBorrowerPayBacks(PayBack.STATE_WAITFORREPAY, -1, -1, 0, 1).get("total"));
-		message.put("pbs_finishrepay", paybackService.findBorrowerPayBacks(PayBack.STATE_FINISHREPAY, -1, -1, 0, 1).get("total"));
-		message.put("pbs_waitforcheck", paybackService.findBorrowerPayBacks(PayBack.STATE_WAITFORCHECK, -1, -1, 0, 1).get("total"));
+		
+		message.put("pbs_waitforrepay", paybackDao.countByBorrowerAndState2(borrower.getAccountId(), PayBack.STATE_WAITFORREPAY, -1, -1));
+		message.put("pbs_finishrepay", paybackDao.countByBorrowerAndState2(borrower.getAccountId(), PayBack.STATE_FINISHREPAY, -1, -1));
+		message.put("pbs_waitforcheck", paybackDao.countByBorrowerAndState2(borrower.getAccountId(), PayBack.STATE_WAITFORCHECK, -1, -1));
 		message.put("pbs_canberepayed", paybackService.findBorrowerCanBeRepayedPayBacks().size());
 		message.put("pbs_canberepayedinadvance", paybackService.findBorrowerCanBeRepayedInAdvancePayBacks().size());
 		
 		
-		message.put("cash_recharge", accountService.findBorrowerCashStreamByActionAndState(0,2, 0, 1).get("total"));
-		message.put("cash_withdraw", accountService.findBorrowerCashStreamByActionAndState(5,2, 0, 1).get("total"));
-		message.put("cash_financing", accountService.findBorrowerCashStreamByActionAndState(3,2, 0, 1).get("total"));
-		message.put("cash_payback", accountService.findBorrowerCashStreamByActionAndState(4,2, 0, 1).get("total"));
+		
+		message.put("cash_recharge", cashStreamDao.countByActionAndState(null, borrower.getAccountId(), CashStream.ACTION_RECHARGE, CashStream.STATE_SUCCESS));
+		message.put("cash_withdraw", cashStreamDao.countByActionAndState(null, borrower.getAccountId(), CashStream.ACTION_CASH, CashStream.STATE_SUCCESS));
+		message.put("cash_financing", cashStreamDao.countByActionAndState(null, borrower.getAccountId(), CashStream.ACTION_PAY, CashStream.STATE_SUCCESS));
+		message.put("cash_payback", cashStreamDao.countByActionAndState(null, borrower.getAccountId(), CashStream.ACTION_REPAY, CashStream.STATE_SUCCESS));
 
 		return message;
 	}

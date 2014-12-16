@@ -30,6 +30,8 @@ public interface IPayBackDao {
 	public List<PayBack> findByBorrowerAndState(@Param("borrowerAccountId")Integer borrowerAccountId,@Param("states")List<Integer> states,@Param("starttime")long starttime,@Param("endtime")long endtime,@Param("offset")int offset,@Param("recnum")int recnum);
 	public int countByBorrowerAndState(@Param("borrowerAccountId")Integer borrowerAccountId,@Param("states")List<Integer> states,@Param("starttime")long starttime,@Param("endtime")long endtime);
 	
+	public int countByBorrowerAndState2(@Param("borrowerAccountId")Integer borrowerAccountId,@Param("state")Integer state,@Param("starttime")long starttime,@Param("endtime")long endtime);
+	
 	public PayBackDetail sumBorrowerWillBeRepayedPayBacks(@Param("borrowerAccountId")Integer borrowerAccountId,@Param("states")List<Integer> states,@Param("endtime")long endtime);
 	public PayBackDetail sumBorrowerRepayedPayBacks(@Param("borrowerAccountId")Integer borrowerAccountId,@Param("states")List<Integer> states,@Param("starttime")long starttime);
 	

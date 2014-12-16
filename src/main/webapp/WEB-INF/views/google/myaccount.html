@@ -58,6 +58,8 @@
         src="/easyservice/gpps.service.IHelpService?json"></script>
     <script type="text/javascript"
         src="/easyservice/gpps.service.IActivityRefService?json"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.IMyAccountService?json"></script>
     <script src="js/getuser.js"></script>
     <script src="js/data.js"></script>
     <script src="js/myaccount.js"></script>
@@ -67,14 +69,13 @@
     
     <script>
     var name = "";
-    if (cuser == null && buser == null) {
+    if (usertype!='lender' && usertype!='borrower') {
 		window.location.href = "login.html";
-	}else if(cuser==null){
+	}else if(usertype=='borrower'){
 		window.location.href="baccount.html";
 	}
 	else {
-		name = cuser.name == null ? cuser.loginId
-				: cuser.name;
+		name = user.name == null ? user.loginId : user.name;
 	}
     
     </script>
@@ -457,7 +458,7 @@ a.accordion-toggle {
 							$('#welcome').html(greet() + name+'<a href="javascript:void(0);" id="inner_letter" style="color:#999;"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>&nbsp;'+lettercount+'</a>');
 							
 
-							var account = accountDao.find(cuser.accountId);
+							var account = accountDao.find(user.accountId);
 							var total = account.total;
 						//	$('#total').html((parseFloat(total.value)+0.09).toFixed(0));
 							$('#total').html(total.value);
@@ -478,7 +479,7 @@ a.accordion-toggle {
 						//	$('#totalincome').html((parseFloat(totalincome.value)+0.09).toFixed(0));
 							$('#totalincome').html(totalincome.value);
 							
-							var cardBinding = cuser.cardBinding;
+							var cardBinding = user.cardBinding;
 							if(cardBinding != null){
 								$('#bankcard').html(cardBinding.cardNo);
 								$('#rebind').html('重新绑定');
@@ -489,7 +490,7 @@ a.accordion-toggle {
 							
 
 
-							var identity = cuser.identityCard;
+							var identity = user.identityCard;
 							if (identity != null && identity != "") {
 								$('#idcard').html(identity);
 								$('#bindidcard').html('已绑定');
@@ -506,7 +507,8 @@ a.accordion-toggle {
 								});
 							}
 
-							var spsw = cuser.accountNumber;
+							var spsw = user.accountNumber;
+							
 							
 							if (spsw != null && spsw != "") {
 								$('#tpaccount').html(spsw);

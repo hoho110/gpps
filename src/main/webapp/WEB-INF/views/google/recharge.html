@@ -32,6 +32,8 @@
 				src="/easyservice/gpps.service.IBorrowerService?json"></script>
 <script type="text/javascript"
         src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IMyAccountService?json"></script>
 <script src="js/tool.js"></script>
 <script src="js/getuser.js"></script>
 </head>
@@ -90,15 +92,15 @@ $(document).ready(function() {
 	var rb = getQueryString('rb');
 	
 
-	if(cuser==null && buser==null){
+	if(usertype!='lender' && usertype!='borrower'){
 		window.location.href="login.html"; 
 		return;
 	}
 	
 	
-	if(cuser!=null){
-		var thirdPartyAccount = cuser.thirdPartyAccount;
-		var identityCard = cuser.identityCard;
+	if(usertype=='lender'){
+		var thirdPartyAccount = user.thirdPartyAccount;
+		var identityCard = user.identityCard;
 		
 		if(identityCard==null || identityCard==''){
 			if(confirm("您尚未实名认证，马上认证?")){
@@ -114,9 +116,9 @@ $(document).ready(function() {
 				window.close();
 			}
 		}
-	}else if(buser!=null){
-		var privilege = buser.privilege;
-		var thirdPartyAccount = buser.thirdPartyAccount;
+	}else if(usertype=='borrower'){
+		var privilege = user.privilege;
+		var thirdPartyAccount = user.thirdPartyAccount;
 		if(privilege==10){
 			if(confirm("您尚未申请实地净调，马上申请?")){
 				window.location.href="baccount.html";
@@ -181,29 +183,6 @@ $(document).ready(function() {
             $('#rechargeformdiv').html(content);
             $('#rechargeform').submit();
 		};
-	});
-	
-	$('#success').click(function(e){
-		if(rb==null)
-			window.location.href = "baccount.html?fid=cash";
-		else
-			window.location.href = rb;
-	});
-	
-	$('#fail').click(function(e){
-		if(rb==null)
-			window.location.href = "baccount.html?fid=cash";
-		else
-			window.location.href = rb;
-	});
-	
-	
-	$('#success2').click(function(e){
-		window.location.reload();
-	});
-	
-	$('#fail2').click(function(e){
-			window.location.href = "baccount.html?fid=mycenter";
 	});
 })
 </script>

@@ -48,6 +48,8 @@
 		src="/easyservice/gpps.service.IProductActionService?json"></script>
 <script type="text/javascript"
         src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IMyAccountService?json"></script>
 <script src="js/getuser.js"></script>
     
     <script>
@@ -75,7 +77,7 @@
  		
  	}
  	
- 	if(buser!=null && buser.id==order.borrowerId){
+ 	if(usertype=='borrower' && user.id==order.borrowerId){
  		window.location.href="productdetailfb.html?pid="+pid;
   	}
 	
@@ -504,12 +506,12 @@
  	$('a#invest').click(function(e){
  		if(order.state==1 && (parseInt(product.expectAmount.value)-parseInt(product.realAmount.value))>0)
  		{
- 		if(cuser==null && buser==null){
+ 		if(usertype!='lender' && usertype!='borrower'){
  			if(confirm('登录后才能购买产品，现在登录？')){
  				window.location.href = "login.html?rb=productdetail.html?pid="+pid;
  			}
  			return;
- 		}else if(cuser==null){
+ 		}else if(usertype=='borrower'){
  			alert('企业用户无法投资产品，请登陆个人用户投资！');
  			return;
  		}
@@ -667,13 +669,13 @@
         	 $('a[data-sk=basic]').trigger('click');
         	 
         	 
-     if(cuser==null && buser==null){
+     if(usertype!='lender' && usertype!='borrower'){
     	 $('p#loginstatus').html('<a href="login.html?rb=productdetail.html?pid='+pid+'" style="margin-right:20px;">登录</a>您尚未登录');
-     }else if(cuser==null){
+     }else if(usertype=='borrower'){
     	 $('p#loginstatus').html('<a href="quit.html" style="margin-right:20px;">退出</a>企业用户无法投资');
      }
      else{
-    	 var account = accountDao.find(cuser.accountId);
+    	 var account = accountDao.find(user.accountId);
     	 $('p#loginstatus').html('<a href="recharge.html" target="_blank" style="margin-right:20px;">充值</a>账户可用余额：<span class="amountFormat">'+account.usable.value+'</span> 元');
      }
      

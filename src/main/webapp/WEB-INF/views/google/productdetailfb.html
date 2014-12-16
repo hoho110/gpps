@@ -47,6 +47,8 @@
 		src="/easyservice/gpps.service.IBorrowerService?json"></script>	
 <script type="text/javascript"
 		src="/easyservice/gpps.service.IProductActionService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IMyAccountService?json"></script>
 		<script src="js/getuser.js"></script>				
 
 
@@ -82,7 +84,7 @@
  		
  	}
  	
- 	if(buser==null || buser.id!=order.borrowerId){
+ 	if(usertype!='borrower' || user.id!=order.borrowerId){
   		window.location.href="productdetail.html?pid="+pid;
   	}
  	
@@ -673,13 +675,13 @@
         	 $('a[data-sk=payback]').trigger('click');
         	 
         	 
-     if(cuser==null && buser==null){
+     if(usertype!='lender' && usertype!='borrower'){
     	 $('p#loginstatus').html('<a href="login.html?rb=productdetail.html?pid='+pid+'" style="margin-right:20px;">登录</a>您尚未登录');
-     }else if(cuser==null){
+     }else if(usertype=='borrower'){
     	 $('p#loginstatus').html('<a href="quit.html" style="margin-right:20px;">退出</a>企业用户无法投资');
      }
      else{
-    	 var account = accountDao.find(cuser.accountId);
+    	 var account = accountDao.find(user.accountId);
     	 $('p#loginstatus').html('<a href="recharge.html" target="_blank" style="margin-right:20px;">充值</a>账户可用余额：<span class="amountFormat">'+account.usable.value+'</span> 元');
      }
      

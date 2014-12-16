@@ -73,14 +73,13 @@
 	
 	<script>
 	var name = "";
-	if (cuser == null && buser == null) {
+	if (usertype!='lender' && usertype!='borrower') {
 		window.location.href = "login.html";
-	}else if(buser==null){
+	}else if(usertype=='lender'){
 		window.location.href="myaccount.html";
 	}
 	else {
-		name = buser.name == null ? buser.loginId
-				: buser.name;
+		name = user.loginId;
 	}
 	</script>
 

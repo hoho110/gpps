@@ -73,14 +73,13 @@
 	
 	<script>
 	var name = "";
-	if (cuser == null && buser == null) {
+	if (usertype!='lender' && usertype!='borrower') {
 		window.location.href = "login.html";
-	}else if(buser==null){
+	}else if(usertype=='lender'){
 		window.location.href="myaccount.html";
 	}
 	else {
-		name = buser.name == null ? buser.loginId
-				: buser.name;
+		name = user.loginId;
 	}
 	</script>
 
@@ -532,7 +531,7 @@ a.accordion-toggle {
 								
 							}
 							
-							var authorizeTypeOpen = message.authorize;
+							var authorizeTypeOpen = message.get('authorize');
 							if(authorizeTypeOpen!=2){
 								$('#giveauth').html('未授权');
 								$('#togive').click(function(e){

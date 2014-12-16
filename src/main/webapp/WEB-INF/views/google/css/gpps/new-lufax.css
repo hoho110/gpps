@@ -239,8 +239,14 @@
 	BORDER-BOTTOM-COLOR: #fff; BORDER-TOP-COLOR: #fff; BORDER-RIGHT-COLOR: #fff; BORDER-LEFT-COLOR: #389404
 }
 .news-notice .news-notice-list LI A {
-	WIDTH: 235px; TEXT-OVERFLOW: ellipsis; DISPLAY: inline-block; WHITE-SPACE: nowrap; COLOR: #333; VERTICAL-ALIGN: middle; OVERFLOW: hidden
+	max-WIDTH: 235px; TEXT-OVERFLOW: ellipsis; text-decoration:none; DISPLAY: inline-block; WHITE-SPACE: nowrap; COLOR: #333; VERTICAL-ALIGN: middle; OVERFLOW: hidden
 }
+
+.news-notice .news-notice-list LI A:hover {
+	TEXT-DECORATION: none;
+	color:#2438cd;
+}
+
 .news-notice .news-notice-head {
 	BORDER-BOTTOM: #d9d9d9 1px solid; PADDING-BOTTOM: 0px; LINE-HEIGHT: 32px; BACKGROUND-COLOR: #f5f5f5; PADDING-LEFT: 15px; PADDING-RIGHT: 10px; DISPLAY: block; HEIGHT: 32px; PADDING-TOP: 0px
 }

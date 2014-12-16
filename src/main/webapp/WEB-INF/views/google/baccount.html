@@ -9,15 +9,16 @@
 
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<link href="css/index/justified-nav.css" rel="stylesheet">
-<link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+
+<link rel="stylesheet" type="text/css" href="css/gpps/lufax-main.css">
+    <link rel="stylesheet" type="text/css" href="css/gpps/new-lufax.css">
+    <link rel="stylesheet" type="text/css" href="css/gpps/productlist.css">
+
 
 <link href="css/mine.css" rel="stylesheet">
 <link href="css/plugins/dataTables/jquery.dataTables.css" rel="stylesheet">
 
 <link href="css/plist/a.css" rel="stylesheet">
-    <link href="css/plist/creditlevel.css" rel="stylesheet">
-    <link href="css/plist/progressbar.css" rel="stylesheet">
 <link href="css/myaccount/myaccount.css" rel="stylesheet">
 
 <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -65,6 +66,8 @@
         src="/easyservice/gpps.service.INoticeService?json"></script>
 	<script type="text/javascript"
         src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.IMyAccountService?json"></script>
 	<script src="js/baccount.js"></script>
 	<script src="js/getuser.js"></script>
 	
@@ -117,63 +120,106 @@ a.accordion-toggle {
 
 				<div class="row">
 					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-						<div id="account_total" class="col-xs-8 col-md-8"
-							style="BACKGROUND-COLOR: #fef9f1; padding-top: 10px;">
-							<div class="col-xs-7 col-md-7">
-								<div>
-									<strong id="welcome"></strong> <a
-										style="margin-left: 50px;" href="resetbpsw.html">修改密码</a> <a
-										style="margin-left: 20px;" href="quit.html">退出</a>
+						<div id="account_total" class="col-xs-12 col-sm-12 col-md-9"
+							style="padding-top: 10px; padding-left:0px; padding-right:0px;">
+							
+							<div class="col-xs-12 col-md-12" style="padding-top:5px; padding-left:0px; padding-right:0px; background-color: #CCFFFF; height:30px;">
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="padding-left:0px; padding-right:0px;">
+									<span id="welcome" style="padding-left:15px;"></span>
 								</div>
-								
-								<div style="margin-top: 25px;">
-									<span class="grey">企业名称：<span class="orange" id="companyname"></span>
-									</span>
-								</div>
-								
-								<div style="margin-top: 5px;">
-									<span class="grey">营业执照：<span class="orange" id="license"></span>
-									</span>
-								</div>
-
-								<div style="margin-top: 7px;">
-									<span class="grey">总资产 ： <span class="green" id="total"></span>元
-									</span> &nbsp;&nbsp;|&nbsp;&nbsp; <span class="grey">可用余额：<span
-										class="green" id="usable"></span>元
-									</span>
-								</div>
-
-
-								<div style="margin-top: 5px;">
-									<span class="grey">冻结金额：<span class="freeze" id="freeze"></span>元
-									</span>
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="padding-left:0px; padding-right:15px; text-align:right">
+									<a href="resetbpsw.html" style="color:#999;">修改密码</a> 
+									<a style="margin-left: 20px; color:#999;" href="quit.html">退出</a>
 								</div>
 							</div>
 							
 							
-							<div class="col-xs-5 col-md-5">
-								<div style="margin-top: 5px;">
-									<span class="grey">开户银行：<span class="grey" id="bankname"></span>
-									</span>
-									<div style="clear:both;"></div>
-								</div>
-								<div style="margin-top: 5px;">
-									<span class="grey">开户卡号：<span class="grey" id="bankcard"></span>
-									</span>
-									<div style="clear:both;"></div>
+							<div class="col-xs-12 col-md-7" style="padding-left:15px; padding-right:0px;">
+								
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
+									<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">企业名称： </span>
+									</div>
+									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px white; padding-right:5px;">
+									<span class="orange" id="companyname"></span>
+									</div>
 								</div>
 								
-								<div style="margin-top: 15px;">
-									<span class="grey">钱多多账户：<span class="grey" id="tpaccount"></span>
-									</span><button id="loginmmm" style="float:right;">登录钱多多</button>
-									<div style="clear:both;"></div>
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
+									<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">营业执照：</span>
+									</div>
+									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px white; padding-right:5px;">
+									<span class="orange" id="license"></span>
+									</div>
 								</div>
 								
-								<div style="margin-top: 5px;">
-									<span class="grey">授权还款：<span class="grey" id="giveauth"></span>
-									</span><button id="togive" style="float:right;">授权</button>
-									<div style="clear:both;"></div>
+								
+								<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="margin-top:5px; padding-left:0px; padding-right:0px;">
+									<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">总资产 ： </span>
+									</div>
+									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px white; padding-right:5px;">
+									<span class="orange" id="total"></span>元
+									</div>
 								</div>
+
+								<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="margin-top:5px; padding-left:0px; padding-right:0px;">
+									<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">冻结金额：</span>
+									</div>
+									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px white; padding-right:5px;">
+									<span class="orange" id="freeze"></span>元
+									</div>
+								</div>
+							</div>
+							
+							
+							<div class="col-xs-12 col-md-5" style="padding-left:15px; padding-right:0px;">
+								
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px; vertical-align : center;">
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">开户银行：</span>
+									</div>
+									<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9" style="border:solid 1px white; padding-left:2px; padding-right:2px;">
+									<div class="grey" id="bankname" style="margin-bottom:0px;"></div>
+									</div>
+								</div>
+								
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px; vertical-align : center;">
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">开户卡号：</span>
+									</div>
+									<div class="col-xs-9 col-sm-9 col-md-9 col-lg-9" style="border:solid 1px white; padding-left:2px; padding-right:2px;">
+									<div class="grey" id="bankcard" style="margin-bottom:0px;"></div>
+									</div>
+								</div>
+								
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">钱多多号</span>
+									</div>
+									<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border:solid 1px white; padding-left:2px; padding-right:2px;">
+									<span class="grey" id="tpaccount"></span>
+									</div>
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
+									<button id="loginmmm" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%; padding-left:0px; padding-right:0px;">登录</button>
+									</div>
+								</div>
+								
+								
+								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px;">
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">授权还款</span>
+									</div>
+									<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border:solid 1px white; padding-left:2px; padding-right:2px;">
+									<span class="grey" id="giveauth"></span>
+									</div>
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
+									<button id="togive" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%; padding-left:0px; padding-right:0px;">授权</button>
+									</div>
+								</div>
+								
 							</div>
 							
 							
@@ -181,7 +227,7 @@ a.accordion-toggle {
 								<div class="btn-group btn-group-lg  btn-group-justified"
 									style="padding-bottom: 5px; margin-top: 10px;">
 									<div class="btn-group">
-										<a class="btn btn-success btn-lg" href="recharge.html" target="_blank" id="recharge">充值</a>
+										<a class="btn btn-warning btn-lg" href="recharge.html" target="_blank" id="recharge">充值</a>
 									</div>
 									<div class="btn-group">
 										<a class="btn btn-default btn-lg" href="cashout.html" target="_blank" id="cashout">提现</a>
@@ -189,67 +235,54 @@ a.accordion-toggle {
 								</div>
 							</div>
 						</div>
-						<div class="col-xs-4 col-md-4">
-							<div class="col-xs-4 col-md-4" style="padding-top: 20px;">
-								<img src="img/phone.jpg" style="width: 80px; height: 100px;"></img>
+						<div class="hidden-xs hidden-sm col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
+							<div class="col-xs-12 col-md-12" style="padding-top: 10px; text-align:center; font-size:20px; font-weight:bold; color:#999;">
+								融资前准备
+							</div>
+							
+							<div class="col-xs-4 col-md-4" style="padding-top: 10px;">
+								<img src="img/people.png" style="width: 40px; height: 40px;"></img>
 								<div
 									style="color: green; font-size: 12px; font-weight: bold; margin-top: 5px; z-index: 1000">
-									<span class="glyphicon glyphicon-ok"></span> 手机已绑定
+									 平台注册
 								</div>
 							</div>
-							<div class="col-xs-4 col-md-4" style="padding-top: 20px;">
-								<a id="identity" title="" href="#"><img
-									id="identity" src="img/people.png"
-									style="width: 80px; height: 100px;"></img></a>
+							
+							<div class="col-xs-4 col-md-4" style="padding-top: 10px;">
+								<a id="identity" title="点击申请净调" href="#"><img
+									id="identity" src="img/identity.jpg"
+									style="width: 40px; height: 40px;"></img></a>
 								<div id="identity"
 									style="color: red; font-size: 12px; font-weight: bold; margin-top: 5px;">
 									
 								</div>
 							</div>
-							<div class="col-xs-4 col-md-4" style="padding-top: 20px;">
+							
+							
+							<div class="col-xs-4 col-md-4" style="padding-top: 10px;">
 								<a id="spsw" title="点击开通第三方账户" href="#" data-sk='none'><img
-									id="spsw" src="img/sanfang_n.jpg"
-									style="width: 80px; height: 100px;"></img></a>
+									id="spsw" src="img/qdd.jpg"
+									style="width: 40px; height: 40px;"></img></a>
 								<div id="spsw"
 									style="color: red; font-size: 12px; font-weight: bold; margin-top: 5px;">
-									<span class="glyphicon glyphicon-remove"></span> 第三方账户未开通
+									 开通第三方
 								</div>
 								<div id="spswformdiv" style="display:none">
 								</div>
+							</div>
+							
+							<div class="col-xs-12 col-md-12" style="padding-top: 35px; text-align:center;">
+								<a class="btn btn-warning btn-lg" href="loan.html" id="loan" style="width:80%">马上融资</a>
 							</div>
 						</div>
 						<div style="clear: both;"></div>
 					</div>
 				</div>
 
-
-				<div class="row">
-					<div class="col-xs-2 col-md-2" style="padding-right: 0px;">
-
-
-						<div class="btn-group-vertical"
-							style="width: 100%; margin-top: 42px;">
-							<button type="button" id="bcenter"
-								class="btn nav-first btn-default btn-lg">企业中心</button>
-							<button type="button" id="request"
-								class="btn nav-first btn-default btn-lg">融资申请</button>
-							<button type="button" id="order"
-								class="btn nav-first btn-default btn-lg">订单查看</button>
-							<button type="button" id="payback"
-								class="btn nav-first btn-default btn-lg">还款查看</button>
-							<button type="button" id="cash"
-								class="btn nav-first btn-default btn-lg">资金查看</button>
-						</div>
-
-					</div>
-					<div class="col-xs-10 col-md-10" style="padding-left: 0px;">
-						<div class="col-xs-12 col-md-12" id="nav_level2"></div>
-
-						<div class="col-xs-12 col-md-12" id="content"
-							style="min-height: 400px; border: #eee solid 1px;"></div>
-
-					</div>
+				<div class="row" id="messagearea" style="margin-top:20px;">
+					
 				</div>
+
 
 
 
@@ -348,6 +381,103 @@ a.accordion-toggle {
 
 
 
+<textarea id="messagearea_template" style="display:none;">
+			<div class="col-xs-12 col-md-4">
+						<div class="news-notice sidebar-panels"
+				style="margin-left: 15px; margin-right: 15px;">
+							<a href="intro/help.html" target="_blank"
+					class="news-notice-head clearfix"> <span class="info">企业中心</span>
+								<span class="more">&gt;</span>
+							</a>
+
+							<div class="news-notice-body">
+								<ul class="news-notice-list faq-list" id="cjquestion">
+									<li><b></b>您好，+-message.get('companyname')-+</li>
+									<li><b></b><a href="#" target="_blank">积分+-message.get('score')-+分，等级level+-message.get('level')-+</a></li>
+									<li><b></b><a href="#" target="_blank">系统公告5条</a></li>
+									<li><b></b><a href="#" target="_blank">站内信+-message.get('letters')-+条未读</a></li>
+									<li><b></b><a href="#" target="_blank">我的问题+-message.get('helps')-+条</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-xs-12 col-md-4">
+						<div class="news-notice sidebar-panels"
+				style="margin-left: 15px; margin-right: 15px;">
+							<a href="intro/help.html" target="_blank"
+					class="news-notice-head clearfix"> <span class="info">我的订单</span>
+								<span class="more">&gt;</span>
+							</a>
+
+							<div class="news-notice-body">
+								<ul class="news-notice-list faq-list" id="cjquestion" style="padding-right: 10px;">
+									<li><b></b><a href="#" target="_blank">预览中+-message.get('orders_prepublish')-+条</a></li>
+									<li><b></b><a href="#" target="_blank">融资中+-message.get('orders_financing')-+条</a></li>
+									<li><b></b><a href="#" target="_blank">还款中+-message.get('orders_repaying')-+条</a></li>
+									<li><b></b><a href="#" target="_blank">待关闭+-message.get('orders_waitingclose')-+条</a></li>
+									<li><b></b><a href="#" target="_blank">已关闭+-message.get('orders_close')-+条</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-4">
+						<div class="news-notice sidebar-panels"
+				style="margin-left: 15px; margin-right: 15px;">
+							<a href="intro/help.html" target="_blank"
+					class="news-notice-head clearfix"> <span class="info">还款查看</span>
+								<span class="more">&gt;</span>
+							</a>
+
+							<div class="news-notice-body">
+								<ul class="news-notice-list faq-list" id="cjquestion" style="padding-right: 10px;">
+									<li><b></b><a href="#" target="_blank">待还款笔数+-message.get('pbs_waitforrepay')-+笔</a></li>
+									<li><b></b><a href="#" target="_blank">已还款笔数+-message.get('pbs_finishrepay')-+笔</a></li>
+									<li><b></b><a href="#" target="_blank">审核中还款+-message.get('pbs_waitforcheck')-+笔</a></li>
+									<li><b></b><a href="#" target="_blank">可执行还款+-message.get('pbs_canberepayed')-+笔</a></li>
+									<li><b></b><a href="#" target="_blank">可申请提前+-message.get('pbs_canberepayedinadvance')-+笔</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-4">
+						<div class="news-notice sidebar-panels"
+				style="margin-left: 15px; margin-right: 15px;">
+							<a href="intro/help.html" target="_blank"
+					class="news-notice-head clearfix"> <span class="info">融资申请</span>
+								<span class="more">&gt;</span>
+							</a>
+
+							<div class="news-notice-body">
+								<ul class="news-notice-list faq-list" id="cjquestion">
+									<li><b></b><a href="#" target="_blank">全部申请+-message.get('request_all')-+条</a></li>
+									<li><b></b><a href="#" target="_blank">待审核中+-message.get('request_init')-+条</a></li>
+									<li><b></b><a href="#" target="_blank">审核通过+-message.get('request_processed')-+条</a></li>
+									<li><b></b><a href="#" target="_blank">审核拒绝+-message.get('request_refused')-+条</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-4">
+						<div class="news-notice sidebar-panels"
+									style="margin-left: 15px; margin-right: 15px;">
+							<a href="intro/help.html" target="_blank"
+					class="news-notice-head clearfix"> <span class="info">资金查看</span>
+								<span class="more">&gt;</span>
+							</a>
+
+							<div class="news-notice-body">
+								<ul class="news-notice-list faq-list" id="cjquestion" style="padding-right: 10px;">
+									<li><b></b><a href="baccountdetail.html?fid=cash&sid=cash-recharge" target="_blank">充值+-message.get('cash_recharge')-+笔</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=cash&sid=cash-withdraw" target="_blank">提现+-message.get('cash_withdraw')-+笔</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=cash&sid=cash-financing" target="_blank">融资+-message.get('cash_financing')-+笔</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=cash&sid=cash-payback" target="_blank">还款+-message.get('cash_payback')-+笔</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+</textarea>
+
 
 
 	
@@ -364,33 +494,37 @@ a.accordion-toggle {
 							var accountDao = EasyServiceClient
 									.getRemoteProxy("/easyservice/gpps.dao.IBorrowerAccountDao");
 							
+							var myaccountService = EasyServiceClient
+							.getRemoteProxy("/easyservice/gpps.service.IMyAccountService");
 							
-							$('#welcome').html(greet() + name);
-
-							var account = accountDao.find(buser.accountId);
-							var total = account.total;
-							$('#total').html(total.value);
-
-							var usable = account.usable;
-							$('#usable').html(usable.value);
-
-							var freeze = account.freeze;
-							$('#freeze').html(freeze.value);
-
-							var used = 0;
-							$('#used').html(used);
-
-							var totalincome = 0;
-							$('#totalincome').html(totalincome);
-							
-							$('#companyname').html(buser.companyName);
-							$('#license').html(buser.license);
+							try{
+							var message = myaccountService.getBAccountMessage();
+							}catch(e){
+								alert(e.message);
+							}
 							
 							
-							var cardBinding = buser.cardBinding;
-							if(cardBinding != null){
-								$('#bankname').html(cardBinding.branchBankName);
-								$('#bankcard').html(cardBinding.cardNo);
+							var ctx = new EasyServiceClient.newContext();
+							ctx.message = message;
+							ejs.renderComplexNode("#messagearea_template", "#messagearea", ctx);
+							
+							
+							$('#welcome').html(greet() + message.get('name'));
+
+							$('#total').html(message.get('total').value);
+
+
+							$('#freeze').html(message.get('freeze').value);
+
+							$('#companyname').html(message.get('companyname'))
+							
+							$('#license').html(message.get('license'));
+							
+							
+							var bankcode = message.get('bankcode');
+							if(bankcode != null){
+								$('#bankname').html(message.get('bankname'));
+								$('#bankcard').html(bankcode);
 								
 							}else{
 								$('#bankname').html('暂未绑定');
@@ -398,7 +532,7 @@ a.accordion-toggle {
 								
 							}
 							
-							var authorizeTypeOpen = buser.authorizeTypeOpen;
+							var authorizeTypeOpen = message.authorize;
 							if(authorizeTypeOpen!=2){
 								$('#giveauth').html('未授权');
 								$('#togive').click(function(e){
@@ -426,17 +560,17 @@ a.accordion-toggle {
 							}
 
 
-							var privilege = buser.privilege;
+							var privilege = message.get('privilege');
 							if (privilege == 10) {
 								$('img#identity').attr('src', 'img/people.png').attr('title', '点击申请').attr('disabled', 'disabled');
 								$('a#identity').attr('href', '#');
 								$('div#identity').css('color', 'red')
-										.html('<span class="glyphicon glyphicon-remove"></span>未申请实地考察')
+										.html('未申请实地考察')
 								$('a#identity').click(function(e){
 									if(confirm('马上申请实地考察?')){
 									bservice.applyForFunding();
 									$('div#identity').css('color', 'red')
-									.html('<span class="glyphicon glyphicon-remove"></span>待实地考察');
+									.html('待实地考察');
 									}
 								})
 							}else if(privilege==14){
@@ -444,12 +578,12 @@ a.accordion-toggle {
 								$('img#identity').attr('src', 'img/people.png').attr('title', '点击申请').attr('disabled', 'disabled');
 								$('a#identity').attr('href', '#');
 								$('div#identity').css('color', 'red')
-										.html('<span class="glyphicon glyphicon-remove"></span>审核未通过');
+										.html('审核未通过');
 								$('a#identity').click(function(e){
 									if(confirm('马上申请实地考察?')){
 									bservice.applyForFunding();
 									$('div#identity').css('color', 'red')
-									.html('<span class="glyphicon glyphicon-remove"></span>待实地考察');
+									.html('待实地考察');
 									}
 								})
 							}
@@ -457,19 +591,21 @@ a.accordion-toggle {
 								$('img#identity').attr('src', 'img/people.png').attr('title', '待实地考察').attr('disabled', 'disabled');
 								$('a#identity').attr('href', '#');
 								$('div#identity').css('color', 'red')
-										.html('<span class="glyphicon glyphicon-remove"></span>待实地考察')
+										.html('待实地考察')
 							}else if(privilege==12){
 								$('img#identity').attr('src', 'img/people.jpg').attr('title', '实地考察已完成').attr('disabled', 'disabled');
 								$('a#identity').attr('href', '#');
 								$('div#identity').css('color', 'green')
-										.html('<span class="glyphicon glyphicon-ok"></span>实地考察已完成')
+										.html('实地考察已完成')
 							}
 
-							var spsw = buser.thirdPartyAccount;
+							
+							
+							var spsw = message.get('qdd');
 							if (spsw != null && spsw != "") {
 								$('#tpaccount').html(spsw);
 								$('#loginmmm').click(function(e){
-									window.open('http://218.4.234.150:88/main');
+									window.open('http://218.4.234.150:88/main?accountname='+spsw);
 								})
 								
 								
@@ -477,7 +613,7 @@ a.accordion-toggle {
 								$('a#spsw').attr('href', '#').attr('data-sk',
 										'done');
 								$('div#spsw').css('color', 'green')
-										.html('<span class="glyphicon glyphicon-ok"></span>第三方账户已开通')
+										.html('第三方账户已开通')
 							}else{
 								$('#tpaccount').html("暂未开通");
 								$('#loginmmm').html('马上注册');

@@ -18,6 +18,7 @@
 			<PermissionRule  entityLimitType="gpps.service.IBorrowerService" operations="register;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel"/>
 			<PermissionRule  entityLimitType="gpps.service.IGovermentOrderService" operations="findByStates;findByBorrowerIdAndStates;findGovermentOrderByProductSeries;findByStatesByPage;findGovermentOrderByProduct;findMimeItems;"/>
 			<PermissionRule  entityLimitType="gpps.service.IProductService" operations="find;findByGovermentOrder;findByStates;findByProductSeriesAndStates;findByProductId;findMimeItems"/>
+			<PermissionRule  entityLimitType="IActivityService" operations="find;findByState;findMimeItem"/>
 		</permissionRules>
 	</Role>
 	<!-- ******************************Lender********************************* -->
@@ -27,6 +28,7 @@
         	<PermissionRule  entityLimitType="gpps.service.IGovermentOrderService" operations="findByStates;findByBorrowerIdAndStates;findGovermentOrderByProductSeries;findByStatesByPage;findGovermentOrderByProduct;findMimeItems;"/>
 			<PermissionRule  entityLimitType="gpps.service.IProductService" operations="find;findByGovermentOrder;findByStates;findByProductSeriesAndStates;findByProductId;findMimeItems"/>
 			<PermissionRule  entityLimitType="gpps.service.ISubmitService"/>
+			<PermissionRule  entityLimitType="IAccountService" operations="findLenderCashStreamByActionAndState;findLenderRepayCashStream;findLenderWaitforRepay;getLenderRepayedDetail;getLenderWillBeRepayedDetail;checkThroughThirdPlatform"></PermissionRule>
         </permissionRules>
     </Role>
 <!--     <Role privilege = "1" limitedType="0"> -->
@@ -35,24 +37,18 @@
 <!--         </permissionRules> -->
 <!--     </Role> -->
 	<!-- ******************************Borrower********************************* -->
-	<Role privilege = "10" limitedType="0">
+	<Role privilege = "10|11|14" limitedType="0">
         <permissionRules>
-        
-        </permissionRules>
-    </Role>
-    <Role privilege = "11" limitedType="0">
-        <permissionRules>
-        
+		 	<PermissionRule  entityLimitType="gpps.service.ILenderService" operations="register;registerSecondStep;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel"/>
+			<PermissionRule  entityLimitType="gpps.service.IBorrowerService" operations="register;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel"/>
+			<PermissionRule  entityLimitType="gpps.service.IGovermentOrderService" operations="findByStates;findByBorrowerIdAndStates;findGovermentOrderByProductSeries;findByStatesByPage;findGovermentOrderByProduct;findMimeItems;"/>
+			<PermissionRule  entityLimitType="gpps.service.IProductService" operations="find;findByGovermentOrder;findByStates;findByProductSeriesAndStates;findByProductId;findMimeItems"/>       
         </permissionRules>
     </Role>
     <Role privilege = "12" limitedType="0">
         <permissionRules>
-        
-        </permissionRules>
-    </Role>
-    <Role privilege = "14" limitedType="0">
-        <permissionRules>
-        
+        	<PermissionRule  entityLimitType="gpps.service.IBorrowerService"/>
+        	<PermissionRule  entityLimitType="IAccountService" operations="findBorrowerCashStreamByActionAndState;getBorrowerRepayedDetail;getBorrowerWillBeRepayedDetail;checkThroughThirdPlatform"></PermissionRule>
         </permissionRules>
     </Role>
     <!-- ******************************管理员********************************* -->

@@ -1,5 +1,7 @@
 package com.easyservice.security;
 
+import gpps.tools.StringUtil;
+
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -48,8 +50,13 @@ public class AuthorityValidateServiceImpl implements IAuthorityValidateService{
 		if(roles==null||roles.size()==0)
 			return null;
 		for (Role role : config.roles) {
-			if (role.getPrivilege()==privilege) {
-				return role;
+			if(StringUtil.isEmpty(role.getPrivilege()))
+				continue;
+			String[] privileges=role.getPrivilege().split("//|");
+			for(String str:privileges)
+			{
+				if(str.equals(String.valueOf(privilege)))
+					return role;
 			}
 		}
 		return null;

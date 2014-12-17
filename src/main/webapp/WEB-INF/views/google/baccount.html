@@ -140,7 +140,7 @@ a.accordion-toggle {
 									<span class="grey">企业名称： </span>
 									</div>
 									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px white; padding-right:5px;">
-									<span class="orange" id="companyname"></span>
+									<span class="grey" id="companyname"></span>
 									</div>
 								</div>
 								
@@ -149,7 +149,7 @@ a.accordion-toggle {
 									<span class="grey">营业执照：</span>
 									</div>
 									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px white; padding-right:5px;">
-									<span class="orange" id="license"></span>
+									<span class="grey" id="license"></span>
 									</div>
 								</div>
 								
@@ -160,6 +160,15 @@ a.accordion-toggle {
 									</div>
 									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px white; padding-right:5px;">
 									<span class="orange" id="total"></span>元
+									</div>
+								</div>
+
+								<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="margin-top:5px; padding-left:0px; padding-right:0px;">
+									<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">可用金额：</span>
+									</div>
+									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8" style="border:solid 1px white; padding-right:5px;">
+									<span class="orange" id="usable"></span>元
 									</div>
 								</div>
 
@@ -392,10 +401,10 @@ a.accordion-toggle {
 							<div class="news-notice-body">
 								<ul class="news-notice-list faq-list" id="cjquestion">
 									<li><b></b>您好，+-message.get('companyname')-+</li>
-									<li><b></b><a href="#" target="_blank">积分+-message.get('score')-+分，等级level+-message.get('level')-+</a></li>
-									<li><b></b><a href="#" target="_blank">系统公告5条</a></li>
-									<li><b></b><a href="#" target="_blank">站内信+-message.get('letters')-+条未读</a></li>
-									<li><b></b><a href="#" target="_blank">我的问题+-message.get('helps')-+条</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=bcenter&sid=my-score" target="_blank">积分+-message.get('score')-+分，等级level+-message.get('level')-+</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=bcenter&sid=notice-view" target="_blank">查看系统公告</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=bcenter&sid=letter-unread-mycenter" target="_blank">站内信<span style="color:red; font-size:18px;">+-message.get('letters')-+</span>条未读</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=bcenter&sid=question-view" target="_blank">我的问题+-message.get('helps')-+条</a></li>
 								</ul>
 							</div>
 						</div>
@@ -411,11 +420,11 @@ a.accordion-toggle {
 
 							<div class="news-notice-body">
 								<ul class="news-notice-list faq-list" id="cjquestion" style="padding-right: 10px;">
-									<li><b></b><a href="#" target="_blank">预览中+-message.get('orders_prepublish')-+条</a></li>
-									<li><b></b><a href="#" target="_blank">融资中+-message.get('orders_financing')-+条</a></li>
-									<li><b></b><a href="#" target="_blank">还款中+-message.get('orders_repaying')-+条</a></li>
-									<li><b></b><a href="#" target="_blank">待关闭+-message.get('orders_waitingclose')-+条</a></li>
-									<li><b></b><a href="#" target="_blank">已关闭+-message.get('orders_close')-+条</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=order&sid=order-preview" target="_blank">预览中+-message.get('orders_prepublish')-+条</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=order&sid=order-financing" target="_blank">融资中+-message.get('orders_financing')-+条</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=order&sid=order-paying" target="_blank">还款中+-message.get('orders_repaying')-+条</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=order&sid=order-toclose" target="_blank">待关闭+-message.get('orders_waitingclose')-+条</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=order&sid=order-closed" target="_blank">已关闭+-message.get('orders_close')-+条</a></li>
 								</ul>
 							</div>
 						</div>
@@ -430,11 +439,11 @@ a.accordion-toggle {
 
 							<div class="news-notice-body">
 								<ul class="news-notice-list faq-list" id="cjquestion" style="padding-right: 10px;">
-									<li><b></b><a href="#" target="_blank">待还款笔数+-message.get('pbs_waitforrepay')-+笔</a></li>
-									<li><b></b><a href="#" target="_blank">已还款笔数+-message.get('pbs_finishrepay')-+笔</a></li>
-									<li><b></b><a href="#" target="_blank">审核中还款+-message.get('pbs_waitforcheck')-+笔</a></li>
-									<li><b></b><a href="#" target="_blank">可执行还款+-message.get('pbs_canberepayed')-+笔</a></li>
-									<li><b></b><a href="#" target="_blank">可申请提前+-message.get('pbs_canberepayedinadvance')-+笔</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=payback&sid=payback-to" target="_blank">待还款笔数+-message.get('pbs_waitforrepay')-+笔</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=payback&sid=payback-have" target="_blank">已还款笔数+-message.get('pbs_finishrepay')-+笔</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=payback&sid=payback-toaudit" target="_blank">审核中还款+-message.get('pbs_waitforcheck')-+笔</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=payback&sid=payback-canpay" target="_blank">可执行还款<span style="color:red; font-size:18px;">+-message.get('pbs_canberepayed')-+</span>笔</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=payback&sid=payback-canapply" target="_blank">可申请提前<span style="color:red; font-size:18px;">+-message.get('pbs_canberepayedinadvance')-+</span>笔</a></li>
 								</ul>
 							</div>
 						</div>
@@ -449,10 +458,10 @@ a.accordion-toggle {
 
 							<div class="news-notice-body">
 								<ul class="news-notice-list faq-list" id="cjquestion">
-									<li><b></b><a href="#" target="_blank">全部申请+-message.get('request_all')-+条</a></li>
-									<li><b></b><a href="#" target="_blank">待审核中+-message.get('request_init')-+条</a></li>
-									<li><b></b><a href="#" target="_blank">审核通过+-message.get('request_processed')-+条</a></li>
-									<li><b></b><a href="#" target="_blank">审核拒绝+-message.get('request_refused')-+条</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=request&sid=request-all" target="_blank">全部申请+-message.get('request_all')-+条</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=request&sid=request-tohandle" target="_blank">待审核中+-message.get('request_init')-+条</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=request&sid=request-pass" target="_blank">审核通过+-message.get('request_processed')-+条</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=request&sid=request-refuse" target="_blank">审核拒绝+-message.get('request_refused')-+条</a></li>
 								</ul>
 							</div>
 						</div>
@@ -489,7 +498,7 @@ a.accordion-toggle {
 							
 							var fid = getQueryString('fid');
 							var sid = getQueryString('sid');
-
+							
 							var accountDao = EasyServiceClient
 									.getRemoteProxy("/easyservice/gpps.dao.IBorrowerAccountDao");
 							
@@ -512,6 +521,7 @@ a.accordion-toggle {
 
 							$('#total').html(message.get('total').value);
 
+							$('#usable').html(message.get('usable').value);
 
 							$('#freeze').html(message.get('freeze').value);
 

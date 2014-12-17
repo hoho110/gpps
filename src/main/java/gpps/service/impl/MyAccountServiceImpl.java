@@ -109,6 +109,7 @@ public class MyAccountServiceImpl implements IMyAccountService {
 		message.put("license", borrower.getLicense());
 		message.put("total", account.getTotal());
 		message.put("freeze", account.getFreeze());
+		message.put("usable", account.getUsable());
 		
 		CardBinding cb = borrower.getCardBinding();
 		if(cb!=null)

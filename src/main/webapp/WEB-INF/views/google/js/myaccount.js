@@ -206,7 +206,7 @@ var myactivity = function(container){
 				iDisplayLength = data.value;
 		}
 		var res = null;
-		res = refservice.findByLender(cuser.id, iDisplayStart, iDisplayLength);
+		res = refservice.findByLender(user.id, iDisplayStart, iDisplayLength);
 		var result = {};
 		result.iTotalRecords = res.get('total');
 		result.iTotalDisplayRecords = res.get('total');

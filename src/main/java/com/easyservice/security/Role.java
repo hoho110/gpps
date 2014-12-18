@@ -7,7 +7,7 @@ import com.easyservice.xml.annotation.CollectionStyleType;
 import com.easyservice.xml.annotation.XMLMapping;
 
 public class Role{
-	private int privilege;
+	private String privilege;//多个权限用“|”分离
 	public static final int LIMITEDTYPE_NOTLIMITED=1;//不限
 	public static final int LIMITEDTYPE_PARTPERMIT=0;//部分许可
 	public static final int LIMITEDTYPE_ALLLIMITED=-1;//全部许可
@@ -20,10 +20,10 @@ public class Role{
 	public void setPermissionRules(List<PermissionRule> permissionRules) {
 		this.permissionRules = permissionRules;
 	}
-	public int getPrivilege() {
+	public String getPrivilege() {
 		return privilege;
 	}
-	public void setPrivilege(int privilege) {
+	public void setPrivilege(String privilege) {
 		this.privilege = privilege;
 	}
 	public int getLimitedType() {

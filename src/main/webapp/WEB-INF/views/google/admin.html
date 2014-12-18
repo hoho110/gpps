@@ -139,7 +139,10 @@ function refreshRepayingOrder(){
 				if(pbs.get(l).state==0)
 					{
 					state="待还款";
-					button = "<button class='repay' id='"+pbs.get(l).id+"'>还款</button>";
+					if(pbs.get(l).type==1)
+						button = "<button class='earlier' id='"+pbs.get(l).id+"'>申请提前</button><button class='repay' id='"+pbs.get(l).id+"'>还款</button>";
+						else
+						button = "<button class='repay' id='"+pbs.get(l).id+"'>还款</button>";
 					}
 				else if(pbs.get(l).state==2)
 					{
@@ -254,6 +257,10 @@ $('button#closedone').click(function(e){
 
 $('button.repay').click(function(e){
 	window.location.href = '/account/repay/request?paybackId='+$(this).attr('id');
+});
+$('button.earlier').click(function(e){
+	paybackService.applyRepayInAdvance(parseInt($(this).attr('id')));
+	refreshFinancingOrder();
 });
 
 

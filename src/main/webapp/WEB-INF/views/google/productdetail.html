@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="css/gpps/new-lufax.css">
     <link rel="stylesheet" type="text/css" href="css/gpps/detail/productDetail.css">
     <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     </head>
  
 <body>
@@ -236,6 +237,25 @@
 	</div>
 
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">产品购买</h4>
+      </div>
+      <div class="modal-body">
+       购买完成前请不要关闭该对话框，在购买完毕后点击相应的操作以完成购买。
+      </div>
+      <div class="modal-footer">
+        <button id="success-continue" type="button" class="btn btn-primary" data-dismiss="modal">继续购买</button>
+        <button id="success-myaccount" type="button" class="btn btn-primary" data-dismiss="modal">返回我的帐户</button>
+        <button id="fail" type="button" class="btn btn-default">购买失败</button>
+      </div>
+    </div>
+  </div>
+</div>
  
  <script src="js/tool.js"></script>
  <script type="text/javascript"
@@ -391,12 +411,14 @@
  		
  		try{
  		var oid = submitService.buy(parseInt(pid), parseInt($('#raiseAmount').val()));
+ 		
+ 		$('#myModal').modal({
+			  keyboard: false,
+			  backdrop: false
+		});
+ 		
  		window.open("/account/buy/request?submitId="+oid, "", "toolbar=yes, menubar=yes, scrollbars=yes, resizable=yes, fullscreen = yes");
- 		if(confirm('购买是否成功？')){
- 			window.location.href = "myaccount.html";
-			}else{
-				window.location.href = "myaccount.html";
-			}
+ 		
  		}catch(e){
  			alert(e.message);
  		}
@@ -455,6 +477,19 @@
     	 var account = accountDao.find(cuser.accountId);
     	 $('p#loginstatus').html('<a href="recharge.html" style="margin-right:20px;">充值</a>账户可用余额：<span class="amountFormat">'+account.usable.value+'</span> 元');
      }
+     
+     
+     $('#success-continue').click(function(e){
+  		window.location.reload();
+  	});
+     
+     $('#success-myaccount').click(function(e){
+ 		window.location.href = "myaccount.html";
+ 	});
+ 	
+ 	$('#fail').click(function(e){
+ 		window.location.href = "myaccount.html";
+ 	});
         	 
         	 
          });

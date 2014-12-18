@@ -117,7 +117,26 @@
       </div>
       <div class="modal-footer">
         <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">充值成功</button>
-        <button id="false" type="button" class="btn btn-default">充值失败</button>
+        <button id="fail" type="button" class="btn btn-default">充值失败</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+	    <!-- Modal -->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">第三方认证</h4>
+      </div>
+      <div class="modal-body">
+      			完成第三方认证才能充值, 认证完成前请不要关闭该对话框，在认证完毕后点击相应的操作以完成认证。
+      </div>
+      <div class="modal-footer">
+        <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">认证成功</button>
+        <button id="false" type="button" class="btn btn-default">认证失败</button>
       </div>
     </div>
   </div>
@@ -153,14 +172,11 @@ $(document).ready(function() {
   		}
 	}
 	else if(thirdPartyAccount==null || thirdPartyAccount==''){
-		if(confirm("您尚未在第三方支付平台注册，马上注册?")){
+			$('#myModal2').modal({
+				  keyboard: false,
+				  backdrop: false
+			});
 			window.open("/account/thirdPartyRegist/request"); 
- 	  		if(confirm("第三方认证是否成功?")){
- 	  			window.location.href="recharge.html";
- 	  		}
-  		}else{
-  			window.location.href="myaccount.html";
-  		}
 	}
 	
 	

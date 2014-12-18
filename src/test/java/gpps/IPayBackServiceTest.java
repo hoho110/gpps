@@ -4,6 +4,7 @@ import gpps.model.PayBack;
 import gpps.model.ProductSeries;
 import gpps.service.IPayBackService;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -43,5 +44,31 @@ public class IPayBackServiceTest extends TestSupport{
 		
 		Assert.assertEquals("1000000", payBacks.get(2).getChiefAmount().toString());
 		Assert.assertEquals("3287.68", payBacks.get(2).getInterest().toString());
+		
+		payBacks=payBackService.generatePayBacks(100*10000, 0.12, ProductSeries.TYPE_AVERAGECAPITALPLUSINTEREST, from.getTime(), to.getTime());
+		Assert.assertEquals(3, payBacks.size());
+		
+		Assert.assertEquals("330022.11", payBacks.get(0).getChiefAmount().toString());
+		Assert.assertEquals("10000.00", payBacks.get(0).getInterest().toString());
+		
+		Assert.assertEquals("333322.33", payBacks.get(1).getChiefAmount().toString());
+		Assert.assertEquals("6699.78", payBacks.get(1).getInterest().toString());
+		
+		Assert.assertEquals("336655.56", payBacks.get(2).getChiefAmount().toString());
+		Assert.assertEquals("3366.56", payBacks.get(2).getInterest().toString());
+		
+		
+		for(int i=0;i<10000000;i++)
+		{
+			payBacks=payBackService.generatePayBacks(i+1, 0.12, ProductSeries.TYPE_AVERAGECAPITALPLUSINTEREST, from.getTime(), to.getTime());
+			Assert.assertEquals(3, payBacks.size());
+			BigDecimal totalChiefAmout=BigDecimal.ZERO;
+			for(PayBack payBack:payBacks)
+				totalChiefAmout=totalChiefAmout.add(payBack.getChiefAmount());
+			Assert.assertEquals(0, new BigDecimal(i+1).compareTo(totalChiefAmout));
+			if(i%1000==0)
+				System.out.println("已校验数："+i);
+		}
+		
 	}
 }

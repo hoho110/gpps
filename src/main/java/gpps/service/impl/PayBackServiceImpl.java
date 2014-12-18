@@ -97,6 +97,12 @@ public class PayBackServiceImpl implements IPayBackService {
 		List<PayBack> payBacks=payBackDao.findAllByProduct(productId);
 		if(payBacks==null||payBacks.size()==0)
 			return new ArrayList<PayBack>(0);
+		BigDecimal total=null;
+		PayBack lastPayBack=null;
+		if(product.getState()==Product.STATE_UNPUBLISH||product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
+			total=product.getExpectAmount();
+		else 
+			total=product.getRealAmount();
 		for(PayBack payBack:payBacks)
 		{
 			if(product.getState()==Product.STATE_UNPUBLISH||product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
@@ -108,7 +114,12 @@ public class PayBackServiceImpl implements IPayBackService {
 				payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
 				payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
 			}
+			if(payBack.getType()==PayBack.TYPE_LASTPAY)
+				lastPayBack=payBack;
+			else
+				total=total.subtract(payBack.getChiefAmount());
 		}
+		lastPayBack.setChiefAmount(total);
 		return payBacks;
 	}
 
@@ -127,6 +138,15 @@ public class PayBackServiceImpl implements IPayBackService {
 	@Override
 	public PayBack find(Integer id) {
 		PayBack payBack=payBackDao.find(id);
+		if(payBack.getType()==PayBack.TYPE_LASTPAY)
+		{
+			List<PayBack> payBacks=findAll(payBack.getProductId());
+			for(PayBack pb:payBacks)
+			{
+				if(pb.getType()==PayBack.TYPE_LASTPAY)
+					return pb;
+			}
+		}
 		Product product=productDao.find(payBack.getProductId());
 		if(product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
 		{

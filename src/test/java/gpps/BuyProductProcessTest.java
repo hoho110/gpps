@@ -247,6 +247,9 @@ public class BuyProductProcessTest extends TestSupport{
 		
 		List<PayBack> payBacks=payBackService.findAll(product.getId());
 		Assert.assertEquals(3, payBacks.size());
+		Assert.assertEquals(true,payBackService.canRepay(payBacks.get(0).getId()));
+		Assert.assertEquals(false,payBackService.canRepay(payBacks.get(1).getId()));
+		Assert.assertEquals(false,payBackService.canRepay(payBacks.get(2).getId()));
 		//对照网上的计算器http://finance.sina.com.cn/calc/money_loan.html
 		for(int i=0;i<payBacks.size();i++)
 		{

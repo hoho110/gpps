@@ -2,7 +2,9 @@ package com.easyservice.security;
 
 import gpps.tools.StringUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -65,21 +67,31 @@ public class AuthorityValidateServiceImpl implements IAuthorityValidateService{
 	{
 		if(role==null)
 			return false;
-		for (PermissionRule rule : role.getPermissionRules()) {
-			if (rule.getEntityLimitType().equals(applyService))
-			{
-				if(fetchServiceSdl)
-					return true;
-				if(rule.getOperations()==null||rule.getOperations().trim().length()==0)
-					return true;
-				String[] ops=rule.getOperations().split(";");
-				for(String op:ops)
+		if(role.getPermissionRules()!=null&&role.getPermissionRules().size()>0)
+		{
+			for (PermissionRule rule : role.getPermissionRules()) {
+				if (rule.getEntityLimitType().equals(applyService))
 				{
-					if(op.equals(applyMethod))
+					if(fetchServiceSdl)
 						return true;
+					if(rule.getOperations()==null||rule.getOperations().trim().length()==0)
+						return true;
+					String[] ops=rule.getOperations().split(";");
+					for(String op:ops)
+					{
+						if(op.equals(applyMethod))
+							return true;
+					}
+					break;
 				}
-				return false;
 			}
+		}
+		if(role.getExtendsRoles()==null||role.getExtendsRoles().size()==0)
+			return false;
+		for(Role extendsRole:role.getExtendsRoles())
+		{
+			if(checkPermissionRules(extendsRole,applyService,applyMethod,fetchServiceSdl))
+				return true;
 		}
 		return false;
 	}
@@ -94,6 +106,33 @@ public class AuthorityValidateServiceImpl implements IAuthorityValidateService{
 		//加载权限配置文件到内存中
 		try {
 			config=xmlTransformer.parse(configLocation.getInputStream(), StaticRolesConfig.class);
+			
+			//添加关联角色
+			List<Role> roles= config.getRoles();
+			if(roles!=null&&roles.size()>0)
+			{
+				Map<String,Role> m=new HashMap<String,Role>();
+				for(Role role:roles)
+				{
+					if(!StringUtil.isEmpty(role.getId()))
+						m.put(role.getId(), role);
+				}
+				if(!m.isEmpty())
+				{
+					for(Role role:roles)
+					{
+						if(StringUtil.isEmpty(role.getExtendsRoleIds()))
+							continue;
+						String[] extendsRoleIds=role.getExtendsRoleIds().split("//|");
+						for(String extendsRoleId:extendsRoleIds)
+						{
+							Role extendsRole=m.get(extendsRoleId);
+							if(extendsRole!=null)
+								role.getExtendsRoles().add(extendsRole);
+						}
+					}
+				}
+			}
 		} catch (Throwable e)
 		{
 			logger.error(e.getMessage(),e);

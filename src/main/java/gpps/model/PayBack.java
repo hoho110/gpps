@@ -3,7 +3,7 @@ package gpps.model;
 import java.math.BigDecimal;
 
 public class PayBack {
-	public static final BigDecimal BASELINE=new BigDecimal(10*10000);
+//	public static final BigDecimal BASELINE=new BigDecimal(10*10000);
 	private Integer id;
 	private Integer borrowerAccountId;
 	private Integer productId;

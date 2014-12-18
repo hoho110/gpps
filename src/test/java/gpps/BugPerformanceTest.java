@@ -19,6 +19,7 @@ import gpps.model.Lender;
 import gpps.model.LenderAccount;
 import gpps.model.PayBack;
 import gpps.model.Product;
+import gpps.model.ProductSeries;
 import gpps.model.Submit;
 import gpps.service.CashStreamSum;
 import gpps.service.IAccountService;
@@ -509,6 +510,7 @@ public class BugPerformanceTest extends TestSupport{
 			order=orderService.applyFinancingOrder(orderId);
 			if(order!=null)
 			{
+				Borrower borrower=borrowerDao.find(order.getBorrowerId());
 				List<Product> products=order.getProducts();
 				if(products!=null&&products.size()>0)
 				{
@@ -531,9 +533,20 @@ public class BugPerformanceTest extends TestSupport{
 						product=order.findProductById(product.getId());
 						order.getProducts().remove(product);
 						product.setState(Product.STATE_REPAYING);
+						//重新计算payback
+						//删除
+						payBackDao.deleteByProduct(product.getId());
+						// 创建还款计划
+						ProductSeries productSeries=productSeriesDao.find(product.getProductseriesId());
+						List<PayBack> payBacks=payBackService.generatePayBacks(product.getRealAmount().intValue(), product.getRate().doubleValue(),productSeries.getType(), order.getIncomeStarttime(), product.getIncomeEndtime());
+						for(PayBack payBack:payBacks)
+						{
+							payBack.setBorrowerAccountId(borrower.getAccountId());
+							payBack.setProductId(product.getId());
+							payBackDao.create(payBack);
+						}
 						//审核转账
 						executePayTask(product);
-						
 					}
 				}
 				orderDao.changeState(orderId, GovermentOrder.STATE_REPAYING,System.currentTimeMillis());

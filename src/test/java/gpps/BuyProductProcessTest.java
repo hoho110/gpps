@@ -19,6 +19,8 @@ import gpps.model.Lender;
 import gpps.model.LenderAccount;
 import gpps.model.PayBack;
 import gpps.model.Product;
+import gpps.model.ProductSeries;
+import gpps.model.StateLog;
 import gpps.model.Submit;
 import gpps.model.Task;
 import gpps.service.CashStreamSum;
@@ -257,15 +259,15 @@ public class BuyProductProcessTest extends TestSupport{
 			switch(i)
 			{
 				case 0:
-					Assert.assertEquals("99336.27", payBack.getChiefAmount().toString());
-					Assert.assertEquals("2000.01", payBack.getInterest().toString());
+					Assert.assertEquals("99336.29", payBack.getChiefAmount().toString());
+					Assert.assertEquals("2000.00", payBack.getInterest().toString());
 					break;
 				case 1:
-					Assert.assertEquals("99998.52", payBack.getChiefAmount().toString());
+					Assert.assertEquals("99998.53", payBack.getChiefAmount().toString());
 					Assert.assertEquals("1337.76", payBack.getInterest().toString());
 					break;
 				case 2:
-					Assert.assertEquals("100665.21", payBack.getChiefAmount().toString());
+					Assert.assertEquals("100665.18", payBack.getChiefAmount().toString());
 					Assert.assertEquals("671.10", payBack.getInterest().toString());
 					break;
 			}
@@ -274,19 +276,19 @@ public class BuyProductProcessTest extends TestSupport{
 			baccount = borrowerAccountDao.find(borrower.getAccountId());
 			switch(i){
 			case 0:
-				Assert.assertEquals(0, baccount.getFreeze().compareTo(new BigDecimal("101336.28")));
-				Assert.assertEquals(0, baccount.getTotal().compareTo(new BigDecimal(1300000)));
-				Assert.assertEquals(0, baccount.getUsable().compareTo(new BigDecimal(1300000).subtract(new BigDecimal("101336.28"))));
+				Assert.assertEquals("101336.29", baccount.getFreeze().toString());
+				Assert.assertEquals("1300000.00", baccount.getTotal().toString());
+				Assert.assertEquals("1198663.71", baccount.getUsable().toString());
 				break;
 			case 1:
-				Assert.assertEquals(0, baccount.getFreeze().compareTo(new BigDecimal("101336.28")));
-				Assert.assertEquals(0, baccount.getTotal().compareTo(new BigDecimal("1198663.72")));
-				Assert.assertEquals(0, baccount.getUsable().compareTo(new BigDecimal("1097327.44")));
+				Assert.assertEquals("101336.29", baccount.getFreeze().toString());
+				Assert.assertEquals("1198663.71", baccount.getTotal().toString());
+				Assert.assertEquals("1097327.42", baccount.getUsable().toString());
 				break;
 			case 2:
-				Assert.assertEquals(0, baccount.getFreeze().compareTo(new BigDecimal("101336.31")));
-				Assert.assertEquals(0, baccount.getTotal().compareTo(new BigDecimal("1097327.44")));
-				Assert.assertEquals(0, baccount.getUsable().compareTo(new BigDecimal("995991.13")));
+				Assert.assertEquals("101336.28", baccount.getFreeze().toString());
+				Assert.assertEquals("1097327.42", baccount.getTotal().toString());
+				Assert.assertEquals("995991.14", baccount.getUsable().toString());
 				break;
 			}
 			payBackDao.changeCheckResult(payBack.getId(), PayBack.CHECK_SUCCESS);
@@ -296,45 +298,45 @@ public class BuyProductProcessTest extends TestSupport{
 			baccount = borrowerAccountDao.find(borrower.getAccountId());
 			switch(i){
 			case 0:
-				Assert.assertEquals(0, baccount.getFreeze().compareTo(new BigDecimal("0")));
-				Assert.assertEquals(0, baccount.getTotal().compareTo(new BigDecimal("1198663.72")));
-				Assert.assertEquals(0, baccount.getUsable().compareTo(new BigDecimal("1198663.72")));
+				Assert.assertEquals("0.00", baccount.getFreeze().toString());
+				Assert.assertEquals("1198663.71", baccount.getTotal().toString());
+				Assert.assertEquals("1198663.71", baccount.getUsable().toString());
 				break;
 			case 1:
-				Assert.assertEquals(0, baccount.getFreeze().compareTo(new BigDecimal("0")));
-				Assert.assertEquals(0, baccount.getTotal().compareTo(new BigDecimal("1097327.44")));
-				Assert.assertEquals(0, baccount.getUsable().compareTo(new BigDecimal("1097327.44")));
+				Assert.assertEquals("0.00", baccount.getFreeze().toString());
+				Assert.assertEquals("1097327.42", baccount.getTotal().toString());
+				Assert.assertEquals("1097327.42", baccount.getUsable().toString());
 				break;
 			case 2:
-				Assert.assertEquals(0, baccount.getFreeze().compareTo(new BigDecimal("0")));
-				Assert.assertEquals(0, baccount.getTotal().compareTo(new BigDecimal("995991.13")));
-				Assert.assertEquals(0, baccount.getUsable().compareTo(new BigDecimal("995991.13")));
+				Assert.assertEquals("0.00", baccount.getFreeze().toString());
+				Assert.assertEquals("995991.14", baccount.getTotal().toString());
+				Assert.assertEquals("995991.14", baccount.getUsable().toString());
 				break;
 			}
 			lenderAccount = lenderAccountDao.find(lender.getAccountId());
 			switch(i){
 			case 0:
 				
-				Assert.assertEquals(0, lenderAccount.getFreeze().compareTo(new BigDecimal(0)));
-				Assert.assertEquals(0, lenderAccount.getUsed().compareTo(new BigDecimal("200663.73")));
-				Assert.assertEquals(0, lenderAccount.getTotal().compareTo(new BigDecimal("1002000.01")));
-				Assert.assertEquals(0, lenderAccount.getTotalincome().compareTo(new BigDecimal("2000.01")));
-				Assert.assertEquals(0, lenderAccount.getUsable().compareTo(new BigDecimal("801336.28")));
+				Assert.assertEquals("0.00", lenderAccount.getFreeze().toString());
+				Assert.assertEquals("200663.71", lenderAccount.getUsed().toString());
+				Assert.assertEquals("1001999.99", lenderAccount.getTotal().toString());
+				Assert.assertEquals("1999.99", lenderAccount.getTotalincome().toString());
+				Assert.assertEquals("801336.28", lenderAccount.getUsable().toString());
 				break;
 			case 1:
 				
-				Assert.assertEquals(0, lenderAccount.getFreeze().compareTo(new BigDecimal(0)));
-				Assert.assertEquals(0, lenderAccount.getUsed().compareTo(new BigDecimal("100665.21")));
-				Assert.assertEquals(0, lenderAccount.getTotal().compareTo(new BigDecimal("1003337.77")));
-				Assert.assertEquals(0, lenderAccount.getTotalincome().compareTo(new BigDecimal("3337.77")));
-				Assert.assertEquals(0, lenderAccount.getUsable().compareTo(new BigDecimal("902672.56")));
+				Assert.assertEquals("0.00", lenderAccount.getFreeze().toString());
+				Assert.assertEquals("100665.18", lenderAccount.getUsed().toString());
+				Assert.assertEquals("1003337.75", lenderAccount.getTotal().toString());
+				Assert.assertEquals("3337.75", lenderAccount.getTotalincome().toString());
+				Assert.assertEquals("902672.57", lenderAccount.getUsable().toString());
 				break;
 			case 2:
-				Assert.assertEquals(0, lenderAccount.getFreeze().compareTo(new BigDecimal(0)));
-				Assert.assertEquals(0, lenderAccount.getUsed().compareTo(new BigDecimal(0)));
-				Assert.assertEquals(0, lenderAccount.getTotal().compareTo(new BigDecimal("1004008.87")));
-				Assert.assertEquals(0, lenderAccount.getTotalincome().compareTo(new BigDecimal("4008.87")));
-				Assert.assertEquals(0, lenderAccount.getUsable().compareTo(new BigDecimal("1004008.87")));
+				Assert.assertEquals("0.00", lenderAccount.getFreeze().toString());
+				Assert.assertEquals("0.00", lenderAccount.getUsed().toString());
+				Assert.assertEquals("1004008.85", lenderAccount.getTotal().toString());
+				Assert.assertEquals("4008.85", lenderAccount.getTotalincome().toString());
+				Assert.assertEquals("1004008.85", lenderAccount.getUsable().toString());
 				break;
 			}
 			
@@ -345,14 +347,14 @@ public class BuyProductProcessTest extends TestSupport{
 		lenderAccount=lenderAccountDao.find(lender.getAccountId());
 		Assert.assertEquals(0, lenderAccount.getFreeze().compareTo(BigDecimal.ZERO));
 		Assert.assertEquals(0, lenderAccount.getUsed().compareTo(BigDecimal.ZERO));
-		Assert.assertEquals("1004008.87", lenderAccount.getTotal().toString());
-		Assert.assertEquals("4008.87", lenderAccount.getTotalincome().toString());
-		Assert.assertEquals("1004008.87", lenderAccount.getUsable().toString());
+		Assert.assertEquals("1004008.85", lenderAccount.getTotal().toString());
+		Assert.assertEquals("4008.85", lenderAccount.getTotalincome().toString());
+		Assert.assertEquals("1004008.85", lenderAccount.getUsable().toString());
 		
 		BorrowerAccount borrowerAccount=borrowerAccountDao.find(borrower.getAccountId());
 		Assert.assertEquals(0, borrowerAccount.getFreeze().compareTo(BigDecimal.ZERO));
-		Assert.assertEquals("995991.13", borrowerAccount.getTotal().toString());
-		Assert.assertEquals("995991.13", borrowerAccount.getUsable().toString());
+		Assert.assertEquals("995991.14", borrowerAccount.getTotal().toString());
+		Assert.assertEquals("995991.14", borrowerAccount.getUsable().toString());
 		
 		checkPayBack(product);
 	}
@@ -446,6 +448,7 @@ public class BuyProductProcessTest extends TestSupport{
 			order=orderService.applyFinancingOrder(orderId);
 			if(order!=null)
 			{
+				Borrower borrower=borrowerDao.find(order.getBorrowerId());
 				List<Product> products=order.getProducts();
 				if(products!=null&&products.size()>0)
 				{
@@ -468,9 +471,20 @@ public class BuyProductProcessTest extends TestSupport{
 						product=order.findProductById(product.getId());
 						order.getProducts().remove(product);
 						product.setState(Product.STATE_REPAYING);
+						//重新计算payback
+						//删除
+						payBackDao.deleteByProduct(product.getId());
+						// 创建还款计划
+						ProductSeries productSeries=productSeriesDao.find(product.getProductseriesId());
+						List<PayBack> payBacks=payBackService.generatePayBacks(product.getRealAmount().intValue(), product.getRate().doubleValue(),productSeries.getType(), order.getIncomeStarttime(), product.getIncomeEndtime());
+						for(PayBack payBack:payBacks)
+						{
+							payBack.setBorrowerAccountId(borrower.getAccountId());
+							payBack.setProductId(product.getId());
+							payBackDao.create(payBack);
+						}
 						//审核转账
 						executePayTask(product);
-						
 					}
 				}
 				orderDao.changeState(orderId, GovermentOrder.STATE_REPAYING,System.currentTimeMillis());

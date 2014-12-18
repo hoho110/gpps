@@ -97,29 +97,6 @@ public class PayBackServiceImpl implements IPayBackService {
 		List<PayBack> payBacks=payBackDao.findAllByProduct(productId);
 		if(payBacks==null||payBacks.size()==0)
 			return new ArrayList<PayBack>(0);
-		BigDecimal total=null;
-		PayBack lastPayBack=null;
-		if(product.getState()==Product.STATE_UNPUBLISH||product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
-			total=product.getExpectAmount();
-		else 
-			total=product.getRealAmount();
-		for(PayBack payBack:payBacks)
-		{
-			if(product.getState()==Product.STATE_UNPUBLISH||product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
-			{
-				payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-				payBack.setInterest(payBack.getInterest().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-			}else
-			{
-				payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-				payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-			}
-			if(payBack.getType()==PayBack.TYPE_LASTPAY)
-				lastPayBack=payBack;
-			else
-				total=total.subtract(payBack.getChiefAmount());
-		}
-		lastPayBack.setChiefAmount(total);
 		return payBacks;
 	}
 
@@ -138,25 +115,6 @@ public class PayBackServiceImpl implements IPayBackService {
 	@Override
 	public PayBack find(Integer id) {
 		PayBack payBack=payBackDao.find(id);
-		if(payBack.getType()==PayBack.TYPE_LASTPAY)
-		{
-			List<PayBack> payBacks=findAll(payBack.getProductId());
-			for(PayBack pb:payBacks)
-			{
-				if(pb.getType()==PayBack.TYPE_LASTPAY)
-					return pb;
-			}
-		}
-		Product product=productDao.find(payBack.getProductId());
-		if(product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
-		{
-			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-			payBack.setInterest(payBack.getInterest().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-		}else
-		{
-			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-			payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-		}
 		return payBack;
 	}
 
@@ -220,10 +178,10 @@ public class PayBackServiceImpl implements IPayBackService {
 		int days=getDays(lastCal, cal);
 		if(days<0)
 			days=0;
-		payBack.setInterest(PayBack.BASELINE.multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
+		payBack.setInterest(product.getRealAmount().multiply(product.getRate()).multiply(new BigDecimal(days)).divide(new BigDecimal(365),2,BigDecimal.ROUND_UP));
 //		payBack.setRealtime(cal.getTimeInMillis());
 		payBack.setDeadline(cal.getTimeInMillis());
-		payBack.setChiefAmount(PayBack.BASELINE);
+		payBack.setChiefAmount(product.getRealAmount());
 		payBackDao.update(payBack);
 	}
 
@@ -337,11 +295,6 @@ public class PayBackServiceImpl implements IPayBackService {
 		List<PayBack> payBacks=payBackDao.findAllByProduct(productId);
 		if(payBacks==null||payBacks.size()==0)
 			return new ArrayList<PayBack>(0);
-		for(PayBack payBack:payBacks)
-		{
-			payBack.setChiefAmount(payBack.getChiefAmount().multiply(new BigDecimal(amount)).divide(PayBack.BASELINE,2,BigDecimal.ROUND_DOWN));
-			payBack.setInterest(payBack.getInterest().multiply(new BigDecimal(amount)).divide(PayBack.BASELINE,2,BigDecimal.ROUND_DOWN));
-		}
 		return payBacks;
 	}
 
@@ -364,15 +317,6 @@ public class PayBackServiceImpl implements IPayBackService {
 		for(PayBack payBack:payBacks)
 		{
 			Product product=productDao.find(payBack.getProductId());
-			if(product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
-			{
-				payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-				payBack.setInterest(payBack.getInterest().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-			}else
-			{
-				payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-				payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-			}
 			payBack.setProduct(product);
 			product.setGovermentOrder(govermentOrderDao.find(product.getGovermentorderId()));
 			product.setProductSeries(productSeriesDao.find(product.getProductseriesId()));
@@ -566,15 +510,15 @@ public class PayBackServiceImpl implements IPayBackService {
 	}
 	private void changeBorrowerPayBackLimit(PayBack payBack,Product product)
 	{
-		if(product.getState()==Product.STATE_UNPUBLISH||product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
-		{
-			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-			payBack.setInterest(payBack.getInterest().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-		}else
-		{
-			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-			payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-		}
+//		if(product.getState()==Product.STATE_UNPUBLISH||product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
+//		{
+//			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+//			payBack.setInterest(payBack.getInterest().multiply(product.getExpectAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+//		}else
+//		{
+//			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+//			payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+//		}
 	}
 
 	@Override
@@ -619,8 +563,8 @@ public class PayBackServiceImpl implements IPayBackService {
 		{
 			Product product=productDao.find(payBack.getProductId());
 			
-			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
-			payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+//			payBack.setChiefAmount(payBack.getChiefAmount().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
+//			payBack.setInterest(payBack.getInterest().multiply(product.getRealAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_UP));
 			
 			payBack.setProduct(product);
 			product.setGovermentOrder(govermentOrderDao.find(product.getGovermentorderId()));

@@ -9,14 +9,18 @@ import gpps.dao.IBorrowerDao;
 import gpps.dao.ICashStreamDao;
 import gpps.dao.IFinancingRequestDao;
 import gpps.dao.IGovermentOrderDao;
+import gpps.dao.IPayBackDao;
 import gpps.dao.IProductDao;
+import gpps.dao.IProductSeriesDao;
 import gpps.dao.IStateLogDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
 import gpps.model.CashStream;
 import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
+import gpps.model.PayBack;
 import gpps.model.Product;
+import gpps.model.ProductSeries;
 import gpps.model.StateLog;
 import gpps.model.Submit;
 import gpps.model.Task;
@@ -26,6 +30,7 @@ import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.CashStreamSum;
 import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
+import gpps.service.IPayBackService;
 import gpps.service.IProductService;
 import gpps.service.ITaskService;
 import gpps.service.exception.CheckException;
@@ -76,6 +81,12 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	ISubmitDao submitDao;
 	@Autowired
 	ICashStreamDao cashStreamDao;
+	@Autowired
+	IPayBackService payBackService;
+	@Autowired
+	IPayBackDao payBackDao;
+	@Autowired
+	IProductSeriesDao productSeriesDao;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	static int[] orderStates={
 		GovermentOrder.STATE_UNPUBLISH,
@@ -234,6 +245,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			order=applyFinancingOrder(orderId);
 			if(order!=null)
 			{
+				Borrower borrower=borrowerDao.find(order.getBorrowerId());
 				List<Product> products=order.getProducts();
 				if(products!=null&&products.size()>0)
 				{
@@ -256,6 +268,25 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 						product=order.findProductById(product.getId());
 						order.getProducts().remove(product);
 						product.setState(Product.STATE_REPAYING);
+						//重新计算payback
+						//删除
+						payBackDao.deleteByProduct(product.getId());
+						// 创建还款计划
+						ProductSeries productSeries=productSeriesDao.find(product.getProductseriesId());
+						List<PayBack> payBacks=payBackService.generatePayBacks(product.getRealAmount().intValue(), product.getRate().doubleValue(),productSeries.getType(), order.getIncomeStarttime(), product.getIncomeEndtime());
+						for(PayBack payBack:payBacks)
+						{
+							payBack.setBorrowerAccountId(borrower.getAccountId());
+							payBack.setProductId(product.getId());
+							payBackDao.create(payBack);
+							
+							StateLog stateLog=new StateLog();
+							stateLog.setCreatetime(System.currentTimeMillis());
+							stateLog.setRefid(payBack.getId());
+							stateLog.setTarget(payBack.getState());
+							stateLog.setType(stateLog.TYPE_PAYBACK);
+							stateLogDao.create(stateLog);
+						}
 						Task task=new Task();
 						task.setProductId(product.getId());
 						task.setType(Task.TYPE_PAY);

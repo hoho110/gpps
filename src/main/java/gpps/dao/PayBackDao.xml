@@ -145,4 +145,9 @@
 		PayBack set checkResult=#{checkResult} 
 		where id=#{id}
     </update>
+    <delete id="deleteByProduct" parameterType="Integer">
+		delete from PayBack
+		where
+		productId=#{productId}
+	</delete>
 </mapper>

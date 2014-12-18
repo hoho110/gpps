@@ -425,10 +425,18 @@ public class AccountServiceImpl implements IAccountService {
 			{
 				PayBack lenderPayBack=new PayBack();
 				lenderPayBack.setBorrowerAccountId(payBack.getBorrowerAccountId());
-				lenderPayBack.setChiefAmount(payBack.getChiefAmount().multiply(submit.getAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_DOWN));
+				if(product.getState()==Product.STATE_UNPUBLISH||product.getState()==Product.STATE_FINANCING||product.getState()==Product.STATE_QUITFINANCING)
+				{
+					lenderPayBack.setChiefAmount(payBack.getChiefAmount().multiply(submit.getAmount()).divide(product.getExpectAmount(),2,BigDecimal.ROUND_DOWN));
+					lenderPayBack.setInterest(payBack.getInterest().multiply(submit.getAmount()).divide(product.getExpectAmount(),2,BigDecimal.ROUND_DOWN));
+				}
+				else
+				{
+					lenderPayBack.setChiefAmount(payBack.getChiefAmount().multiply(submit.getAmount()).divide(product.getRealAmount(),2,BigDecimal.ROUND_DOWN));
+					lenderPayBack.setInterest(payBack.getInterest().multiply(submit.getAmount()).divide(product.getRealAmount(),2,BigDecimal.ROUND_DOWN));
+				}
 				lenderPayBack.setDeadline(payBack.getDeadline());
 				lenderPayBack.setId(payBack.getId());
-				lenderPayBack.setInterest(payBack.getInterest().multiply(submit.getAmount()).divide(PayBack.BASELINE,2,BigDecimal.ROUND_DOWN));
 				lenderPayBack.setProduct(product);
 				lenderPayBack.getProduct().setGovermentOrder(orderDao.find(lenderPayBack.getProduct().getGovermentorderId()));
 				lenderPayBack.setProductId(payBack.getProductId());

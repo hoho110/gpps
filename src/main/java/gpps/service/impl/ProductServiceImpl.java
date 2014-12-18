@@ -113,7 +113,7 @@ public class ProductServiceImpl implements IProductService {
 		
 		Borrower borrower=borrowerDao.find(order.getBorrowerId());
 		// 创建还款计划
-		List<PayBack> payBacks=payBackService.generatePayBacks(PayBack.BASELINE.intValue(), product.getRate().doubleValue(),productSeries.getType(), starttime.getTimeInMillis(), endtime.getTimeInMillis());
+		List<PayBack> payBacks=payBackService.generatePayBacks(product.getExpectAmount().intValue(), product.getRate().doubleValue(),productSeries.getType(), starttime.getTimeInMillis(), endtime.getTimeInMillis());
 		if(payBacks==null||payBacks.size()==0)
 			throw new RuntimeException("未生成还款计划");
 		for(PayBack payBack:payBacks)

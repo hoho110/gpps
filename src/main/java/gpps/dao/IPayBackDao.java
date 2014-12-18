@@ -38,4 +38,6 @@ public interface IPayBackDao {
 	public List<PayBack> findBorrowerWaitForRepayed(Integer borrowerAccountId);
 	
 	public void changeCheckResult(@Param("id")Integer id,@Param("checkResult")int checkResult);
+	
+	public void deleteByProduct(Integer productId);
 }

@@ -111,6 +111,16 @@
 			<div style="clear:both;"></div>
 		</div>
 		
+		<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
+			<div class="hidden-xs hidden-sm col-md-3 col-lg-3">
+			<label class="control-label" for="inputSuccess3">邮箱地址</label>
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+				<input type="text" class="form-control" id="email" style="padding-left:1px; padding-right:1px;" placeholder="邮箱地址" required>
+			</div>
+			<div style="clear:both;"></div>
+		</div>
+		
 			
 			<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
 			<div class="hidden-xs hidden-sm col-md-3 col-lg-3">
@@ -230,6 +240,7 @@ $(document).ready(function() {
 			var password = $('input#password').val();
 			var password_r = $('input#password_r').val();
 			var phone = $('input#phone').val();
+			var email = $('input#email').val();
 			var validate = $('input#validate').val();
 			
 			if(username==null||username==''){
@@ -295,6 +306,38 @@ $(document).ready(function() {
 					$('input#validate').parent().parent().removeClass('has-error').addClass('has-success');
 					removeMessage();
 				}
+			
+			
+			
+			var emailreg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+			
+			if(email==null||email==''){
+				$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(error);
+				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*请输入邮箱地址');
+				return;
+	        }else if(bservice.isEmailExist(email)){
+				$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(error);
+				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*邮箱已被注册');
+				return;
+			}
+	        else if(!emailreg.test(email)){
+					$('input#email').parent().find('span').remove();
+					$('input#email').parent().append(error);
+					$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+					addMessage('*邮箱格式不正确');
+					return;
+				}
+	        else{
+	        	$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(ok);
+				$('input#email').parent().parent().removeClass('has-error').addClass('has-success');
+				removeMessage();
+	        	}
+
 
 			
 			var companyname = $('input#companyname').val();
@@ -360,7 +403,7 @@ $(document).ready(function() {
 			
 
 			try{
-				var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname,"identityCard":"123", "license" : license, "privilege" : 11};
+				var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname,"identityCard":"123", "license" : license, "privilege" : 11, "email" : email};
 				var bor = bservice.register(borrower, validate);
 				
 				var financingrequest = {"_t_":"gpps.model.FinancingRequest", "govermentOrderName":ordertitle, "govermentOrderDetail":"asdfadfadsfasdf", "applyFinancingAmount":parseFloat(amount), "rate":"12%", "createtime":(new Date()).getTime(), "lastModifyTime":(new Date()).getTime(), "borrowerID": bor.id};
@@ -376,6 +419,34 @@ $(document).ready(function() {
 			
 			
         });
+    
+    
+    $('input#email').blur(function(e){
+    	var email = $(this).val();
+    	var emailreg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+        	if(email==null||email==''){
+        }else if(bservice.isEmailExist(email)){
+			$('input#email').parent().find('span').remove();
+			$('input#email').parent().append(error);
+			$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+			addMessage('*邮箱已被注册');
+			return;
+		}
+        else if(!emailreg.test(email)){
+				$('input#email').parent().find('span').remove();
+				$('input#email').parent().append(error);
+				$('input#email').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*邮箱格式不正确');
+			}
+        else{
+        	$('input#email').parent().find('span').remove();
+			$('input#email').parent().append(ok);
+			$('input#email').parent().parent().removeClass('has-error').addClass('has-success');
+			removeMessage();
+        		}
+    });
+    
+    
 
     $('input#username').blur(function(e){
         var username = $(this).val();

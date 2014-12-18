@@ -572,8 +572,17 @@ var createSingleProduct2 = function(order){
 	return str;
 }
 
+
+
+
+
+
+
+
+
+
 var createBorrowerNavLevel2 = function(nav){
-	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
+	var ul = $('<ul class="nav nav-second navbar-nav navbar-right"></ul>');
 	if(nav=='bcenter'){
 		
 		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');

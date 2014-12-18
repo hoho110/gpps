@@ -1,4 +1,4 @@
-
+var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
 _defaultDataTableOLanguage = {
 		"sProcessing" : "<img src ='images/waiting.gif' height = 18/>正在查询中，请稍后......",
 		"sLengthMenu" : "每页 _MENU_ 条记录",
@@ -95,53 +95,92 @@ var defaultSettings_noCallBack = {
 			16:"流标",
 			32:"已关闭"
 	}
+	
+var readletter=function(id){
+		window.location.href="baccountdetail.html?fid=bcenter&sid=letter-unread-mycenter";
+		window.open('letter.html?lid='+id);
+	}
+var repay = function(id){
+		if(user.authorizeTypeOpen!=2){
+			alert('尚未授权平台自动还款，请先执行授权再还款！');
+			return;
+		}
+		
+		if(confirm('确认要执行本次还款？')){
+		try{
+			paybackService.repay(parseInt(id));
+			alert('还款成功！');
+			window.location.href="baccountdetail.html?fid=payback&sid=payback-have";
+		}catch(e){
+			alert(e.message);
+			window.location.href="baccountdetail.html?fid=payback&sid=payback-canpay";
+		}
+		}
+}
+var apply = function(id){
+	try{
+		paybackService.applyRepayInAdvance(parseInt(id));
+		window.location.href="baccountdetail.html?fid=payback&sid=payback-canpay";
+	}catch(e){
+		alert(e.message);
+		window.location.href="baccountdetail.html?fid=payback&sid=payback-canapply";
+	}
+	
+}
 
 
 var myscore = function(container){
 	var bService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
 	var borrower=bService.getCurrentUser();
-	var content = $('<div></div>');
+	
+	
+	
+	
+	var aaData = new Array();
+	
+	aaData.push(["level5","10000000以上", "3个月", "1000000", "有最低消费"]);
+	aaData.push(["level4","1000000-10000000", "3个月", "300000", "有最低消费"]);
+	aaData.push(["level3","200000-1000000", "半年", "100000", "有最低消费"]);
+	aaData.push(["level2","50000-200000", "一年", "10000", "有最低消费"]);
+	aaData.push(["level1","10000-50000", "永久", "无", "无最低消费"]);
+	aaData.push(["level0","0-10000", "永久", "无", "无最低消费"]);
+	
+	
+	
+	
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
+	
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 135px;">会员等级</th>');
+	tr.append('<th style="width: 102px;">对应积分</th>');
+	tr.append('<th style="width: 60px;">有效期</th>');
+	tr.append('<th style="width: 60px;">最低贡献值</th>');
+	tr.append('<th style="width: 102px;">说明</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	
 	var name = borrower.name==null?borrower.loginId : borrower.name
-	content.append('<p>您好'+name+'，您的信用值是<span class="orange">'+borrower.creditValue+'</span>分，信用等级为<span class="orange">level'+borrower.level+'</span></p>');
-	content.append('<br><span class="orange">积分规则：</span>');
-	content.append('<p>如何获取积分的说明</p>');
-	var str = "";
-	str += '<table class="table table-striped table-hover" style="min-width:300px;">';
-	str += '<thead>';	
-	str += '<tr><td style="min-width:100px;">会员等级</td><td style="min-width:50px;">对应积分</td><td style="min-width:100px;">有效期</td><td style="min-width:50px;">最低贡献值</td><td style="min-width:50px;">说明</td></tr>';
-	str += '</thead>';
-	str += '<tbody>';
-	str += '<tr><td>level5</td><td>10000000以上</td><td>3个月</td><td>1000000</td><td>有最低消费</td></tr>';
-	str += '<tr><td>level4</td><td>1000000-10000000</td><td>3个月</td><td>300000</td><td>有最低消费</td></tr>';
-	str += '<tr><td>level3</td><td>200000-1000000</td><td>半年</td><td>100000</td><td>有最低消费</td></tr>';
-	str += '<tr><td>level2</td><td>50000-200000</td><td>一年</td><td>10000</td><td>有最低消费</td></tr>';
-	str += '<tr><td>level1</td><td>10000-50000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
-	str += '<tr><td>level0</td><td>0-10000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
-	str += '</tbody>';
-	str += '</table>';
-	content.append(str);
+	container.append('<p>您好'+name+'，您的信用值是<span class="orange">'+borrower.creditValue+'</span>分，信用等级为<span class="orange">level'+borrower.level+'</span></p>');
+	container.append('<br><span class="orange">积分规则：</span>');
+	container.append(table);
 	
-	
-	
-	content.append('<br><span class="orange">会员特权：</span>');
-	
-	
-	var str1 = "";
-	str1 += '<table class="table table-striped table-hover" style="min-width:300px;">';
-	str1 += '<thead>';	
-	str1 += '<tr><td style="min-width:100px;">会员等级</td><td style="min-width:50px;">特权一</td><td style="min-width:100px;">特权二</td><td style="min-width:50px;">特权三</td><td style="min-width:50px;">说明</td></tr>';
-	str1 += '</thead>';
-	str1 += '<tbody>';
-	str1 += '<tr><td>level5</td><td>10000000以上</td><td>3个月</td><td>1000000</td><td>有最低消费</td></tr>';
-	str1 += '<tr><td>level4</td><td>1000000-10000000</td><td>3个月</td><td>300000</td><td>有最低消费</td></tr>';
-	str1 += '<tr><td>level3</td><td>200000-1000000</td><td>半年</td><td>100000</td><td>有最低消费</td></tr>';
-	str1 += '<tr><td>level2</td><td>50000-200000</td><td>一年</td><td>10000</td><td>有最低消费</td></tr>';
-	str1 += '<tr><td>level1</td><td>10000-50000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
-	str1 += '<tr><td>level0</td><td>0-10000</td><td>永久</td><td>无</td><td>无最低消费</td></tr>';
-	str1 += '</tbody>';
-	str1 += '</table>';
-	content.append(str1);
-	container.append(content);
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		bFilter : false, //是否使用搜索 
+		aaData : aaData,
+		bPaginate : false, // 是否使用分页
+		bLengthChange : false, //是否启用设置每页显示记录数 
+		iDisplayLength : 10, //默认每页显示的记录数
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 
 var requestall = function(container){
@@ -179,14 +218,33 @@ var requestall = function(container){
 		                    formatDate(data.createtime),
 		                    str]);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
+	
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 235px;">订单名称</th>');
+	tr.append('<th style="width: 217px;">申请额度</th>');
+	tr.append('<th style="width: 102px;">预期利率</th>');
+	tr.append('<th style="width: 42px;">申请时间</th>');
+	tr.append('<th style="width: 42px;">状态</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	container.append(table);
+	
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		aaData : aaData,
+		bFilter : false, //是否使用搜索 
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 	
 }
 
@@ -219,14 +277,33 @@ var requesttohandle = function(container){
 		                    formatDate(data.createtime),
 		                    '待审核']);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
+	
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 235px;">订单名称</th>');
+	tr.append('<th style="width: 217px;">申请额度</th>');
+	tr.append('<th style="width: 102px;">预期利率</th>');
+	tr.append('<th style="width: 42px;">申请时间</th>');
+	tr.append('<th style="width: 42px;">状态</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	container.append(table);
+	
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		aaData : aaData,
+		bFilter : false, //是否使用搜索 
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 
 
@@ -260,14 +337,33 @@ var requestpass = function(container){
 		                    formatDate(data.createtime),
 		                    '审核通过']);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
+	
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 235px;">订单名称</th>');
+	tr.append('<th style="width: 217px;">申请额度</th>');
+	tr.append('<th style="width: 102px;">预期利率</th>');
+	tr.append('<th style="width: 42px;">申请时间</th>');
+	tr.append('<th style="width: 42px;">状态</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	container.append(table);
+	
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		aaData : aaData,
+		bFilter : false, //是否使用搜索 
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 
 
@@ -300,14 +396,33 @@ var requestrefuse = function(container){
 		                    formatDate(data.createtime),
 		                    '审核未通过']);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
+	
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 235px;">订单名称</th>');
+	tr.append('<th style="width: 217px;">申请额度</th>');
+	tr.append('<th style="width: 102px;">预期利率</th>');
+	tr.append('<th style="width: 42px;">申请时间</th>');
+	tr.append('<th style="width: 42px;">状态</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	container.append(table);
+	
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		aaData : aaData,
+		bFilter : false, //是否使用搜索 
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 
 var orderall = function(container){
@@ -315,29 +430,6 @@ var orderall = function(container){
 	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(-1);
-	
-	var columns = [ {
-		"sTitle" : "订单名称",
-			"code" : "name"
-	}, {
-		"sTitle" : "融资起始时间",
-		"code" : "state"
-	}, {
-		"sTitle" : "融资截止时间",
-		"code" : "financingEndtime"
-	}, {
-		"sTitle" : "预期金额",
-		"code" : "expect"
-	}, {
-		"sTitle" : "已融金额",
-		"code" : "real"
-	}, {
-		"sTitle" : "状态",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "详情",
-		"code" : "view"
-	}];
 	var aaData = new Array();
 	for(var i=0; i<orders.size(); i++){
 		var data=orders.get(i);
@@ -354,60 +446,38 @@ var orderall = function(container){
 		                    totalamount,
 		                    real,
 		                    orderstate[data.state],
-		                    "<button class='vieworder' id='"+data.id+"'>查看</button>"]);
+		                    "<a class='vieworder' href='productdetail.html?pid="+products.get(0).id+"' target='_blank' id='"+data.id+"'>查看</a>"]);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
 	
-	$('button.vieworder').click(function(e){
-		var ntr = $(this).parents('tr').next('tr');
-		if(ntr.prop("className")=='information'){
-			$(this).parents('tr').removeAttr("style");
-			ntr.remove();
-			return;
-		}
-		
-		$(this).parents('tr').css('backgroundColor', 'orange');
-		
-		var orderid = parseInt($(this).attr('id'));
-		var order = orderDao.find(orderid);
-		var products = productService.findByGovermentOrder(orderid);
-		
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
 	
-		var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
-		var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
-		tr.append('<td class="color-gray-text text-center">产品类型</td>');
-		tr.append('<td class="color-gray-text text-center">年利率</td>');
-		tr.append('<td class="color-gray-text text-center">预期金额</td>');
-		tr.append('<td class="color-gray-text text-center">已融金额</td>');
-		tr.append('<td class="color-gray-text text-center">期限</td>');
-		tr.append('<td class="color-gray-text text-center">进度</td>');
-		tr.append('<td class="color-gray-text text-center"></td>');
-		table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
-		table.append(tr);
-		
-    	   for(var i=0; i<products.size(); i++){
-    		   var product = products.get(i);
-    		   product.govermentOrder = order;
-    		   table.append(createSingleSubProduct(product));
-    	   }
-		
-		
-		var ftr = $('<tr class="information"></tr>');
-		var ftd = $('<td colspan=7 align=center></td>');
-		ftr.append(ftd);
-		ftd.append(table);
-		
-		
-		$(this).parents('tr').after(ftr);
-		
-	});
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 235px;">订单名称</th>');
+	tr.append('<th style="width: 217px;">融资起始时间</th>');
+	tr.append('<th style="width: 102px;">融资截止时间</th>');
+	tr.append('<th style="width: 42px;">预期金额</th>');
+	tr.append('<th style="width: 42px;">已融金额</th>');
+	tr.append('<th style="width: 42px;">状态</th>');
+	tr.append('<th style="width: 42px;">详情</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	container.append(table);
+	
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		aaData : aaData,
+		bFilter : false, //是否使用搜索 
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 
 var orderpreview = function(container){
@@ -416,28 +486,6 @@ var orderpreview = function(container){
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(2);
 	
-	var columns = [ {
-		"sTitle" : "订单名称",
-			"code" : "name"
-	}, {
-		"sTitle" : "融资起始时间",
-		"code" : "state"
-	}, {
-		"sTitle" : "融资截止时间",
-		"code" : "financingEndtime"
-	}, {
-		"sTitle" : "预期金额",
-		"code" : "expect"
-	}, {
-		"sTitle" : "已融金额",
-		"code" : "real"
-	}, {
-		"sTitle" : "状态",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "详情",
-		"code" : "view"
-	}];
 	var aaData = new Array();
 	for(var i=0; i<orders.size(); i++){
 		var data=orders.get(i);
@@ -454,57 +502,39 @@ var orderpreview = function(container){
 		                    totalamount,
 		                    real,
 		                    orderstate[data.state],
-		                    "<button class='vieworder' id='"+data.id+"'>查看</button>"]);
+		                    "<a class='vieworder' href='productdetail.html?pid="+products.get(0).id+"' target='_blank' id='"+data.id+"'>查看</a>"]);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
 	
-	$('button.vieworder').click(function(e){
-		var ntr = $(this).parents('tr').next('tr');
-		if(ntr.prop("className")=='information'){
-			ntr.remove();
-			return;
-		}
-		
-		var orderid = parseInt($(this).attr('id'));
-		var order = orderDao.find(orderid);
-		var products = productService.findByGovermentOrder(orderid);
-		
+var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
 	
-		var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
-		var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
-		tr.append('<td class="color-gray-text text-center">产品类型</td>');
-		tr.append('<td class="color-gray-text text-center">年利率</td>');
-		tr.append('<td class="color-gray-text text-center">预期金额</td>');
-		tr.append('<td class="color-gray-text text-center">已融金额</td>');
-		tr.append('<td class="color-gray-text text-center">期限</td>');
-		tr.append('<td class="color-gray-text text-center">进度</td>');
-		tr.append('<td class="color-gray-text text-center"></td>');
-		table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
-		table.append(tr);
-		
-    	   for(var i=0; i<products.size(); i++){
-    		   var product = products.get(i);
-    		   product.govermentOrder = order;
-    		   table.append(createSingleSubProduct(product));
-    	   }
-		
-		
-		var ftr = $('<tr class="information"></tr>');
-		var ftd = $('<td colspan=7 align=center></td>');
-		ftr.append(ftd);
-		ftd.append(table);
-		
-		
-		$(this).parents('tr').after(ftr);
-		
-	});
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 235px;">订单名称</th>');
+	tr.append('<th style="width: 217px;">融资起始时间</th>');
+	tr.append('<th style="width: 102px;">融资截止时间</th>');
+	tr.append('<th style="width: 42px;">预期金额</th>');
+	tr.append('<th style="width: 42px;">已融金额</th>');
+	tr.append('<th style="width: 42px;">状态</th>');
+	tr.append('<th style="width: 42px;">详情</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	container.append(table);
+	
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		aaData : aaData,
+		bFilter : false, //是否使用搜索 
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
+	
 }
 
 
@@ -514,28 +544,6 @@ var orderfinancing = function(container){
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(1);
 	
-	var columns = [ {
-		"sTitle" : "订单名称",
-			"code" : "name"
-	}, {
-		"sTitle" : "融资起始时间",
-		"code" : "state"
-	}, {
-		"sTitle" : "融资截止时间",
-		"code" : "financingEndtime"
-	}, {
-		"sTitle" : "预期金额",
-		"code" : "expect"
-	}, {
-		"sTitle" : "已融金额",
-		"code" : "real"
-	}, {
-		"sTitle" : "状态",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "详情",
-		"code" : "view"
-	}];
 	var aaData = new Array();
 	for(var i=0; i<orders.size(); i++){
 		var data=orders.get(i);
@@ -552,57 +560,38 @@ var orderfinancing = function(container){
 		                    totalamount,
 		                    real,
 		                    orderstate[data.state],
-		                    "<button class='vieworder' id='"+data.id+"'>查看</button>"]);
+		                    "<a class='vieworder' href='productdetail.html?pid="+products.get(0).id+"' target='_blank' id='"+data.id+"'>查看</a>"]);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
 	
-	$('button.vieworder').click(function(e){
-		var ntr = $(this).parents('tr').next('tr');
-		if(ntr.prop("className")=='information'){
-			ntr.remove();
-			return;
-		}
-		
-		var orderid = parseInt($(this).attr('id'));
-		var order = orderDao.find(orderid);
-		var products = productService.findByGovermentOrder(orderid);
-		
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 235px;">订单名称</th>');
+	tr.append('<th style="width: 217px;">融资起始时间</th>');
+	tr.append('<th style="width: 102px;">融资截止时间</th>');
+	tr.append('<th style="width: 42px;">预期金额</th>');
+	tr.append('<th style="width: 42px;">已融金额</th>');
+	tr.append('<th style="width: 42px;">状态</th>');
+	tr.append('<th style="width: 42px;">详情</th>');
 	
-		var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
-		var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
-		tr.append('<td class="color-gray-text text-center">产品类型</td>');
-		tr.append('<td class="color-gray-text text-center">年利率</td>');
-		tr.append('<td class="color-gray-text text-center">预期金额</td>');
-		tr.append('<td class="color-gray-text text-center">已融金额</td>');
-		tr.append('<td class="color-gray-text text-center">期限</td>');
-		tr.append('<td class="color-gray-text text-center">进度</td>');
-		tr.append('<td class="color-gray-text text-center"></td>');
-		table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
-		table.append(tr);
-		
-    	   for(var i=0; i<products.size(); i++){
-    		   var product = products.get(i);
-    		   product.govermentOrder = order;
-    		   table.append(createSingleSubProduct(product));
-    	   }
-		
-		
-		var ftr = $('<tr class="information"></tr>');
-		var ftd = $('<td colspan=7 align=center></td>');
-		ftr.append(ftd);
-		ftd.append(table);
-		
-		
-		$(this).parents('tr').after(ftr);
-		
-	});
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	container.append(table);
+	
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		aaData : aaData,
+		bFilter : false, //是否使用搜索 
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
+	
 }
 
 var orderpaying = function(container){
@@ -611,22 +600,6 @@ var orderpaying = function(container){
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(4);
 	
-	var columns = [ {
-		"sTitle" : "订单名称",
-			"code" : "name"
-	}, {
-		"sTitle" : "计息起始时间",
-		"code" : "state"
-	}, {
-		"sTitle" : "实际融资金额",
-		"code" : "real"
-	}, {
-		"sTitle" : "状态",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "详情",
-		"code" : "view"
-	}];
 	var aaData = new Array();
 	for(var i=0; i<orders.size(); i++){
 		var data=orders.get(i);
@@ -639,57 +612,36 @@ var orderpaying = function(container){
 		             formatDate(data.incomeStarttime),
 		                    real,
 		                    orderstate[data.state],
-		                    "<button class='vieworder' id='"+data.id+"'>查看</button>"]);
+		                    "<a class='vieworder' href='productdetail.html?pid="+products.get(0).id+"' target='_blank' id='"+data.id+"'>查看</a>"]);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
 	
-	$('button.vieworder').click(function(e){
-		var ntr = $(this).parents('tr').next('tr');
-		if(ntr.prop("className")=='information'){
-			ntr.remove();
-			return;
-		}
-		
-		var orderid = parseInt($(this).attr('id'));
-		var order = orderDao.find(orderid);
-		var products = productService.findByGovermentOrder(orderid);
-		
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
 	
-		var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
-		var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
-		tr.append('<td class="color-gray-text text-center">产品类型</td>');
-		tr.append('<td class="color-gray-text text-center">年利率</td>');
-		tr.append('<td class="color-gray-text text-center">预期金额</td>');
-		tr.append('<td class="color-gray-text text-center">已融金额</td>');
-		tr.append('<td class="color-gray-text text-center">期限</td>');
-		tr.append('<td class="color-gray-text text-center">进度</td>');
-		tr.append('<td class="color-gray-text text-center"></td>');
-		table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
-		table.append(tr);
-		
-    	   for(var i=0; i<products.size(); i++){
-    		   var product = products.get(i);
-    		   product.govermentOrder = order;
-    		   table.append(createSingleSubProduct(product));
-    	   }
-		
-		
-		var ftr = $('<tr class="information"></tr>');
-		var ftd = $('<td colspan=7 align=center></td>');
-		ftr.append(ftd);
-		ftd.append(table);
-		
-		
-		$(this).parents('tr').after(ftr);
-		
-	});
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 235px;">订单名称</th>');
+	tr.append('<th style="width: 217px;">计息起始时间</th>');
+	tr.append('<th style="width: 102px;">实际融资金额</th>');
+	tr.append('<th style="width: 42px;">状态</th>');
+	tr.append('<th style="width: 42px;">详情</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	container.append(table);
+	
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		aaData : aaData,
+		bFilter : false, //是否使用搜索 
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 
 var ordertoclose = function(container){
@@ -698,22 +650,6 @@ var ordertoclose = function(container){
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(8);
 	
-	var columns = [ {
-		"sTitle" : "订单名称",
-			"code" : "name"
-	}, {
-		"sTitle" : "还款完成时间",
-		"code" : "state"
-	}, {
-		"sTitle" : "实际融资金额",
-		"code" : "real"
-	}, {
-		"sTitle" : "状态",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "详情",
-		"code" : "view"
-	}];
 	var aaData = new Array();
 	for(var i=0; i<orders.size(); i++){
 		var data=orders.get(i);
@@ -726,57 +662,36 @@ var ordertoclose = function(container){
 		             formatDate(data.lastModifytime),
 		                    real,
 		                    orderstate[data.state],
-		                    "<button class='vieworder' id='"+data.id+"'>查看</button>"]);
+		                    "<a class='vieworder' href='productdetail.html?pid="+products.get(0).id+"' target='_blank' id='"+data.id+"'>查看</a>"]);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
 	
-	$('button.vieworder').click(function(e){
-		var ntr = $(this).parents('tr').next('tr');
-		if(ntr.prop("className")=='information'){
-			ntr.remove();
-			return;
-		}
-		
-		var orderid = parseInt($(this).attr('id'));
-		var order = orderDao.find(orderid);
-		var products = productService.findByGovermentOrder(orderid);
-		
+var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
 	
-		var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
-		var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
-		tr.append('<td class="color-gray-text text-center">产品类型</td>');
-		tr.append('<td class="color-gray-text text-center">年利率</td>');
-		tr.append('<td class="color-gray-text text-center">预期金额</td>');
-		tr.append('<td class="color-gray-text text-center">已融金额</td>');
-		tr.append('<td class="color-gray-text text-center">期限</td>');
-		tr.append('<td class="color-gray-text text-center">进度</td>');
-		tr.append('<td class="color-gray-text text-center"></td>');
-		table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
-		table.append(tr);
-		
-    	   for(var i=0; i<products.size(); i++){
-    		   var product = products.get(i);
-    		   product.govermentOrder = order;
-    		   table.append(createSingleSubProduct(product));
-    	   }
-		
-		
-		var ftr = $('<tr class="information"></tr>');
-		var ftd = $('<td colspan=7 align=center></td>');
-		ftr.append(ftd);
-		ftd.append(table);
-		
-		
-		$(this).parents('tr').after(ftr);
-		
-	});
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 235px;">订单名称</th>');
+	tr.append('<th style="width: 217px;">还款完成时间</th>');
+	tr.append('<th style="width: 102px;">实际融资金额</th>');
+	tr.append('<th style="width: 42px;">状态</th>');
+	tr.append('<th style="width: 42px;">详情</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	container.append(table);
+	
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		aaData : aaData,
+		bFilter : false, //是否使用搜索 
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 
 
@@ -787,25 +702,6 @@ var orderquit = function(container){
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(16);
 	
-	var columns = [ {
-		"sTitle" : "订单名称",
-			"code" : "name"
-	}, {
-		"sTitle" : "流标时间",
-		"code" : "state"
-	}, {
-		"sTitle" : "预期融资金额",
-		"code" : "expect"
-	}, {
-		"sTitle" : "实际融资金额",
-		"code" : "expect"
-	}, {
-		"sTitle" : "状态",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "详情",
-		"code" : "view"
-	}];
 	var aaData = new Array();
 	for(var i=0; i<orders.size(); i++){
 		var data=orders.get(i);
@@ -821,57 +717,37 @@ var orderquit = function(container){
 		             		expect,
 		                    real,
 		                    orderstate[data.state],
-		                    "<button class='vieworder' id='"+data.id+"'>查看</button>"]);
+		                    "<a class='vieworder' href='productdetail.html?pid="+products.get(0).id+"' target='_blank' id='"+data.id+"'>查看</a>"]);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
 	
-	$('button.vieworder').click(function(e){
-		var ntr = $(this).parents('tr').next('tr');
-		if(ntr.prop("className")=='information'){
-			ntr.remove();
-			return;
-		}
-		
-		var orderid = parseInt($(this).attr('id'));
-		var order = orderDao.find(orderid);
-		var products = productService.findByGovermentOrder(orderid);
-		
+var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
 	
-		var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
-		var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
-		tr.append('<td class="color-gray-text text-center">产品类型</td>');
-		tr.append('<td class="color-gray-text text-center">年利率</td>');
-		tr.append('<td class="color-gray-text text-center">预期金额</td>');
-		tr.append('<td class="color-gray-text text-center">已融金额</td>');
-		tr.append('<td class="color-gray-text text-center">期限</td>');
-		tr.append('<td class="color-gray-text text-center">进度</td>');
-		tr.append('<td class="color-gray-text text-center"></td>');
-		table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
-		table.append(tr);
-		
-    	   for(var i=0; i<products.size(); i++){
-    		   var product = products.get(i);
-    		   product.govermentOrder = order;
-    		   table.append(createSingleSubProduct(product));
-    	   }
-		
-		
-		var ftr = $('<tr class="information"></tr>');
-		var ftd = $('<td colspan=7 align=center></td>');
-		ftr.append(ftd);
-		ftd.append(table);
-		
-		
-		$(this).parents('tr').after(ftr);
-		
-	});
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 235px;">订单名称</th>');
+	tr.append('<th style="width: 217px;">流标时间</th>');
+	tr.append('<th style="width: 102px;">预期融资金额</th>');
+	tr.append('<th style="width: 102px;">实际融资金额</th>');
+	tr.append('<th style="width: 42px;">状态</th>');
+	tr.append('<th style="width: 42px;">详情</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	container.append(table);
+	
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		aaData : aaData,
+		bFilter : false, //是否使用搜索 
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 
 
@@ -882,22 +758,6 @@ var orderclosed = function(container){
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(32);
 	
-	var columns = [ {
-		"sTitle" : "订单名称",
-			"code" : "name"
-	}, {
-		"sTitle" : "关闭时间",
-		"code" : "state"
-	}, {
-		"sTitle" : "实际融资金额",
-		"code" : "real"
-	}, {
-		"sTitle" : "状态",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "详情",
-		"code" : "view"
-	}];
 	var aaData = new Array();
 	for(var i=0; i<orders.size(); i++){
 		var data=orders.get(i);
@@ -910,57 +770,35 @@ var orderclosed = function(container){
 		             formatDate(data.lastModifytime),
 		                    real,
 		                    orderstate[data.state],
-		                    "<button class='vieworder' id='"+data.id+"'>查看</button>"]);
+		                    "<a class='vieworder' href='productdetail.html?pid="+products.get(0).id+"' target='_blank' id='"+data.id+"'>查看</a>"]);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
 	
-	$('button.vieworder').click(function(e){
-		var ntr = $(this).parents('tr').next('tr');
-		if(ntr.prop("className")=='information'){
-			ntr.remove();
-			return;
-		}
-		
-		var orderid = parseInt($(this).attr('id'));
-		var order = orderDao.find(orderid);
-		var products = productService.findByGovermentOrder(orderid);
-		
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 235px;">订单名称</th>');
+	tr.append('<th style="width: 217px;">关闭时间</th>');
+	tr.append('<th style="width: 102px;">实际融资金额</th>');
+	tr.append('<th style="width: 42px;">状态</th>');
+	tr.append('<th style="width: 42px;">详情</th>');
 	
-		var table = $('<table class="ui-list-invest" id="products" style="width:95%"></table>');
-		var tr = $('<tr id="header" style="padding-left:0px; padding-right:0px;"></tr>');
-		tr.append('<td class="color-gray-text text-center">产品类型</td>');
-		tr.append('<td class="color-gray-text text-center">年利率</td>');
-		tr.append('<td class="color-gray-text text-center">预期金额</td>');
-		tr.append('<td class="color-gray-text text-center">已融金额</td>');
-		tr.append('<td class="color-gray-text text-center">期限</td>');
-		tr.append('<td class="color-gray-text text-center">进度</td>');
-		tr.append('<td class="color-gray-text text-center"></td>');
-		table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
-		table.append(tr);
-		
-    	   for(var i=0; i<products.size(); i++){
-    		   var product = products.get(i);
-    		   product.govermentOrder = order;
-    		   table.append(createSingleSubProduct(product));
-    	   }
-		
-		
-		var ftr = $('<tr class="information"></tr>');
-		var ftd = $('<td colspan=7 align=center></td>');
-		ftr.append(ftd);
-		ftd.append(table);
-		
-		
-		$(this).parents('tr').after(ftr);
-		
-	});
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	
+	container.append(table);
+	
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		aaData : aaData,
+		bFilter : false, //是否使用搜索 
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 
 
@@ -970,86 +808,87 @@ var orderclosed = function(container){
 var paybackall = function(container){
 	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
 	var repayedDetail=account.getBorrowerRepayedDetail();
-	var willBeRepayedDetail=account.getBorrowerWillBeRepayedDetail();
-	var content = $('<div></div>');
-	var str = "";
-	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-	str += '<thead>';	
-	str += '<tr><td style="min-width:100px;">已回款统计</td><th style="min-width:50px;">最近一年</th><th style="min-width:100px;">最近半年</th><th style="min-width:50px;">最近三个月</th><th style="min-width:50px;">最近两个月</th><th style="min-width:50px;">最近一个月</th></tr>';
-	str += '</thead>';
-	str += '<tbody>';
-	str += '<tr><td>本金</td><td>'+parseFloat(repayedDetail.get("oneyear").chiefAmount.value).toFixed(2)+'</td><td>'
-								 +parseFloat(repayedDetail.get("halfyear").chiefAmount.value).toFixed(2)+'</td><td>'
-								 +parseFloat(repayedDetail.get("threemonth").chiefAmount.value).toFixed(2)+'</td><td>'
-								 +parseFloat(repayedDetail.get("twomonth").chiefAmount.value).toFixed(2)+'</td><td>'
-								 +parseFloat(repayedDetail.get("onemonth").chiefAmount.value).toFixed(2)+'</td></tr>';
-	str += '<tr><td>利息</td><td>'+parseFloat(repayedDetail.get("oneyear").interest.value).toFixed(2)+'</td><td>'
-	 							 +parseFloat(repayedDetail.get("halfyear").interest.value).toFixed(2)+'</td><td>'
- 							 	 +parseFloat(repayedDetail.get("threemonth").interest.value).toFixed(2)+'</td><td>'
- 							 	 +parseFloat(repayedDetail.get("twomonth").interest.value).toFixed(2)+'</td><td>'
- 							 	 +parseFloat(repayedDetail.get("onemonth").interest.value).toFixed(2)+'</td></tr>';
-	str += '<tr><td>总计</td><td>'+(parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("oneyear").interest.value)).toFixed(2)+'</td><td>'
-	 							 +(parseFloat(repayedDetail.get("halfyear").chiefAmount.value)+parseFloat(repayedDetail.get("halfyear").interest.value)).toFixed(2)+'</td><td>'
-	 							 +(parseFloat(repayedDetail.get("threemonth").chiefAmount.value)+parseFloat(repayedDetail.get("threemonth").interest.value)).toFixed(2)+'</td><td>'
-	 							 +(parseFloat(repayedDetail.get("twomonth").chiefAmount.value)+parseFloat(repayedDetail.get("twomonth").interest.value)).toFixed(2)+'</td><td>'
-	 							 +(parseFloat(repayedDetail.get("onemonth").chiefAmount.value)+parseFloat(repayedDetail.get("onemonth").interest.value)).toFixed(2)+'</td></tr>';
-	str += '</tbody>';
-	str += '</table>';
+	var willBeRepayedDetail =account.getBorrowerWillBeRepayedDetail();
 	
-	str += '<br>';
-	str += '<br>';
+	var aaData = new Array();
+	
+	aaData.push(["已还款本金",
+	             repayedDetail.get("oneyear").chiefAmount.value,
+	             repayedDetail.get("halfyear").chiefAmount.value,
+	             repayedDetail.get("threemonth").chiefAmount.value,
+	             repayedDetail.get("twomonth").chiefAmount.value,
+	             repayedDetail.get("onemonth").chiefAmount.value
+                 ]);
+	aaData.push(["已还款利息",
+	             repayedDetail.get("oneyear").interest.value,
+	             repayedDetail.get("halfyear").interest.value,
+	             repayedDetail.get("threemonth").interest.value,
+	             repayedDetail.get("twomonth").interest.value,
+	             repayedDetail.get("onemonth").interest.value
+                 ]);
+	aaData.push(["已还款总计",
+	             parseFloat(repayedDetail.get("oneyear").chiefAmount.value)+parseFloat(repayedDetail.get("oneyear").interest.value),
+	             parseFloat(repayedDetail.get("halfyear").chiefAmount.value)+parseFloat(repayedDetail.get("halfyear").interest.value),
+	             parseFloat(repayedDetail.get("threemonth").chiefAmount.value)+parseFloat(repayedDetail.get("threemonth").interest.value),
+	             parseFloat(repayedDetail.get("twomonth").chiefAmount.value)+parseFloat(repayedDetail.get("twomonth").interest.value),
+	             parseFloat(repayedDetail.get("onemonth").chiefAmount.value)+parseFloat(repayedDetail.get("onemonth").interest.value)
+                 ]);
+	
+		aaData.push(["待还款本金",
+		             	willBeRepayedDetail.get("oneyear").chiefAmount.value,
+		             	willBeRepayedDetail.get("halfyear").chiefAmount.value,
+		             	willBeRepayedDetail.get("threemonth").chiefAmount.value,
+		             	willBeRepayedDetail.get("twomonth").chiefAmount.value,
+		             	willBeRepayedDetail.get("onemonth").chiefAmount.value
+	                    ]);
+		aaData.push(["待还款利息",
+		             	willBeRepayedDetail.get("oneyear").interest.value,
+		             	willBeRepayedDetail.get("halfyear").interest.value,
+		             	willBeRepayedDetail.get("threemonth").interest.value,
+		             	willBeRepayedDetail.get("twomonth").interest.value,
+		             	willBeRepayedDetail.get("onemonth").interest.value
+	                    ]);
+		aaData.push(["待还款总计",
+		             parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("oneyear").interest.value),
+		             parseFloat(willBeRepayedDetail.get("halfyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("halfyear").interest.value),
+		             parseFloat(willBeRepayedDetail.get("threemonth").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("threemonth").interest.value),
+		             parseFloat(willBeRepayedDetail.get("twomonth").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("twomonth").interest.value),
+		             parseFloat(willBeRepayedDetail.get("onemonth").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("onemonth").interest.value)
+	                    ]);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
+	
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 135px;">统计项</th>');
+	tr.append('<th style="width: 102px;">近一年</th>');
+	tr.append('<th style="width: 60px;">近半年</th>');
+	tr.append('<th style="width: 60px;">近三个月</th>');
+	tr.append('<th style="width: 102px;">近两个月</th>');
+	tr.append('<th style="width: 42px;">近一个月</th>');
+	
+	thead.append(tr);
+	table.append(thead)
 	
 	
-	str += '<table class="table table-striped table-hover" style="min-width:300px;" id="dataTables-example">';
-	str += '<thead>';	
-	str += '<tr><td style="min-width:100px;">待回款统计</td><th style="min-width:50px;">未来一年</th><th style="min-width:100px;">未来半年</th><th style="min-width:50px;">未来三个月</th><th style="min-width:50px;">未来两个月</th><th style="min-width:50px;">未来一个月</th></tr>';
-	str += '</thead>';
-	str += '<tbody>';
-	str += '<tr><td>本金</td><td>'+parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value).toFixed(2)+'</td><td>'
-								 +parseFloat(willBeRepayedDetail.get("halfyear").chiefAmount.value).toFixed(2)+'</td><td>'
-								 +parseFloat(willBeRepayedDetail.get("threemonth").chiefAmount.value).toFixed(2)+'</td><td>'
-								 +parseFloat(willBeRepayedDetail.get("twomonth").chiefAmount.value).toFixed(2)+'</td><td>'
-								 +parseFloat(willBeRepayedDetail.get("onemonth").chiefAmount.value).toFixed(2)+'</td></tr>';
-	str += '<tr><td>利息</td><td>'+parseFloat(willBeRepayedDetail.get("oneyear").interest.value).toFixed(2)+'</td><td>'
-								 +parseFloat(willBeRepayedDetail.get("halfyear").interest.value).toFixed(2)+'</td><td>'
-							 	 +parseFloat(willBeRepayedDetail.get("threemonth").interest.value).toFixed(2)+'</td><td>'
-							 	 +parseFloat(willBeRepayedDetail.get("twomonth").interest.value).toFixed(2)+'</td><td>'
-							 	 +parseFloat(willBeRepayedDetail.get("onemonth").interest.value).toFixed(2)+'</td></tr>';
-	str += '<tr><td>总计</td><td>'+(parseFloat(willBeRepayedDetail.get("oneyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("oneyear").interest.value)).toFixed(2)+'</td><td>'
-								 +(parseFloat(willBeRepayedDetail.get("halfyear").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("halfyear").interest.value)).toFixed(2)+'</td><td>'
-								 +(parseFloat(willBeRepayedDetail.get("threemonth").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("threemonth").interest.value)).toFixed(2)+'</td><td>'
-								 +(parseFloat(willBeRepayedDetail.get("twomonth").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("twomonth").interest.value)).toFixed(2)+'</td><td>'
-								 +(parseFloat(willBeRepayedDetail.get("onemonth").chiefAmount.value)+parseFloat(willBeRepayedDetail.get("onemonth").interest.value)).toFixed(2)+'</td></tr>';
-	str += '</tbody>';
-	str += '</table>';
+	table.append('<tbody></tbody>');
+	container.append(table);
 	
-	content.append(str);
-	container.append(content);
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		bFilter : false, //是否使用搜索 
+		aaData : aaData,
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
+	
 }
 
 var paybackcanpay = function(container){
 
 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
 	var paybacks = paybackService.findBorrowerCanBeRepayedPayBacks();
-	var columns = [ {
-		"sTitle" : "项目信息",
-			"code" : "product"
-	}, {
-		"sTitle" : "还款额",
-		"code" : "total"
-	}, {
-		"sTitle" : "本金",
-		"code" : "bj"
-	}, {
-		"sTitle" : "利息",
-		"code" : "lx"
-	}, {
-		"sTitle" : "最迟还款时间",
-		"code" : "time"
-	}, {
-		"sTitle" : "操作",
-		"code" : "operate"
-	}];
+	
 	var aaData = new Array();
 	for(var i=0; i<paybacks.size(); i++){
 		var data=paybacks.get(i);
@@ -1058,67 +897,40 @@ var paybackcanpay = function(container){
 	                    data.chiefAmount.value,
 	                    data.interest.value,
 	                    formatDateToDay(data.deadline),
-	                    "<button class='pay' id="+data.id+">还款</button>"
+	                    "<a class='pay' onclick='repay("+data.id+")' id="+data.id+">还款</a>"
 	                    ]);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
 	
-	$('button.pay').click(function(e){
-		
-		if(user.authorizeTypeOpen!=2){
-			alert('尚未授权平台自动还款，请先执行授权再还款！');
-			return;
-		}
-		
-		if(confirm('确认要执行本次还款？')){
-		var paybackid = $(this).attr('id');
-//		$('#myModal').modal({
-//			  keyboard: false,
-//			  backdrop: false
-//		});
-//		window.open('/account/repay/request?paybackId='+paybackid);
-		try{
-			paybackService.repay(parseInt(paybackid));
-			alert('还款成功！');
-			window.location.href="baccountdetail.html?fid=payback&sid=payback-have";
-		}catch(e){
-			alert(e.message);
-			window.location.href="baccountdetail.html?fid=payback&sid=payback-canpay";
-		}
-		}
-	});
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 135px;">项目信息</th>');
+	tr.append('<th style="width: 102px;">还款额</th>');
+	tr.append('<th style="width: 60px;">本金</th>');
+	tr.append('<th style="width: 60px;">利息</th>');
+	tr.append('<th style="width: 102px;">最迟还款时间</th>');
+	tr.append('<th style="width: 42px;">操作</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	container.append(table);
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		bFilter : false, //是否使用搜索 
+		aaData : aaData,
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 
 var paybackcanapply = function(container){
 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
 	var paybacks = paybackService.findBorrowerCanBeRepayedInAdvancePayBacks();
-	var columns = [ {
-		"sTitle" : "项目信息",
-			"code" : "product"
-	}, {
-		"sTitle" : "还款额",
-		"code" : "total"
-	}, {
-		"sTitle" : "本金",
-		"code" : "bj"
-	}, {
-		"sTitle" : "利息",
-		"code" : "lx"
-	}, {
-		"sTitle" : "最迟还款时间",
-		"code" : "time"
-	}, {
-		"sTitle" : "操作",
-		"code" : "operate"
-	}
-	];
 	var aaData = new Array();
 	for(var i=0; i<paybacks.size(); i++){
 		var data=paybacks.get(i);
@@ -1127,41 +939,38 @@ var paybackcanapply = function(container){
 	                    data.chiefAmount.value,
 	                    data.interest.value,
 	                    formatDateToDay(data.deadline),
-	                    "<button class='apply' id="+data.id+">申请提前</button>"
+	                    "<a class='apply' onclick='apply("+data.id+")' id="+data.id+">申请提前</a>"
 	                    ]);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
 	
-	$('button.apply').click(function(e){
-		paybackService.applyRepayInAdvance(parseInt($(this).attr('id')));
-		window.location.href="baccountdetail.html?fid=payback&sid=payback-canpay";
-	});
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 135px;">项目信息</th>');
+	tr.append('<th style="width: 102px;">还款额</th>');
+	tr.append('<th style="width: 60px;">本金</th>');
+	tr.append('<th style="width: 60px;">利息</th>');
+	tr.append('<th style="width: 102px;">最迟还款时间</th>');
+	tr.append('<th style="width: 42px;">操作</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	container.append(table);
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		responsive: true,
+		bFilter : false, //是否使用搜索 
+		aaData : aaData,
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 var paybacktoaudit = function(container){
 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
-	var columns = [ {
-		"sTitle" : "项目信息",
-			"code" : "product"
-	}, {
-		"sTitle" : "还款额",
-		"code" : "total"
-	}, {
-		"sTitle" : "本金",
-		"code" : "bj"
-	}, {
-		"sTitle" : "利息",
-		"code" : "lx"
-	}, {
-		"sTitle" : "还款时间",
-		"code" : "time"
-	}];
 	
 	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
 		var sEcho = "";
@@ -1171,9 +980,9 @@ var paybacktoaudit = function(container){
 			var data = aoData[i];
 			if (data.name == "sEcho")
 				sEcho = data.value;
-			if (data.name == "iDisplayStart")
+			if (data.name == "start")
 				iDisplayStart = data.value;
-			if (data.name == "iDisplayLength")
+			if (data.name == "length")
 				iDisplayLength = data.value;
 		}
 		var res = null;
@@ -1191,7 +1000,7 @@ var paybacktoaudit = function(container){
 			                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 			                    data.chiefAmount.value,
 			                    data.interest.value,
-			                    formatDateToDay(data.deadline)]);
+			                    formatDateToDay(data.realtime)]);
 			}
 		}
 		result.sEcho = sEcho;
@@ -1199,34 +1008,36 @@ var paybacktoaudit = function(container){
 
 		return res;
 	}
-	var mySettings = $.extend({}, defaultSettings, {
-		"aoColumns" : columns,
-		"fnServerData" : fnServerData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
+	
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 135px;">项目信息</th>');
+	tr.append('<th style="width: 102px;">还款额</th>');
+	tr.append('<th style="width: 60px;">本金</th>');
+	tr.append('<th style="width: 60px;">利息</th>');
+	tr.append('<th style="width: 102px;">还款时间</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	container.append(table);
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		bServerSide : true,
+		responsive: true,
+		bFilter : false, //是否使用搜索 
+		fnServerData : fnServerData,
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 	
 }
 var paybackhave = function(container){
 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
-	var columns = [ {
-		"sTitle" : "项目信息",
-			"code" : "product"
-	}, {
-		"sTitle" : "还款额",
-		"code" : "total"
-	}, {
-		"sTitle" : "本金",
-		"code" : "bj"
-	}, {
-		"sTitle" : "利息",
-		"code" : "lx"
-	}, {
-		"sTitle" : "还款时间",
-		"code" : "time"
-	}];
 	
 	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
 		var sEcho = "";
@@ -1236,9 +1047,9 @@ var paybackhave = function(container){
 			var data = aoData[i];
 			if (data.name == "sEcho")
 				sEcho = data.value;
-			if (data.name == "iDisplayStart")
+			if (data.name == "start")
 				iDisplayStart = data.value;
-			if (data.name == "iDisplayLength")
+			if (data.name == "length")
 				iDisplayLength = data.value;
 		}
 		var res = null;
@@ -1256,7 +1067,7 @@ var paybackhave = function(container){
 			                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 			                    data.chiefAmount.value,
 			                    data.interest.value,
-			                    formatDateToDay(data.deadline)]);
+			                    formatDateToDay(data.checktime)]);
 			}
 		}
 		result.sEcho = sEcho;
@@ -1264,14 +1075,32 @@ var paybackhave = function(container){
 
 		return res;
 	}
-	var mySettings = $.extend({}, defaultSettings, {
-		"aoColumns" : columns,
-		"fnServerData" : fnServerData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
+	
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 135px;">项目信息</th>');
+	tr.append('<th style="width: 102px;">还款额</th>');
+	tr.append('<th style="width: 60px;">本金</th>');
+	tr.append('<th style="width: 60px;">利息</th>');
+	tr.append('<th style="width: 102px;">还款时间</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	container.append(table);
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		bServerSide : true,
+		responsive: true,
+		bFilter : false, //是否使用搜索 
+		fnServerData : fnServerData,
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 
 
@@ -1280,23 +1109,7 @@ var paybackto = function(container){
 	
 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
 	var paybacks = paybackService.findBorrowerWaitForRepayed();
-	var columns = [ {
-		"sTitle" : "项目信息",
-			"code" : "product"
-	}, {
-		"sTitle" : "还款额",
-		"code" : "total"
-	}, {
-		"sTitle" : "本金",
-		"code" : "bj"
-	}, {
-		"sTitle" : "利息",
-		"code" : "lx"
-	}, {
-		"sTitle" : "最迟还款时间",
-		"code" : "time"
-	}
-	];
+	
 	var aaData = new Array();
 	for(var i=0; i<paybacks.size(); i++){
 		var data=paybacks.get(i);
@@ -1307,14 +1120,32 @@ var paybackto = function(container){
 	                    formatDateToDay(data.deadline)
 	                    ]);
 	}
-	var mySettings = $.extend({}, defaultSettings_noCallBack, {
-		"aoColumns" : columns,
-		"aaData" : aaData
-	});
-	var content = $('<div></div>');
-	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
-	container.append(content);
-	table.dataTable(mySettings);
+	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
+	
+	var thead = $('<thead></thead>');
+	var tr = $('<tr role="row"></tr>');
+	tr.append('<th style="width: 135px;">项目信息</th>');
+	tr.append('<th style="width: 102px;">还款额</th>');
+	tr.append('<th style="width: 60px;">本金</th>');
+	tr.append('<th style="width: 60px;">利息</th>');
+	tr.append('<th style="width: 102px;">最迟还款时间</th>');
+	
+	thead.append(tr);
+	table.append(thead)
+	
+	
+	table.append('<tbody></tbody>');
+	container.append(table);
+	
+	table.addClass( 'nowrap' )
+	.dataTable( {
+		bServerSide : false,
+		responsive: true,
+		bFilter : false, //是否使用搜索 
+		aaData : aaData,
+		oLanguage : _defaultDataTableOLanguage,
+		pagingType: "full"
+	} );
 }
 var cashProcessor=function(action,state,container){
 	var account = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IAccountService");
@@ -1384,6 +1215,7 @@ var cashProcessor=function(action,state,container){
 	.dataTable( {
 		bServerSide : true,
 		responsive: true,
+		bFilter : false, //是否使用搜索 
 		fnServerData : fnServerData,
 		oLanguage : _defaultDataTableOLanguage,
 		pagingType: "full"
@@ -1440,21 +1272,11 @@ var letterunread_center = function(container){
 			                    "管理员",
 			                    formatDate(letters.get(i).createtime), 
 			                    letters.get(i).markRead==0?'未读':'已读',
-			                    "<button class='readletter' id='"+letters.get(i).id+"'>阅读</button>"
+			                    "<a class='readletter' onclick='readletter("+letters.get(i).id+");' id='"+letters.get(i).id+"'>阅读</a>"
 			                   ]);
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
-		
-		
-		
-		$('button.readletter').bind('click', function(e){
-			var letterid = $(this).attr('id');
-			window.location.href="baccountdetail.html?fid=bcenter&sid=letter-unread-mycenter";
-			window.open('letter.html?lid='+letterid);
-		})
-		
-		
 
 		return res;
 	}
@@ -1466,7 +1288,7 @@ var letterunread_center = function(container){
 	tr.append('<th style="width: 102px;">发送者</th>');
 	tr.append('<th style="width: 102px;">发送时间</th>');
 	tr.append('<th style="width: 42px;">状态</th>');
-	tr.append('<th style="width: 93px;">操作</th>');
+	tr.append('<th style="width: 42px;">操作</th>');
 	
 	thead.append(tr);
 	table.append(thead)
@@ -1479,6 +1301,7 @@ var letterunread_center = function(container){
 	.dataTable( {
 		bServerSide : true,
 		responsive: true,
+		bFilter : false, //是否使用搜索 
 		fnServerData : fnServerData,
 		oLanguage : _defaultDataTableOLanguage,
 		pagingType: "full"
@@ -1523,7 +1346,7 @@ var questionview = function(container){
 					operation = "<button disabled='disabled'>查看</button>";
 				}else{
 					answertype="<font color=orange>已回答</font>";
-					operation = "<button class='viewanswer' id='"+data.id+"'>查看</button>";
+					operation = "<a class='viewanswer' href='detail.html?id="+data.id+"' target='_blank' id='"+data.id+"'>查看</a>";
 				}
 				
 				result.aaData.push([data.question,
@@ -1537,11 +1360,6 @@ var questionview = function(container){
 		result.sEcho = sEcho;
 		fnCallback(result);
 		
-		$('button.viewanswer').click(function(e){
-			var helpid = $(this).attr('id');
-			window.open('detail.html?id='+helpid);
-		})
-
 		return res;
 	}
 	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
@@ -1552,8 +1370,8 @@ var questionview = function(container){
 	tr.append('<th style="width: 217px;">提问时间</th>');
 	tr.append('<th style="width: 102px;">提问者类型</th>');
 	tr.append('<th style="width: 42px;">提问者ID</th>');
-	tr.append('<th style="width: 93px;">是否回答</th>');
-	tr.append('<th style="width: 93px;">操作</th>');
+	tr.append('<th style="width: 42px;">是否回答</th>');
+	tr.append('<th style="width: 42px;">操作</th>');
 	
 	thead.append(tr);
 	table.append(thead)
@@ -1613,17 +1431,11 @@ var noticeview = function(container){
 				             formatDate(data.publishtime),
 				             userType[data.usefor],
 				                    data.level,
-				                    "<button class='viewnotice' id='"+data.id+"'>查看</button>"]);
+				                    "<a href='detail.html?id="+data.id+"' id='"+data.id+"' target='_blank'>查看</button>"]);
 			}
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
-		
-		$('button.viewnotice').bind('click', function(e){
-			var id = $(this).attr('id');
-			window.open="detail.html?id="+id;
-		})
-
 		return res;
 	}
 	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
@@ -1634,7 +1446,7 @@ var noticeview = function(container){
 	tr.append('<th style="width: 217px;">发布时间</th>');
 	tr.append('<th style="width: 102px;">发布对象</th>');
 	tr.append('<th style="width: 42px;">用户级别</th>');
-	tr.append('<th style="width: 93px;">操作</th>');
+	tr.append('<th style="width: 42px;">操作</th>');
 	
 	thead.append(tr);
 	table.append(thead)

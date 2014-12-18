@@ -610,7 +610,7 @@ public class PayBackServiceImpl implements IPayBackService {
 	}
 	@Override
 	public void checkoutPayBack(Integer payBackId) throws CheckException {
-		PayBack payBack=payBackDao.find(payBackId);
+		PayBack payBack=find(payBackId);
 		if(payBack==null)
 			return;
 		List<Submit> submits=submitDao.findAllByProductAndState(payBack.getProductId(), Submit.STATE_COMPLETEPAY);
@@ -680,7 +680,7 @@ public class PayBackServiceImpl implements IPayBackService {
 				CashStreamSum sum=cashStreamDao.sumPayBack(pb.getId());
 				if(sum.getChiefAmount().compareTo(pb.getChiefAmount())!=0||sum.getInterest().compareTo(pb.getInterest())!=0)
 					throw new CheckException("还款[id:"+pb.getId()+"]金额计算不符");
-				amount.add(pb.getChiefAmount());
+				amount=amount.add(pb.getChiefAmount());
 			}
 			if(amount.add(payBack.getChiefAmount()).compareTo(product.getRealAmount())!=0)
 				throw new CheckException("还款总额与产品不符");

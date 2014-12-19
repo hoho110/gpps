@@ -42,8 +42,7 @@
 		src="/resources/EasyServiceClientFullZ.js"></script>
 	<script type="text/javascript"
 		src="/easyservice/gpps.service.ILenderService?json"></script>
-	<script type="text/javascript"
-		src="/easyservice/gpps.dao.IBorrowerAccountDao?json"></script>
+	
 	<script type="text/javascript"
 				src="/easyservice/gpps.service.IBorrowerService?json"></script>
 	<script type="text/javascript"
@@ -54,8 +53,7 @@
         src="/easyservice/gpps.service.IPayBackService?json"></script>
     <script type="text/javascript"
         src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
-    <script type="text/javascript"
-        src="/easyservice/gpps.dao.IGovermentOrderDao?json"></script>
+    
     <script type="text/javascript"
         src="/easyservice/gpps.service.IProductService?json"></script>
     <script type="text/javascript"
@@ -498,9 +496,6 @@ a.accordion-toggle {
 							
 							var fid = getQueryString('fid');
 							var sid = getQueryString('sid');
-							
-							var accountDao = EasyServiceClient
-									.getRemoteProxy("/easyservice/gpps.dao.IBorrowerAccountDao");
 							
 							var myaccountService = EasyServiceClient
 							.getRemoteProxy("/easyservice/gpps.service.IMyAccountService");

@@ -57,9 +57,9 @@
 <!-- 	    <listener-class>gpps.service.impl.MyHttpSessionListener</listener-class> -->
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	<listener>
-       <listener-class>gpps.service.impl.MyHttpSessionListener</listener-class>
-    </listener>
+<!-- 	<listener> -->
+<!--        <listener-class>gpps.service.impl.MyHttpSessionListener</listener-class> -->
+<!--     </listener> -->
 
 	<!-- Processes application requests -->
 	<servlet>

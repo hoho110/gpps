@@ -76,7 +76,8 @@ var defaultSettings_noCallBack = {
 			2 : '解冻',
 			3 : '投标',
 			4 : '还款',
-			5 : '提现'
+			5 : '提现',
+			6 : '存零'
 	}
 	var productstate = {
 			1:'融资中',
@@ -110,7 +111,7 @@ var repay = function(id){
 		try{
 			paybackService.repay(parseInt(id));
 			alert('还款成功！');
-			window.location.href="baccountdetail.html?fid=payback&sid=payback-have";
+			window.location.href="baccountdetail.html?fid=payback&sid=payback-toaudit";
 		}catch(e){
 			alert(e.message);
 			window.location.href="baccountdetail.html?fid=payback&sid=payback-canpay";
@@ -118,12 +119,14 @@ var repay = function(id){
 		}
 }
 var apply = function(id){
+	if(confirm('提前还款一旦确认就无法更改，确认要提前本产品的还款？')){
 	try{
 		paybackService.applyRepayInAdvance(parseInt(id));
 		window.location.href="baccountdetail.html?fid=payback&sid=payback-canpay";
 	}catch(e){
 		alert(e.message);
 		window.location.href="baccountdetail.html?fid=payback&sid=payback-canapply";
+	}
 	}
 	
 }
@@ -427,7 +430,6 @@ var requestrefuse = function(container){
 
 var orderall = function(container){
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
-	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(-1);
 	var aaData = new Array();
@@ -482,7 +484,6 @@ var orderall = function(container){
 
 var orderpreview = function(container){
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
-	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(2);
 	
@@ -540,7 +541,6 @@ var table = $('<table role="grid" id="example" class="display nowrap dataTable d
 
 var orderfinancing = function(container){
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
-	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(1);
 	
@@ -596,7 +596,6 @@ var orderfinancing = function(container){
 
 var orderpaying = function(container){
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
-	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(4);
 	
@@ -646,7 +645,6 @@ var orderpaying = function(container){
 
 var ordertoclose = function(container){
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
-	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(8);
 	
@@ -698,7 +696,6 @@ var table = $('<table role="grid" id="example" class="display nowrap dataTable d
 var orderquit = function(container){
 
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
-	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(16);
 	
@@ -754,7 +751,6 @@ var table = $('<table role="grid" id="example" class="display nowrap dataTable d
 var orderclosed = function(container){
 
 	var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
-	var orderDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IGovermentOrderDao");
 	var productService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductService");
 	var orders = orderService.findBorrowerOrderByStates(32);
 	

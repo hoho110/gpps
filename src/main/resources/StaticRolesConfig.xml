@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<StaticRolesConfig enabled="false">
+<StaticRolesConfig enabled="true">
 	<!--匿名用户(未登陆)角色,privilege为-1
 		id:角色ID
 		limitedType:受限类型,1:不受限;0:部分许可;-1:全部受限
@@ -17,18 +17,24 @@
 	<Role id="anonymous" privilege = "-1" limitedType="0" extendsRoleIds="">
 		<permissionRules>
 			<PermissionRule  entityLimitType="gpps.service.ILenderService" operations="register;registerSecondStep;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel"/>
-			<PermissionRule  entityLimitType="gpps.service.IBorrowerService" operations="register;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel"/>
+			<PermissionRule  entityLimitType="gpps.service.IAdminService" operations="register;registerSecondStep;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel"/>
+			<PermissionRule  entityLimitType="gpps.service.IBorrowerService" operations="find;register;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel;findMimeItems"/>
 			<PermissionRule  entityLimitType="gpps.service.IGovermentOrderService" operations="findByStates;findByBorrowerIdAndStates;findGovermentOrderByProductSeries;findByStatesByPage;findGovermentOrderByProduct;findMimeItems;"/>
 			<PermissionRule  entityLimitType="gpps.service.IProductService" operations="find;findByGovermentOrder;findByStates;findByProductSeriesAndStates;findByProductId;findMimeItems"/>
 			<PermissionRule  entityLimitType="gpps.service.IActivityService" operations="find;findByState;findMimeItem"/>
-			<PermissionRule  entityLimitType="gpps.service.IActivityRefService" operations="find；findByActivity；applyActivityByAnonymous；isApply"/>
-			<PermissionRule  entityLimitType="gpps.service.IHelpService" operations="find；findPublicHelps"/>
-			<PermissionRule  entityLimitType="gpps.service.INewsService" operations="find；findAll"/>
-			<PermissionRule  entityLimitType="gpps.service.INoticeService" operations="find；findAll"/>
-			<PermissionRule  entityLimitType="gpps.service.IPayBackService" operations="find；findAll;generatePayBacks;generatePayBacks"/>
+			<PermissionRule  entityLimitType="gpps.service.IActivityRefService" operations="find;findByActivity;applyActivityByAnonymous;isApply"/>
+			<PermissionRule  entityLimitType="gpps.service.IHelpService" operations="find;findPublicHelps"/>
+			<PermissionRule  entityLimitType="gpps.service.INewsService" operations="find;findAll"/>
+			<PermissionRule  entityLimitType="gpps.service.INoticeService" operations="find;findAll"/>
+			<PermissionRule  entityLimitType="gpps.service.IPayBackService" operations="find;findAll;generatePayBacks;generatePayBacks"/>
 			<PermissionRule  entityLimitType="gpps.service.IProductActionService" operations="findAllByProduct"/>
 			<PermissionRule  entityLimitType="gpps.service.IProductSeriesService" operations="find;findAll"/>
 			<PermissionRule  entityLimitType="gpps.service.IStatisticsService"/>
+			<PermissionRule  entityLimitType="gpps.service.IMyAccountService" operations="getCurrentUser"/>
+			<PermissionRule  entityLimitType="gpps.service.ISubmitService" operations="findPayedSubmitsByProduct"/>
+			<PermissionRule  entityLimitType="gpps.dao.ILenderAccountDao" operations="never"/>
+			<PermissionRule  entityLimitType="gpps.dao.IBorrowerAccountDao" operations="never"/>
+			<PermissionRule  entityLimitType="gpps.service.thirdpay.IThirdPaySupportService" operations="never"/>
 		</permissionRules>
 	</Role>
 	<!-- ******************************Lender********************************* -->
@@ -37,11 +43,12 @@
         	<PermissionRule  entityLimitType="gpps.service.ILenderService"/>
 			<PermissionRule  entityLimitType="gpps.service.ISubmitService"/>
 			<PermissionRule  entityLimitType="gpps.service.IAccountService" operations="findLenderCashStreamByActionAndState;findLenderRepayCashStream;findLenderWaitforRepay;getLenderRepayedDetail;getLenderWillBeRepayedDetail;checkThroughThirdPlatform"></PermissionRule>
-			<PermissionRule  entityLimitType="gpps.service.IActivityRefService" operations="applyActivity；findByLender"/>
+			<PermissionRule  entityLimitType="gpps.service.IActivityRefService" operations="applyActivity;findByLender"/>
 			<PermissionRule  entityLimitType="gpps.service.IHelpService" operations="createPrivate;findMyHelps"/>
 			<PermissionRule  entityLimitType="gpps.service.ILetterService" operations="find;findMyLetters;alreadyRead"/>
 			<PermissionRule  entityLimitType="gpps.service.IMyAccountService" operations="getCurrentUser;getLAccountMessage"/>
-			<PermissionRule  entityLimitType="gpps.service.IThirdPaySupportService" operations="getRegistAccount;getRecharge;getTransferToBuy;getCardBinding;getCash"/>
+			<PermissionRule  entityLimitType="gpps.service.thirdpay.IThirdPaySupportService" operations="getRegistAccount;getRecharge;getTransferToBuy;getCardBinding;getCash"/>
+        	<PermissionRule  entityLimitType="gpps.dao.ILenderAccountDao" operations="find"/>
         </permissionRules>
     </Role>
 <!--     <Role privilege = "1" limitedType="0"> -->
@@ -50,18 +57,24 @@
 <!--         </permissionRules> -->
 <!--     </Role> -->
 	<!-- ******************************Borrower********************************* -->
-	<Role privilege = "10|11|14" limitedType="0" extendsRoleIds="anonymous">
-    </Role>
-    <Role privilege = "12" limitedType="0" extendsRoleIds="anonymous">
-        <permissionRules>
-        	<PermissionRule  entityLimitType="gpps.service.IBorrowerService"/>
-        	<PermissionRule  entityLimitType="gpps.service.IAccountService" operations="findBorrowerCashStreamByActionAndState;getBorrowerRepayedDetail;getBorrowerWillBeRepayedDetail;checkThroughThirdPlatform"/>
+	<Role id="borrowerView" privilege = "10|11|14" limitedType="0" extendsRoleIds="anonymous">
+		<permissionRules>
+			<PermissionRule  entityLimitType="gpps.service.ILenderService" operations="loginOut"/>
+			<PermissionRule  entityLimitType="gpps.service.ISubmitService" operations="find;findPayedSubmitsByProduct"/>
+			<PermissionRule  entityLimitType="gpps.service.IBorrowerService"/>
+			<PermissionRule  entityLimitType="gpps.service.ILetterService" operations="find;findMyLetters;alreadyRead"/>
+			<PermissionRule  entityLimitType="gpps.service.IMyAccountService" operations="getCurrentUser;getBAccountMessage"/>
+			<PermissionRule  entityLimitType="gpps.service.thirdpay.IThirdPaySupportService" operations="getRegistAccount;getRecharge;getCardBinding;getCash;getAuthorize"/>
+			<PermissionRule  entityLimitType="gpps.service.IAccountService" operations="findBorrowerCashStreamByActionAndState;getBorrowerRepayedDetail;getBorrowerWillBeRepayedDetail;checkThroughThirdPlatform"/>
         	<PermissionRule  entityLimitType="gpps.service.IGovermentOrderService" operations="findBorrowerOrderByStates;findBorrowerFinancingRequest"/>
         	<PermissionRule  entityLimitType="gpps.service.IHelpService" operations="createPrivate;findMyHelps"/>
-        	<PermissionRule  entityLimitType="gpps.service.ILetterService" operations="find;findMyLetters;alreadyRead"/>
-        	<PermissionRule  entityLimitType="gpps.service.IMyAccountService" operations="getCurrentUser;getBAccountMessage"/>
-        	<PermissionRule  entityLimitType="gpps.service.IPayBackService" operations="applyRepayInAdvance;findBorrowerPayBacks;findBorrowerCanBeRepayedPayBacks;findBorrowerCanBeRepayedInAdvancePayBacks;findBorrowerWaitForRepayed;canRepay;canRepayInAdvance;repay;findWaitforCheckPayBacks"/>
-        	<PermissionRule  entityLimitType="gpps.service.IThirdPaySupportService" operations="getRegistAccount;getRecharge;getCardBinding;getCash;getAuthorize"/>
+        	<PermissionRule  entityLimitType="gpps.service.IPayBackService" operations="findBorrowerPayBacks;findBorrowerCanBeRepayedPayBacks;findBorrowerCanBeRepayedInAdvancePayBacks;findBorrowerWaitForRepayed;canRepay;canRepayInAdvance;findWaitforCheckPayBacks"/>
+		</permissionRules>
+    </Role>
+    <Role privilege = "12" limitedType="0" extendsRoleIds="anonymous|borrowerView">
+        <permissionRules>
+        	<PermissionRule  entityLimitType="gpps.service.IPayBackService" operations="applyRepayInAdvance;repay"/>
+        	<PermissionRule  entityLimitType="gpps.dao.IBorrowerAccountDao" operations="find"/>
         </permissionRules>
     </Role>
     <!-- ******************************管理员********************************* -->

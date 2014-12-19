@@ -71,13 +71,12 @@ function header(title){
 	navulstr += '<li class="dropdown">';
 	navulstr += '<a href="#" class="dropdown-toggle" data-toggle="dropdown">帮助<span class="caret"></span></a>';
 	navulstr += '<ul class="dropdown-menu" role="menu">';
-	navulstr += '<li><a href="#">新手帮助</a></li>';
-	navulstr += '<li><a href="#">平台公告</a></li>';
-	navulstr += '<li><a href="#">新闻资讯</a></li>';
+	navulstr += '<li><a href="helpcenter.html?type=0" target="_blank">新手帮助</a></li>';
+	navulstr += '<li><a href="helpcenter.html?type=1" target="_blank">常见问题</a></li>';
+	navulstr += '<li><a href="helpcenter.html?type=3" target="_blank">投资融资</a></li>';
 	navulstr += '<li class="divider"></li>';
-	navulstr += '<li><a href="#">常见问题</a></li>';
-	navulstr += '<li class="divider"></li>';
-	navulstr += '<li><a href="#">等等等等</a></li>';
+	navulstr += '<li><a href="noticecenter.html?type=0" target="_blank">平台公告</a></li>';
+	navulstr += '<li><a href="newscenter.html?type=-1" target="_blank">新闻资讯</a></li>';
 	navulstr += '</ul>';
 	navulstr += '</li>';
 	navulstr += '</ul>';

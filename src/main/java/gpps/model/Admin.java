@@ -1,6 +1,8 @@
 package gpps.model;
 
-public class Admin {
+import com.easyservice.security.Permit;
+
+public class Admin implements Permit{
 	private Integer id;
 	private String  name;
 	private String tel;

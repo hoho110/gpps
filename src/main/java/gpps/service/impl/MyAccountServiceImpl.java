@@ -160,7 +160,7 @@ public class MyAccountServiceImpl implements IMyAccountService {
 		message.put("orders_close", orders_close.size());
 		
 		
-		message.put("pbs_waitforrepay", paybackDao.countByBorrowerAndState2(borrower.getAccountId(), PayBack.STATE_WAITFORREPAY, -1, -1));
+		message.put("pbs_waitforrepay", paybackService.findBorrowerWaitForRepayed().size());
 		message.put("pbs_finishrepay", paybackDao.countByBorrowerAndState2(borrower.getAccountId(), PayBack.STATE_FINISHREPAY, -1, -1));
 		message.put("pbs_waitforcheck", paybackDao.countByBorrowerAndState2(borrower.getAccountId(), PayBack.STATE_WAITFORCHECK, -1, -1));
 		message.put("pbs_canberepayed", paybackService.findBorrowerCanBeRepayedPayBacks().size());

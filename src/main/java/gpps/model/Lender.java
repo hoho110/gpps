@@ -1,6 +1,8 @@
 package gpps.model;
 
-public class Lender {
+import com.easyservice.security.Permit;
+
+public class Lender implements Permit {
 	private Integer id;//主键ID
 	private String name;//名称
 	private String tel;//手机

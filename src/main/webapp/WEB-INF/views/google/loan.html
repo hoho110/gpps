@@ -192,6 +192,7 @@ $(document).ready(function() {
 		$('input#license').val(user.license).attr('disabled', 'disabled');
 		$('input#phone').parent().parent().css('display', 'none');
 		$('input#validate').parent().parent().css('display', 'none');
+		$('input#email').parent().parent().css('display', 'none');
 		
 		
 		$('#login').click(function(e){
@@ -226,7 +227,7 @@ $(document).ready(function() {
 				removeMessage();
 			}
 			try{
-				var financingrequest = {"_t_":"gpps.model.FinancingRequest", "govermentOrderName":ordertitle, "govermentOrderDetail":"asdfadfadsfasdf", "applyFinancingAmount":parseFloat(amount), "rate":"12%", "createtime":(new Date()).getTime(), "lastModifyTime":(new Date()).getTime(), "borrowerID": buser.id};
+				var financingrequest = {"_t_":"gpps.model.FinancingRequest", "govermentOrderName":ordertitle, "govermentOrderDetail":"asdfadfadsfasdf", "applyFinancingAmount":parseFloat(amount), "rate":"12%", "createtime":(new Date()).getTime(), "lastModifyTime":(new Date()).getTime(), "borrowerID": user.id};
 				bservice.applyFinancing(financingrequest);
 				window.location.href="baccount.html?fid=request&sid=request-tohandle";
 			}catch(ee){

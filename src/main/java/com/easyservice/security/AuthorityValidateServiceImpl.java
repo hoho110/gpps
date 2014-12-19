@@ -31,20 +31,37 @@ public class AuthorityValidateServiceImpl implements IAuthorityValidateService{
 				throw new PermissionException("user entity must implements Permit");
 			privilege=((Permit)user).getPrivilege();
 		}
-		if(fetchServiceSdl)
-			logger.debug("用户角色：{privilege:"+privilege+"},申请获取服务:"+applyService+"定义");
-		else
-			logger.debug("用户角色：{privilege:"+privilege+"},申请执行服务:"+applyService+"方法:"+applyMethod);
+//		if(fetchServiceSdl)
+//			logger.debug("用户角色：{privilege:"+privilege+"},申请获取服务:"+applyService+"定义");
+//		else
+//			logger.debug("用户角色：{privilege:"+privilege+"},申请执行服务:"+applyService+"方法:"+applyMethod);
 		Role role=getRoleByPrivilege(privilege);
-		if(role==null){
-			logger.debug("未找到该用户角色配置");
+		if (role == null) {
+			if (fetchServiceSdl)
+				logger.error("用户角色：{privilege:" + privilege + "},申请获取服务:"
+						+ applyService + "定义,未找到该用户角色配置");
+			else
+				logger.error("用户角色：{privilege:" + privilege + "},申请执行服务:"
+						+ applyService + "方法:" + applyMethod+",未找到该用户角色配置");
 			return false;
 		}
 		if(role.getLimitedType()==Role.LIMITEDTYPE_ALLLIMITED)
 			return false;
 		else if(role.getLimitedType()==Role.LIMITEDTYPE_NOTLIMITED)
 			return true;
-		return checkPermissionRules(role, applyService, applyMethod, fetchServiceSdl);
+		boolean success=checkPermissionRules(role, applyService, applyMethod, fetchServiceSdl);
+		if(success)
+			return true;
+		else
+		{
+			if (fetchServiceSdl)
+				logger.error("用户角色：{privilege:" + privilege + "},申请获取服务:"
+						+ applyService + "定义,未找到该用户角色配置");
+			else
+				logger.error("用户角色：{privilege:" + privilege + "},申请执行服务:"
+						+ applyService + "方法:" + applyMethod+",未找到该用户角色配置");
+			return false;
+		}
 	}
 	private Role getRoleByPrivilege(int privilege)
 	{
@@ -54,7 +71,7 @@ public class AuthorityValidateServiceImpl implements IAuthorityValidateService{
 		for (Role role : config.roles) {
 			if(StringUtil.isEmpty(role.getPrivilege()))
 				continue;
-			String[] privileges=role.getPrivilege().split("//|");
+			String[] privileges=role.getPrivilege().split("\\|");
 			for(String str:privileges)
 			{
 				if(str.equals(String.valueOf(privilege)))
@@ -123,7 +140,7 @@ public class AuthorityValidateServiceImpl implements IAuthorityValidateService{
 					{
 						if(StringUtil.isEmpty(role.getExtendsRoleIds()))
 							continue;
-						String[] extendsRoleIds=role.getExtendsRoleIds().split("//|");
+						String[] extendsRoleIds=role.getExtendsRoleIds().split("\\|");
 						for(String extendsRoleId:extendsRoleIds)
 						{
 							Role extendsRole=m.get(extendsRoleId);

@@ -43,7 +43,8 @@
 <script type="text/javascript"
 				src="/easyservice/gpps.service.IGovermentOrderService?json"></script>
 <script type="text/javascript"
-				src="/easyservice/gpps.dao.IProductSeriesDao?json"></script>
+				src="/easyservice/gpps.service.IProductSeriesService?json"></script>
+												
 <script type="text/javascript"
 				src="/easyservice/gpps.service.ILenderService?json"></script>
 <script type="text/javascript"
@@ -136,7 +137,7 @@
         <div class="hidden-xs hidden-sm col-md-3 col-lg-3" style="padding-right:0px; padding-left:15px; margin-top:40px;">
  
             <div class="news-notice sidebar-panels">
-                <a href="intro/help.html" target="_blank"
+                <a href="helpcenter.html?type=1" target="_blank"
                    class="news-notice-head clearfix">
                     <span class="info">常见问题</span>
                     <span class="more">&gt;</span>
@@ -152,7 +153,7 @@
             
             
              <div class="news-notice sidebar-panels">
-                <a href="intro/help.html" target="_blank"
+                <a href="helpcenter.html?type=0" target="_blank"
                    class="news-notice-head clearfix">
                     <span class="info">新手帮助</span>
                     <span class="more">&gt;</span>
@@ -343,10 +344,10 @@
         	 header('productlist');
         	 var sid = getQueryString('sid');
         	 
-        	 var seriesDao = EasyServiceClient.getRemoteProxy("/easyservice/gpps.dao.IProductSeriesDao");
+        	 var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
         	 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
         	 var helpService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IHelpService");
-        	 var series = seriesDao.findAll();
+        	 var series = seriesService.findAll();
         	 var li1 = $('<li class="active"></li>');
         	 var a1 = $('<a href="javascript:void(0);" data-sk="all"><span class="min-price">全部</span></a>');
         	 $('li#nav_name').html('全部');

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1, user-scalable=no">
+     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="renderer" content="webkit">
 
     <title>政采贷>帮助中心</title>
 
@@ -86,19 +87,19 @@
 				<div class="col-md-12" style="margin-top:15px;">
 			<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
 			<span style="font-size:18px; color:#999" id="category">全部</span>
-			<div class="btn-group" style="float:right;">
-  					<button type="button" class="btn btn-default dropdown-toggle" style="height:30px; font-size:12px; padding-top:7px;" data-toggle="dropdown">
-    						分类 <span class="caret"></span>
-  					</button>
-  					<ul class="dropdown-menu" role="menu">
-    					<li><a class="help" id="0">新手帮助</a></li>
-    					<li><a class="help" id="1">常见问题</a></li>
-    					<li><a class="help" id="2">交易管理</a></li>
-    					<li><a class="help" id="3">投资融资</a></li>
-    					<li><a class="help" id="4">免责声明</a></li>
-    					<li><a class="myquestion" id="5">我要提问</a></li>
-  					</ul>
-			</div>
+			
+			
+			<select id="help" style="float:right;">
+			<option value="-1">全部</option>
+			<option value="0">新手帮助</option>
+			<option value="1">常见问题</option>
+			<option value="2">交易管理</option>
+			<option value="3">投资融资</option>
+			<option value="4">免责声明</option>
+			<option value="5">我要提问</option>
+			</select>
+			
+			
 			<div style="clear:both;"></div>
 			</div>
 			
@@ -187,6 +188,20 @@
 		
 	});
 	
+	$('#help').change(function(e){
+		
+		publicType = parseInt($(this).val());
+		
+		if(publicType==-1){
+			$('#category').html('全部');
+		}else{
+			$('#category').html(typename[publicType]);
+		}
+		
+		
+		table.fnDraw();
+	})
+	
 	
 	
 	
@@ -232,6 +247,7 @@
 		}else{
 			$('#category').html('全部');
 		}
+	$('#help').val(type);
 	
 	table = $('#example')
 	.addClass( 'nowrap' )

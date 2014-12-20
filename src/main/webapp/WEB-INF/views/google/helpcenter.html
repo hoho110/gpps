@@ -180,13 +180,6 @@
 	ejs.renderComplexNode("#content_template", "#content", ctx);
 	
 	
-	$('.help').click(function(e){
-		$('#category').html($(this).html());
-		publicType = parseInt($(this).attr('id'));
-		
-		table.fnDraw();
-		
-	});
 	
 	$('#help').change(function(e){
 		
@@ -231,7 +224,7 @@
 		{
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
-				result.aaData.push(['<a href="detail.html?type=help&id='+item.id+'" target="_blank">'+item.question+'</a>',
+				result.aaData.push(['<a href="detail.html?type=help&stype='+item.publicType+'&id='+item.id+'" target="_blank">'+item.question+'</a>',
 				                    formatDate(item.createtime)]);
 			}
 		}

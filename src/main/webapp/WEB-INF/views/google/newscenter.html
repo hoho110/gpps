@@ -85,17 +85,17 @@
 			<div class="col-md-12" style="min-height:400px;">
 				<div class="col-md-12" style="margin-top:15px;">
 			<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
+			
 			<span style="font-size:18px; color:#999" id="category">全部</span>
-			<div class="btn-group" style="float:right;">
-  					<button type="button" class="btn btn-default dropdown-toggle" style="height:30px; font-size:12px; padding-top:7px;" data-toggle="dropdown">
-    						分类 <span class="caret"></span>
-  					</button>
-  					<ul class="dropdown-menu" role="menu">
-    					<li><a class="news" id="0">行业资讯</a></li>
-    					<li><a class="news" id="1">财经新闻</a></li>
-  					</ul>
-			</div>
+			
+			<select id="news" style="float:right;">
+			<option value="-1">全部</option>
+			<option value="0">行业资讯</option>
+			<option value="1">财经新闻</option>
+			</select>
+			
 			<div style="clear:both;"></div>
+			
 			</div>
 			
 			<div class="col-md-12" style="border-top:solid gold 1px; margin-top:2px;">
@@ -171,13 +171,19 @@
 	ejs.renderComplexNode("#content_template", "#content", ctx);
 	
 	
-	$('.news').click(function(e){
-		$('#category').html($(this).html());
-		publicType = parseInt($(this).attr('id'));
+	$('#news').change(function(e){
+		
+		publicType = parseInt($(this).val());
+		
+		if(publicType==-1){
+			$('#category').html('全部');
+		}else{
+			$('#category').html(typename[publicType]);
+		}
+		
 		
 		table.fnDraw();
-		
-	});
+	})
 	
 	
 	
@@ -208,7 +214,7 @@
 		{
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
-				result.aaData.push(['<a href="detail.html?type=news&id='+item.id+'" target="_blank">'+item.title+'</a>',
+				result.aaData.push(['<a href="detail.html?type=news&stype='+item.publicType+'&id='+item.id+'" target="_blank">'+item.title+'</a>',
 				                    formatDate(item.publishtime)]);
 			}
 		}
@@ -224,6 +230,9 @@
 		}else{
 			$('#category').html('全部');
 		}
+	
+	
+	$('#news').val(type);
 	
 	table = $('#example')
 	.addClass( 'nowrap' )

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <title>政采贷>登陆</title>
+    <title>政采贷</title>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -26,11 +26,13 @@
 		<script type="text/javascript"
 				src="/resources/EasyServiceClientFullZ.js"></script>
 		<script type="text/javascript"
-				src="/easyservice/gpps.service.ILenderService?json"></script>
-		<script type="text/javascript"
-				src="/easyservice/gpps.service.IBorrowerService?json"></script>
-		<script type="text/javascript"
 				src="/easyservice/gpps.service.IMyAccountService?json"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.IHelpService?json"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.INoticeService?json"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.INewsService?json"></script>
 		<script src="js/tool.js"></script>
 		<script src="js/getuser.js"></script>
   </head>
@@ -43,40 +45,8 @@
       
       	</div>
 		
-		<div class="row" style="padding-left:15px; padding-right:15px;">
-		<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
-		政采贷>关于我们>系统公告
-		</div>
-		<div class="col-md-12" style="border:solid 2px #f5f5f5; margin-top:15px;">
-			<div class="col-md-12" style="margin-top:15px;">
-			<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
-			<span style="font-size:18px; color:#999">平台公告</span><a style="float:right;" class="btn btn-success">返回列表</a>
-			<div style="clear:both;"></div>
-			</div>
-			
-			<div class="col-md-12" style="border-top:solid gold 1px; margin-top:2px;">
-			</div>
-			</div>
-			<div class="col-md-12" style="margin-top:15px; padding-left:0px; padding-right:0px;">
-			<div class="col-md-12">
-				<span style="font-size:16px; font-weight:bold; color:#999;">[政采贷全国客服变更公告]</span>
-			</div>
-			<div class="col-md-12">
-				<span style="font-size:12px; color:#999;">2014-10-22 公告</span>
-			</div>
-			<div class="col-md-12" style="margin-top:20px; padding:top:10px; padding-bottom:20px;">
-				<p>尊敬的政采贷用户:</p>
-				<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您长期以来的信任，啊的说法是地方萨芬萨芬撒发生法萨芬撒反对啊沙发大水电费撒放大声贩毒阿萨德发暗室逢灯暗室逢灯撒飞洒地方撒爱上范德萨法萨芬撒反对啊撒范德萨。</p>
-				<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您长期以来的信任，啊的说法是地方萨芬萨芬撒发生法萨芬撒反对啊沙发大水电费撒放大声贩毒阿萨德发暗室逢灯暗室逢灯撒飞洒地方撒爱上范德萨法萨芬撒反对啊撒范德萨。</p>
-				<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;感谢您长期以来的信任，啊的说法是地方萨芬萨芬撒发生法萨芬撒反对啊沙发大水电费撒放大声贩毒阿萨德发暗室逢灯暗室逢灯撒飞洒地方撒爱上范德萨法萨芬撒反对啊撒范德萨。</p>
-				<p>给您带来的不便，敬请谅解！</p>
-				<div  style="text-align:right;">北京春蕾投资管理有限责任公司</div>
-				<div style="text-align:right;">2014-10-22</div>
-				<div style = "clear:both;"></div>
-			</div>
-			</div>
-		</div>
-
+		<div class="row" id="content" style="padding-left:15px; padding-right:15px;">
+		
       	</div>
       
       
@@ -89,6 +59,80 @@
     </div> <!-- /container -->
 
 
+	<textarea id="content_template" style="display:none;">
+	<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
+		政采贷>+-typename-+>+-stypename-+
+		</div>
+		<div class="col-md-12" style="border:solid 2px #f5f5f5; margin-top:15px;">
+			<div class="col-md-12" style="margin-top:15px;">
+			<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
+			<span style="font-size:18px; color:#999">+-stypename-+</span><a style="float:right;" href="+-(centerurl+stype)-+">返回列表</a>
+			<div style="clear:both;"></div>
+			</div>
+			
+			<div class="col-md-12" style="border-top:solid gold 1px; margin-top:2px;">
+			</div>
+			</div>
+			<div class="col-md-12" style="margin-top:15px; padding-left:0px; padding-right:0px;">
+			
+				<!--# 
+				if(type=='notice' || type=='news')
+				{
+				 #-->
+				 <div class="col-md-12">
+				<span style="font-size:16px; font-weight:bold; color:#999;">[+-value.title-+]</span>
+				</div>
+				<div class="col-md-12" style="margin-top:5px;">
+				<span style="font-size:12px; color:#999;">+-formatDate(value.publishtime)-+ 发送</span>
+				</div>
+				<div class="col-md-12" style="margin-top:20px;">
+				<div style="min-height:200px;">+-value.content-+</div>
+				<div  style="text-align:right;">北京春蕾投资管理有限责任公司</div>
+				<div style="text-align:right;">+-formatDate(value.publishtime)-+</div>
+				<div style = "clear:both;"></div>
+				</div>
+				<!--# 
+				}else
+				{
+				var content = "";
+				var publishtime = "";
+				var answertime = "";
+				if(value.type==0){
+					content = value.answer;
+					publishtime = formatDate(value.createtime)+"发布";
+					answertime = formatDate(value.createtime)+"发布";
+				}else if(value.type==1){
+					content = '尚未回答';
+					publishtime = formatDate(value.createtime)+"提问";
+					answertime = formatDate(value.createtime)+"提问";
+				}else if(value.type==2){
+					content = value.answer;
+					publishtime = formatDate(value.createtime)+"提问";
+					answertime = formatDate(value.answertime)+"回答";
+				}
+				
+				
+				 #-->
+				 <div class="col-md-12">
+				<span style="font-size:16px; font-weight:bold; color:#999;">[+-value.question-+]</span>
+				</div>
+				<div class="col-md-12" style="margin-top:5px;">
+				<span style="font-size:12px; color:#999;">+-publishtime-+</span>
+				</div>
+				<div class="col-md-12" style="margin-top:20px;">
+				<div style="min-height:200px;">+-content-+</div>
+				<div  style="text-align:right;">北京春蕾投资管理有限责任公司</div>
+				<div style="text-align:right;">+-answertime-+</div>
+				<div style = "clear:both;"></div>
+				</div>
+				 <!--# 
+				 }
+				  #-->
+			</div>
+		</div>
+	</textarea>
+
+
     
   </body>
   
@@ -96,10 +140,75 @@
   <script src="js/head.js"></script>
   <script src="js/foot.js"></script>
   <script>
-
+  	var noticeService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INoticeService");
+  	var newsService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.INewsService");
+  	var helpService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IHelpService");
+	var typename = {
+		"help" : "帮助中心",
+		"notice" : "公告中心",
+		"news" : "新闻中心"
+	};
+	
+	var centerurl = {
+			"help" : "helpcenter.html?type=",
+			"notice" : "noticecenter.html?type=",
+			"news" : "newscenter.html?type="
+	}
+	
+	var stypename = {
+			"help-1" : "所有",
+			"help0" : "新手帮助",
+			"help1" : "常见问题",
+			"help2" : "交易管理",
+			"help3" : "投资融资",
+			"help4" : "免责声明",
+			"help5" : "我的问题",
+			"notice-1" : "所有",
+			"notice0" : "平台公告",
+			"notice1" : "企业公告",
+			"notice2" : "活动公告",
+			"news-1" : "所有",
+			"news0" : "行业资讯",
+			"news1" : "财经新闻"
+	}
+	
+	var type = getQueryString('type');
+	var stype = getQueryString('stype');
+	var id = getQueryString('id');
+	
 	$(document).ready(function() {
+		if(type==null || type=='' || stype==null || stype=='' || id==null || id==''){
+			  alert('参数错误！');
+			  return;
+		  }
+		
+	var value = null;
+	
+	if(type=='notice'){
+		value = noticeService.find(parseInt(id));
+	}else if(type=='news'){
+		value = newsService.find(parseInt(id));
+	}else if(type=='help'){
+		value = helpService.find(parseInt(id));
+	}
+		
+	
+	if(value==null){
+		alert('参数错误！');
+		return;
+	}
 	
 	header('detail');
+	
+	var ctx = new EasyServiceClient.newContext();
+	
+	ctx.type = type;
+	ctx.stype = stype;
+	ctx.typename = typename[type];
+	ctx.stypename = stypename[type+stype];
+	ctx.centerurl = centerurl[type];
+	ctx.value = value;
+	ejs.renderComplexNode("#content_template", "#content", ctx);
 	
 })
 </script>

@@ -85,17 +85,16 @@
 			<div class="col-md-12" style="min-height:400px;">
 				<div class="col-md-12" style="margin-top:15px;">
 			<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
+			
 			<span style="font-size:18px; color:#999" id="category">全部</span>
-			<div class="btn-group" style="float:right;">
-  					<button type="button" class="btn btn-default dropdown-toggle" style="height:30px; font-size:12px; padding-top:7px;" data-toggle="dropdown">
-    						分类 <span class="caret"></span>
-  					</button>
-  					<ul class="dropdown-menu" role="menu">
-    					<li><a class="notice" id="0">平台公告</a></li>
-    					<li><a class="notice" id="1">企业公告</a></li>
-    					<li><a class="notice" id="2">活动公告</a></li>
-  					</ul>
-			</div>
+			
+			<select id="notice" style="float:right;">
+			<option value="-1">全部</option>
+			<option value="0">平台公告</option>
+			<option value="1">企业公告</option>
+			<option value="2">活动公告</option>
+			</select>
+			
 			<div style="clear:both;"></div>
 			</div>
 			
@@ -173,13 +172,19 @@
 	ejs.renderComplexNode("#content_template", "#content", ctx);
 	
 	
-	$('.notice').click(function(e){
-		$('#category').html($(this).html());
-		publicType = parseInt($(this).attr('id'));
+	$('#notice').change(function(e){
+		
+		publicType = parseInt($(this).val());
+		
+		if(publicType==-1){
+			$('#category').html('全部');
+		}else{
+			$('#category').html(typename[publicType]);
+		}
+		
 		
 		table.fnDraw();
-		
-	});
+	})
 	
 	
 	
@@ -210,7 +215,7 @@
 		{
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
-				result.aaData.push(['<a href="detail.html?type=notice&id='+item.id+'" target="_blank">'+item.title+'</a>',
+				result.aaData.push(['<a href="detail.html?type=notice&stype='+item.publicType+'&id='+item.id+'" target="_blank">'+item.title+'</a>',
 				                    formatDate(item.publishtime)]);
 			}
 		}
@@ -226,6 +231,8 @@
 		}else{
 			$('#category').html('全部');
 		}
+	
+	$('#notice').val(type);
 	
 	table = $('#example')
 	.addClass( 'nowrap' )

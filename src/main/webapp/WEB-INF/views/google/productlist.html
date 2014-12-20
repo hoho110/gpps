@@ -412,7 +412,7 @@
         	 if(questions){
         		 for(var i=0; i<questions.size(); i++)
         			 {
-        		 		$('#cjquestion').append('<li><b></b><a href="#" target="_blank">'+questions.get(i).question+'</a></li>');
+        		 		$('#cjquestion').append('<li><b></b><a href="detail.html?type=help&stype='+questions.get(i).publicType+'&id='+questions.get(i).id+'" target="_blank">'+questions.get(i).question+'</a></li>');
         			 }
         	 }
         	 
@@ -420,7 +420,7 @@
         	 var nhelps = newhelps.get('result');
         	 if(nhelps){
         		 for(var i=0; i<nhelps.size(); i++){
-        			 $('#newhelp').append('<li><b></b><a href="#" target="_blank">'+nhelps.get(i).question+'</a></li>');
+        			 $('#newhelp').append('<li><b></b><a href="detail.html?type=help&stype='+nhelps.get(i).publicType+'&id='+nhelps.get(i).id+'" target="_blank">'+nhelps.get(i).question+'</a></li>');
         		 }
         	 }
         	 

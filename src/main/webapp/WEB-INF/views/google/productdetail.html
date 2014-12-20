@@ -50,6 +50,8 @@
         src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
 <script type="text/javascript"
 				src="/easyservice/gpps.service.IMyAccountService?json"></script>
+<script type="text/javascript"
+				src="/easyservice/gpps.service.IHelpService?json"></script>
 <script src="js/getuser.js"></script>
     
     <script>
@@ -60,6 +62,7 @@
 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
 	var productActionService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductActionService");
+	var helpService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IHelpService");
 	var pid = getQueryString('pid');
 	
 	var order = null;
@@ -286,13 +289,11 @@
     	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
     	
     	<ul id="sourcelist" class="nav navbar-nav sourcelist">
-    			
     			<li class=""><a href="javascript: void(0);" data-sk="basic"><span class="min-price">项目详情</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="payback"><span class="min-price">还款计划</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="resource"><span class="min-price">相关资料</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="action"><span class="min-price">项目进程</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="video"><span class="min-price">签约视频</span></a></li>
-    			
 		</ul>
 		
 		</div>
@@ -331,23 +332,9 @@
             <a href="helpcenter.html?type=1" target="_blank">更多</a><span>&gt;</span>
         </span>
     </div>
-    <ul class="contentList">
-                    <li>
-                <b></b><a href="intro/help.html" title="投资人是否要支付费用？" target="_blank">投资人是否要支付费用？</a>
-            </li>
-                    <li>
-                <b></b><a href="intro/help.html" title="我通过稳盈-安e达成的交易有什么风险吗？" target="_blank">我通过稳盈-安e达成的交易有什么风险吗？</a>
-            </li>
-                    <li>
-                <b></b><a href="intro/help.html" title="我可以投资吗？ " target="_blank">我可以投资吗？ </a>
-            </li>
-                    <li>
-                <b></b><a href="intro/help.html" title="债权出让人向政采贷提交转让申请的规则是什么？" target="_blank">债权出让人向政采贷提交转让申请的规则是什么？</a>
-            </li>
-                    <li>
-                <b></b><a href="intro/help.html" title="转让需要支付什么费用吗？" target="_blank">转让需要支付什么费用吗？</a>
-            </li>
-            </ul>
+    <ul id="cjquestion" class="contentList">
+              
+    </ul>
 </div>        
     </div>
 </div>
@@ -422,6 +409,19 @@
  	$('#progressTxt').html((parseInt(product.realAmount.value)*100/parseInt(product.expectAmount.value)).toFixed(2)+"%");
  	$('#progressBar').css('width', parseInt(product.realAmount.value)*145/parseInt(product.expectAmount.value)+'px');
  	$('#reward-info').html(seriesname[product.productseriesId].typeDetail);
+ 	
+ 	
+ 	
+ 	
+ 	var cjquestions = helpService.findPublicHelps(1,0,10);
+	 var questions = cjquestions.get('result');
+	 if(questions){
+		 for(var i=0; i<questions.size(); i++)
+			 {
+		 		$('#cjquestion').append('<li><b></b><a href="detail.html?type=help&stype='+questions.get(i).publicType+'&id='+questions.get(i).id+'" target="_blank">'+questions.get(i).question+'</a></li>');
+			 }
+	 }
+	 
  	
  	
  	if(order.state==2){

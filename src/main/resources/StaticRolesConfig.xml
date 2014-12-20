@@ -35,6 +35,9 @@
 			<PermissionRule  entityLimitType="gpps.dao.ILenderAccountDao" operations="never"/>
 			<PermissionRule  entityLimitType="gpps.dao.IBorrowerAccountDao" operations="never"/>
 			<PermissionRule  entityLimitType="gpps.service.thirdpay.IThirdPaySupportService" operations="never"/>
+			<PermissionRule  entityLimitType="gpps.service.IAccountService" operations="never"/>
+			<PermissionRule  entityLimitType="gpps.service.ILetterService" operations="never"/>
+			
 		</permissionRules>
 	</Role>
 	<!-- ******************************Lender********************************* -->

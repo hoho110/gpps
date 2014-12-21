@@ -98,7 +98,7 @@ var defaultSettings_noCallBack = {
 	}
 	
 var readletter=function(id){
-		window.location.href="baccountdetail.html?fid=bcenter&sid=letter-unread-mycenter";
+		window.location.href="baccountdetail.html?fid=mycenter&sid=letter-unread-mycenter";
 		window.open('letter.html?lid='+id);
 	}
 var repay = function(id){
@@ -1339,11 +1339,11 @@ var questionview = function(container){
 				var operation = "";
 				if(datatype==1){
 					answertype="未回答";
-					operation = "<button disabled='disabled'>查看</button>";
 				}else{
 					answertype="<font color=orange>已回答</font>";
-					operation = "<a class='viewanswer' href='detail.html?id="+data.id+"' target='_blank' id='"+data.id+"'>查看</a>";
 				}
+				
+				operation = "<a class='viewanswer' href='detail.html?type=question&stype=-1&id="+data.id+"' target='_blank' id='"+data.id+"'>查看</a>";
 				
 				result.aaData.push([data.question,
 				             formatDate(data.createtime),
@@ -1427,7 +1427,7 @@ var noticeview = function(container){
 				             formatDate(data.publishtime),
 				             userType[data.usefor],
 				                    data.level,
-				                    "<a href='detail.html?id="+data.id+"' id='"+data.id+"' target='_blank'>查看</button>"]);
+				                    "<a href='detail.html?type=notice&stype="+data.publicType+"&id="+data.id+"' id='"+data.id+"' target='_blank'>查看</button>"]);
 			}
 		}
 		result.sEcho = sEcho;

@@ -11,6 +11,9 @@
 <!-- Bootstrap -->
 <link href="css/bootstrap.min.css" rel="stylesheet">
 
+<link rel="stylesheet" type="text/css" href="css/gpps/lufax-main.css">
+    <link rel="stylesheet" type="text/css" href="css/gpps/new-lufax.css">
+    <link rel="stylesheet" type="text/css" href="css/gpps/productlist.css">
 
 <link href="css/mine.css" rel="stylesheet">
 <link href="css/plugins/dataTables/jquery.dataTables.css" rel="stylesheet">
@@ -267,87 +270,10 @@ a.accordion-toggle {
 					</div>
 				</div>
 
-				<div class="row" style="margin-top:35px;">
-				<nav class="navbar navbar-default" role="navigation">
-	<div class="container-fluid">
-	<div class="navbar-header">
-	<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
-	<span class="sr-only">Toggle navigation</span>
-	<span class="icon-bar"></span>
-	<span class="icon-bar"></span>
-	<span class="icon-bar"></span>
-	</button>
-	<span class="navbar-brand">功能</span>
-	</div>
-	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-	<ul class="nav navbar-nav">
-	<li class="dropdown">
-	<a class="firstnav" class="dropdown-toggle" data-sk="投资查看" data-toggle="dropdown">投资查看<span class="caret"></span></a>
-	<ul class="dropdown-menu" role="menu">
-	<li><a class="secondnav" id="submit-all">全部</a></li>
-	<li><a class="secondnav" id="submit-toafford">待支付</a></li>
-	<li><a class="secondnav" id="submit-payback">还款中</a></li>
-	<li><a class="secondnav" id="submit-done">还款完毕</a></li>
-	<li><a class="secondnav" id="submit-retreat">已退订</a></li>
-	</ul>
-	</li>
-	<li class="dropdown">
-	<a class="firstnav" class="dropdown-toggle" data-sk="回款查看" data-toggle="dropdown">回款查看<span class="caret"></span></a>
-	<ul class="dropdown-menu" role="menu">
-	<li><a class="secondnav" id="payback-all">总览</a></li>
-	<li><a class="secondnav" id="payback-to">待回款</a></li>
-	<li><a class="secondnav" id="payback-have">已回款</a></li>
-	</ul>
-	</li>
-	<li class="dropdown">
-	<a class="firstnav" class="dropdown-toggle" data-sk="资金查看" data-toggle="dropdown">资金查看<span class="caret"></span></a>
-	<ul class="dropdown-menu" role="menu">
-	<li><a class="secondnav" id="cash-all">全部</a></li>
-	<li><a class="secondnav" id="cash-recharge">充值</a></li>
-	<li><a class="secondnav" id="cash-withdraw">提现</a></li>
-	<li><a class="secondnav" id="cash-invest">投标</a></li>
-	<li><a class="secondnav" id="cash-receive">回款</a></li>
-	</ul>
-	</li>
-	<li class="dropdown">
-	<a class="firstnav" class="dropdown-toggle" data-sk="站内信" data-toggle="dropdown">站内信<span class="caret"></span></a>
-	<ul class="dropdown-menu" role="menu">
-	<li><a class="secondnav" id="letter-unread">未读</a></li>
-	<li><a class="secondnav" id="letter-readed">已读</a></li>
-	</ul>
-	</li>
-	</ul>
-	<ul class="nav navbar-nav navbar-right">
-	<li class="dropdown">
-	<a class="firstnav" class="dropdown-toggle" data-sk="会员中心" data-toggle="dropdown">会员中心<span class="caret"></span></a>
-	<ul class="dropdown-menu" role="menu">
-	<li><a class="secondnav" id="my-score">积分等级</a></li>
-	<li><a class="secondnav" id="my-activity">我的活动</a></li>
-	<li><a class="secondnav" id="letter-unread-mycenter">站内信</a></li>
-	<li><a class="secondnav" id="question-view">我的问题</a></li>
-	<li class="divider"></li>
-	<li><a class="secondnav" id="notice-view">系统公告</a></li>
-	</ul>
-	</li>
-	</ul>
-	</div><!-- /.navbar-collapse -->
-	</div><!-- /.container-fluid -->
-	</nav>
+
+				<div class="row" id="messagearea" style="margin-top:20px;">
+					
 				</div>
-
-
-				<div class="row" style="margin-top:5px;">
-					<div class="col-xs-12 col-md-12" id="navpath" style="margin-bottom:10px; color:#999;"></div>
-					<div class="col-xs-12 col-md-12">
-						<div class="table-responsive" id="content"
-							style="min-height: 400px; border: #eee solid 1px;"></div>
-
-					</div>
-				</div>
-
-
-
-
 
 
 			</div>
@@ -360,81 +286,104 @@ a.accordion-toggle {
 		
 		
 	</div>
+	
+	
+	
+<textarea id="messagearea_template" style="display:none;">
+			<div class="col-xs-12 col-md-4">
+						<div class="news-notice sidebar-panels"
+				style="margin-left: 15px; margin-right: 15px;">
+							<a href="myaccountdetail.html?fid=mycenter" target="_blank"
+					class="news-notice-head clearfix"> <span class="info">会员中心</span>
+								<span class="more">&gt;</span>
+							</a>
 
+							<div class="news-notice-body">
+								<ul class="news-notice-list faq-list" id="cjquestion">
+									<li><b></b>您好，XXX</li>
+									<li><b></b><a href="myaccountdetail.html?fid=mycenter&sid=my-score" target="_blank">积分100000分，等级level5</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=mycenter&sid=notice-view" target="_blank">查看系统公告</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=mycenter&sid=letter-unread-mycenter" target="_blank">站内信<span style="color:red; font-size:18px;">5</span>条未读</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=mycenter&sid=question-view" target="_blank">我的问题2条</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-xs-12 col-md-4">
+						<div class="news-notice sidebar-panels"
+				style="margin-left: 15px; margin-right: 15px;">
+							<a href="myaccountdetail.html?fid=submit" target="_blank"
+					class="news-notice-head clearfix"> <span class="info">投资产看</span>
+								<span class="more">&gt;</span>
+							</a>
 
+							<div class="news-notice-body">
+								<ul class="news-notice-list faq-list" id="cjquestion" style="padding-right: 10px;">
+									<li><b></b><a href="myaccountdetail.html?fid=submit&sid=submit-all" target="_blank">全部8条</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=submit&sid=submit-toafford" target="_blank">待支付2条</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=submit&sid=submit-payback" target="_blank">还款中2条</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=submit&sid=submit-done" target="_blank">还款完毕2条</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=submit&sid=submit-retreat" target="_blank">已退订2条</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-xs-12 col-md-4">
+						<div class="news-notice sidebar-panels"
+									style="margin-left: 15px; margin-right: 15px;">
+							<a href="myaccountdetail.html?fid=cash" target="_blank"
+					class="news-notice-head clearfix"> <span class="info">资金查看</span>
+								<span class="more">&gt;</span>
+							</a>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">投资标的支付</h4>
-      </div>
-      <div class="modal-body">
-      			投资标的支付完成前请不要关闭该对话框，在支付完毕后点击相应的操作以完成支付。
-      </div>
-      <div class="modal-footer">
-        <button id="success" type="button" class="btn btn-primary" data-dismiss="modal">支付成功</button>
-        <button id="fail" type="button" class="btn btn-default">支付失败</button>
-      </div>
-    </div>
-  </div>
-</div>
+							<div class="news-notice-body">
+								<ul class="news-notice-list faq-list" id="cjquestion" style="padding-right: 10px;">
+									<li><b></b><a href="myaccountdetail.html?fid=cash&sid=cash-all" target="_blank">全部60笔</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=cash&sid=cash-recharge" target="_blank">充值11笔</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=cash&sid=cash-withdraw" target="_blank">提现2笔</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=cash&sid=cash-invest" target="_blank">投标23笔</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=cash&sid=cash-receive" target="_blank">回款48笔</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+					<div class="col-xs-12 col-md-4">
+						<div class="news-notice sidebar-panels"
+				style="margin-left: 15px; margin-right: 15px;">
+							<a href="myaccountdetail.html?fid=payback" target="_blank"
+					class="news-notice-head clearfix"> <span class="info">还款查看</span>
+								<span class="more">&gt;</span>
+							</a>
 
-<div id="buyformdiv" style="display:none;"></div>
+							<div class="news-notice-body">
+								<ul class="news-notice-list faq-list" id="cjquestion" style="padding-right: 10px;">
+									<li><b></b><a href="myaccountdetail.html?fid=payback&sid=payback-to" target="_blank">待回款笔数1笔</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=payback&sid=payback-have" target="_blank">已回款笔数1笔</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-xs-12 col-md-4">
+						<div class="news-notice sidebar-panels"
+				style="margin-left: 15px; margin-right: 15px;">
+							<a href="myaccountdetail.html?fid=letter" target="_blank"
+					class="news-notice-head clearfix"> <span class="info">站内信</span>
+								<span class="more">&gt;</span>
+							</a>
 
-<!-- Modal -->
-<div class="modal fade" id="repaydetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">回款详情</h4>
-      </div>
-      <div class="modal-body" id="rdetail">
-      			
-      </div>
-      <div class="modal-footer">
-        
-      </div>
-    </div>
-  </div>
-</div>
+							<div class="news-notice-body">
+								<ul class="news-notice-list faq-list" id="cjquestion">
+									<li><b></b><a href="myaccountdetail.html?fid=letter&sid=letter-unread" target="_blank">未读1条</a></li>
+									<li><b></b><a href="myaccountdetail.html?fid=letter&sid=letter-readed" target="_blank">已读2条</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+</textarea>
 
-
-<!-- Modal -->
-<div class="modal fade" id="letterdetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">站内信</h4>
-      </div>
-      <div class="modal-body" id="ldetail">
-      			
-      </div>
-      <div class="modal-footer">
-        <button id="lclose" type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="noticedetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="nlabel">站内信</h4>
-      </div>
-      <div class="modal-body" id="ndetail">
-      			
-      </div>
-      <div class="modal-footer">
-        <button id="nclose" type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
-      </div>
-    </div>
-  </div>
-</div>
 
         <script src="js/head.js"></script>
 		<script src="js/foot.js"></script>
@@ -453,7 +402,7 @@ a.accordion-toggle {
 							}
 							
 							
-							$('#welcome').html(greet() + name+'<a href="javascript:void(0);" id="inner_letter" style="color:#999;"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>&nbsp;'+lettercount+'</a>');
+							$('#welcome').html(greet() + name+'<a href="myaccountdetail.html?fid=mycenter&sid=letter-unread-mycenter" target="_blank" id="inner_letter" style="color:#999;"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>&nbsp;'+lettercount+'</a>');
 							
 
 							var account = accountDao.find(user.accountId);
@@ -485,6 +434,11 @@ a.accordion-toggle {
 								$('#bankcard').html('暂未绑定');
 								$('#rebind').html('绑定');
 							}
+							
+							
+							var ctx = new EasyServiceClient.newContext();
+				//			ctx.message = message;
+							ejs.renderComplexNode("#messagearea_template", "#messagearea", ctx);
 							
 
 

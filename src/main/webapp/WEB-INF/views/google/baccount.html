@@ -391,7 +391,7 @@ a.accordion-toggle {
 			<div class="col-xs-12 col-md-4">
 						<div class="news-notice sidebar-panels"
 				style="margin-left: 15px; margin-right: 15px;">
-							<a href="intro/help.html" target="_blank"
+							<a href="baccountdetail.html?fid=mycenter" target="_blank"
 					class="news-notice-head clearfix"> <span class="info">企业中心</span>
 								<span class="more">&gt;</span>
 							</a>
@@ -399,10 +399,10 @@ a.accordion-toggle {
 							<div class="news-notice-body">
 								<ul class="news-notice-list faq-list" id="cjquestion">
 									<li><b></b>您好，+-message.get('companyname')-+</li>
-									<li><b></b><a href="baccountdetail.html?fid=bcenter&sid=my-score" target="_blank">积分+-message.get('score')-+分，等级level+-message.get('level')-+</a></li>
-									<li><b></b><a href="baccountdetail.html?fid=bcenter&sid=notice-view" target="_blank">查看系统公告</a></li>
-									<li><b></b><a href="baccountdetail.html?fid=bcenter&sid=letter-unread-mycenter" target="_blank">站内信<span style="color:red; font-size:18px;">+-message.get('letters')-+</span>条未读</a></li>
-									<li><b></b><a href="baccountdetail.html?fid=bcenter&sid=question-view" target="_blank">我的问题+-message.get('helps')-+条</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=mycenter&sid=my-score" target="_blank">积分+-message.get('score')-+分，等级level+-message.get('level')-+</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=mycenter&sid=notice-view" target="_blank">查看系统公告</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=mycenter&sid=letter-unread-mycenter" target="_blank">站内信<span style="color:red; font-size:18px;">+-message.get('letters')-+</span>条未读</a></li>
+									<li><b></b><a href="baccountdetail.html?fid=mycenter&sid=question-view" target="_blank">我的问题+-message.get('helps')-+条</a></li>
 								</ul>
 							</div>
 						</div>
@@ -411,7 +411,7 @@ a.accordion-toggle {
 					<div class="col-xs-12 col-md-4">
 						<div class="news-notice sidebar-panels"
 				style="margin-left: 15px; margin-right: 15px;">
-							<a href="intro/help.html" target="_blank"
+							<a href="baccountdetail.html?fid=order" target="_blank"
 					class="news-notice-head clearfix"> <span class="info">我的订单</span>
 								<span class="more">&gt;</span>
 							</a>
@@ -430,7 +430,7 @@ a.accordion-toggle {
 					<div class="col-xs-12 col-md-4">
 						<div class="news-notice sidebar-panels"
 				style="margin-left: 15px; margin-right: 15px;">
-							<a href="intro/help.html" target="_blank"
+							<a href="baccountdetail.html?fid=payback" target="_blank"
 					class="news-notice-head clearfix"> <span class="info">还款查看</span>
 								<span class="more">&gt;</span>
 							</a>
@@ -449,7 +449,7 @@ a.accordion-toggle {
 					<div class="col-xs-12 col-md-4">
 						<div class="news-notice sidebar-panels"
 				style="margin-left: 15px; margin-right: 15px;">
-							<a href="intro/help.html" target="_blank"
+							<a href="baccountdetail.html?fid=request" target="_blank"
 					class="news-notice-head clearfix"> <span class="info">融资申请</span>
 								<span class="more">&gt;</span>
 							</a>
@@ -467,7 +467,7 @@ a.accordion-toggle {
 					<div class="col-xs-12 col-md-4">
 						<div class="news-notice sidebar-panels"
 									style="margin-left: 15px; margin-right: 15px;">
-							<a href="intro/help.html" target="_blank"
+							<a href="baccountdetail.html?fid=cash" target="_blank"
 					class="news-notice-head clearfix"> <span class="info">资金查看</span>
 								<span class="more">&gt;</span>
 							</a>
@@ -745,7 +745,7 @@ a.accordion-toggle {
 									$('ul.nav-second li a').first().trigger('click');
 								
 							}else{
-								$('#bcenter').trigger('click');
+								$('#mycenter').trigger('click');
 							}
 							
 							$('#paysuccess').click(function(e){

@@ -583,7 +583,7 @@ var createSingleProduct2 = function(order){
 
 var createBorrowerNavLevel2 = function(nav){
 	var ul = $('<ul class="nav nav-second navbar-nav navbar-right"></ul>');
-	if(nav=='bcenter'){
+	if(nav=='mycenter'){
 		
 		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');
 		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice-view">系统公告</a></li>');
@@ -648,14 +648,14 @@ var createBorrowerNavLevel2 = function(nav){
 	return ul;
 }
 var createNavLevel2 = function(nav){
-	var ul = $('<ul class="nav nav-second nav-tabs" style="float:right;" role="tablist"></ul>');
+	var ul = $('<ul class="nav nav-second navbar-nav navbar-right"></ul>');
 	if(nav=='mycenter'){
-		lettercount = letterDao.countByReceiver(0, 0, cuser.id);
-		var li2 = $('<li role="presentation" class="active"><a class="btn btn-default" href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');
-		var li3 = $('<li role="presentation"><a class="btn btn-default" href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
-		var li4 = $('<li role="presentation"><a class="btn btn-default" href="javascript:void(0)" data-sk="letter-unread-mycenter">站内信('+lettercount+')</a></li>');
-		var li5 = $('<li role="presentation"><a class="btn btn-default" href="javascript:void(0)" data-sk="notice-view">系统公告</a></li>');
-		var li6 = $('<li role="presentation"><a class="btn btn-default" href="javascript:void(0)" data-sk="question-view">我的问题</a></li>');
+		//lettercount = letterDao.countByReceiver(0, 0, cuser.id);
+		var li2 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="my-score">积分等级</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="my-activity">我的活动</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="letter-unread-mycenter">站内信('+lettercount+')</a></li>');
+		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="notice-view">系统公告</a></li>');
+		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="question-view">我的问题</a></li>');
 		
 		
 	//	var li4 = $('<li role="presentation" class="dropdown"></li>');
@@ -676,12 +676,13 @@ var createNavLevel2 = function(nav){
 //		var li3 = $('<li role="presentation"><a href="#" data-sk="submit-toaudit">待审核</a></li>');
 		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="submit-payback">还款中</a></li>');
 		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="submit-done">还款完毕</a></li>');
-		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="submit-retreat">已退订</a></li>');
+		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="submit-retreat">已退订</a></li>');
 		ul.append(li1);
 		ul.append(li2);
 //		ul.append(li3);
 		ul.append(li4);
 		ul.append(li5);
+		ul.append(li6);
 	}else if(nav=='payback'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="payback-all">总览</a></li>');
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-to">待回款</a></li>');

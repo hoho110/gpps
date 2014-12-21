@@ -66,7 +66,17 @@
 		<div class="col-md-12" style="border:solid 2px #f5f5f5; margin-top:15px;">
 			<div class="col-md-12" style="margin-top:15px;">
 			<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
-			<span style="font-size:18px; color:#999">+-stypename-+</span><a style="float:right;" href="+-(centerurl+stype)-+">返回列表</a>
+			<!--# 
+			if(type=='question'){
+			 #-->
+			<span style="font-size:18px; color:#999">+-stypename-+</span><a style="float:right;" href="+-centerurl-+">返回列表</a>
+			<!--# 
+			}else{
+			 #-->
+			 <span style="font-size:18px; color:#999">+-stypename-+</span><a style="float:right;" href="+-(centerurl+stype)-+">返回列表</a>
+			 <!--# 
+			 }
+			  #-->
 			<div style="clear:both;"></div>
 			</div>
 			
@@ -146,13 +156,15 @@
 	var typename = {
 		"help" : "帮助中心",
 		"notice" : "公告中心",
-		"news" : "新闻中心"
+		"news" : "新闻中心",
+		"question" : "我的问题"
 	};
 	
 	var centerurl = {
 			"help" : "helpcenter.html?type=",
 			"notice" : "noticecenter.html?type=",
-			"news" : "newscenter.html?type="
+			"news" : "newscenter.html?type=",
+			"question" : "baccountdetail.html?fid=mycenter&sid=question-view"
 	}
 	
 	var stypename = {
@@ -169,7 +181,8 @@
 			"notice2" : "活动公告",
 			"news-1" : "所有",
 			"news0" : "行业资讯",
-			"news1" : "财经新闻"
+			"news1" : "财经新闻",
+			"question-1" : "所有"
 	}
 	
 	var type = getQueryString('type');
@@ -188,7 +201,7 @@
 		value = noticeService.find(parseInt(id));
 	}else if(type=='news'){
 		value = newsService.find(parseInt(id));
-	}else if(type=='help'){
+	}else if(type=='help' || type=='question'){
 		value = helpService.find(parseInt(id));
 	}
 		

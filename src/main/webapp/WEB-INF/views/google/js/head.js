@@ -33,7 +33,7 @@ function header(title){
 	}
 	else{
 	if(usertype=='lender'){
-		divusercontent.html(greet()+user.loginId+'&nbsp;&nbsp;<a style="color:white;" href="myaccount.html?fid=mycenter&sid=letter-unread-mycenter" id="inner_letter"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>&nbsp;'+lettercount+'</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
+		divusercontent.html(greet()+user.loginId+'&nbsp;&nbsp;<a style="color:white;" href="myaccountdetail.html?fid=mycenter&sid=letter-unread-mycenter" id="inner_letter" target="_blank"><span class="glyphicon glyphicon-envelope" style="margin-left:10px; color=red"></span>&nbsp;'+lettercount+'</a>'+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
 	}else if(usertype=='borrower'){
 		divusercontent.html(greet()+"企业用户"+user.loginId+'&nbsp;&nbsp;|&nbsp;&nbsp;<a href="quit.html" style="color:white;">退出</a>');
 	}else{

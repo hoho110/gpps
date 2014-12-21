@@ -62,28 +62,35 @@
         src="/easyservice/gpps.service.thirdpay.IThirdPaySupportService?json"></script>
     <script type="text/javascript"
         src="/easyservice/gpps.service.IMyAccountService?json"></script>
-	<script src="js/baccount.js"></script>
+    <script type="text/javascript"
+        src="/easyservice/gpps.service.IActivityRefService?json"></script>
+        
+	<script src="js/myaccount.js"></script>
 	<script src="js/getuser.js"></script>
 	
 	<script>
 	var name = "";
+	
 	var fid = getQueryString('fid');
 	var sid = getQueryString('sid');
+
+	
 	if(fid==null || fid==''){
 		alert('非法参数！！');
-		fid=='';
+		fid='';
 	}
+	
 	if (usertype!='lender' && usertype!='borrower') {
 		window.location.href = "login.html";
-	}else if(usertype=='lender'){
-		var hf="myaccountdetail.html?fid="+fid;
+	}else if(usertype=='borrower'){
+		var hf="baccountdetail.html?fid="+fid;
 		if(sid!=null && sid!=''){
 			hf+="&sid="+sid;
 		}
 		window.location.href=hf;
 	}
 	else {
-		name = user.loginId;
+		name = (user.name==null?user.loginId:user.name);
 	}
 	</script>
 
@@ -152,82 +159,7 @@ a.accordion-toggle {
 		
 	</div>
 
-
-
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">还款</h4>
-      </div>
-      <div class="modal-body">
-      			还款完成前请不要关闭该对话框，在支付完毕后点击相应的操作以完成还款。
-      </div>
-      <div class="modal-footer">
-        <button id="paysuccess" type="button" class="btn btn-primary" data-dismiss="modal">还款成功</button>
-        <button id="payfail" type="button" class="btn btn-default">还款失败</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="repaydetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">回款详情</h4>
-      </div>
-      <div class="modal-body" id="rdetail">
-      			
-      </div>
-      <div class="modal-footer">
-        
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="noticedetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="nlabel"></h4>
-      </div>
-      <div class="modal-body" id="ndetail">
-      			
-      </div>
-      <div class="modal-footer">
-        <button id="nclose" type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- Modal -->
-<div class="modal fade" id="letterdetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">站内信</h4>
-      </div>
-      <div class="modal-body" id="ldetail">
-      			
-      </div>
-      <div class="modal-footer">
-        <button id="lclose" type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-	
+	<div id="buyformdiv" style="display:none;"></div>
         <script src="js/head.js"></script>
 		<script src="js/foot.js"></script>
 	<script>
@@ -240,31 +172,20 @@ a.accordion-toggle {
 							}
 							
 							var firstnav = {
-									'mycenter' : '企业中心',
-									'request' : '融资申请',
-									'order' : '订单查看',
-									'payback' : '还款查看',
+									'mycenter' : '会员中心',
+									'submit' : '投资查看',
+									'letter' : '站内信',
+									'payback' : '回款查看',
 									'cash' : '资金查看'
 							}
 							
 							
-												var content = createBorrowerNavLevel2(fid);
+												var content = createNavLevel2(fid);
 							
 							
 								$('#bs-example-navbar-collapse-2').html('');
 								$('#bs-example-navbar-collapse-2').append(content);
 								$('#snav_title').html(firstnav[fid]);
-								
-							
-							
-											//	content.css('float', 'right');
-											//	content.css('margin-right','-15px');
-											//	$('#nav_level2').html('');
-											//	$('#nav_level2')
-											//			.append(content);
-										//		$('#nav_level2')
-										//				.append(
-										//						'<div style="clear:both;"></div>');
 
 												$('ul.nav-second li a').on('click',function(e) {
 																	$('ul.nav-second li')
@@ -273,7 +194,7 @@ a.accordion-toggle {
 																	$(this).parent().addClass('active');
 
 																	
-																	var ff = bnav2funtion[$(this).attr('data-sk')];
+																	var ff = nav2funtion[$(this).attr('data-sk')];
 
 																	if (ff == null) {
 																		$('div#content').html($(this).attr('data-sk'));
@@ -290,15 +211,6 @@ a.accordion-toggle {
 									$('ul.nav-second li a[data-sk="'+sid+'"]').trigger('click');
 								else
 									$('ul.nav-second li a').first().trigger('click');
-								
-							
-							$('#paysuccess').click(function(e){
-									window.location.href = "baccount.html?fid=payback&sid=payback-have";
-							});
-							
-							$('#payfail').click(function(e){
-									window.location.href = "baccount.html?fid=payback&sid=payback-canpay";
-							});
 						});
 	</script>
 </body>

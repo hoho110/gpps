@@ -10,14 +10,14 @@ import gpps.service.thirdpay.IThirdPaySupportService;
 public class IThirdPaySupportServiceTest extends TestSupport{
 	private static IThirdPaySupportService thirdPaySupportService;
 	@BeforeClass
-	public void init()
+	public static void init()
 	{
 		thirdPaySupportService=context.getBean(IThirdPaySupportService.class);
 	}
 	@Test
 	public void testCheckWithThirdPay(){
 		try {
-			thirdPaySupportService.checkWithThirdPay(1);
+			thirdPaySupportService.checkWithThirdPay(8103);
 		} catch (IllegalOperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

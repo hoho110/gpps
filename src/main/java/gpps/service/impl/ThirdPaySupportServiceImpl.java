@@ -8,7 +8,6 @@ import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.Lender;
 import gpps.model.PayBack;
-import gpps.model.Product;
 import gpps.model.Submit;
 import gpps.service.IAccountService;
 import gpps.service.IBorrowerService;
@@ -36,7 +35,6 @@ import gpps.tools.ObjectUtil;
 import gpps.tools.RsaHelper;
 import gpps.tools.StringUtil;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
@@ -48,7 +46,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -723,7 +720,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		params.put("SignInfo", rsa.signData(sBuilder.toString(), privateKey));
 		String body=httpClientService.post(baseUrl, params);
 		Gson gson = new Gson();
-		Map<String,String> returnParams=gson.fromJson(body, Map.class);
+		Map<String,String> returnParams=(Map<String, String>) (gson.fromJson(body, List.class).get(0));
 		if(cashStream.getAction()==CashStream.ACTION_CASH)
 		{
 			String withdrawsState=returnParams.get("WithdrawsState");
@@ -753,6 +750,9 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			if(cashStream.getState()==CashStream.STATE_SUCCESS)
 				return;
 			String loanNo=returnParams.get("LoanNo");
+			submitService.confirmBuy(cashStream.getSubmitId());
+			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
+			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
 		}
 	}
 }

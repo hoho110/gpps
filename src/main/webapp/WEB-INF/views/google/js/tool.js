@@ -70,6 +70,26 @@ _$fd = function(longt) {
 		return ldStr;
 	};
 	
+	explorer = function(){
+		if(navigator.userAgent.indexOf("Opera") != -1) { 
+			alert('Opera'); 
+			} 
+			else if(navigator.userAgent.indexOf("MSIE") != -1) { 
+			alert('Internet Explorer'); 
+			} 
+			else if(navigator.userAgent.indexOf("Firefox") != -1) { 
+			alert('Firefox'); 
+			} 
+			else if(navigator.userAgent.indexOf("Netscape") != -1) { 
+			alert('Netscape'); 
+			} 
+			else if(navigator.userAgent.indexOf("Safari") != -1) { 
+			alert('Safari'); 
+			} 
+			else{ 
+			alert('无法识别的浏览器。'); 
+			} 
+	}
 	
 	greet = function(){
 		var now = new Date();

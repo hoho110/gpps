@@ -37,8 +37,12 @@
     <script src="js/bootstrap.min.js"></script>
     
     
-    <script type="text/javascript" src="dttest/test/site.js"></script>
-		<script type="text/javascript" language="javascript" src="dttest/test/dataTables.js"></script>
+    <!-- 
+	<script type="text/javascript" src="dttest/test/site.js"></script>
+	<script type="text/javascript" language="javascript" src="dttest/test/dataTables.js"></script>
+	 -->
+		 
+	<script type="text/javascript" language="javascript" src="dttest/test/jquery.dataTables.min.js"></script>
     
     
     
@@ -101,7 +105,7 @@
 			<div class="col-md-12" style="border-top:solid gold 1px; margin-top:2px;">
 			</div>
 			</div>
-			<div class="col-md-12" id="table_content" style="margin-top:15px; padding-left:0px; padding-right:0px;">
+			<div class="col-md-12 table-responsive" id="table_content" style="margin-top:15px; padding-left:0px; padding-right:0px;">
 				<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="95%" cellspacing="0">
 				<thead>
 				<tr role="row">
@@ -221,6 +225,10 @@
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
+		
+		$('button.test').on('click', function(e){
+			alert(123);
+		})
 		
 		return res;
 	}

@@ -80,7 +80,7 @@
  		
  	}
  	
- 	if(usertype!='borrower' || user.id!=order.borrowerId){
+ 	if( !(usertype=='borrower' && user.id==order.borrowerId) && !(usertype=='admin')){
   		window.location.href="productdetail.html?pid="+pid;
   	}
  	
@@ -675,6 +675,8 @@
     	 $('p#loginstatus').html('<a href="login.html?rb=productdetail.html?pid='+pid+'" style="margin-right:20px;">登录</a>您尚未登录');
      }else if(usertype=='borrower'){
     	 $('p#loginstatus').html('<a href="quit.html" style="margin-right:20px;">退出</a>企业用户无法投资');
+     }else if(usertype=='admin'){
+    	 $('p#loginstatus').html('<a href="quit.html" style="margin-right:20px;">退出</a>管理员无法投资');
      }
      else{
     	 var account = accountDao.find(user.accountId);

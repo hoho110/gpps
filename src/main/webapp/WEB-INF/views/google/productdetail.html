@@ -80,7 +80,7 @@
  		
  	}
  	
- 	if(usertype=='borrower' && user.id==order.borrowerId){
+ 	if( (usertype=='borrower' && user.id==order.borrowerId) || usertype=='admin'){
  		window.location.href="productdetailfb.html?pid="+pid;
   	}
 	

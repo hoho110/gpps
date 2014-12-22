@@ -239,6 +239,11 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		if(lender==null)
 			throw new LoginException("未找到用户信息，请重新登录");
 		Submit submit = ObjectUtil.checkNullObject(Submit.class, submitService.find(submitId));
+		
+		if(submit.getState()==Submit.STATE_COMPLETEPAY){
+			throw new InsufficientBalanceException("该投标已经支付成功！");
+		}
+		
 		GovermentOrder order=orderService.findGovermentOrderByProduct(submit.getProductId());
 		Borrower borrower=borrowerService.find(order.getBorrowerId());
 		

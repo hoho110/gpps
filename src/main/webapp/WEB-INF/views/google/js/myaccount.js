@@ -132,8 +132,21 @@ _$fd = function(longt) {
 		try{
 	 		var submit = submitService.find(parseInt(id));
 	 		
-	        var transfer=tpService.getTransferToBuy(submit.id,''+submit.productId);
-	        var content="<form id='buyform' action='"+transfer.baseUrl+"'method='post' target='_blank'>";
+	 		//如果购买成功
+	 		if(submit.state==2){
+	 			alert('该投标已经支付成功！');
+	 			window.location.href = "myaccountdetail.html?fid=submit&sid=submit-toafford";
+	 			return;
+	 		}
+	 		
+	        var transfer = null;
+	        try{
+	        transfer = tpService.getTransferToBuy(submit.id,''+submit.productId);
+	        }catch(e){
+	        	alert(e.message);
+	        	return;
+	        }
+	        var content="<form id='buyform' action='"+transfer.baseUrl+"'method='post'>";
 	        for(var o in transfer)
 	       	{
 	            if(o=="baseUrl")
@@ -151,11 +164,14 @@ _$fd = function(longt) {
 	 		}catch(e){
 	 			alert(e.message);
 	 		}
-	 		if(confirm('付款成功？')){
-				window.location.href = "myaccountdetail.html?fid=submit&sid=submit-toafford";
-			}else{
-				window.location.href = "myaccountdetail.html?fid=submit&sid=submit-toafford";
-			}
+	 		
+//	 		/window.location.href = "myaccountdetail.html?fid=submit&sid=submit-all";
+	 		
+//	 		if(confirm('付款成功？')){
+//				window.location.href = "myaccountdetail.html?fid=submit&sid=submit-toafford";
+//			}else{
+//				window.location.href = "myaccountdetail.html?fid=submit&sid=submit-toafford";
+//			}
 	}
 
 
@@ -372,7 +388,7 @@ var submittoafford = function(container){
 		                    formatDate(data.createtime),
 		                    data.amount.value,
 		                    formatDate(data.payExpiredTime),
-		                    "<a id="+data.id+" class='submittoafford' onclick='afford("+data.id+")' href='javascript:void(0);'>立即支付</a>"]);
+		                    "<a id="+data.id+" class='submittoafford' href='javascript:void(0);'>立即支付</a>"]);
 	}
 	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
 	
@@ -400,37 +416,16 @@ var submittoafford = function(container){
 		oLanguage : _defaultDataTableOLanguage,
 		pagingType: "full"
 	} );
+	
+	$('a.submittoafford').click(function(e){
+		afford($(this).attr('id'));
+	});
 }
 
 
 var submitpayback = function(container){
 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
-	var columns = [ {
-		"sTitle" : "项目信息",
-			"code" : "info"
-	}, {
-		"sTitle" : "状态",
-		"code" : "state"
-	}, {
-		"sTitle" : "投标完成时间",
-		"code" : "financingEndtime"
-	}, {
-		"sTitle" : "金额",
-		"code" : "amount"
-	}, {
-		"sTitle" : "已回款",
-		"code" : "repayed"
-	}, {
-		"sTitle" : "待回款",
-		"code" : "willBeRepayed"
-	}, {
-		"sTitle" : "回款明细",
-		"code" : "repaydetail"
-	}, {
-		"sTitle" : "合同",
-		"code" : "contract"
-	}];
 	
 	var paybackState={0: '待还款', 1 : '正在还款', 2: '已还款', 3: '延期' , 5: '待审核'};
 	
@@ -475,7 +470,7 @@ var submitpayback = function(container){
 			var itemid = $(this).attr('id');
 			var submititem = submitService.find(parseInt(itemid));
 			var pays = paybackService.generatePayBacks(submititem.product.id, parseInt(submititem.amount.value));
-			var str = "<table style='width:95%;'>";
+			var str = "<table class='table' style='width:95%;'>";
 			str+="<tr><td colspan=5>本笔投资总金额为："+submititem.amount.value+"元, 预期还款明细如下：</td></tr>";
 			str+="<tr><td>序号</td><td>还款日期</td><td>总额</td><td>本金</td><td>利息</td><td>状态</td></tr>";
 			for(var i=0; i<pays.size(); i++){
@@ -1056,20 +1051,6 @@ var letterreaded = function(container){
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
-		
-		
-		
-		$('button.readletter').click(function(e){
-			var letterid = $(this).attr('id');
-			var letter = letterS.find(parseInt(letterid));
-			$('#ldetail').html(letter.content);
-			$('#letterdetail').modal({
-				  keyboard: false,
-				  backdrop: true
-			});
-		})
-		
-		
 
 		return res;
 	}
@@ -1136,11 +1117,17 @@ var letterunread_center = function(container){
 			                    "管理员",
 			                    formatDate(letters.get(i).createtime), 
 			                    letters.get(i).markRead==0?'未读':'已读',
-			                    "<a class='readletter' onclick='readletter("+letters.get(i).id+");' id='"+letters.get(i).id+"'>阅读</a>"
+			                    "<a class='readletter'  id='"+letters.get(i).id+"'>阅读</a>"
 			                   ]);
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
+		
+		$('a.readletter').click(function(e){
+			var id = $(this).attr('id');
+			readletter(id);
+		})
+		
 
 		return res;
 	}
@@ -1283,6 +1270,7 @@ var noticeview = function(container){
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
+		
 		return res;
 	}
 	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');

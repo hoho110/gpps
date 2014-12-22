@@ -696,4 +696,63 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		}
 		return body;
 	}
+
+	@Override
+	public void checkWithThirdPay(Integer cashStreamId)
+			throws IllegalOperationException, IllegalConvertException {
+		CashStream cashStream=cashStreamDao.find(cashStreamId);
+		if(cashStream==null)
+			return;
+		if(cashStream.getAction()!=CashStream.ACTION_CASH&&cashStream.getAction()!=CashStream.ACTION_FREEZE&&cashStream.getAction()!=CashStream.ACTION_RECHARGE)
+			return;
+		if(cashStream.getState()==CashStream.STATE_SUCCESS&&(cashStream.getAction()==CashStream.ACTION_FREEZE||cashStream.getAction()==CashStream.ACTION_RECHARGE))
+			return;
+		String baseUrl=getBaseUrl(ACTION_ORDERQUERY);
+		Map<String,String> params=new HashMap<String,String>();
+		params.put("PlatformMoneymoremore", platformMoneymoremore);
+		if(cashStream.getAction()==CashStream.ACTION_CASH)
+			params.put("Action", "2");
+		else if(cashStream.getAction()==CashStream.ACTION_RECHARGE)
+			params.put("Action", "1");
+		params.put("OrderNo", String.valueOf(cashStream.getId()));
+		StringBuilder sBuilder=new StringBuilder();
+		sBuilder.append(StringUtil.strFormat(params.get("PlatformMoneymoremore")));
+		sBuilder.append(StringUtil.strFormat(params.get("Action")));
+		sBuilder.append(StringUtil.strFormat(params.get("OrderNo")));
+		RsaHelper rsa = RsaHelper.getInstance();
+		params.put("SignInfo", rsa.signData(sBuilder.toString(), privateKey));
+		String body=httpClientService.post(baseUrl, params);
+		Gson gson = new Gson();
+		Map<String,String> returnParams=gson.fromJson(body, Map.class);
+		if(cashStream.getAction()==CashStream.ACTION_CASH)
+		{
+			String withdrawsState=returnParams.get("WithdrawsState");
+			if(withdrawsState.equals("0")||withdrawsState.equals("1"))
+			{
+				if(cashStream.getState()==CashStream.STATE_SUCCESS)
+					return;
+				String loanNo=returnParams.get("LoanNo");
+				cashStreamDao.updateLoanNo(cashStreamId, loanNo,new BigDecimal(returnParams.get("FeeWithdraws")));
+				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			}
+			else if(withdrawsState.equals("2"))
+			{
+				if(cashStream.getState()!=CashStream.STATE_SUCCESS)
+					return;
+				accountService.returnCash(cashStreamId);//退回
+			}
+		}else if(cashStream.getAction()==CashStream.ACTION_RECHARGE)
+		{
+			if(cashStream.getState()==CashStream.STATE_SUCCESS)
+				return;
+			String loanNo=returnParams.get("LoanNo");
+			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
+			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+		}else if(cashStream.getAction()==CashStream.ACTION_FREEZE)
+		{
+			if(cashStream.getState()==CashStream.STATE_SUCCESS)
+				return;
+			String loanNo=returnParams.get("LoanNo");
+		}
+	}
 }

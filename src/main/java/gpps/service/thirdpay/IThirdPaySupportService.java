@@ -1,5 +1,6 @@
 package gpps.service.thirdpay;
 
+import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.LoginException;
@@ -53,4 +54,5 @@ public interface IThirdPaySupportService {
 	public void repayProcessor(Map<String,String> params) throws SignatureException, ResultCodeException;
 	public void checkCash(Integer cashStreamId) throws IllegalOperationException;
 	public String balanceQuery(String thirdPartyAccount);
+	public void checkWithThirdPay(Integer cashStreamId) throws IllegalOperationException, IllegalConvertException;
 }

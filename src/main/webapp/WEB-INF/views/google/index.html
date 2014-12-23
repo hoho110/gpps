@@ -272,10 +272,10 @@
 				<span style="font-size:16px; font-weight:bold;">+-qixian-+</span>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:15px;">
-				<button class="btn btn-warning  btn-block seriesdetail" id='+-series.id-+'>产品详情</button>
+				<button class="btn btn-warning  btn-block seriesdetail" id='+-series.type-+'>产品详情</button>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-12">
-				<button class="btn btn-danger  btn-block productlist" id='+-series.id-+'>产品列表</button>
+				<button class="btn btn-danger  btn-block productlist" id='+-series.type-+'>产品列表</button>
 			</div>
 			<div style = "clear:both;"></div>
 		</textarea>
@@ -490,6 +490,10 @@ $(document).ready(function () {
                    }
                    
                    
+                   $('button.seriesdetail').click(function(e){
+                	   var type = $(this).attr('id');
+                	   window.open('pseriescenter.html?type='+type);
+                   })
                    
                    $('button.productlist').click(function(e){
                 	   var sid = $(this).attr('id');

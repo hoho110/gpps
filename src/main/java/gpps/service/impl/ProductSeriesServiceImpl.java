@@ -26,5 +26,10 @@ public class ProductSeriesServiceImpl implements IProductSeriesService{
 	public List<ProductSeries> findAll() {
 		return productSeriesDao.findAll();
 	}
+	
+	@Override
+	public ProductSeries findByType(Integer type){
+		return productSeriesDao.findByType(type);
+	}
 
 }

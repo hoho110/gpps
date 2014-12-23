@@ -15,6 +15,10 @@
 		select *
 		from ProductSeries where id=#{id}
 	</select>
+	<select id="findByType" parameterType="Integer" resultType="gpps.model.ProductSeries">
+		select *
+		from ProductSeries where type=#{type}
+	</select>
 	<delete id="delete">
 		delete from ProductSeries
 		where

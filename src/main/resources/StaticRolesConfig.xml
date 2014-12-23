@@ -28,7 +28,7 @@
 			<PermissionRule  entityLimitType="gpps.service.INoticeService" operations="find;findAll"/>
 			<PermissionRule  entityLimitType="gpps.service.IPayBackService" operations="find;findAll;generatePayBacks;generatePayBacks"/>
 			<PermissionRule  entityLimitType="gpps.service.IProductActionService" operations="findAllByProduct"/>
-			<PermissionRule  entityLimitType="gpps.service.IProductSeriesService" operations="find;findAll"/>
+			<PermissionRule  entityLimitType="gpps.service.IProductSeriesService" operations="find;findAll;findByType"/>
 			<PermissionRule  entityLimitType="gpps.service.IStatisticsService"/>
 			<PermissionRule  entityLimitType="gpps.service.IMyAccountService" operations="getCurrentUser"/>
 			<PermissionRule  entityLimitType="gpps.service.ISubmitService" operations="findPayedSubmitsByProduct"/>

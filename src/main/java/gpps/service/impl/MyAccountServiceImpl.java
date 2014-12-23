@@ -10,6 +10,7 @@ import gpps.dao.ILenderAccountDao;
 import gpps.dao.ILenderDao;
 import gpps.dao.ILetterDao;
 import gpps.dao.IPayBackDao;
+import gpps.dao.ISubmitDao;
 import gpps.model.Admin;
 import gpps.model.Borrower;
 import gpps.model.BorrowerAccount;
@@ -19,8 +20,10 @@ import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
 import gpps.model.Help;
 import gpps.model.Lender;
+import gpps.model.LenderAccount;
 import gpps.model.Letter;
 import gpps.model.PayBack;
+import gpps.model.Product;
 import gpps.service.IAccountService;
 import gpps.service.IBorrowerService;
 import gpps.service.IGovermentOrderService;
@@ -31,7 +34,9 @@ import gpps.service.ILoginService;
 import gpps.service.IMyAccountService;
 import gpps.service.INoticeService;
 import gpps.service.IPayBackService;
+import gpps.service.ISubmitService;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +77,10 @@ public class MyAccountServiceImpl implements IMyAccountService {
 	IFinancingRequestDao requestDao;
 	@Autowired
 	ICashStreamDao cashStreamDao;
+	@Autowired
+	ISubmitDao submitDao;
+	@Autowired
+	ISubmitService submitService;
 	
 	
 	@Override
@@ -178,8 +187,77 @@ public class MyAccountServiceImpl implements IMyAccountService {
 
 	@Override
 	public Map<String, Object> getLAccountMessage() {
-		// TODO Auto-generated method stub
-		return null;
+
+		Map<String, Object> message = new HashMap<String, Object>();
+		Lender lender = lenderService.getCurrentUser();
+		LenderAccount account = lenderAccountDao.find(lender.getAccountId());
+		String name = lender.getName()==null?lender.getLoginId():lender.getName();
+		message.put("name", name);
+		message.put("total", account.getTotal());
+		message.put("freeze", account.getFreeze());
+		message.put("usable", account.getUsable());
+		message.put("used", account.getUsed());
+		message.put("totalincome", account.getTotalincome());
+		
+		CardBinding cb = lender.getCardBinding();
+		if(cb!=null)
+		{
+			message.put("bankname", lender.getCardBinding().getBranchBankName());
+			message.put("bankcode", lender.getCardBinding().getCardNo());
+		}else{
+			message.put("bankname", null);
+			message.put("bankcode", null);
+		}
+		message.put("qdd", lender.getAccountNumber());
+		
+		message.put("identityCard", lender.getIdentityCard());
+		
+		message.put("grade", lender.getGrade());
+		message.put("level", lender.getLevel());
+		
+		message.put("letters_unread", letterDao.countByReceiver(Letter.MARKREAD_NO, Letter.RECEIVERTYPE_LENDER, lender.getId()));
+		
+		message.put("letters_readed", letterDao.countByReceiver(Letter.MARKREAD_YES, Letter.RECEIVERTYPE_LENDER, lender.getId()));
+		
+		message.put("helps",  helpDao.countPrivateHelps(-1, Help.QUESTIONERTYPE_LENDER, lender.getId()));
+		
+		
+		
+		
+		message.put("pbs_waitforrepay", accountService.findLenderWaitforRepay().size());
+		message.put("pbs_finishrepay", cashStreamDao.countByActionAndState(lender.getAccountId(), null, CashStream.ACTION_REPAY, CashStream.STATE_SUCCESS));
+		
+		
+		message.put("cash_total", cashStreamDao.countByActionAndState(lender.getAccountId(), null, -1, CashStream.STATE_SUCCESS));
+		message.put("cash_recharge", cashStreamDao.countByActionAndState(lender.getAccountId(), null, CashStream.ACTION_RECHARGE, CashStream.STATE_SUCCESS));
+		message.put("cash_withdraw", cashStreamDao.countByActionAndState(lender.getAccountId(), null, CashStream.ACTION_CASH, CashStream.STATE_SUCCESS));
+		message.put("cash_financing", cashStreamDao.countByActionAndState(lender.getAccountId(), null, CashStream.ACTION_PAY, CashStream.STATE_SUCCESS));
+		message.put("cash_payback", cashStreamDao.countByActionAndState(lender.getAccountId(), null, CashStream.ACTION_REPAY, CashStream.STATE_SUCCESS));
+
+		
+		
+		List<Integer> stateList = new ArrayList<Integer>();
+		
+		message.put("submit_all", submitDao.countByLenderAndProductStates(lender.getId(), null));
+		message.put("submit_waitforpay", submitService.findMyAllWaitforPayingSubmits().size());
+		
+		stateList.add(Product.STATE_REPAYING);
+		stateList.add(Product.STATE_POSTPONE);
+		message.put("submit_paying", submitDao.countByLenderAndProductStates(lender.getId(), stateList));
+		
+		stateList.clear();
+		stateList.add(Product.STATE_APPLYTOCLOSE);
+		stateList.add(Product.STATE_CLOSE);
+		stateList.add(Product.STATE_FINISHREPAY);
+		message.put("submit_done", submitDao.countByLenderAndProductStates(lender.getId(), stateList));
+		
+		stateList.clear();
+		stateList.add(Product.STATE_APPLYTOCLOSE);
+		stateList.add(Product.STATE_CLOSE);
+		stateList.add(Product.STATE_FINISHREPAY);
+		message.put("submit_retreat", submitService.findMyAllRetreatSubmits().size());
+		
+		return message;
 	}
 
 }

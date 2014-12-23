@@ -40,5 +40,10 @@ serverPort=80
         </property>
 </bean>
 
+<bean id="accessoryTransferServlet" class="gpps.servlet.AccessoryTransferServlet">
+        <property name="officalDir" value="file:/root/install/data/officialDir"></property>
+        <property name="tempDir" value="file:/root/install/data/tempDir"></property>
+    </bean>
+
 7.切换到tomcat/bin目录，./startup启动tomcat
 

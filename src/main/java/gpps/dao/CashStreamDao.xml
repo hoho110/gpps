@@ -139,4 +139,7 @@
 		select sum(chiefamount) chiefAmount,sum(interest) interest from
 		CashStream where paybackId=#{paybackId}  and state=2
 	</select>
+	<select id="findBySubmitAndState" resultType="gpps.model.CashStream">
+	   select * from CashStream where action=#{action} and submitId=#{submitId}
+	</select>
 </mapper>

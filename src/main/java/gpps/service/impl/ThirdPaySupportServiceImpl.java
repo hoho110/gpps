@@ -255,8 +255,13 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		transfer.setTransferType("2");//直连
 		
 		List<LoanJson> loanJsons=new ArrayList<LoanJson>();
-		
-		Integer cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), submit.getAmount(), submitId, "购买");
+		Integer cashStreamId =null;
+		//查看是否有存在的现金流 
+		CashStream cashStream=cashStreamDao.findBySubmitAndState(submitId, CashStream.ACTION_FREEZE);
+		if(cashStream==null)
+			cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), submit.getAmount(), submitId, "购买");
+		else
+			cashStreamId=cashStream.getId();
 		LoanJson loanJson=new LoanJson();
 		loanJson.setLoanOutMoneymoremore(lender.getThirdPartyAccount());
 		loanJson.setLoanInMoneymoremore(borrower.getThirdPartyAccount());

@@ -630,6 +630,11 @@ public class AccountServlet {
 				if(orignal!=null&&orignal.getCardNo().equals(cardNo))
 				{
 					//已绑定
+					lender=lenderService.getCurrentUser();
+					if(lender!=null){
+						lender.setCardBindingId(orignal.getId());
+						lender.setCardBinding(orignal);
+					}
 					return;
 				}
 			}
@@ -650,21 +655,44 @@ public class AccountServlet {
 				e.printStackTrace();
 			}
 		}
-//		else 
-//		{
-//			Borrower borrower=borrowerDao.findByThirdPartyAccount(moneymoremoreId);
-//			if(borrower!=null)
-//			{
-//				borrowerService.bindCard(borrower.getId(), cardBinding.getId());
-//				//加一分钱
-//				Integer cashStreamId=accountService.rechargeBorrowerAccount(borrower.getAccountId(), new BigDecimal(0.01), "快捷支付充值");
-//				try {
-//					accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-//				} catch (IllegalConvertException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
+		else 
+		{
+			Borrower borrower=borrowerDao.findByThirdPartyAccount(moneymoremoreId);
+			if(borrower!=null)
+			{
+				if(borrower.getCardBindingId()!=null)
+				{
+					CardBinding orignal=cardBindingDao.find(borrower.getCardBindingId());
+					if(orignal!=null&&orignal.getCardNo().equals(cardNo))
+					{
+						//已绑定
+						borrower=borrowerService.getCurrentUser();
+						if(borrower!=null)
+						{
+							borrower.setCardBindingId(orignal.getId());
+							borrower.setCardBinding(orignal);
+						}
+						return;
+					}
+				}
+				CardBinding cardBinding=new CardBinding();
+				cardBinding.setBankCode(params.get("BankCode"));
+				cardBinding.setBranchBankName(params.get("BranchBankName"));
+				cardBinding.setCardNo(cardNo);
+				cardBinding.setCardType(Integer.parseInt(params.get("CardType")));
+				cardBinding.setCity(params.get("City"));
+				cardBinding.setProvince(params.get("Province"));
+				cardBindingDao.create(cardBinding);
+				borrowerService.bindCard(borrower.getId(), cardBinding);
+				//加一分钱
+				Integer cashStreamId=accountService.rechargeBorrowerAccount(borrower.getAccountId(), new BigDecimal(0.01), "快捷支付充值");
+				try {
+					accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+				} catch (IllegalConvertException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	@RequestMapping(value = { "/account/authorize/response" })
 	public void completeAuthorize(HttpServletRequest req,HttpServletResponse resp)

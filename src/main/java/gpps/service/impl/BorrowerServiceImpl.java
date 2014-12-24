@@ -13,6 +13,7 @@ import gpps.model.BorrowerAccount;
 import gpps.model.CardBinding;
 import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
+import gpps.model.Lender;
 import gpps.model.Product;
 import gpps.model.ref.Accessory;
 import gpps.model.ref.Accessory.MimeCol;
@@ -390,12 +391,14 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 
 	@Override
 	public void bindCard(Integer id, CardBinding cardBinding) {
-		Borrower borrower=find(id);
 		cardBindingDao.create(cardBinding);
-		borrowerDao.bindCard(borrower.getId(), cardBinding.getId());
-		
-		borrower.setCardBindingId(cardBinding.getId());
-		borrower.setCardBinding(cardBinding);
+		borrowerDao.bindCard(id, cardBinding.getId());
+		Borrower borrower=getCurrentUser();
+		if(borrower!=null)
+		{
+			borrower.setCardBindingId(cardBinding.getId());
+			borrower.setCardBinding(cardBinding);
+		}
 	}
 
 	@Override

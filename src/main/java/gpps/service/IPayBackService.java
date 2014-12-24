@@ -41,7 +41,12 @@ public interface IPayBackService {
 	 */
 	public List<PayBack> generatePayBacks(int amount,double rate,int payBackModel,
 			long from, long to);
-	
+	/**
+	 * 根据产品生成还款计划
+	 * @param productId
+	 * @param amount
+	 * @return
+	 */
 	public List<PayBack> generatePayBacks(Integer productId,int amount);
 	/**
 	 * 获取当前借款人的还款
@@ -51,19 +56,58 @@ public interface IPayBackService {
 	 * @return
 	 */
 	public Map<String, Object> findBorrowerPayBacks(int state,long starttime,long endtime,int offset,int recnum);
-	
+	/**
+	 * 返回当前借款人所有的可还款
+	 * @return
+	 */
 	public List<PayBack> findBorrowerCanBeRepayedPayBacks();
-	
+	/**
+	 * 返回当前借款人所有的可提前还款
+	 * @return
+	 */
 	public List<PayBack> findBorrowerCanBeRepayedInAdvancePayBacks();
-	
+	/**
+	 * 返回当前借款人所有的待还款
+	 * @return
+	 */
 	public List<PayBack> findBorrowerWaitForRepayed();
-	
+	/**
+	 * 该payback是否可还
+	 * @param payBackId
+	 * @return
+	 */
 	public boolean canRepay(Integer payBackId);
-	
+	/**
+	 * 该payback是否可提前还
+	 * @param payBackId
+	 * @return
+	 */
 	public boolean canRepayInAdvance(Integer payBackId);
-	
+	/**
+	 * 借款人还款
+	 * @param payBackId
+	 * @throws IllegalStateException
+	 * @throws IllegalOperationException
+	 * @throws InsufficientBalanceException
+	 * @throws IllegalConvertException
+	 */
 	public void repay(Integer payBackId) throws IllegalStateException, IllegalOperationException, InsufficientBalanceException, IllegalConvertException;
+	/**
+	 * 管理员验证通过还款
+	 * @param payBackId
+	 * @throws IllegalConvertException
+	 * @throws IllegalOperationException
+	 */
 	public void check(Integer payBackId) throws IllegalConvertException, IllegalOperationException;
+	/**
+	 * 对该次还款进行校验,校验通过才可调用check方法
+	 * @param payBackId
+	 * @throws CheckException
+	 */
 	public void checkoutPayBack(Integer payBackId) throws CheckException;
+	/**
+	 * 返回所有等待审核的还款
+	 * @return
+	 */
 	public List<PayBack> findWaitforCheckPayBacks();
 }

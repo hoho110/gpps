@@ -32,6 +32,10 @@ public interface IHelpService {
 	public Map<String,Object> findMyHelps(int type,int offset,int recnum);
 	
 	public Map<String,Object> findPrivateHelps(int type,int offset,int recnum);
-	
+	/**
+	 * 回答帮助问题
+	 * @param id
+	 * @param answer
+	 */
 	public void answer(Integer id,String answer);
 }

@@ -74,13 +74,13 @@ public interface IAccountService {
 	 */
 	public Integer repay(Integer lenderAccountId,Integer borrowerAccountId,BigDecimal chiefamount,BigDecimal interest,Integer submitid,Integer paybackId,String description) throws IllegalConvertException;
 	/**
-	 * 取现
+	 * 贷款人取现
 	 * @param amount
 	 * @exception InsufficientBalanceException 余额不足
 	 */
 	public Integer cashLenderAccount(Integer lenderAccountId,BigDecimal amount,String description) throws InsufficientBalanceException;
 	/**
-	 * 取现
+	 * 借款人取现
 	 * @param amount
 	 * @exception InsufficientBalanceException 余额不足
 	 */
@@ -122,19 +122,46 @@ public interface IAccountService {
 	 * @return 分页结果，详细Key查看{@link Pagination}
 	 */
 	public Map<String, Object> findLenderCashStreamByActionAndState(int action,int state,int offset,int recnum);
+	/**
+	 * 获取当前借款人的资金流
+	 * @param action 资金流行为{@link CashStream.cation},-1为不限
+	 * @param state 资金流状态,-1为不限
+	 * @param offset 翻页偏移量，从0开始
+	 * @param recnum 返回结果数
+	 * @return 分页结果，详细Key查看{@link Pagination}
+	 */
 	public Map<String, Object> findBorrowerCashStreamByActionAndState(int action,int state,int offset,int recnum);
-	
+	/**
+	 * 找到所有贷款人的已还款
+	 * @param offset 翻页偏移量，从0开始
+	 * @param recnum 返回结果数
+	 * @return
+	 */
 	public Map<String,Object> findLenderRepayCashStream(int offset,int recnum);
 	/**
 	 * 找到所有待还款的计划，即时计算所有Lender购买的还款中产品所有未还款的payback，同时将payback的金额替换为Lender的金额
 	 * @return
 	 */
 	public List<PayBack> findLenderWaitforRepay();
-	
+	/**
+	 * 返回贷款人的已还款总览
+	 * @return
+	 */
 	public Map<String,PayBackDetail> getLenderRepayedDetail();
+	/**
+	 * 返回贷款人的待还款总览
+	 * @return
+	 */
 	public Map<String,PayBackDetail> getLenderWillBeRepayedDetail();
-	
+	/**
+	 * 返回借款人的已还款总览
+	 * @return
+	 */
 	public Map<String,PayBackDetail> getBorrowerRepayedDetail();
+	/**
+	 * 返回借款人的待还款总览
+	 * @return
+	 */
 	public Map<String,PayBackDetail> getBorrowerWillBeRepayedDetail();
 	/**
 	 * 提现退回

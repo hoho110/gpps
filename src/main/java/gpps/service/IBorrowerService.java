@@ -93,13 +93,45 @@ public interface IBorrowerService extends ILoginService {
 	 * @throws IllegalConvertException
 	 */
 	public void refuseFundingApplying(Integer borrowerId)throws IllegalConvertException;
-	
+	/**
+	 * 添加附件
+	 * @param borrowerId
+	 * @param category
+	 * @param item
+	 * @throws XMLParseException
+	 */
 	public void addAccessory(Integer borrowerId,int category,MimeItem item) throws XMLParseException;
+	/**
+	 * 删除附件
+	 * @param borrowerId
+	 * @param category
+	 * @param itemId
+	 * @throws XMLParseException
+	 */
 	public void delAccessory(Integer borrowerId,int category,String itemId) throws XMLParseException;
+	/**
+	 * 返回附件
+	 * @param borrowerId
+	 * @param category
+	 * @return
+	 * @throws XMLParseException
+	 */
 	public List<MimeItem> findMimeItems(Integer borrowerId,int category)throws XMLParseException;
-	
+	/**
+	 * 当前借款人申请融资
+	 * @param financingRequest
+	 */
 	public void applyFinancing(FinancingRequest financingRequest);
+	/**
+	 * 审核通过融资申请
+	 * @param financingRequestId
+	 * @throws IllegalOperationException
+	 */
 	public void passFinancingRequest(Integer financingRequestId) throws IllegalOperationException;
+	/**
+	 * 审核拒绝融资申请
+	 * @param financingRequestId
+	 */
 	public void refuseFinancingRequest(Integer financingRequestId);
 	
 	public FinancingRequest findFinancingRequest(Integer id);
@@ -117,8 +149,17 @@ public interface IBorrowerService extends ILoginService {
 	 * @return
 	 */
 	public Map<String, Object> findAllFinancingRequests(int state,int offset, int recnum);
-	
+	/**
+	 * 注册第三方账户
+	 * @param id
+	 * @param thirdPartyAccount
+	 * @param accountNumber
+	 */
 	public void registerThirdPartyAccount(Integer id,String thirdPartyAccount,String accountNumber);
+	/**
+	 * 第三方是否认证
+	 * @return
+	 */
 	public boolean isThirdPartyAuthentication();
 	/**
 	 * 查找借款人
@@ -128,7 +169,18 @@ public interface IBorrowerService extends ILoginService {
 	 * @return
 	 */
 	public Map<String, Object> findByPrivilegeWithPaging(int privilege,int offset,int recnum);
+	/**
+	 * 更新
+	 * @param id
+	 * @param corporationName
+	 * @param corporationAddr
+	 * @param brange
+	 */
 	public void update(Integer id,String corporationName,String corporationAddr,String brange);
-	
+	/**
+	 * 绑定银行卡
+	 * @param id
+	 * @param cardBinding
+	 */
 	public void bindCard(Integer id, CardBinding cardBinding);
 }

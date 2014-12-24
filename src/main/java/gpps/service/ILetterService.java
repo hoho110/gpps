@@ -16,5 +16,9 @@ public interface ILetterService {
 	 */
 	public Map<String,Object> findMyLetters(int markRead,int offset,int recnum);
 	public Map<String,Object> findAll(int offset,int recnum);
+	/**
+	 * 设置信件为已读
+	 * @param id
+	 */
 	public void alreadyRead(Integer id);
 }

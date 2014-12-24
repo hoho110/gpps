@@ -49,9 +49,18 @@ public interface IGovermentOrderService {
 //	public void refuseApplying(Integer orderId)throws IllegalConvertException;//拒绝申请
 //	public void reviseApplying(Integer orderId)throws IllegalConvertException;//修订申请
 //	public void reApply(Integer orderId)throws IllegalConvertException;//重新申请
-	
+	/**
+	 * 发布
+	 * @param orderId
+	 * @throws IllegalConvertException
+	 */
 	public void publish(Integer orderId)throws IllegalConvertException;
-	
+	/**
+	 * 开始融资
+	 * @param orderId
+	 * @throws IllegalConvertException
+	 * @throws IllegalOperationException
+	 */
 	public void startFinancing(Integer orderId)throws IllegalConvertException, IllegalOperationException;//启动融资
 	/**
 	 * 启动还款
@@ -62,8 +71,26 @@ public interface IGovermentOrderService {
 	 * @throws CheckException 
 	 */
 	public void startRepaying(Integer orderId)throws IllegalConvertException, IllegalOperationException, ExistWaitforPaySubmitException, CheckException;//启动还款
+	/**
+	 * 取消融资
+	 * @param orderId
+	 * @throws IllegalConvertException
+	 * @throws IllegalOperationException
+	 * @throws ExistWaitforPaySubmitException
+	 * @throws CheckException
+	 */
 	public void quitFinancing(Integer orderId)throws IllegalConvertException, IllegalOperationException, ExistWaitforPaySubmitException, CheckException;//放弃融资（流标）
+	/**
+	 * 系统自查后关闭融资
+	 * @param orderId
+	 * @throws IllegalConvertException
+	 */
 	public void closeFinancing(Integer orderId)throws IllegalConvertException;//关闭融资
+	/**
+	 * 管理员关闭融资
+	 * @param orderId
+	 * @throws IllegalConvertException
+	 */
 	public void closeComplete(Integer orderId)throws IllegalConvertException;
 	/**
 	 * 申请融资中产品，并对订单加锁,必须相应地在finally中调用releaseFinancingProduct方法
@@ -90,7 +117,7 @@ public interface IGovermentOrderService {
 	 */
 	public void releaseFinancingOrder(GovermentOrder order);
 	/**
-	 * 
+	 * 根据产品线查找订单
 	 * @param productSeriesId
 	 * @param states
 	 * @param offset
@@ -98,7 +125,13 @@ public interface IGovermentOrderService {
 	 * @return total:count (int),result:List<GovermentOrder>
 	 */
 	public Map<String, Object> findGovermentOrderByProductSeries(Integer productSeriesId,int states,int offset,int recnum);
-	
+	/**
+	 * 根据订单状态查找订单
+	 * @param states
+	 * @param offset
+	 * @param recnum
+	 * @return
+	 */
 	public Map<String, Object> findByStatesByPage(int states,int offset,int recnum);
 	/**
 	 * 返回产品所属订单以及订单的所有产品
@@ -107,9 +140,29 @@ public interface IGovermentOrderService {
 	 */
 	public GovermentOrder findGovermentOrderByProduct(Integer productId);
 	
-
+	/**
+	 * 增加附件
+	 * @param orderId
+	 * @param category
+	 * @param item
+	 * @throws XMLParseException
+	 */
 	public void addAccessory(Integer orderId,int category,MimeItem item) throws XMLParseException;
+	/**
+	 * 删除附件
+	 * @param orderId
+	 * @param category
+	 * @param path
+	 * @throws XMLParseException
+	 */
 	public void delAccessory(Integer orderId,int category,String path) throws XMLParseException;
+	/**
+	 * 查找附件
+	 * @param orderId
+	 * @param category
+	 * @return
+	 * @throws XMLParseException
+	 */
 	public List<MimeItem> findMimeItems(Integer orderId,int category)throws XMLParseException;
 	/**
 	 * 返回当前借款人的订单
@@ -123,8 +176,19 @@ public interface IGovermentOrderService {
 	 * @return
 	 */
 	public List<FinancingRequest> findBorrowerFinancingRequest(int state);
-	
+	/**
+	 * 找到所有未发布的订单
+	 * @return
+	 */
 	public List<GovermentOrder> findAllUnpublishOrders();
-	
+	/**
+	 * 更新订单
+	 * @param id
+	 * @param title
+	 * @param financingStarttime
+	 * @param financingEndtime
+	 * @param incomeStarttime
+	 * @param description
+	 */
 	public void update(Integer id,String title,long financingStarttime,long financingEndtime,long incomeStarttime,String description);
 }

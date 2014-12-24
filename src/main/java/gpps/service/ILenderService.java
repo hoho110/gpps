@@ -67,5 +67,10 @@ public interface ILenderService extends ILoginService{
 	 * @return
 	 */
 	public Map<String, Object> findByPrivilegeWithPaging(int privilege,int offset,int recnum);
+	/**
+	 * 绑定银行卡
+	 * @param id
+	 * @param cardId
+	 */
 	public void bindCard(Integer id,Integer cardId);
 }

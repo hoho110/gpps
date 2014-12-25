@@ -746,17 +746,26 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		{
 			if(cashStream.getState()==CashStream.STATE_SUCCESS)
 				return;
-			String loanNo=returnParams.get("LoanNo");
-			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
-			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			if(returnParams.get("RechargeState").equals("1"))
+			{
+				//RechargeState:0.未充值;1.成功;2.失败
+				String loanNo=returnParams.get("LoanNo");
+				cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
+				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			}
 		}else if(cashStream.getAction()==CashStream.ACTION_FREEZE)
 		{
 			if(cashStream.getState()==CashStream.STATE_SUCCESS)
 				return;
-			String loanNo=returnParams.get("LoanNo");
-			submitService.confirmBuy(cashStream.getSubmitId());
-			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
-			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			if(returnParams.get("TransferState").equals("1")&&(returnParams.get("ActState").equals("3")||returnParams.get("ActState").equals("1")))
+			{
+				//TransferState:0.未转账;1.已转账
+				//ActState:0.未操作;1.已通过;2.已退回;3.自动通过
+				String loanNo=returnParams.get("LoanNo");
+				submitService.confirmBuy(cashStream.getSubmitId());
+				cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
+				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			}
 		}
 	}
 }

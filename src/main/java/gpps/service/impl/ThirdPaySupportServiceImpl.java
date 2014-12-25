@@ -602,7 +602,6 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 					e.printStackTrace();
 				}
 			}
-			//TODO 处理LoanNoListFail
 		}
 	}
 	public void repayProcessor(Map<String,String> params) throws SignatureException, ResultCodeException

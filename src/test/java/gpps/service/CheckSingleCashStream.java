@@ -66,7 +66,7 @@ public class CheckSingleCashStream {
 	public static void main(String args[]) throws Exception{
 //		withdrawSingleCashStream("LN19029242014122113491557888");
 		
-		List<CashStream> recharges = cashStreamDao.findByActionAndTime(-1, -1, -1);
+		List<CashStream> recharges = cashStreamDao.findByActionAndTime(CashStream.ACTION_STORECHANGE, -1, -1);
 		
 		int total = 0;
 		int success = 0;
@@ -656,8 +656,7 @@ public class CheckSingleCashStream {
 			return true;
 		}else if((res==null || res.isEmpty())){
 			if("快捷支付充值".equals(cashStream.getDescription())){
-				
-				//TODO: 根据loanNo重新发送一遍对账请求
+				//快捷支付充值
 				return true;
 			}else{
 			throw new Exception("现金流[ID:"+cashStream.getId()+"]有问题: 找不到第三方上对应的记录！");

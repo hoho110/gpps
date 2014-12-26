@@ -59,6 +59,13 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 			@Override
 			public String call() throws Exception {
 				StringBuilder sBuilder=new StringBuilder();
+				int totallender = 0;
+				int successlender = 0;
+				int errorlender = 0;
+				
+				int totalborrower = 0;
+				int successborrower = 0;
+				int errorborrower = 0;
 				try
 				{
 					int total=lenderDao.countAll();
@@ -69,14 +76,22 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							continue;
 						for(Lender lender:lenders)
 						{
+							totallender++;
+							
+							boolean flag = true;
+							
 							if(StringUtil.isEmpty(lender.getThirdPartyAccount()))
+							{
+								successlender++;
 								continue;
+							}
 							//与第三方验证
 							//网贷平台子账户可用余额|总可用余额(子账户可用余额+公共账户可用余额)|子账户冻结余额”（例:100.00|200.00|10.00）
 							String text=thirdPaySupportService.balanceQuery(lender.getThirdPartyAccount());
 							if(StringUtil.isEmpty(text))
 							{
 								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "从第三方支付平台获取账户信息失败.");
+								errorlender++;
 								continue;
 							}
 							
@@ -90,11 +105,13 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							String[] thirdAccount=text.split("\\|");
 							if(thirdAccount.length!=3)
 							{
+								flag=false;
 								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), 
 										"查询账户的乾多多标识错误:"+lender.getThirdPartyAccount());
 							}
 							else if(!compareAccount(thirdAccount[0], account.getUsable())||!compareAccount(thirdAccount[2], account.getFreeze()))
 							{
+								flag=false;
 								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), 
 										"本地账户与第三方支付平台不符,本地可用|冻结金额为"+account.getUsable().toString()+"|"+account.getFreeze().toString()+";"
 										+"第三方可用|冻结金额为"+thirdAccount[0]+"|"+thirdAccount[2]);
@@ -104,6 +121,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							//验证：总金额=可用金额+冻结金额+已投资金额
 							if(account.getFreeze().add(account.getUsable()).add(account.getUsed()).compareTo(account.getTotal())!=0)
 							{
+								flag=false;
 								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "账户金额错误,总金额不等于可用金额+冻结金额+已投资金额");
 							}
 							//可用金额=所有现金流之和
@@ -111,6 +129,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							sum=(sum==null)?new CashStreamSum():sum;
 							if(account.getUsable().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
 							{
+								flag=false;
 								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "可用金额与现金流验证错误,可用金额:"+account.getUsable().toString()+",现金流:"+sum);
 							}
 							//冻结金额=冻结+解冻
@@ -121,6 +140,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							sum=(sum==null)?new CashStreamSum():sum;
 							if(account.getFreeze().negate().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
 							{
+								flag=false;
 								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "冻结金额与现金流验证错误,冻结金额:"+account.getFreeze().toString()+",现金流:"+sum);
 							}
 							//已投资金额=购买+回款（本金）
@@ -131,6 +151,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							sum=(sum==null)?new CashStreamSum():sum;
 							if(account.getUsed().negate().compareTo(sum.getChiefAmount())!=0)
 							{
+								flag=false;
 								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "已用金额与现金流验证错误,已用金额:"+account.getFreeze().toString()+",现金流:"+sum.getChiefAmount());
 							}
 							//利息=回款（利息）
@@ -140,7 +161,13 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							sum=(sum==null)?new CashStreamSum():sum;
 							if(account.getTotalincome().compareTo(sum.getInterest())!=0)
 							{
+								flag=false;
 								appendMsg(sBuilder, Lender.class, lender.getId(), lender.getThirdPartyAccount(), "已收益金额与现金流验证错误,已收益金额:"+account.getTotalincome().toString()+",现金流:"+sum.getInterest());
+							}
+							if(flag==false){
+								errorlender++;
+							}else{
+								successlender++;
 							}
 						}
 					}
@@ -153,13 +180,21 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							continue;
 						for(Borrower borrower:borrowers)
 						{
+							totalborrower++;
+							
+							boolean flag = true;
+							
 							if(StringUtil.isEmpty(borrower.getThirdPartyAccount()))
+							{
+								successborrower++;
 								continue;
+							}
 							//与第三方验证
 							//网贷平台子账户可用余额|总可用余额(子账户可用余额+公共账户可用余额)|子账户冻结余额”（例:100.00|200.00|10.00）
 							String text=thirdPaySupportService.balanceQuery(borrower.getThirdPartyAccount());
 							if(StringUtil.isEmpty(text))
 							{
+								errorborrower++;
 								appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), "从第三方支付平台获取账户信息失败.");
 								continue;
 							}
@@ -167,11 +202,13 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							String[] thirdAccount=text.split("\\|");
 							if(thirdAccount.length!=3)
 							{
+								flag = false;
 								appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), 
 										"查询账户的乾多多标识错误:"+borrower.getThirdPartyAccount());
 							}
 							else if(!compareAccount(thirdAccount[0], account.getUsable())||!compareAccount(thirdAccount[2], account.getFreeze()))
 							{
+								flag = false;
 								appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), 
 										"本地账户与第三方支付平台不符,本地可用|冻结金额为"+account.getUsable().toString()+"|"+account.getFreeze().toString()+";"
 										+"第三方可用|冻结金额为"+thirdAccount[0]+"|"+thirdAccount[2]);
@@ -181,6 +218,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							//验证：总金额=可用金额+冻结金额
 							if(account.getFreeze().add(account.getUsable()).compareTo(account.getTotal())!=0)
 							{
+								flag = false;
 								appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), "账户金额错误,总金额不等于可用金额+冻结金额");
 							}
 							//可用金额=(充值、取现、冻结、解冻)现金流之和+（支付、还款、存零）现金流之和取反
@@ -201,6 +239,7 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							sum.setInterest(sum.getInterest().add(sum2.getInterest().negate()));
 							if(account.getUsable().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
 							{
+								flag = false;
 								appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), "可用金额与现金流验证错误,可用金额:"+account.getUsable().toString()+",现金流:"+sum);
 							}
 							
@@ -212,7 +251,14 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 							sum=(sum==null)?new CashStreamSum():sum;
 							if(account.getFreeze().negate().compareTo(sum.getChiefAmount().add(sum.getInterest()))!=0)
 							{
+								flag = false;
 								appendMsg(sBuilder, Borrower.class, borrower.getId(), borrower.getThirdPartyAccount(), "冻结金额与现金流验证错误,冻结金额:"+account.getFreeze().toString()+",现金流:"+sum);
+							}
+							
+							if(flag==false){
+								errorborrower++;
+							}else{
+								successborrower++;
 							}
 						}
 					}
@@ -221,6 +267,10 @@ public class AccountCheckServiceImpl implements IAccountCheckService {
 					logger.error(e.getMessage(),e);
 					sBuilder.append(e.getMessage());
 				}
+				
+				sBuilder.append("Lender account: total:"+totallender+", success:"+successlender+", error:"+errorlender).append(NEWLINE);
+				sBuilder.append("Borrower account: total:"+totalborrower+", success:"+successborrower+", error:"+errorborrower).append(NEWLINE);
+				
 				return sBuilder.toString();
 			}
 		});

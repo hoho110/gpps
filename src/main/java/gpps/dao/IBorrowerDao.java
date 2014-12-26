@@ -15,6 +15,7 @@ public interface IBorrowerDao {
 	public List<Borrower> findByPrivilege(int privilege);
 	public Borrower findByTel(String tel);
 	public Borrower findByEmail(String email);
+	public Borrower findByAccountID(Integer accountId);
 	public Borrower findByIdentityCard(String identityCard);
 	public List<Borrower> findByState(int state);
 	public void create(Borrower borrower);

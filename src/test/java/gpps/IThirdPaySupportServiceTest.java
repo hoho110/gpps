@@ -17,7 +17,7 @@ public class IThirdPaySupportServiceTest extends TestSupport{
 	@Test
 	public void testCheckWithThirdPay(){
 		try {
-			thirdPaySupportService.checkWithThirdPay(8103);
+			thirdPaySupportService.checkWithThirdPay(2003);
 		} catch (IllegalOperationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

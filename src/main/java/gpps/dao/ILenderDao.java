@@ -16,6 +16,7 @@ public interface ILenderDao {
 	public Lender findByTel(String tel);
 	public Lender findByIdentityCard(String identityCard);
 	public Lender findByEmail(String email);
+	public Lender findByAccountID(Integer accountId);
 	public void create(Lender lender);
 //	public void update(Lender lender);
 	public void changePrivilege(@Param("id") Integer id,@Param("privilege") int privilege);

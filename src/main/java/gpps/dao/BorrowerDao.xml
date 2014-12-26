@@ -12,6 +12,10 @@
 		select *
 		from Borrower where id=#{id}
 	</select>
+	<select id="findByAccountID" parameterType="Integer" resultType="gpps.model.Borrower">
+		select *
+		from Borrower where accountId=#{accountId}
+	</select>
 	<select id="findByLoginId" parameterType="String" resultType="gpps.model.Borrower">
 		select *
 		from Borrower where loginId=#{loginId}

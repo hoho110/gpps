@@ -17,6 +17,7 @@ public interface ICashStreamDao {
 	public CashStream find(Integer id);
 	public void delete(Integer id);
 	public List<CashStream> findByState(int state);
+	public List<CashStream> findByAction(int action);
 	public void deleteByLenderAccountId(Integer accountId);//测试使用
 	public void deleteByBorrowerAccountId(Integer accountId);//测试使用
 	/**
@@ -26,6 +27,15 @@ public interface ICashStreamDao {
 	 * @return
 	 */
 	public List<CashStream> findByActionAndState(@Param("lenderAccountId")Integer lenderAccountId,@Param("borrowerAccountId")Integer borrowerAccountId,@Param("action")int action,@Param("state")int state,@Param("offset")int offset,@Param("recnum")int recnum);
+	
+	/**
+	 * @param action -1为不限
+	 * @param start -1为不限
+	 * @param end -1为不限
+	 * 
+	 * */
+	public List<CashStream> findByActionAndTime(@Param("action")int action, @Param("start")long start, @Param("end")long end);
+	
 	public int countByActionAndState(@Param("lenderAccountId")Integer lenderAccountId,@Param("borrowerAccountId")Integer borrowerAccountId,@Param("action")int action,@Param("state")int state);
 	public PayBackDetail sumLenderRepayed(@Param("lenderAccountId")Integer lenderAccountId,@Param("starttime")long starttime,@Param("endtime")long endtime);
 	/**
@@ -50,4 +60,6 @@ public interface ICashStreamDao {
 	public CashStreamSum sumPayBack(@Param("paybackId")Integer paybackId);
 	
 	public CashStream findBySubmitAndState(@Param("submitId")Integer submitId,@Param("action")int action);
+	
+	public CashStream findBySubmitAndActionAndState(@Param("submitId")Integer submitId,@Param("action")int action,@Param("state")int state);
 }

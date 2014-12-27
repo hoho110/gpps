@@ -3,9 +3,11 @@ package gpps.service.impl;
 import gpps.dao.IBorrowerDao;
 import gpps.dao.IFinancingRequestDao;
 import gpps.dao.IGovermentOrderDao;
+import gpps.dao.IPayBackDao;
 import gpps.model.Borrower;
 import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
+import gpps.model.PayBack;
 import gpps.service.IWaitToDoStatisticsService;
 import gpps.service.WaitToDoStatistics;
 
@@ -22,6 +24,8 @@ public class WaitToDoStatisticsServiceImpl implements IWaitToDoStatisticsService
 	IFinancingRequestDao financingRequestDao;
 	@Autowired
 	IGovermentOrderDao govermentOrderDao;
+	@Autowired
+	IPayBackDao paybackDao;
 	@Override
 	public WaitToDoStatistics getStatistics() {
 		WaitToDoStatistics statistisc=new WaitToDoStatistics();
@@ -36,6 +40,8 @@ public class WaitToDoStatisticsServiceImpl implements IWaitToDoStatisticsService
 		orderStates.clear();
 		orderStates.add(GovermentOrder.STATE_WAITINGCLOSE);
 		statistisc.setWaitingCloseOrderCount(govermentOrderDao.countByState(orderStates));
+		
+		statistisc.setToAuditPaybackCount(paybackDao.findByProductsAndState(null, PayBack.STATE_WAITFORCHECK).size());
 		return statistisc;
 	}
 

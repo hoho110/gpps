@@ -481,22 +481,22 @@ public class AccountServlet {
 		}
 	}
 	
-	@RequestMapping(value = { "/account/checkBuy/response/bg" })
-	public void checkBuyBg(HttpServletRequest req,HttpServletResponse resp)
-	{
-		try {
-			log.debug("购买确认回调:"+req.getRequestURI());
-			Map<String,String> params=getAllParams(req);
-			thirdPaySupportService.checkBuyProcessor(params);
-		} catch (SignatureException e) {
-			e.printStackTrace();
-			return;
-		} catch (ResultCodeException e) {
-			e.printStackTrace();
-			return;
-		}
-		writeSuccess(resp);
-	}
+//	@RequestMapping(value = { "/account/checkBuy/response/bg" })
+//	public void checkBuyBg(HttpServletRequest req,HttpServletResponse resp)
+//	{
+//		try {
+//			log.debug("购买确认回调:"+req.getRequestURI());
+//			Map<String,String> params=getAllParams(req);
+//			thirdPaySupportService.checkBuyProcessor(params);
+//		} catch (SignatureException e) {
+//			e.printStackTrace();
+//			return;
+//		} catch (ResultCodeException e) {
+//			e.printStackTrace();
+//			return;
+//		}
+//		writeSuccess(resp);
+//	}
 //	@RequestMapping(value = { "/account/repay/request" })
 //	public void repay(HttpServletRequest req, HttpServletResponse resp) {
 //		// HttpSession session=req.getSession();
@@ -565,21 +565,21 @@ public class AccountServlet {
 //		writeThirdParty(resp, "说明：该步骤跳转到第三方平台,借款人输入第三方平台账户密码完成还款.<p><a href='/account/repay/response?cashStreamId=" + cashStreamId + "'>还款成功</a><p><a href='javascript:window.close()'>还款失败</a>");
 //	}
 
-	@RequestMapping(value = { "/account/repay/response/bg" })
-	public void completeRepayBg(HttpServletRequest req, HttpServletResponse resp) {
-		try {
-			log.debug("还款回调:"+req.getRequestURI());
-			Map<String,String> params=getAllParams(req);
-			thirdPaySupportService.repayProcessor(params);
-		} catch (SignatureException e) {
-			e.printStackTrace();
-			return;
-		} catch (ResultCodeException e) {
-			e.printStackTrace();
-			return;
-		}
-		writeSuccess(resp);
-	}
+//	@RequestMapping(value = { "/account/repay/response/bg" })
+//	public void completeRepayBg(HttpServletRequest req, HttpServletResponse resp) {
+//		try {
+//			log.debug("还款回调:"+req.getRequestURI());
+//			Map<String,String> params=getAllParams(req);
+//			thirdPaySupportService.repayProcessor(params);
+//		} catch (SignatureException e) {
+//			e.printStackTrace();
+//			return;
+//		} catch (ResultCodeException e) {
+//			e.printStackTrace();
+//			return;
+//		}
+//		writeSuccess(resp);
+//	}
 	@RequestMapping(value = { "/account/cardBinding/response" })
 	public void completeCardBinding(HttpServletRequest req, HttpServletResponse resp) {
 		String message=null;
@@ -761,46 +761,46 @@ public class AccountServlet {
 		if(borrower!=null)
 			borrower.setAuthorizeTypeOpen(originalAuthorizeTypeOpen);
 	}
-	private void writeThirdParty(HttpServletResponse resp, String message) {
+//	private void writeThirdParty(HttpServletResponse resp, String message) {
+//
+//		StringBuilder text = new StringBuilder();
+//		text.append("<div style='width:100%; text-align:center; color:#999'>");
+//		text.append("<h1>第三方支付平台</h1>");
+//		text.append("<p>当前页面为第三方平台（如汇付天下）模拟页面，模拟本系统集成第三方平台后用户在第三方平台可以做的操作</p>");
+//		text.append("<p>用户可操作如下，如用户在跳转到第三方后未进行任何操作直接关闭第三方平台页面，则该种情况等同于操作失败</p>");
+//		text.append("</div>");
+//		text.append(message);
+//		write(resp, text.toString());
+//	}
+//
+//	private void writeLocal(HttpServletResponse resp, String message) {
+//		StringBuilder text = new StringBuilder();
+//		text.append("<div style='width:100%; text-align:center; color:#999'>");
+//		text.append("<h1>政采贷</h1>");
+//		text.append("<p>该页面为第三方操作成功后的返回页面，会提示\"第三方操作成功\"之类的说明文字，然后自动跳转到用户的相应页面，具体跳转页面如下所示</p>");
+//		text.append("<p>实际系统在提示操作成功后倒计时5s自动跳转到相应页面，此处为了流程演示，暂时由用户点击后才跳转到相应页面.</p>");
+//		text.append("</div>");
+//		text.append(message);
+//		write(resp, text.toString());
+//	}
 
-		StringBuilder text = new StringBuilder();
-		text.append("<div style='width:100%; text-align:center; color:#999'>");
-		text.append("<h1>第三方支付平台</h1>");
-		text.append("<p>当前页面为第三方平台（如汇付天下）模拟页面，模拟本系统集成第三方平台后用户在第三方平台可以做的操作</p>");
-		text.append("<p>用户可操作如下，如用户在跳转到第三方后未进行任何操作直接关闭第三方平台页面，则该种情况等同于操作失败</p>");
-		text.append("</div>");
-		text.append(message);
-		write(resp, text.toString());
-	}
-
-	private void writeLocal(HttpServletResponse resp, String message) {
-		StringBuilder text = new StringBuilder();
-		text.append("<div style='width:100%; text-align:center; color:#999'>");
-		text.append("<h1>政采贷</h1>");
-		text.append("<p>该页面为第三方操作成功后的返回页面，会提示\"第三方操作成功\"之类的说明文字，然后自动跳转到用户的相应页面，具体跳转页面如下所示</p>");
-		text.append("<p>实际系统在提示操作成功后倒计时5s自动跳转到相应页面，此处为了流程演示，暂时由用户点击后才跳转到相应页面.</p>");
-		text.append("</div>");
-		text.append(message);
-		write(resp, text.toString());
-	}
-
-	private void write(HttpServletResponse resp, String message) {
-		resp.setContentType("text/html");
-		resp.setCharacterEncoding("utf-8");
-		PrintWriter writer = null;
-		try {
-			writer = resp.getWriter();
-			writer.write(message.toString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (writer != null) {
-				writer.flush();
-				writer.close();
-			}
-		}
-
-	}
+//	private void write(HttpServletResponse resp, String message) {
+//		resp.setContentType("text/html");
+//		resp.setCharacterEncoding("utf-8");
+//		PrintWriter writer = null;
+//		try {
+//			writer = resp.getWriter();
+//			writer.write(message.toString());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (writer != null) {
+//				writer.flush();
+//				writer.close();
+//			}
+//		}
+//
+//	}
 	private void writeMsg(HttpServletResponse resp, String message,String redirct) {
 		resp.setContentType("text/html");
 		resp.setCharacterEncoding("utf-8");
@@ -826,19 +826,19 @@ public class AccountServlet {
 
 	}
 
-	private Object checkUserSession(HttpServletRequest req, HttpServletResponse resp) {
-		HttpSession session = req.getSession();
-		Object user = session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
-		if (user == null) {
-			try {
-				resp.sendError(403, "未找到用户信息，请重新登录");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-		return user;
-	}
+//	private Object checkUserSession(HttpServletRequest req, HttpServletResponse resp) {
+//		HttpSession session = req.getSession();
+//		Object user = session.getAttribute(ILoginService.SESSION_ATTRIBUTENAME_USER);
+//		if (user == null) {
+//			try {
+//				resp.sendError(403, "未找到用户信息，请重新登录");
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		return user;
+//	}
 
 	private Map<String, String> getAllParams(HttpServletRequest req) {
 		Map<String, String> params = new HashMap<String, String>();

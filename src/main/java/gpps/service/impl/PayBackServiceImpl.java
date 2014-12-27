@@ -292,10 +292,42 @@ public class PayBackServiceImpl implements IPayBackService {
 	@Override
 	public List<PayBack> generatePayBacks(Integer productId, int amount) {
 		Product product=productDao.find(productId);
+		BigDecimal real = product.getRealAmount();
+		BigDecimal samount = new BigDecimal(amount);
 		List<PayBack> payBacks=payBackDao.findAllByProduct(productId);
 		if(payBacks==null||payBacks.size()==0)
 			return new ArrayList<PayBack>(0);
+		for(PayBack payBack : payBacks){
+			payBack.setChiefAmount(payBack.getChiefAmount().multiply(samount).divide(real,2,BigDecimal.ROUND_UP));
+			payBack.setInterest(payBack.getInterest().multiply(samount).divide(real,2,BigDecimal.ROUND_UP));
+			
+		}
 		return payBacks;
+	}
+	
+	@Override
+	public List<PayBack> generatePayBacksBySubmit(Integer submitId){
+		Submit submit = submitDao.find(submitId);
+		List<PayBack> pbs = generatePayBacks(submit.getProductId(), submit.getAmount().intValue());
+		int i = 0;
+		BigDecimal total = new BigDecimal(0);
+		for(PayBack pb:pbs){
+			i++;
+			if(pb.getState()==PayBack.STATE_FINISHREPAY){
+				List<CashStream> pbcs = cashStreamDao.findRepayCashStream(submitId, pb.getId());
+				if(pbcs!=null && !pbcs.isEmpty()){
+				CashStream pbc = pbcs.get(0);
+				pb.setChiefAmount(pbc.getChiefamount());
+				pb.setInterest(pbc.getInterest());
+				}
+			}
+			//最后一笔不加
+			if(i<pbs.size()){
+				total = total.add(pb.getChiefAmount());
+			}
+		}
+		pbs.get(pbs.size()-1).setChiefAmount(submit.getAmount().subtract(total));
+		return pbs;
 	}
 
 	@Override

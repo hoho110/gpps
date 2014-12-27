@@ -48,6 +48,15 @@ public interface IPayBackService {
 	 * @return
 	 */
 	public List<PayBack> generatePayBacks(Integer productId,int amount);
+	
+	/**
+	 * 根据投标生成还款详情
+	 * 		已还款的按实际还款，未还款的新计算出来
+	 * @param submitId
+	 * @return
+	 * */
+	public List<PayBack> generatePayBacksBySubmit(Integer submitId);
+	
 	/**
 	 * 获取当前借款人的还款
 	 * @param state 还款状态，-1为不限

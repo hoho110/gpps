@@ -61,5 +61,5 @@ public interface ICashStreamDao {
 	
 	public CashStream findBySubmitAndState(@Param("submitId")Integer submitId,@Param("action")int action);
 	
-	public CashStream findBySubmitAndActionAndState(@Param("submitId")Integer submitId,@Param("action")int action,@Param("state")int state);
+	public List<CashStream> findBySubmitAndActionAndState(@Param("submitId")Integer submitId,@Param("action")int action,@Param("state")int state);
 }

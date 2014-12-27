@@ -16,9 +16,9 @@
 	<!-- 匿名用户 -->
 	<Role id="anonymous" privilege = "-1" limitedType="0" extendsRoleIds="">
 		<permissionRules>
-			<PermissionRule  entityLimitType="gpps.service.ILenderService" operations="register;registerSecondStep;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel"/>
+			<PermissionRule  entityLimitType="gpps.service.ILenderService" operations="register;registerSecondStep;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel;changePassword"/>
 			<PermissionRule  entityLimitType="gpps.service.IAdminService" operations="register;registerSecondStep;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel"/>
-			<PermissionRule  entityLimitType="gpps.service.IBorrowerService" operations="find;register;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel;findMimeItems"/>
+			<PermissionRule  entityLimitType="gpps.service.IBorrowerService" operations="find;register;getCurrentUser;login;sendMessageValidateCode;isLoginIdExist;isPhoneNumberExist;isIdentityCardExist;isEmailExist;getProcessedTel;findMimeItems;changePassword"/>
 			<PermissionRule  entityLimitType="gpps.service.IGovermentOrderService" operations="findByStates;findByBorrowerIdAndStates;findGovermentOrderByProductSeries;findByStatesByPage;findGovermentOrderByProduct;findMimeItems;"/>
 			<PermissionRule  entityLimitType="gpps.service.IProductService" operations="find;findByGovermentOrder;findByStates;findByProductSeriesAndStates;findByProductId;findMimeItems"/>
 			<PermissionRule  entityLimitType="gpps.service.IActivityService" operations="find;findByState;findMimeItem"/>
@@ -26,7 +26,7 @@
 			<PermissionRule  entityLimitType="gpps.service.IHelpService" operations="find;findPublicHelps"/>
 			<PermissionRule  entityLimitType="gpps.service.INewsService" operations="find;findAll"/>
 			<PermissionRule  entityLimitType="gpps.service.INoticeService" operations="find;findAll"/>
-			<PermissionRule  entityLimitType="gpps.service.IPayBackService" operations="find;findAll;generatePayBacks;generatePayBacks"/>
+			<PermissionRule  entityLimitType="gpps.service.IPayBackService" operations="find;findAll;generatePayBacks;generatePayBacks;generatePayBacksBySubmit"/>
 			<PermissionRule  entityLimitType="gpps.service.IProductActionService" operations="findAllByProduct"/>
 			<PermissionRule  entityLimitType="gpps.service.IProductSeriesService" operations="find;findAll;findByType"/>
 			<PermissionRule  entityLimitType="gpps.service.IStatisticsService"/>

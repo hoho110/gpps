@@ -121,8 +121,8 @@ var createAdminNavLevel2 = function(nav){
 		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-financing">待审核融资订单<font color=red>('+tof+')</font></a></li>');
 		var tclo = res.waitingCloseOrderCount;
 		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-order-toclose">待关闭订单<font color=red>('+tclo+')</font></a></li>');
-		
-		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-toaudit">待审核还款<font color=red>(0)</font></a></li>');
+		var taud = res.toAuditPaybackCount;
+		var li6 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="payback-toaudit">待审核还款<font color=red>('+taud+')</font></a></li>');
 		ul.append(li1);
 		ul.append(li2);
 		ul.append(li3);
@@ -188,8 +188,10 @@ var createAdminNavLevel2 = function(nav){
 	}
 	else if(nav=='other'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="lender-view">用户浏览</a></li>');
-		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="activity">活动管理</a></li>');
+		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="activity">活动管理</a></li>');
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="validate-tp">系统校验</a></li>')
 		ul.append(li1);
+		ul.append(li2);
 		ul.append(li3);
 	}
 	
@@ -1177,14 +1179,22 @@ var orderfinancing = function(container){
 //			for(var i=0; i<products.size(); i++){
 //				productService.startRepaying(products.get(i).id);
 //			}
+			try{
 			orderService.startRepaying(orderid);
 			window.location.href="opadmin.html?fid=order&sid=order-paying";
+			}catch(e){
+				alert(e.message);
+			}
 		});
 		
 		$('button.quit').click(function(e){
 			var orderid = parseInt($(this).attr('id'));
+			try{
 			orderService.quitFinancing(orderid);
 			window.location.href="opadmin.html?fid=order&sid=order-quit";
+			}catch(e){
+				alert(e.message);
+			}
 		});
 		
 		$('button.vieworder').click(function(e){
@@ -2178,6 +2188,53 @@ var noticewrite = function(container){
 	
 }
 
+var validatetp = function(container){
+	
+	var columns = [ {
+		"sTitle" : "校验项目",
+			"code" : "name"
+	}, {
+		"sTitle" : "校验说明",
+		"code" : "state"
+	}, {
+		"sTitle" : "执行状态",
+		"code" : "phone"
+	}, {
+		"sTitle" : "执行结果",
+		"code" : "requesttime"
+	}, {
+		"sTitle" : "操作",
+		"code" : "requesttime"
+	}];
+	var aaData = new Array();
+	aaData.push(["现金流对帐",
+	             "<a href='#'>说明</a>",
+		         "执行完毕",
+		         "<button>结果</button>",
+		         "<button>校验</button>"]);
+	
+	aaData.push(["账户对帐",
+	             "<a href='#'>说明</a>",
+		         "执行完毕",
+		         "<button>结果</button>",
+		         "<button>校验</button>"]);
+	
+	aaData.push(["融资产品对帐",
+	             "<a href='#'>说明</a>",
+		         "执行完毕",
+		         "<button>结果</button>",
+		         "<button>校验</button>"]);
+
+	var mySettings = $.extend({}, defaultSettings_noCallBack, {
+		"aoColumns" : columns,
+		"aaData" : aaData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
 
 var nav2funtion = {
 		'lender-view' : lenderview,
@@ -2211,5 +2268,6 @@ var nav2funtion = {
 		"help-view" : helpview,
 		"help-question" : helpquestion,
 		"help-answered" : helpanswered,
-		"activity" : activity
+		"activity" : activity,
+		"validate-tp" : validatetp
 }

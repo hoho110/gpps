@@ -325,11 +325,11 @@ public class SubmitServiceImpl implements ISubmitService {
 			{
 				if(cashStream.getAction()==CashStream.ACTION_REPAY&&cashStream.getState()==CashStream.STATE_SUCCESS)
 				{
-					submit.setRepayedAmount(submit.getRepayedAmount().add(cashStream.getChiefamount()));
+					submit.setRepayedAmount(submit.getRepayedAmount().add(cashStream.getChiefamount()).add(cashStream.getInterest()));
 				}
 			}
 			//计算待回款
-			List<PayBack> payBacks=payBackService.generatePayBacks(submit.getProductId(), submit.getAmount().intValue());
+			List<PayBack> payBacks=payBackService.generatePayBacksBySubmit(submit.getId());
 			for(PayBack payBack:payBacks)
 			{
 				if(payBack.getState()!=PayBack.STATE_WAITFORREPAY)

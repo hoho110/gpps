@@ -469,7 +469,7 @@ var submitpayback = function(container){
 		$('a.repaydetail').click(function(e){
 			var itemid = $(this).attr('id');
 			var submititem = submitService.find(parseInt(itemid));
-			var pays = paybackService.generatePayBacks(submititem.product.id, parseInt(submititem.amount.value));
+			var pays = paybackService.generatePayBacksBySubmit(submititem.id);
 			var str = "<table class='table' style='width:95%;'>";
 			str+="<tr><td colspan=5>本笔投资总金额为："+submititem.amount.value+"元, 预期还款明细如下：</td></tr>";
 			str+="<tr><td>序号</td><td>还款日期</td><td>总额</td><td>本金</td><td>利息</td><td>状态</td></tr>";

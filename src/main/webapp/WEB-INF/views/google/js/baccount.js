@@ -996,7 +996,7 @@ var paybacktoaudit = function(container){
 			                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 			                    data.chiefAmount.value,
 			                    data.interest.value,
-			                    formatDateToDay(data.realtime)]);
+			                    formatDateToDay(data.checktime)]);
 			}
 		}
 		result.sEcho = sEcho;
@@ -1063,7 +1063,7 @@ var paybackhave = function(container){
 			                    (parseFloat(data.chiefAmount.value)+parseFloat(data.interest.value)).toFixed(2),
 			                    data.chiefAmount.value,
 			                    data.interest.value,
-			                    formatDateToDay(data.checktime)]);
+			                    formatDateToDay(data.realtime)]);
 			}
 		}
 		result.sEcho = sEcho;

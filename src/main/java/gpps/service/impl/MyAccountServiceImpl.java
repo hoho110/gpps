@@ -1,5 +1,6 @@
 package gpps.service.impl;
 
+import gpps.dao.IActivityRefDao;
 import gpps.dao.IBorrowerAccountDao;
 import gpps.dao.IBorrowerDao;
 import gpps.dao.ICashStreamDao;
@@ -81,6 +82,8 @@ public class MyAccountServiceImpl implements IMyAccountService {
 	ISubmitDao submitDao;
 	@Autowired
 	ISubmitService submitService;
+	@Autowired
+	IActivityRefDao activityRefDao;
 	
 	
 	@Override
@@ -221,7 +224,7 @@ public class MyAccountServiceImpl implements IMyAccountService {
 		
 		message.put("helps",  helpDao.countPrivateHelps(-1, Help.QUESTIONERTYPE_LENDER, lender.getId()));
 		
-		
+		message.put("activitys", activityRefDao.countByLender(lender.getId()));
 		
 		
 		message.put("pbs_waitforrepay", accountService.findLenderWaitforRepay().size());

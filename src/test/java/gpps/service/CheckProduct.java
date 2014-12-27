@@ -4,9 +4,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import gpps.dao.ICashStreamDao;
 import gpps.dao.IPayBackDao;
 import gpps.dao.IProductDao;
 import gpps.dao.ISubmitDao;
+import gpps.model.CashStream;
 import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.Submit;
@@ -20,6 +22,7 @@ public class CheckProduct {
 	protected static IProductDao productDao = context.getBean(IProductDao.class);
 	protected static ISubmitDao submitDao = context.getBean(ISubmitDao.class);
 	protected static IPayBackDao paybackDao = context.getBean(IPayBackDao.class);
+	protected static ICashStreamDao cashStreamDao = context.getBean(ICashStreamDao.class);
 	public static void main(String args[]){
 		
 		
@@ -80,26 +83,41 @@ public class CheckProduct {
 		}
 		
 		boolean realamountflag = realFinancingAmount.compareTo(product.getRealAmount())==0;
+		CashStreamSum sum = cashStreamDao.sumProduct(product.getId(), CashStream.ACTION_PAY);
+		boolean realbuycashflag = sum.getChiefAmount().negate().compareTo(product.getRealAmount())==0;
+		
+		
 		
 		List<Integer> proIds = new ArrayList<Integer>();
 		proIds.add(product.getId());
 		List<PayBack> paybacks = paybackDao.findByProductsAndState(proIds, PayBack.STATE_FINISHREPAY);
 		BigDecimal paybackChiefAmount = new BigDecimal(0);
+		BigDecimal realPayCashAmount = new BigDecimal(0);
 		for(PayBack payback:paybacks){
 			paybackChiefAmount = paybackChiefAmount.add(payback.getChiefAmount());
+			CashStreamSum paysum = cashStreamDao.sumPayBack(payback.getId());
+			realPayCashAmount = realPayCashAmount.add(paysum.getChiefAmount());
 		}
 		
+		
 		boolean paybackflag = paybackChiefAmount.compareTo(product.getRealAmount())==0;
+		boolean realpaycashflag = realPayCashAmount.compareTo(product.getRealAmount())==0;
 		
 		StringBuilder errormessage = new StringBuilder();
 		errormessage.append("产品["+product.getId()+"]错误信息:").append("\n");
 		if(!paybackflag){
 			errormessage.append("产品["+product.getId()+"]实际还款本金总额不等于实际融资总额！");
 		}
+		if(!realbuycashflag){
+			errormessage.append("产品["+product.getId()+"]实际融资总额总额不等于购买现金流之和！");
+		}
 		if(!realamountflag){
 			errormessage.append("产品["+product.getId()+"]实际融资总额不等于所有已投标的[已支付]额度之和！");
 		}
-		if(paybackflag && realamountflag){
+		if(!realpaycashflag){
+			errormessage.append("产品["+product.getId()+"]还款现金流之和总额不等于实际融资总额！");
+		}
+		if(paybackflag && realamountflag && realbuycashflag && realpaycashflag){
 			return true;
 		}else{
 			throw new Exception(errormessage.toString());
@@ -117,6 +135,9 @@ public class CheckProduct {
 		
 		boolean realamountflag = realFinancingAmount.compareTo(product.getRealAmount())==0;
 		
+		CashStreamSum sum = cashStreamDao.sumProduct(product.getId(), CashStream.ACTION_FREEZE);
+		boolean realbuycashflag = sum.getChiefAmount().negate().compareTo(product.getRealAmount())==0;
+		
 		List<PayBack> paybacks = paybackDao.findAllByProduct(product.getId());
 		BigDecimal paybackChiefAmount = new BigDecimal(0);
 		for(PayBack payback:paybacks){
@@ -133,7 +154,10 @@ public class CheckProduct {
 		if(!realamountflag){
 			errormessage.append("产品["+product.getId()+"]实际融资总额不等于所有已投标的[已支付+待支付]额度之和！");
 		}
-		if(paybackflag && realamountflag){
+		if(!realbuycashflag){
+			errormessage.append("产品["+product.getId()+"]实际融资总额总额不等于购买现金流之和！");
+		}
+		if(paybackflag && realamountflag && realbuycashflag){
 			return true;
 		}else{
 			throw new Exception(errormessage.toString());
@@ -142,15 +166,32 @@ public class CheckProduct {
 	}
 	
 	public static boolean checkRepayingProduct(Product product) throws Exception{
+		
+		StringBuilder errormessage = new StringBuilder();
+		errormessage.append("产品["+product.getId()+"]错误信息:").append("\n");
+		
 		List<Submit> submits_complete = submitDao.findAllByProductAndState(product.getId(), Submit.STATE_COMPLETEPAY);
 		
 		List<PayBack> paybacks = paybackDao.findAllByProduct(product.getId());
 		BigDecimal paybackChiefAmount = new BigDecimal(0);
 		for(PayBack payback:paybacks){
-			paybackChiefAmount = paybackChiefAmount.add(payback.getChiefAmount());
+			if(payback.getState() == PayBack.STATE_FINISHREPAY){
+				CashStreamSum sum = cashStreamDao.sumPayBack(payback.getId());
+				if(sum.getChiefAmount().compareTo(payback.getChiefAmount())==0 && sum.getInterest().compareTo(payback.getInterest())==0){
+					paybackChiefAmount = paybackChiefAmount.add(payback.getChiefAmount());
+				}else{
+					errormessage.append("产品["+product.getId()+"]的单笔还款["+payback.getId()+"]出错，已还款现金流本金总和不等于应还款本金总额！");
+					paybackChiefAmount = paybackChiefAmount.add(sum.getChiefAmount());
+				}
+			}else{
+				paybackChiefAmount = paybackChiefAmount.add(payback.getChiefAmount());
+			}
+			
 		}
-		
 		boolean paybackflag = paybackChiefAmount.compareTo(product.getRealAmount())==0;
+		
+		CashStreamSum sum = cashStreamDao.sumProduct(product.getId(), CashStream.ACTION_PAY);
+		boolean realbuycashflag = sum.getChiefAmount().negate().compareTo(product.getRealAmount())==0;
 		
 		BigDecimal realFinancingAmount = new BigDecimal(0);
 		for(Submit submit:submits_complete){
@@ -159,15 +200,17 @@ public class CheckProduct {
 		
 		boolean realamountflag = realFinancingAmount.compareTo(product.getRealAmount())==0;
 		
-		StringBuilder errormessage = new StringBuilder();
-		errormessage.append("产品["+product.getId()+"]错误信息:").append("\n");
+		
 		if(!paybackflag){
 			errormessage.append("产品["+product.getId()+"]计算还款本金总额不等于实际融资总额！");
 		}
 		if(!realamountflag){
 			errormessage.append("产品["+product.getId()+"]实际融资总额不等于所有已投标的[已支付+待支付]额度之和！");
 		}
-		if(paybackflag && realamountflag){
+		if(!realbuycashflag){
+			errormessage.append("产品["+product.getId()+"]还款[已还+待还]总和与产品实际融资额不一致！");
+		}
+		if(paybackflag && realamountflag && realbuycashflag){
 			return true;
 		}else{
 			throw new Exception(errormessage.toString());

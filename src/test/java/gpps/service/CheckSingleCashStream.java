@@ -66,7 +66,7 @@ public class CheckSingleCashStream {
 	public static void main(String args[]) throws Exception{
 //		withdrawSingleCashStream("LN19029242014122113491557888");
 		
-		List<CashStream> recharges = cashStreamDao.findByActionAndTime(CashStream.ACTION_STORECHANGE, -1, -1);
+		List<CashStream> recharges = cashStreamDao.findByActionAndTime(-1, -1, -1);
 		
 		int total = 0;
 		int success = 0;
@@ -89,7 +89,7 @@ public class CheckSingleCashStream {
 		
 		
 		System.out.println(errorlog.toString());
-		System.out.println("状态为"+0+"的现金流审核执行完毕：总共"+total+"条，成功"+success+"条，失败"+wrong+"条！");
+		System.out.println("现金流审核执行完毕：总共"+total+"条，成功"+success+"条，失败"+wrong+"条！");
 		
 		System.exit(0);
 	}
@@ -269,11 +269,16 @@ public class CheckSingleCashStream {
 		}else if((res==null || res.isEmpty()) && cashStream.getLenderAccountId()==null && cashStream.getBorrowerAccountId()!=null){
 			return true;
 		}else if(cashStream.getState()==cashStream.STATE_INIT){
-			CashStream cash = cashStreamDao.findBySubmitAndActionAndState(cashStream.getSubmitId(), cashStream.getAction(), CashStream.STATE_SUCCESS);
-			if(cash!=null){
+			List<CashStream> cash = cashStreamDao.findBySubmitAndActionAndState(cashStream.getSubmitId(), cashStream.getAction(), CashStream.STATE_SUCCESS);
+			if(cash!=null && !cash.isEmpty()){
 				return true;
-			}else{
+			}else{ 
+				Map<String, String> result = res.get(0);
+				if("0".equals(result.get("TransferState")) && "0".equals(result.get("ActState"))){
+				return true;
+				}else{
 				throw new Exception("现金流[ID:"+cashStream.getId()+"]有问题: 平台未处理的现金流在第三方上有对应的记录！");
+				}
 			}
 		}
 		else if((res==null || res.isEmpty())){

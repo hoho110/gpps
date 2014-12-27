@@ -18,6 +18,8 @@
 				src="/easyservice/gpps.service.ILenderService?json"></script>
 		<script type="text/javascript"
 				src="/easyservice/gpps.service.IBorrowerService?json"></script>
+		<script type="text/javascript"
+				src="/easyservice/gpps.service.IMyAccountService?json"></script>
 <!--[if lt IE 9]>
       <script src="js/cdn/html5shiv.min.js"></script>
       <script src="js/cdn/respond.min.js"></script>
@@ -134,10 +136,10 @@ $(document).ready(function() {
 	
 	var loginId = null;
 	
-		if(buser){
+		if(usertype=='borrower'){
 			$('#change').css("display", "none");
-			$('#loginIdContent').html('<label class="control-label">'+buser.loginId+'</label>');
-			loginId = buser.loginId;
+			$('#loginIdContent').html('<label class="control-label">'+user.loginId+'</label>');
+			loginId = user.loginId;
 		}
 	
        $('#confirm').click(function(e){
@@ -202,7 +204,7 @@ $(document).ready(function() {
 			try{
 				
 				bservice.changePassword(loginId, password, validate);
-				if(cuser)
+				if(usertype=='lender')
 					window.location.href="baccount.html";
 				else
 					window.location.href="login.html";
@@ -217,7 +219,7 @@ $(document).ready(function() {
        
        $('button#sendValCode').click(function(e){
      		  service.sendMessageValidateCode();
-     		 	var t = 300;
+     		 	var t = 60;
   	    		$('button#sendValCode').attr('disabled', true);
   				setInterval(count,1000);  
   				//显示当前的秒数

@@ -6,6 +6,13 @@ public class WaitToDoStatistics {
 	private int prepublishOrderCount;
 	private int unCheckedOrderCount;
 	private int waitingCloseOrderCount;
+	private int toAuditPaybackCount;
+	public int getToAuditPaybackCount() {
+		return toAuditPaybackCount;
+	}
+	public void setToAuditPaybackCount(int toAuditPaybackCount) {
+		this.toAuditPaybackCount = toAuditPaybackCount;
+	}
 	public int getApplyBorrowerCount() {
 		return applyBorrowerCount;
 	}

@@ -2092,7 +2092,6 @@ var helpwrite = function(container){
 			return;
 		}
 		var help = {'_t_':'gpps.model.Help','type':0, 'publicType':parseInt(category), 'question':title, 'answer': content, 'createtime': (new Date()).getTime()};
-		alert(JSON.stringify(help));
 		helpservice.createPublic(help);
 		window.location.href="opadmin.html?fid=help&sid=help-view";
 	});

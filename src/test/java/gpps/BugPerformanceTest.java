@@ -88,16 +88,16 @@ public class BugPerformanceTest extends TestSupport{
 		payBackService=context.getBean(IPayBackService.class);
 		payBackDao=context.getBean(IPayBackDao.class);
 //		createLender(10000);
-//		all();
-		System.out.println("所有用户的深层校验结果："+accountCheck());
+		all();
+//		System.out.println("所有用户的深层校验结果："+accountCheck());
 		System.exit(-1);
 	}
 	public static void all()
 	{
 		Random random=new Random();
 		long currenttime=System.currentTimeMillis();
-		int lenderNum=1000;
-		int buyNum=1;
+		int lenderNum=300;
+		int buyNum=100;
 		try
 		{
 			List<Lender> lenders=new ArrayList<Lender>();
@@ -119,13 +119,20 @@ public class BugPerformanceTest extends TestSupport{
 			accountService.changeCashStreamState(accountService.rechargeBorrowerAccount(borrower.getAccountId(), new BigDecimal(10000*10000), "充值"),CashStream.STATE_SUCCESS);
 			FinancingRequest financingRequest=new FinancingRequest();
 			financingRequest.setApplyFinancingAmount(10000000);
-			financingRequest.setGovermentOrderName("申请融资订单");
+			financingRequest.setGovermentOrderName("测试性能申请融资订单一");
+			
+			FinancingRequest financingRequest2 = new FinancingRequest();
+			financingRequest2.setApplyFinancingAmount(300000);
+			financingRequest2.setGovermentOrderName("测试性能申请融资订单二");
+			
 			mockLogin(borrower);
 			borrowerService.applyFinancing(financingRequest);
+			borrowerService.applyFinancing(financingRequest2);
+			
 			GovermentOrder order=new GovermentOrder();
 			order.setBorrowerId(borrower.getId());
 			order.setFinancingRequestId(financingRequest.getId());
-			order.setTitle("融资订单1");
+			order.setTitle("性能测试融资订单1");
 			order.setFinancingStarttime(currenttime+24L*3600*1000);
 			order.setFinancingEndtime(currenttime+24L*2*3600*1000);
 			order.setIncomeStarttime(currenttime+24L*3*3600*1000);
@@ -135,23 +142,85 @@ public class BugPerformanceTest extends TestSupport{
 			product.setGovermentorderId(order.getId());
 			product.setIncomeEndtime(currenttime+24L*(3+90)*3600*1000);
 			product.setLevelToBuy(0);
-			product.setMiniAdd(1);
-			product.setMinimum(1);
+			product.setMiniAdd(100);
+			product.setMinimum(100);
 			product.setProductseriesId(1);
-			product.setRate(new BigDecimal(0.08));
+			product.setRate(new BigDecimal(0.12));
+			
 			productService.create(product);
 			borrowerService.passFinancingRequest(financingRequest.getId());
 			orderService.startFinancing(order.getId());
+			
+			GovermentOrder order2=new GovermentOrder();
+			order2.setBorrowerId(borrower.getId());
+			order2.setFinancingRequestId(financingRequest2.getId());
+			order2.setTitle("性能测试融资订单2");
+			order2.setFinancingStarttime(currenttime+24L*3600*1000);
+			order2.setFinancingEndtime(currenttime+24L*2*3600*1000);
+			order2.setIncomeStarttime(currenttime+24L*3*3600*1000);
+			orderService.create(order2);
+			Product product2=new Product();
+			product2.setExpectAmount(new BigDecimal(1000*10000));
+			product2.setGovermentorderId(order2.getId());
+			product2.setIncomeEndtime(currenttime+24L*(3+90)*3600*1000);
+			product2.setLevelToBuy(0);
+			product2.setMiniAdd(100);
+			product2.setMinimum(100);
+			product2.setProductseriesId(1);
+			product2.setRate(new BigDecimal(0.16));
+			Product product21=new Product();
+			product21.setExpectAmount(new BigDecimal(500*10000));
+			product21.setGovermentorderId(order2.getId());
+			product21.setIncomeEndtime(currenttime+24L*(3+90)*3600*1000);
+			product21.setLevelToBuy(0);
+			product21.setMiniAdd(100);
+			product21.setMinimum(100);
+			product21.setProductseriesId(2);
+			product21.setRate(new BigDecimal(0.24));
+			Product product22=new Product();
+			product22.setExpectAmount(new BigDecimal(300*10000));
+			product22.setGovermentorderId(order2.getId());
+			product22.setIncomeEndtime(currenttime+24L*(3+90)*3600*1000);
+			product22.setLevelToBuy(0);
+			product22.setMiniAdd(100);
+			product22.setMinimum(100);
+			product22.setProductseriesId(3);
+			product22.setRate(new BigDecimal(0.32));
+			
+			productService.create(product2);
+			productService.create(product21);
+			productService.create(product22);
+			borrowerService.passFinancingRequest(financingRequest2.getId());
+			orderService.startFinancing(order2.getId());
 			
 			logger.info("开始多线程购买");
 			//创建多线程测试购买
 			List<FutureTask<List<Long>>> futures=new ArrayList<FutureTask<List<Long>>>();
 			for(Lender lender:lenders)
 			{
-				FutureTask<List<Long>> future = new FutureTask<List<Long>>(new BuyThread(buyNum,lender,product, System.currentTimeMillis()));
+				Random rdm = new Random();
+				int rand = rdm.nextInt(100)+1;
+				FutureTask<List<Long>> future = new FutureTask<List<Long>>(new BuyThread(rand*buyNum,lender,product, System.currentTimeMillis()));
 				new Thread(future).start();
 				futures.add(future);
+				
+				rand = rdm.nextInt(10)+1;
+				FutureTask<List<Long>> future2 = new FutureTask<List<Long>>(new BuyThread(rand*buyNum,lender,product2, System.currentTimeMillis()));
+				new Thread(future2).start();
+				futures.add(future2);
+				
+				rand = rdm.nextInt(10)+1;
+				FutureTask<List<Long>> future21 = new FutureTask<List<Long>>(new BuyThread(rand*buyNum,lender,product21, System.currentTimeMillis()));
+				new Thread(future21).start();
+				futures.add(future21);
+				
+				rand = rdm.nextInt(10)+1;
+				FutureTask<List<Long>> future22 = new FutureTask<List<Long>>(new BuyThread(rand*buyNum,lender,product22, System.currentTimeMillis()));
+				new Thread(future22).start();
+				futures.add(future22);
 			}
+			
+			
 			long totalCost=0;
 			long maxCost = 0;
 			long minCost = 0;
@@ -176,8 +245,26 @@ public class BugPerformanceTest extends TestSupport{
 			/*******************************流标********************************/
 			
 			/*******************************还款********************************/
-//			startRepaying(order.getId());
-//			List<PayBack> payBacks=payBackService.findAll(product.getId());
+			startRepaying(order2.getId());
+			
+			
+			while(true)
+			{
+
+			List<PayBack> payBacks = payBackService.findBorrowerCanBeRepayedPayBacks();
+			if(payBacks==null || payBacks.isEmpty()){
+				break;
+			}
+			
+			mockLogin(borrower);
+			for(PayBack pb:payBacks){
+				payBackService.repay(pb.getId());
+				payBackDao.changeCheckResult(pb.getId(), PayBack.CHECK_SUCCESS);
+				checkAndRepay(pb.getId());
+				System.out.println("执行"+pb.getProductId()+"产品还款，ID为："+pb.getId());
+			}
+			}
+			
 //			for(int i=0;i<payBacks.size();i++)
 //			{
 //				PayBack payBack=payBacks.get(i);
@@ -186,8 +273,10 @@ public class BugPerformanceTest extends TestSupport{
 //				payBackDao.changeCheckResult(payBack.getId(), PayBack.CHECK_SUCCESS);
 //				checkAndRepay(payBack.getId());
 //			}
-//			orderService.closeComplete(order.getId());
-//			checkPayBack(product);
+			orderService.closeComplete(order2.getId());
+			checkPayBack(product2);
+			checkPayBack(product21);
+			checkPayBack(product22);
 			/*******************************还款********************************/
 			
 			
@@ -477,12 +566,13 @@ public class BugPerformanceTest extends TestSupport{
 			try
 			{
 				long currenttime=System.currentTimeMillis();
-				for(int i=0;i<buyNum;i++)
+//				for(int i=0;i<buyNum;i++)
+				for(int i=0;i<1;i++)
 				{
 					try{
 					mockLogin(lender);
-					Integer submitId=submitService.buy(product.getId(), 100);
-					Integer cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), new BigDecimal(100), submitId, "购买");
+					Integer submitId=submitService.buy(product.getId(), buyNum);
+					Integer cashStreamId = accountService.freezeLenderAccount(lender.getAccountId(), new BigDecimal(buyNum), submitId, "购买");
 					submitService.confirmBuy(submitId);
 		//			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
 					accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
@@ -492,7 +582,7 @@ public class BugPerformanceTest extends TestSupport{
 //					long cost=System.currentTimeMillis()-currenttime;
 					long cost=System.currentTimeMillis()-createtime;
 					long executetime = System.currentTimeMillis()-currenttime;
-					logger.info("lender,id="+lender.getId()+"执行第"+i+"次购买，调度耗时:"+cost+"ms"+", 本次执行耗时："+executetime);
+					logger.info("lender,id="+lender.getId()+"执行第"+i+"次购买，调度耗时:"+cost+"ms"+", 本次执行耗时："+executetime+", 购买金额："+buyNum);
 					costs.add(cost);
 					currenttime=System.currentTimeMillis();
 				}

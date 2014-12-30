@@ -1,4 +1,10 @@
 eclipse.preferences.version=1
+encoding//src/main/java/gpps/service/message/Mo.java=UTF-8
+encoding//src/main/java/gpps/service/message/SDKClient.java=UTF-8
+encoding//src/main/java/gpps/service/message/SDKService.java=UTF-8
+encoding//src/main/java/gpps/service/message/SDKServiceBindingStub.java=UTF-8
+encoding//src/main/java/gpps/service/message/SDKServiceLocator.java=UTF-8
+encoding//src/main/java/gpps/service/message/StatusReport.java=UTF-8
 encoding//src/main/webapp/WEB-INF/views/alistyle/ttt.html=UTF-8
 encoding//src/main/webapp/WEB-INF/views/google/css/plist/a.css=UTF-8
 encoding/<project>=UTF-8

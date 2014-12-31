@@ -96,7 +96,7 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	@PostConstruct
 	public void init()
 	{
-		client=new Client(serialNo,key);
+		client=new Client(serialNo,password);
 	}
 	@Override
 	public void sendSMS(List<String> tels, String content) throws SMSException{

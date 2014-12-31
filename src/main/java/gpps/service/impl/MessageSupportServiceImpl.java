@@ -241,7 +241,7 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 		params.put("phone", sBuilder.toString());
 		params.put("message", content);
 		params.put("sendtime", getDateStr(sendTime));
-		String resp=httpClientService.post(getUrl(ACTION_SENDSMS), params);
+		String resp=httpClientService.post(getUrl(ACTION_SENDTIMESMS), params);
 		String resultCode=getResultCode(resp);
 		if(!resultCode.equals("0"))
 			throw new RuntimeException(errorMsgs.get(resultCode));

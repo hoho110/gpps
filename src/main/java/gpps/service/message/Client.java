@@ -1,14 +1,17 @@
 package gpps.service.message;
 
+import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 public class Client {
 private String softwareSerialNo;
 private String key;
-	public Client(String sn,String key){
+private String baseUrl;
+	public Client(String sn,String key,String baseUrl){
 		this.softwareSerialNo=sn;
 		this.key=key;
+		this.baseUrl=baseUrl;
 		init();
 	}
 	
@@ -18,12 +21,14 @@ private String key;
 	public void init(){
 		 try {
             binding = (SDKServiceBindingStub)
-                          new SDKServiceLocator().getSDKService();
+                          new SDKServiceLocator().getSDKService(new java.net.URL(baseUrl));
 		 }
         catch (javax.xml.rpc.ServiceException jre) {
             if(jre.getLinkedCause()!=null)
                 jre.getLinkedCause().printStackTrace();
-        }
+        } catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public int chargeUp(  String cardNo,String cardPass)

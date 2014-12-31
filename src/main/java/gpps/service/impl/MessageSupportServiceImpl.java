@@ -18,7 +18,6 @@ import javax.annotation.PostConstruct;
 import org.apache.http.client.utils.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-@Service
 public class MessageSupportServiceImpl implements IMessageSupportService {
 	public static final String CHARSET="UTF-8";
 	private String serialNo;// 软件序列号,请通过亿美销售人员获取
@@ -98,7 +97,7 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	@PostConstruct
 	public void init()
 	{
-		client=new Client(serialNo,password);
+		client=new Client(serialNo,password,baseUrl);
 	}
 	@Override
 	public void sendSMS(List<String> tels, String content) throws SMSException{

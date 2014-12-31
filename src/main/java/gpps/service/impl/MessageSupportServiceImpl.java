@@ -18,7 +18,6 @@ import javax.annotation.PostConstruct;
 import org.apache.http.client.utils.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-@Service
 public class MessageSupportServiceImpl implements IMessageSupportService {
 	public static final String CHARSET="UTF-8";
 	private String serialNo;// 软件序列号,请通过亿美销售人员获取
@@ -110,46 +109,47 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	}
 	@Override
 	public void sendSMS(List<String> tels, String content) throws SMSException{
-		sendScheduledSMS(tels, content, -1);
+//		sendScheduledSMS(tels, content, -1);
+		
 	}
 	@Override
 	public void sendScheduledSMS(List<String> tels, String content,
 			long sendTime) throws SMSException {
-		if(tels==null||tels.size()==0||StringUtil.isEmpty(content))
-			return;
-		int resultCode=0;
-		try {
-			if(sendTime==-1)
-				resultCode=client.sendScheduledSMSEx((String[])(tels.toArray()), content,"", CHARSET);
-			else	
-				resultCode=client.sendScheduledSMSEx((String[])(tels.toArray()), content, DateUtils.formatDate(new Date(sendTime),"yyyyMMddHHmmss"), CHARSET);
-			if(resultCode!=0)
-				throw new SMSException(errorMsgs.get(resultCode));
-		} catch (RemoteException e) {
-			logger.error(e.getMessage(),e);
-			throw new SMSException("短信平台服务异常");
-		}
+//		if(tels==null||tels.size()==0||StringUtil.isEmpty(content))
+//			return;
+//		int resultCode=0;
+//		try {
+//			if(sendTime==-1)
+//				resultCode=client.sendScheduledSMSEx((String[])(tels.toArray()), content,"", CHARSET);
+//			else	
+//				resultCode=client.sendScheduledSMSEx((String[])(tels.toArray()), content, DateUtils.formatDate(new Date(sendTime),"yyyyMMddHHmmss"), CHARSET);
+//			if(resultCode!=0)
+//				throw new SMSException(errorMsgs.get(resultCode));
+//		} catch (RemoteException e) {
+//			logger.error(e.getMessage(),e);
+//			throw new SMSException("短信平台服务异常");
+//		}
 	}
 	@Override
 	public void getUpSMS() throws SMSException {
-		try {
-			List<Mo> mos = client.getMO();
-			if(mos==null||mos.size()==0)
-			{
-				logger.debug("未获取到上行短信");
-				return;
-			}
-			for(Mo mo:mos)
-			{
-				System.out.println("短信内容:" + mo.getSmsContent());
-				System.out.println("通道号:" + mo.getChannelnumber());
-				System.out.println("手机号:" + mo.getMobileNumber());
-				System.out.println("附加码:" + mo.getAddSerialRev());
-				System.out.println("附加码:" + mo.getAddSerial());
-			}
-		} catch (RemoteException e) {
-			logger.error(e.getMessage(),e);
-			throw new SMSException("短信平台服务异常");
-		}
+//		try {
+//			List<Mo> mos = client.getMO();
+//			if(mos==null||mos.size()==0)
+//			{
+//				logger.debug("未获取到上行短信");
+//				return;
+//			}
+//			for(Mo mo:mos)
+//			{
+//				System.out.println("短信内容:" + mo.getSmsContent());
+//				System.out.println("通道号:" + mo.getChannelnumber());
+//				System.out.println("手机号:" + mo.getMobileNumber());
+//				System.out.println("附加码:" + mo.getAddSerialRev());
+//				System.out.println("附加码:" + mo.getAddSerial());
+//			}
+//		} catch (RemoteException e) {
+//			logger.error(e.getMessage(),e);
+//			throw new SMSException("短信平台服务异常");
+//		}
 	}
 }

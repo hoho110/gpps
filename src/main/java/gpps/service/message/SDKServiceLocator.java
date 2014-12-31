@@ -26,7 +26,8 @@ public class SDKServiceLocator extends org.apache.axis.client.Service implements
     // Use to get a proxy class for SDKService
 //    private java.lang.String SDKService_address = "http://116.58.219.223:8081/sdk/SDKService";
    
-    	 private java.lang.String SDKService_address =PropertyResourceBundle.getBundle("config").getString("uri");
+//    	 private java.lang.String SDKService_address =PropertyResourceBundle.getBundle("config").getString("uri");
+    private java.lang.String SDKService_address=null;
 
     public java.lang.String getSDKServiceAddress() {
         return SDKService_address;

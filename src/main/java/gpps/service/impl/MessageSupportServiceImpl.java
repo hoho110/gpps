@@ -4,14 +4,23 @@ import gpps.service.exception.SMSException;
 import gpps.service.message.Client;
 import gpps.service.message.IMessageSupportService;
 import gpps.service.thirdpay.IHttpClientService;
+import gpps.tools.StringUtil;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
+import javax.xml.parsers.DocumentBuilder;
 
+import org.apache.http.client.utils.DateUtils;
 import org.apache.log4j.Logger;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 public class MessageSupportServiceImpl implements IMessageSupportService {
 	public static final String CHARSET="UTF-8";
@@ -26,11 +35,13 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	public static final String ACTION_REGIST="1";
 	public static final String ACTION_SENDSMS="2";
 	public static final String ACTION_SENDTIMESMS="4";
+	public static final String ACTION_GETMO="5";
 	static {
 		urls.put(ACTION_REGISTDETAILINFO, "/sdkproxy/registdetailinfo.action");
 		urls.put(ACTION_REGIST, "/sdkproxy/regist.action");
 		urls.put(ACTION_SENDSMS, "/sdkproxy/sendsms.action");
 		urls.put(ACTION_SENDTIMESMS, "/sdkproxy/sendtimesms.action");
+		urls.put(ACTION_GETMO, "/sdkproxy/getmo.action");
 	}
 	private static Map<String, String> errorMsgs=new HashMap<String, String>();
 	/**
@@ -78,6 +89,7 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	}
 	@Autowired
 	IHttpClientService httpClientService;
+    DocumentBuilder builder =null;  
 	public String getSerialNo() {
 		return serialNo;
 	}
@@ -115,6 +127,22 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 //			e.printStackTrace();
 //		}
 //	}
+	private String getUrl(String action)
+	{
+		return baseUrl+urls.get(action);
+	}
+	private String getResultCode(String text)
+	{
+		 Document doc = null;  
+         try {  
+             doc = DocumentHelper.parseText(text.trim());
+             Element root = doc.getRootElement();// 指向根节点
+             return root.element("error").getText();
+         } catch (DocumentException e) {  
+             logger.error(e.getMessage(),e);
+         }  
+         return null;
+	}
 	@PostConstruct
 	public void init()
 	{
@@ -132,14 +160,54 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 			postcode	邮政编码(最多6字节)，必须输入
 
 		 */
+		logger.info("短信服务注册企业信息");
 		Map<String, String> params=new HashMap<String, String>();
-		params.put("", "");
-		httpClientService.post(urls.get(ACTION_REGISTDETAILINFO), params);
+		params.put("cdkey", serialNo);
+		params.put("password", password);
+		params.put("ename", "春雷投资");
+		params.put("linkman", "王东");
+		params.put("phonenum", "13601114578");
+		params.put("mobile", "13601114578");
+		params.put("email", "test@calis.edu.cn");
+		params.put("fax", "01062758880");
+		params.put("address", "北京中关村");
+		params.put("postcode", "100080");
+
+		String resp=httpClientService.post(getUrl(ACTION_REGISTDETAILINFO), params);
+		String resultCode=getResultCode(resp);
+		if(!resultCode.equals("0"))
+			throw new RuntimeException(errorMsgs.get(resultCode));
+		
+		logger.info("短信服务激活");
+		params.clear();
+		params.put("cdkey", serialNo);
+		params.put("password", password);
+
+		resp=httpClientService.post(getUrl(ACTION_REGIST), params);
+		resultCode=getResultCode(resp);
+		if(!resultCode.equals("0"))
+			throw new RuntimeException(errorMsgs.get(resultCode));
 	}
 	@Override
 	public void sendSMS(List<String> tels, String content) throws SMSException{
-//		sendScheduledSMS(tels, content, -1);
-		
+		if(tels==null||tels.size()==0||StringUtil.isEmpty(content))
+			return;
+		StringBuilder sBuilder=new StringBuilder();
+		for(int i=0;i<tels.size();i++)
+		{
+			if(i!=0)
+				sBuilder.append(",");
+			sBuilder.append(tels.get(i));
+		}
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("cdkey", serialNo);
+		params.put("password", password);
+		params.put("phone", sBuilder.toString());
+		params.put("message", content);
+		String resp=httpClientService.post(getUrl(ACTION_SENDSMS), params);
+		String resultCode=getResultCode(resp);
+		if(!resultCode.equals("0"))
+			throw new RuntimeException(errorMsgs.get(resultCode));
 	}
 	@Override
 	public void sendScheduledSMS(List<String> tels, String content,
@@ -158,6 +226,29 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 //			logger.error(e.getMessage(),e);
 //			throw new SMSException("短信平台服务异常");
 //		}
+		if(tels==null||tels.size()==0||StringUtil.isEmpty(content))
+			return;
+		StringBuilder sBuilder=new StringBuilder();
+		for(int i=0;i<tels.size();i++)
+		{
+			if(i!=0)
+				sBuilder.append(",");
+			sBuilder.append(tels.get(i));
+		}
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("cdkey", serialNo);
+		params.put("password", password);
+		params.put("phone", sBuilder.toString());
+		params.put("message", content);
+		params.put("sendtime", getDateStr(sendTime));
+		String resp=httpClientService.post(getUrl(ACTION_SENDSMS), params);
+		String resultCode=getResultCode(resp);
+		if(!resultCode.equals("0"))
+			throw new RuntimeException(errorMsgs.get(resultCode));
+	}
+	private String getDateStr(long time){
+		SimpleDateFormat format=new SimpleDateFormat("yyyyMMddHHmmss");
+		return format.format(new Date(time));
 	}
 	@Override
 	public void getUpSMS() throws SMSException {
@@ -180,5 +271,11 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 //			logger.error(e.getMessage(),e);
 //			throw new SMSException("短信平台服务异常");
 //		}
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("cdkey", serialNo);
+		params.put("password", password);
+		String resp=httpClientService.post(getUrl(ACTION_GETMO), params);
+		
+		System.out.println(resp);
 	}
 }

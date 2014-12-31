@@ -8,9 +8,11 @@ public class Client {
 private String softwareSerialNo;
 private String key;
 private String baseUrl;
-	public Client(String sn,String key,String baseUrl){
+private String password;
+	public Client(String sn,String key,String password,String baseUrl){
 		this.softwareSerialNo=sn;
 		this.key=key;
+		this.password=password;
 		this.baseUrl=baseUrl;
 		init();
 	}

@@ -98,7 +98,7 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	@PostConstruct
 	public void init()
 	{
-		client=new Client(serialNo,password,baseUrl);
+		client=new Client(serialNo,key,password,baseUrl);
 		try {
 			int value=client.registDetailInfo("企业名称", "联系人", "01058750425","13000000000", "sjfkls@yahoo.cn", "01058750500", "企业地址", "056900");
 			System.out.println("企业注册返回码："+value);

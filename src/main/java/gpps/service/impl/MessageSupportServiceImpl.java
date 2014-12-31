@@ -108,12 +108,16 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 			long sendTime) throws SMSException {
 		if(tels==null||tels.size()==0||StringUtil.isEmpty(content))
 			return;
+		String[] strs=new String[tels.size()];
+        for(int i=0;i<tels.size();i++){
+        	strs[i]=tels.get(i);
+        }
 		int resultCode=0;
 		try {
 			if(sendTime==-1)
-				resultCode=client.sendScheduledSMSEx((String[])(tels.toArray()), content,"", CHARSET);
+				resultCode=client.sendScheduledSMSEx(strs, content,"", CHARSET);
 			else	
-				resultCode=client.sendScheduledSMSEx((String[])(tels.toArray()), content, DateUtils.formatDate(new Date(sendTime),"yyyyMMddHHmmss"), CHARSET);
+				resultCode=client.sendScheduledSMSEx(strs, content, DateUtils.formatDate(new Date(sendTime),"yyyyMMddHHmmss"), CHARSET);
 			if(resultCode!=0)
 				throw new SMSException(errorMsgs.get(resultCode));
 		} catch (RemoteException e) {

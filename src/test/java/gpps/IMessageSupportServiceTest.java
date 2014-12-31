@@ -22,9 +22,9 @@ public class IMessageSupportServiceTest extends TestSupport {
 		List<String> tels=new ArrayList<String>();
 		tels.add("13601122581");
 		try {
-//			messageSupportService.sendSMS(tels, "您好，您中大奖啦!!");
+			messageSupportService.sendSMS(tels, "【春雷投资】您的验证码为123321");
 //			messageSupportService.sendScheduledSMS(tels, "您好，您又中大奖啦!!", 60L*1000+System.currentTimeMillis());//定时一分钟后发送
-			messageSupportService.getUpSMS();
+//			messageSupportService.getUpSMS();
 		} catch (SMSException e) {
 			e.printStackTrace();
 		}

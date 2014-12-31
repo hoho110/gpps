@@ -302,4 +302,11 @@ public class Mo  implements java.io.Serializable {
             _javaType, _xmlType, typeDesc);
     }
 
+	@Override
+	public String toString() {
+		return "Mo [addSerial=" + addSerial + ", addSerialRev=" + addSerialRev
+				+ ", channelnumber=" + channelnumber + ", mobileNumber="
+				+ mobileNumber + ", sentTime=" + sentTime + ", smsContent="
+				+ smsContent + "]";
+	}
 }

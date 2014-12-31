@@ -3,11 +3,13 @@ package gpps.service.impl;
 import gpps.service.exception.SMSException;
 import gpps.service.message.Client;
 import gpps.service.message.IMessageSupportService;
+import gpps.service.message.Mo;
 import gpps.tools.StringUtil;
 
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -115,6 +117,28 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 				resultCode=client.sendScheduledSMSEx((String[])(tels.toArray()), content, DateUtils.formatDate(new Date(sendTime),"yyyyMMddHHmmss"), CHARSET);
 			if(resultCode!=0)
 				throw new SMSException(errorMsgs.get(resultCode));
+		} catch (RemoteException e) {
+			logger.error(e.getMessage(),e);
+			throw new SMSException("短信平台服务异常");
+		}
+	}
+	@Override
+	public void getUpSMS() throws SMSException {
+		try {
+			List<Mo> mos = client.getMO();
+			if(mos==null||mos.size()==0)
+			{
+				logger.debug("未获取到上行短信");
+				return;
+			}
+			for(Mo mo:mos)
+			{
+				System.out.println("短信内容:" + mo.getSmsContent());
+				System.out.println("通道号:" + mo.getChannelnumber());
+				System.out.println("手机号:" + mo.getMobileNumber());
+				System.out.println("附加码:" + mo.getAddSerialRev());
+				System.out.println("附加码:" + mo.getAddSerial());
+			}
 		} catch (RemoteException e) {
 			logger.error(e.getMessage(),e);
 			throw new SMSException("短信平台服务异常");

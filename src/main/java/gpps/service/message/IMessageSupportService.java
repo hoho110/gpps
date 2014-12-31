@@ -12,4 +12,5 @@ public interface IMessageSupportService {
 	 */
 	public void sendSMS(List<String> tels,String content) throws SMSException;
 	public void sendScheduledSMS(List<String> tels,String content,long sendTime)throws SMSException;
+	public void getUpSMS() throws SMSException;
 }

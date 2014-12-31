@@ -3,29 +3,35 @@ package gpps.service.impl;
 import gpps.service.exception.SMSException;
 import gpps.service.message.Client;
 import gpps.service.message.IMessageSupportService;
-import gpps.service.message.Mo;
-import gpps.tools.StringUtil;
+import gpps.service.thirdpay.IHttpClientService;
 
-import java.rmi.RemoteException;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.http.client.utils.DateUtils;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 public class MessageSupportServiceImpl implements IMessageSupportService {
 	public static final String CHARSET="UTF-8";
-	private String serialNo;// 软件序列号,请通过亿美销售人员获取
-	private String key;// 序列号首次激活时自己设定
-	private String password;// 密码,,请通过亿美销售人员获取
-	private String baseUrl;
+	private String serialNo="0SDK-EBB-0130-JIUMN";// 软件序列号,请通过亿美销售人员获取
+	private String key="503497";// 序列号首次激活时自己设定
+	private String password="503497";// 密码,,请通过亿美销售人员获取
+	private String baseUrl="http://sdkhttp.eucp.b2m.cn";
 	private Client client=null;
 	private static Logger logger=Logger.getLogger(MessageSupportServiceImpl.class.getName());
+	private static Map<String, String> urls=new HashMap<String, String>();
+	public static final String ACTION_REGISTDETAILINFO="0";
+	public static final String ACTION_REGIST="1";
+	public static final String ACTION_SENDSMS="2";
+	public static final String ACTION_SENDTIMESMS="4";
+	static {
+		urls.put(ACTION_REGISTDETAILINFO, "/sdkproxy/registdetailinfo.action");
+		urls.put(ACTION_REGIST, "/sdkproxy/regist.action");
+		urls.put(ACTION_SENDSMS, "/sdkproxy/sendsms.action");
+		urls.put(ACTION_SENDTIMESMS, "/sdkproxy/sendtimesms.action");
+	}
 	private static Map<String, String> errorMsgs=new HashMap<String, String>();
 	/**
 	 * 		错误码304
@@ -70,6 +76,8 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 		errorMsgs.put("22", "注销失败");
 		errorMsgs.put("27", "查询单条短信费用错误码");
 	}
+	@Autowired
+	IHttpClientService httpClientService;
 	public String getSerialNo() {
 		return serialNo;
 	}
@@ -94,18 +102,39 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	public void setBaseUrl(String baseUrl) {
 		this.baseUrl = baseUrl;
 	}
+//	@PostConstruct
+//	public void init()
+//	{
+//		client=new Client(serialNo,key,password,baseUrl);
+//		try {
+//			int value=client.registDetailInfo("企业名称", "联系人", "01058750425","13000000000", "sjfkls@yahoo.cn", "01058750500", "企业地址", "056900");
+//			System.out.println("企业注册返回码："+value);
+//			value = client.registEx(password);
+//			System.out.println("序列号激活返回码:" + value);
+//		} catch (RemoteException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	@PostConstruct
 	public void init()
 	{
-		client=new Client(serialNo,key,password,baseUrl);
-		try {
-			int value=client.registDetailInfo("企业名称", "联系人", "01058750425","13000000000", "sjfkls@yahoo.cn", "01058750500", "企业地址", "056900");
-			System.out.println("企业注册返回码："+value);
-			value = client.registEx(password);
-			System.out.println("序列号激活返回码:" + value);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
+		/**
+		 * 注册企业信息
+		 * cdkey	用户序列号。
+			password	用户密码
+			ename	企业名称(最多60字节)，必须输入
+			linkman	联系人姓名(最多20字节)，必须输入
+			phonenum	联系电话(最多20字节)，必须输入
+			mobile	联系手机(最多15字节)，必须输入
+			email	电子邮件(最多60字节)，必须输入
+			fax	联系传真(最多20字节)，必须输入
+			address	公司地址(最多60字节)，必须输入
+			postcode	邮政编码(最多6字节)，必须输入
+
+		 */
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("", "");
+		httpClientService.post(urls.get(ACTION_REGISTDETAILINFO), params);
 	}
 	@Override
 	public void sendSMS(List<String> tels, String content) throws SMSException{

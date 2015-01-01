@@ -50,7 +50,7 @@ public class LoginServlet {
 			text.append("您好，您的***网校验码为:");
 			text.append(String.valueOf(lenderService.getCurrentSession().getAttribute(ILoginService.SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODE)));
 			text.append(",").append("请您在").append(ILoginService.MESSAGEVALIDATECODEEXPIRETIME/60/1000).append("分钟内使用，过期请重新获取。");
-			writer.write(text.toString());
+			writer.write("<font size=36>"+text.toString()+"</font>");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally

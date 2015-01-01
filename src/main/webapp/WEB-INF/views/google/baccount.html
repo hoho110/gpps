@@ -183,6 +183,18 @@ a.accordion-toggle {
 							
 							<div class="col-xs-12 col-md-5" style="padding-left:15px; padding-right:0px;">
 								
+								<div class="col-xs-12 col-sm-12 hidden-md hidden-lg" style="margin-top:5px; padding-left:0px; padding-right:0px; vertical-align : center;">
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:5px; padding-right:0px;">
+									<span class="grey">净调状态：</span>
+									</div>
+									<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border:solid 1px white; padding-left:2px; padding-right:2px;">
+									<div class="grey" id="checkstate" style="margin-bottom:0px;">未实地考察</div>
+									</div>
+									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
+									<button id="reqcheck" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%; padding-left:0px; padding-right:0px;">申请净调</button>
+									</div>
+								</div>
+								
 								<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:5px; padding-left:0px; padding-right:0px; vertical-align : center;">
 									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:5px; padding-right:0px;">
 									<span class="grey">开户银行：</span>
@@ -536,33 +548,6 @@ a.accordion-toggle {
 								
 							}
 							
-							var authorizeTypeOpen = message.get('authorize');
-							if(authorizeTypeOpen!=2){
-								$('#giveauth').html('未授权');
-								$('#togive').click(function(e){
-									$('#authformdiv').empty();
-									var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
-                                    var auth=service.getAuthorize();
-                                    var content="<form id='authform' action='"+auth.baseUrl+"'method='post' target='_blank'>";
-                                    for(var o in auth)
-                                   	{
-                                        if(o=="baseUrl"||o=="_i_"||o=="_t_")
-                                       	{
-                                        	continue;
-                                       	}
-                                        var len = o.length;
-                                        var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
-                                        content+="<input id='"+name+"' name='"+name+"' value='"+auth[o]+"'/> ";
-                                   	}
-                                    content+="</form>";
-                                    $('#authformdiv').html(content);
-                                    $('#authform').submit();
-								});
-							}else{
-								$('#giveauth').html('已授权');
-								$('#togive').attr('disabled', 'disabled');
-							}
-
 
 							var privilege = message.get('privilege');
 							if (privilege == 10) {
@@ -570,11 +555,13 @@ a.accordion-toggle {
 								$('a#identity').attr('href', '#');
 								$('div#identity').css('color', 'red')
 										.html('未申请实地考察')
-								$('a#identity').click(function(e){
+								$('#checkstate').html('未申请实地考察');
+								$('a#identity, #reqcheck').click(function(e){
 									if(confirm('马上申请实地考察?')){
 									bservice.applyForFunding();
 									$('div#identity').css('color', 'red')
 									.html('待实地考察');
+									$('#checkstate').html('待实地考察');
 									}
 								})
 							}else if(privilege==14){
@@ -583,24 +570,28 @@ a.accordion-toggle {
 								$('a#identity').attr('href', '#');
 								$('div#identity').css('color', 'red')
 										.html('审核未通过');
-								$('a#identity').click(function(e){
+								$('#checkstate').html('审核未通过');
+								$('a#identity, #reqcheck').click(function(e){
 									if(confirm('马上申请实地考察?')){
 									bservice.applyForFunding();
 									$('div#identity').css('color', 'red')
 									.html('待实地考察');
+									$('#checkstate').html('待实地考察');
 									}
 								})
 							}
 							else if(privilege==11){
 								$('img#identity').attr('src', 'img/people.png').attr('title', '待实地考察').attr('disabled', 'disabled');
-								$('a#identity').attr('href', '#');
+								$('a#identity, #reqcheck').attr('href', '#');
 								$('div#identity').css('color', 'red')
-										.html('待实地考察')
+										.html('待实地考察');
+								$('#checkstate').html('待实地考察');
 							}else if(privilege==12){
 								$('img#identity').attr('src', 'img/people.jpg').attr('title', '实地考察已完成').attr('disabled', 'disabled');
-								$('a#identity').attr('href', '#');
+								$('a#identity, #reqcheck').attr('href', '#');
 								$('div#identity').css('color', 'green')
-										.html('实地考察已完成')
+										.html('实地考察已完成');
+								$('#checkstate').html('实地考察已完成');
 							}
 
 							
@@ -643,8 +634,51 @@ a.accordion-toggle {
                                     $('#spswformdiv').html(content);
                                     $('#spswform').submit();
 								});
+								}else{
+									$('#loginmmm').click(function(e){
+										alert('企业尚未净调成功，请申请净调。如已申请，请耐心等待！');
+									});
 								}
 							}
+							
+							
+							
+							var authorizeTypeOpen = message.get('authorize');
+							if(spsw != null && spsw != '')
+								{
+							if(authorizeTypeOpen!=2){
+								$('#giveauth').html('未授权');
+								$('#togive').click(function(e){
+									$('#authformdiv').empty();
+									var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+                                    var auth=service.getAuthorize();
+                                    var content="<form id='authform' action='"+auth.baseUrl+"'method='post' target='_blank'>";
+                                    for(var o in auth)
+                                   	{
+                                        if(o=="baseUrl"||o=="_i_"||o=="_t_")
+                                       	{
+                                        	continue;
+                                       	}
+                                        var len = o.length;
+                                        var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
+                                        content+="<input id='"+name+"' name='"+name+"' value='"+auth[o]+"'/> ";
+                                   	}
+                                    content+="</form>";
+                                    $('#authformdiv').html(content);
+                                    $('#authform').submit();
+								});
+							}else{
+								$('#giveauth').html('已授权');
+								$('#togive').attr('disabled', 'disabled');
+							}
+								}else{
+									$('#giveauth').html('未授权');
+									$('#togive').click(function(e){
+										alert('尚未注册第三方账户，请先注册再授权还款！');
+									})
+								}
+							
+							
 
 							
 							if(privilege==12)
@@ -672,32 +706,11 @@ a.accordion-toggle {
                                                 $('#spswformdiv').html(content);
                                                 $('#spswform').submit();
 											});
+							}else{
+								$('a#spsw').click(function(e){
+								alert('企业尚未净调成功，请申请净调。如已申请，请耐心等待！');
+								});
 							}
-							
-							
-							if (spsw != null && spsw != "") {
-							$('button#rebind').click(
-									function(e) {
-										$('#cardBindingformdiv').empty();
-										var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
-                                        var cardBinding=service.getCardBinding();
-                                        var content="<form id='cardBindingform' action='"+cardBinding.baseUrl+"'method='post' target='_blank'>";
-                                        for(var o in cardBinding)
-                                       	{
-                                            if(o=="baseUrl"||o=="_i_"||o=="_t_")
-                                           	{
-                                            	continue;
-                                           	}
-                                            var len = o.length;
-                                            var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
-                                            content+="<input id='"+name+"' name='"+name+"' value='"+cardBinding[o]+"'/> ";
-                                       	}
-                                        content+="</form>";
-                                        $('#cardBindingformdiv').html(content);
-                                        $('#cardBindingform').submit();
-									});
-							}
-							
 							
 
 							$('button.nav-first').click(function(e) {

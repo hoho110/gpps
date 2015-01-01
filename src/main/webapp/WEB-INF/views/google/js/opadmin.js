@@ -131,10 +131,12 @@ var createAdminNavLevel2 = function(nav){
 		ul.append(li6);
 	}
 	else if(nav=='borrower'){
+		var li1 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="borrower-all">全部企业</a></li>');
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="borrower-new">新注册企业</a></li>');
 		var li3 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="borrower-request">申请净调企业</a></li>');
 		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="borrower-pass">审核通过企业</a></li>');
 		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="borrower-refuse">审核拒绝企业</a></li>');
+		ul.append(li1);
 		ul.append(li2);
 		ul.append(li3);
 		ul.append(li4);
@@ -197,6 +199,135 @@ var createAdminNavLevel2 = function(nav){
 	
 	return ul;
 }
+
+
+var borrowerall = function(container){
+
+	var bService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
+	var letterService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILetterService");
+	var columns = [ {
+		"sTitle" : "企业名称",
+			"code" : "name"
+	}, {
+		"sTitle" : "营业执照",
+		"code" : "state"
+	}, {
+		"sTitle" : "手机号",
+		"code" : "phone"
+	}, {
+		"sTitle" : "申请时间",
+		"code" : "requesttime"
+	}, {
+		"sTitle" : "状态",
+		"code" : "repayed"
+	}, {
+		"sTitle" : "发站内信",
+		"code" : "repayed"
+	}];
+	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+		var sEcho = "";
+		var iDisplayStart = 0;
+		var iDisplayLength = 0;
+		for ( var i = 0; i < aoData.length; i++) {
+			var data = aoData[i];
+			if (data.name == "sEcho")
+				sEcho = data.value;
+			if (data.name == "iDisplayStart")
+				iDisplayStart = data.value;
+			if (data.name == "iDisplayLength")
+				iDisplayLength = data.value;
+		}
+		var res = null;
+		res = bService.findByPrivilegeWithPaging(-1,iDisplayStart, iDisplayLength);
+		var result = {};
+		result.iTotalRecords = res.get('total');
+		result.iTotalDisplayRecords = res.get('total');
+		result.aaData = new Array();
+		var items = res.get('result');
+		if(items)
+		{
+			for(var i=0; i<items.size(); i++){
+				var data=items.get(i);
+				result.aaData.push([data.companyName,
+				                    data.license,
+				                    data.tel,
+				                    formatDate(data.createtime),
+				                    borrowerstate[data.privilege],
+				                    "<button id='"+data.id+"' class='sendletter'>发站内信</button>"]);
+			}
+		}
+		result.sEcho = sEcho;
+		fnCallback(result);
+		
+		
+		$('button.sendletter').click(function(e){
+			var id = $(this).attr('id');
+			
+			
+			var ntr = $(this).parents('tr').next('tr');
+			if(ntr.prop("className")=='information'){
+				ntr.remove();
+				return;
+			}
+			
+			var letterdiv1 = $('<div class="row" style="max-width:500px;"></div>');
+			letterdiv1.append('<div class="col-md-3">站内信标题</div>');
+			letterdiv1.append('<div class="col-md-9"><input type="text" id="lettertitle" style="width:100%"></input></div>');
+			var letterdiv2 = $('<div class="row" style="max-width:500px;"></div>');
+			letterdiv2.append('<div class="col-md-3">站内信内容</div>');
+			letterdiv2.append('<div class="col-md-9"><textarea id="lettercontent" style="width:100%; min-height:300px;"></textarea></div>');
+			var letterdiv3 = $('<div class="row" style="max-width:500px;"></div>');
+			var button = $('<button style="width:100%;">发送</button>');
+			letterdiv3.append(button);
+			button.click(function(){
+				
+				var title = $(this).parent().parent().find('input#lettertitle').val();
+				var content = $(this).parent().parent().find('textarea#lettercontent').val();
+				if(title==null || title==''){
+					alert('站内信标题不能为空！');
+					return;
+				}else if(content==null || content==''){
+					alert('站内信内容不能为空！');
+					return;
+				}
+				try{
+					var letter = {'_t_':'gpps.model.Letter', 'title':title, 'content':content, 'markRead':0, 'receiverId':parseInt(id), 'receivertype':1}
+					letterService.create(letter);
+					alert("站内信已成功发送");
+					var fftr = $(this).parents('tr');
+					fftr.remove();
+				}catch(e){
+					alert(e.message);
+				}
+				
+			})
+			
+			
+			var ftr = $('<tr class="information"></tr>');
+			var ftd = $('<td align=center colspan=6></td>');
+			ftr.append(ftd);
+			ftd.append(letterdiv1);
+			ftd.append(letterdiv2);
+			ftd.append(letterdiv3);
+			
+			$(this).parents('tr').after(ftr);
+		});
+
+		return res;
+	}
+	var mySettings = $.extend({}, defaultSettings, {
+		"aoColumns" : columns,
+		"fnServerData" : fnServerData
+	});
+	var content = $('<div></div>');
+	var table = $('<table class="table table-striped table-hover" style="min-width:300px;"></table>').appendTo(content);
+	container.append(content);
+	table.dataTable(mySettings);
+}
+
+
+
+
 
 var borrowernew = function(container){
 
@@ -2239,6 +2370,7 @@ var nav2funtion = {
 		'lender-view' : lenderview,
 		'borrower-request' : borrowerrequest,
 		'tohandle-borrower-request' : borrowerrequest,
+		'borrower-all' : borrowerall,
 		'borrower-new' : borrowernew,
 		'borrower-pass' : borrowerpass,
 		'borrower-refuse' : borrowerrefuse,

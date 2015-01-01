@@ -126,9 +126,9 @@
 			</div>
         </div>
         <div class="col-md-12 cpagination ui_complex_pagination">
-                <span class="btns disabled btn_page btn_small prev"><span class="caret">&lt;</span> 上一页</span>
+                <a class="btns disabled btn_page btn_small pre" href="javascript:void(0)" id="prePage"><span class="caret">&lt;</span>上一页</a>
  
-                <p class="pageNum">第1页/共1页</p>
+                <p class="pageNum" id="pageNum">第1页/共1页</p>
                 <a class="btns disabled btn_page btn_small next" href="javascript:void(0)" id="nextPage">下一页<span
                         class="caret">&gt;</span></a>
          </div>
@@ -331,6 +331,41 @@
  	<script>
  	var seriesname = {};
  	var ctx = new EasyServiceClient.newContext();
+ 	var pageNum = 0;
+ 	var numPerPage = 5;
+ 	var totalPage = 0;
+ 	
+ 	function resetTotal(total){
+ 		pageNum = 0;
+ 		totalPage = parseInt(total/numPerPage+"") + (total%numPerPage==0?0:1);
+ 		$('#pageNum').html('第'+(pageNum+1)+'页/共'+totalPage+'页');
+ 	}
+ 	
+ 	function pre(){
+ 		
+ 		if(pageNum==0)
+ 			{
+ 			
+ 			}
+ 		else{
+ 			pageNum = pageNum-1;
+ 		}
+ 		$('#pageNum').html('第'+(pageNum+1)+'页/共'+totalPage+'页');
+ 		return pageNum;
+ 	}
+ 	
+ 	function next(){
+ 		if(pageNum==totalPage-1){
+ 			
+ 		}else{
+ 			pageNum = pageNum+1;
+ 		}
+ 		$('#pageNum').html('第'+(pageNum+1)+'页/共'+totalPage+'页');
+ 		return pageNum;
+ 	}
+ 	
+ 	
+ 	
  	function refreshList(orders){
  		
  		ctx.res = orders;
@@ -356,28 +391,27 @@
         		 $(this).parent().parent().find('li').removeClass('active');
         		 $(this).parent().addClass('active');
         		 $('li#nav_name').html('全部');
-        		 var orders = orderService.findByStatesByPage(-1,0,10);
+        		 var orders = orderService.findByStatesByPage(-1,0,numPerPage);
+        		 
+        		 var total = orders.get('total');
+        		 resetTotal(total);
+        		 
         		 refreshList(orders);
         		 
-        		 $('#intro').html('<p>预期年化利率 ：<span style="color:#ff0000;">6.0%~18.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 100 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 3-12个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：------</p>');
+        		 $('#prePage').unbind('click');
+        		 $('#prePage').bind('click', function(e){
+        			var cp = pre();
+        			var orders = orderService.findByStatesByPage(-1,cp*numPerPage, numPerPage);
+        			refreshList(orders);
+        		 });
+        		 $('#nextPage').unbind('click');
+        		 $('#nextPage').bind('click', function(e){
+        			var cp = next(); 
+        			var orders = orderService.findByStatesByPage(-1,cp*numPerPage, numPerPage);
+        			refreshList(orders);
+        		 });
         		 
-        		 $('a.constructure, a.stat').click(function(e){
-              	   var info = $(this).parents('li').find('div.productinfo');
-              	  	if(info.css('display')=='block'){
-              	  		info.css('display', 'none');
-              	  		var stat = $(this).parents('li').find('a.stat');
-              	  		if(stat.text()=='投资中'){
-              	  			stat.removeClass('btns-grey').addClass('btns');
-              	  		}else if(stat.text()=='预发布'){
-              	  			stat.removeClass('btns-grey').addClass('btns-green');
-              	  		}
-              	  	}else{
-              	  		//$('ul#productlist li').find('div.productinfo').css('display', 'none');
-              	  		info.css('display', 'block');
-              	  		var stat = $(this).parents('li').find('a.stat');
-              	  		stat.removeClass('btns').removeClass('btns-green').addClass('btns-grey');
-              	  	}
-                 });
+        		 $('#intro').html('<p>预期年化利率 ：<span style="color:#ff0000;">6.0%~18.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 100 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限： 3-12个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：------</p>');
         	 });
         	 $('ul.plnav').append(li1);
         	 for(var i=0; i<series.size(); i++){
@@ -399,9 +433,27 @@
             		 else if($(this).attr('id')=='2')
             			 $('#intro').html('<p>预期年化利率 ：<span style="color:#ff0000;">12.0%~18.0% </span>&nbsp; &nbsp; &nbsp; &nbsp;投资金额： 10000 元起 &nbsp; &nbsp; &nbsp; &nbsp;投资期限：6-12个月 &nbsp; &nbsp; &nbsp; &nbsp;收益方式：每月还息到期还本  &nbsp; &nbsp; &nbsp;<a href="pseriescenter.html?type='+$(this).attr('id')+'" target="_blank">了解详情</a></p>');
             		 
+            		 var orders = orderService.findGovermentOrderByProductSeries(parseInt($(this).attr('data-sk')),-1,0,numPerPage);
+            		 var total = orders.get('total');
+            		 resetTotal(total);
+            		 refreshList(orders);
             		 
-            		 var orders = orderService.findGovermentOrderByProductSeries(parseInt($(this).attr('data-sk')),-1,0,10);
-        			 refreshList(orders);
+            		 $('#prePage').attr('data-sk', $(this).attr('data-sk'));
+            		 $('#nextPage').attr('data-sk', $(this).attr('data-sk'));
+            		 
+            		 $('#prePage').unbind('click');
+            		 $('#prePage').bind('click', function(e){
+            			var cp = pre();
+            			var orders = orderService.findGovermentOrderByProductSeries(parseInt($(this).attr('data-sk')),-1,cp*numPerPage,numPerPage);
+            			refreshList(orders);
+            		 });
+            		 $('#nextPage').unbind('click');
+            		 $('#nextPage').bind('click', function(e){
+            			var cp = next(); 
+            			var orders = orderService.findGovermentOrderByProductSeries(parseInt($(this).attr('data-sk')),-1,cp*numPerPage,numPerPage);
+            			refreshList(orders);
+            		 });
+            		 
         		 })
         		 
         	 }

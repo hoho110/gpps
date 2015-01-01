@@ -22,13 +22,16 @@ public class IMessageSupportServiceTest extends TestSupport {
 	public void testSendSMS()
 	{
 		List<String> tels=new ArrayList<String>();
-		tels.add("13601122581");
+//		tels.add("15901097711");
+//		tels.add("15176156009");
+//		tels.add("13811502837");
+		tels.add("323232323");
 		try {
-//			messageSupportService.sendSMS(tels, "【春雷投资】您的验证码为123321");
+			messageSupportService.sendSMS(tels, "【春雷投资】您的验证码为222222");
 //			long time=60L*15*1000+System.currentTimeMillis();
 //			messageSupportService.sendScheduledSMS(tels, "【春雷投资】您的定时验证码为123321,请求发送时间为"+getDateStr(time), time);//定时一s分钟后发送
 //			System.out.println("定时接收时间："+getDateStr(time));
-			messageSupportService.getUpSMS();
+//			messageSupportService.getUpSMS();
 		} catch (SMSException e) {
 			e.printStackTrace();
 		}

@@ -29,6 +29,7 @@
 	<bean id="accessoryTransferServlet" class="gpps.servlet.AccessoryTransferServlet">
         <property name="officalDir" value="file:d:/test/officalDir"></property>
         <property name="tempDir" value="file:d:/test/tempDir"></property>
+        <property name="contractDir" value="file:d:/test/contractDir"></property>
     </bean>
     <bean id="chinanprSupportService" class="gpps.service.impl.ThirdPaySupportServiceImpl">
         <property name="url" value="${pay.url}"></property>

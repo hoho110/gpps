@@ -37,6 +37,7 @@ import com.easyservice.xml.XMLParseException;
 public class AccessoryTransferServlet {
 	private Resource officalDir;// 上传文件存在根目录
 	private Resource tempDir;// 临时目录
+	private Resource contractDir; //合同保存目录
 	private static final long MAXFILESIZE = 1024L * 1024 * 1024;// 1G
 	@Autowired
 	IGovermentOrderService orderService;
@@ -47,6 +48,13 @@ public class AccessoryTransferServlet {
 	@Autowired
 	IActivityService activityService;
 
+	public Resource getContractDir() {
+		return contractDir;
+	}
+
+	public void setContractDir(Resource contractDir) {
+		this.contractDir = contractDir;
+	}
 	public Resource getOfficalDir() {
 		return officalDir;
 	}
@@ -240,5 +248,108 @@ public class AccessoryTransferServlet {
 				return item;
 		}
 		return null;
+	}
+	
+	
+	/**
+	 * 上传路径："/upload/contract/{pid}"
+	 * id:上传合同对应的产品ID
+	 */
+	@RequestMapping(value = { "/upload/contract/{pid}" })
+	protected void upload(HttpServletRequest request,
+			HttpServletResponse response, @PathVariable("pid") Integer pid) throws ServletException,
+			IOException {
+		// 解析 request，判断是否有上传文件
+		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+		if (!isMultipart) {
+			response.sendError(400, "非法的multipart配置");
+			return;
+		}
+		if (!tempDir.exists())
+			tempDir.getFile().mkdirs();
+
+		FileItemFactory factory = new DiskFileItemFactory(2048,
+				tempDir.getFile());
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		// 设置路径、文件名的字符集
+		upload.setHeaderEncoding("UTF-8");
+		// 设置允许用户上传文件大小,单位:字节
+		upload.setSizeMax(MAXFILESIZE); // 最大限制1G
+		// 得到所有的表单域，它们目前都被当作FileItem
+		List<FileItem> fileItems;
+		try {
+			fileItems = upload.parseRequest(request);
+			if (fileItems == null || fileItems.size() == 0)
+				throw new Exception("fileItems项为空");
+			for (FileItem item : fileItems) {
+				if (item.isFormField())
+					continue;
+				// 如果item是文件上传表单域
+				// 获得文件名及路径
+				String fileName = item.getName();
+				String uuid = UUID.randomUUID().toString();
+				String path = new StringBuilder().append(FILESEPARATOR)
+						.append(pid).append(fileName).toString();
+				if (!contractDir.exists())
+					contractDir.getFile().mkdirs();
+				
+				File productDir = new File(contractDir.getFile().getAbsoluteFile()+File.separator+pid);
+				if(!productDir.exists()){
+					productDir.mkdir();
+				}
+				
+				
+				File uploadFile = new File(productDir, path);
+				if (!uploadFile.getParentFile().exists())
+					uploadFile.getParentFile().mkdirs();
+				uploadFile.createNewFile();
+				item.write(uploadFile);
+				System.out.println("文件" + fileName + "上传成功");
+			}
+			response.setStatus(200);
+			ServletUtils.write(response, "上传成功<a href='/views/google/admin.html'>返回</a>");
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			response.sendError(403, e.getMessage());
+		}
+	}
+	@RequestMapping(value = { "/download/contract/{pid}/{sid}" })
+	protected void service(HttpServletRequest request,
+			HttpServletResponse response, @PathVariable("pid") Integer pid,
+			@PathVariable("sid") int sid) throws ServletException,
+			IOException {
+		OutputStream outputStream = null;
+		InputStream inputStream = null;
+		try {
+			File downloadFile = new File(contractDir.getFile(), pid+File.separator+pid+sid+".pdf");
+			if (!downloadFile.exists()) {
+				response.sendError(404, "未找到下载文件");
+				return;
+			}
+			response.setContentType("pdf");
+			response.setHeader("Content-Disposition", "attachment; filename="+ pid+sid+".pdf");
+			response.addHeader("Content-Length",String.valueOf(downloadFile.length()));
+			outputStream = response.getOutputStream();
+			inputStream = new FileInputStream(downloadFile);
+			byte[] buffer = new byte[1024];
+			int i = -1;
+			while ((i = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, i);
+			}
+			outputStream.flush();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		} finally {
+			try {
+				if (inputStream != null)
+					inputStream.close();
+			} catch (IOException e) {
+			}
+			try {
+				if (outputStream != null)
+					outputStream.close();
+			} catch (IOException e) {
+			}
+		}
 	}
 }

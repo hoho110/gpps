@@ -65,11 +65,11 @@ public class CheckAccount {
 				
 				
 				//验证平台账户金额与第三方账户金额一致
-//				flag = checkLenderWithTP(sBuilder, lender, account);
-//				if(flag==false){
-//					errorlender++;
-//					continue;
-//				}
+				flag = checkLenderWithTP(sBuilder, lender, account);
+				if(flag==false){
+					errorlender++;
+					continue;
+				}
 				
 				
 				
@@ -144,11 +144,11 @@ public class CheckAccount {
 				
 				
 				//验证平台账户金额与第三方账户金额一致
-//				flag = checkBorrowerWithTP(sBuilder, borrower, account);
-//				if(flag==false){
-//					errorborrower++;
-//					continue;
-//				}
+				flag = checkBorrowerWithTP(sBuilder, borrower, account);
+				if(flag==false){
+					errorborrower++;
+					continue;
+				}
 				
 				
 				//验证：总金额=可用金额+冻结金额

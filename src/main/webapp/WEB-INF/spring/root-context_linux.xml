@@ -31,6 +31,9 @@
         <property name="tempDir" value="file:/root/install/data/tempDir"></property>
         <property name="contractDir" value="file:/root/install/data/contractDir"></property>
     </bean>
+    <bean id="contractService" class="gpps.service.impl.ContractServiceImpl">
+        <property name="contractDir" value="file:/root/install/data/contractDir"></property>
+    </bean>
     <bean id="chinanprSupportService" class="gpps.service.impl.ThirdPaySupportServiceImpl">
         <property name="url" value="${pay.url}"></property>
         <property name="privateKey" value="${privateKey}"></property>

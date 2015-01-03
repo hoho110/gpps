@@ -107,4 +107,13 @@
     <update id="updateTelAndEmail">
     	update Lender set email=#{email},tel=#{tel} where id=#{id}
     </update>
+    <update id="updateName">
+    	update Lender set name=#{name} where id=#{id}
+    </update>
+    <update id="updateEmail">
+    	update Lender set email=#{email} where id=#{id}
+    </update>
+    <update id="updateAddress">
+    	update Lender set address=#{address} where id=#{id}
+    </update>
 </mapper>

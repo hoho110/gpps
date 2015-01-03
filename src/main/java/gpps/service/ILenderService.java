@@ -20,6 +20,9 @@ public interface ILenderService extends ILoginService{
 	 */
 	public Lender register(Lender lender,String messageValidateCode) throws ValidateCodeException,IllegalArgumentException, LoginException;
 	
+	
+	public void changeAttri(String name, String value)throws IllegalArgumentException;
+	
 	public void registerSecondStep(String name,String identityCard,int sex,String address,String annualIncome)throws IllegalArgumentException;
 	/**
 	 * 更新用户

@@ -40,4 +40,8 @@ public interface ILenderDao {
 	public void bindCard(@Param("id")Integer id,@Param("cardId")Integer cardId);
 	public Lender findByThirdPartyAccount(String thirdPartyAccount);
 	public void updateTelAndEmail(@Param("id")Integer id,@Param("tel")String tel,@Param("email")String email);
+	
+	public void updateName(@Param("id")Integer id,@Param("name")String name);
+	public void updateEmail(@Param("id")Integer id,@Param("email")String email);
+	public void updateAddress(@Param("id")Integer id,@Param("address")String address);
 }

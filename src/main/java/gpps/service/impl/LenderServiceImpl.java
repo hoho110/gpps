@@ -146,6 +146,24 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	}
 
 	@Override
+	public void changeAttri(String name, String value)throws IllegalArgumentException{
+		value = checkNullAndTrim(name, value);
+		Lender lender = getCurrentUser();
+		if(name.equals("name")){
+			lenderDao.updateName(lender.getId(), value);
+			lender.setName(value);
+		}else if(name.equals("email")){
+			lenderDao.updateEmail(lender.getId(), value);
+			lender.setEmail(value);
+		}else if(name.equals("address")){
+			lenderDao.updateEmail(lender.getId(), value);
+			lender.setAddress(value);
+		}else{
+			throw new IllegalArgumentException("申请修改了无法修改的字段！");
+		}
+	}
+	
+	@Override
 	public void registerSecondStep(String name, String identityCard, int sex, String address,String annualIncome) throws IllegalArgumentException {
 		name=checkNullAndTrim("name", name);
 		identityCard=checkNullAndTrim("identityCard", identityCard);

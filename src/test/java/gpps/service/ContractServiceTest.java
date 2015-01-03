@@ -10,10 +10,11 @@ public class ContractServiceTest {
 	protected static ApplicationContext context =new FileSystemXmlApplicationContext(SPRINGCONFIGPATH);
 	protected static IContractService contractService = context.getBean(IContractService.class);
 	public static void main(String args[]) throws Exception{
-		List<ContractItem> items = contractService.list(2007);
-		for(ContractItem item:items){
-			System.out.println(item.getLenderName()+":"+item.getOrderName()+":"+item.getSeriesName()+":"+item.getAmount().intValue()+":"+item.getSubmitID());
-		}
+//		List<ContractItem> items = contractService.list(2007);
+//		for(ContractItem item:items){
+//			System.out.println(item.getLenderName()+":"+item.getOrderName()+":"+item.getSeriesName()+":"+item.getAmount().intValue()+":"+item.getSubmitID());
+//		}
+		boolean flag = contractService.isComplete(2007);
 		System.exit(0);
 	}
 }

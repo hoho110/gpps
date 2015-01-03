@@ -16,6 +16,22 @@ _defaultDataTableOLanguage = {
 		"sInfoFiltered" : "(在 _MAX_ 条记录中查找)"
 	};
 
+_noDataTableOLanguage = {
+		"sProcessing" : "<img src ='images/waiting.gif' height = 18/>正在查询中，请稍后......",
+		"sLengthMenu" : "",
+		"sZeroRecords" : "无数据",
+		"sInfo" : "",
+		"sInfoEmpty" : " ",
+		"sSearch" : "查找： ",
+		"oPaginate" : {
+			"sFirst" : "",
+			"sLast" : "",
+			"sNext" : "下一页",
+			"sPrevious" : "上一页"
+		},
+		"sInfoFiltered" : "(在 _MAX_ 条记录中查找)"
+	};
+
 var defaultSettings = {
 				"bServerSide" : true,
 				"bAutoWidth" : true,
@@ -177,10 +193,103 @@ _$fd = function(longt) {
 
 	
 	
+	var mymaterial = function(container){
+		
+		var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
+		
+		var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="90%" cellspacing="0"></table>');
+		table.append('<tbody></tbody>');
+		
+		var aaData = new Array();
+		
+		aaData.push(["登录名",user.loginId, "-"]);
+		aaData.push(["姓名","<input style='width:99%;' type=text id='name' value="+user.name+"></input>", "<button id='namemodify'>修改</button>"]);
+		aaData.push(["手机号",user.tel, "-"]);
+		aaData.push(["邮箱","<input style='width:99%;' type=text id='email' value="+user.email+"></input>", "<button id='emailmodify'>修改</button>"]);
+		aaData.push(["身份证",user.identityCard, "-"]);
+		var addr = user.address==null?"":user.address;
+		aaData.push(["住址","<input style='width:99%;' type=text id='address' value="+addr+"></input>", "<button id='addressmodify'>修改</button>"]);
+		
+		var thead = $('<thead style="display:none;"></thead>');
+		var tr = $('<tr role="row"></tr>');
+		tr.append('<th style="width: 135px;"></th>');
+		tr.append('<th style="width: 102px;"></th>');
+		tr.append('<th style="width:50px;"></th>');
+		
+		thead.append(tr);
+		table.append(thead)
+		
+		
+		table.append('<tbody></tbody>');
+		
+		container.append(table);
+		
+		table.addClass( 'nowrap' )
+		.dataTable( {
+			responsive: true,
+			bFilter : false, //是否使用搜索 
+			bSort : false,
+			aaData : aaData,
+			bPaginate : false, // 是否使用分页
+			bLengthChange : false, //是否启用设置每页显示记录数 
+			iDisplayLength : 10, //默认每页显示的记录数
+			oLanguage : _noDataTableOLanguage,
+			pagingType: "full"
+		} );
+		
+		$('#namemodify').click(function(e){
+			var name = $('#name').val();
+			try{
+				lenderService.changeAttri('name', name);
+				alert('姓名修改成功！');
+				window.location.href="myaccountdetail.html?fid=mycenter&sid=my-material";
+			}catch(e){
+				alert(e.message);
+			}
+		});
+		
+		$('#emailmodify').click(function(e){
+			var email = $('#email').val();
+			
+			var emailreg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+			
+			if(email==null || email==''){
+				alert('邮箱不能为空！');
+				return;
+			}
+			else if(!emailreg.test(email)){
+				alert('*邮箱格式不正确');
+				return;
+			}else if(lenderService.isEmailExist(email)){
+				alert('邮箱已经存在！');
+				return;
+			}
+			
+			
+			try{
+				lenderService.changeAttri('email', email);
+				alert('邮箱修改成功！');
+				window.location.href="myaccountdetail.html?fid=mycenter&sid=my-material";
+			}catch(e){
+				alert(e.message);
+			}
+		});
+		
+		$('#addressmodify').click(function(e){
+			var address = $('#address').val();
+			try{
+				lenderService.changeAttri('address', address);
+				alert('住址修改成功！');
+				window.location.href="myaccountdetail.html?fid=mycenter&sid=my-material";
+			}catch(e){
+				alert(e.message);
+			}
+		});
+		
+	}
 	
 	var myscore = function(container){
-		var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
-		var lender=lenderService.getCurrentUser();
+		var lender=user;
 		
 		
 		
@@ -227,7 +336,7 @@ _$fd = function(longt) {
 			bPaginate : false, // 是否使用分页
 			bLengthChange : false, //是否启用设置每页显示记录数 
 			iDisplayLength : 10, //默认每页显示的记录数
-			oLanguage : _defaultDataTableOLanguage,
+			oLanguage : _noDataTableOLanguage,
 			pagingType: "full"
 		} );
 	}
@@ -336,8 +445,7 @@ var submitall = function(container){
 				                    formatDate(item.createtime),
 				                    item.amount.value,
 				                    item.repayedAmount.value,
-				                    item.waitforRepayAmount.value,
-				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
+				                    item.waitforRepayAmount.value]);
 			}
 		}
 		result.sEcho = sEcho;
@@ -355,7 +463,6 @@ var submitall = function(container){
 	tr.append('<th style="width: 42px;">金额</th>');
 	tr.append('<th style="width: 42px;">已回款</th>');
 	tr.append('<th style="width: 42px;">待回款</th>');
-	tr.append('<th style="width: 42px;">合同</th>');
 	
 	thead.append(tr);
 	table.append(thead)
@@ -426,6 +533,7 @@ var submittoafford = function(container){
 var submitpayback = function(container){
 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
 	var paybackService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IPayBackService");
+	var contractService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IContractService");
 	
 	var paybackState={0: '待还款', 1 : '正在还款', 2: '已还款', 3: '延期' , 5: '待审核'};
 	
@@ -453,6 +561,10 @@ var submitpayback = function(container){
 		{
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
+				
+				var ff = contractService.submitContract(item.product.id, item.id);
+				var con = ff==true?"<a href='/download/contract/"+item.product.id+"/"+item.id+"' target='_blank'>查看合同</a>":"尚未上传";
+				
 				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
 				                    "还款中",
 				                    formatDate(item.product.govermentOrder.financingEndtime),
@@ -460,7 +572,7 @@ var submitpayback = function(container){
 				                    item.repayedAmount.value,
 				                    item.waitforRepayAmount.value,
 				                    "<a class='repaydetail' href='javascript:void(0);' id="+item.id+">查看</a>",
-				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
+				                    con]);
 			}
 		}
 		result.sEcho = sEcho;
@@ -577,7 +689,7 @@ var submitretreat = function(container){
 }
 var submitdone = function(container){
 	var submitService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ISubmitService");
-	
+	var contractService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IContractService");
 	var fnServerData = function(sSource, aoData, fnCallback, oSettings) {
 		var sEcho = "";
 		var iDisplayStart = 0;
@@ -602,13 +714,18 @@ var submitdone = function(container){
 		{
 			for(var i=0; i<items.size(); i++){
 				var item=items.get(i);
+				
+				var ff = contractService.submitContract(item.product.id, item.id);
+				var con = ff==true?"<a href='/download/contract/"+item.product.id+"/"+item.id+"' target='_blank'>查看合同</a>":"尚未上传";
+				
+				
 				result.aaData.push(["<a href='productdetail.html?pid="+item.product.id+"' >"+item.product.govermentOrder.title+"("+item.product.productSeries.title+")</a>",
 				                    "还款完毕",
 				                    formatDate(item.createtime),
 				                    item.amount.value,
 				                    item.repayedAmount.value,
 				                    (parseFloat(item.amount.value)-parseFloat(item.repayedAmount.value)).toFixed(2),
-				                    "<a href='pdf/001.pdf' target='_blank'>合同</a>"]);
+				                    con]);
 			}
 		}
 		result.sEcho = sEcho;
@@ -1392,6 +1509,7 @@ var questionview = function(container){
 
 
 var nav2funtion = {
+		"my-material" : mymaterial,
 		"my-score" : myscore,
 		"my-activity" : myactivity,
 		"my-note" : mynote,

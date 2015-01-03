@@ -29,6 +29,7 @@ import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
 import gpps.service.CashStreamSum;
 import gpps.service.IBorrowerService;
+import gpps.service.IContractService;
 import gpps.service.IGovermentOrderService;
 import gpps.service.IPayBackService;
 import gpps.service.IProductService;
@@ -87,6 +88,8 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	IPayBackDao payBackDao;
 	@Autowired
 	IProductSeriesDao productSeriesDao;
+	@Autowired
+	IContractService contractService;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	static int[] orderStates={
 		GovermentOrder.STATE_UNPUBLISH,
@@ -232,6 +235,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		if(StringUtil.isEmpty(borrower.getThirdPartyAccount()))
 			throw new IllegalOperationException("借款方尚未开通第三方账户");
 		
+		
 		changeState(orderId, GovermentOrder.STATE_FINANCING);
 		order.setState(GovermentOrder.STATE_FINANCING);
 		insertGovermentOrderToFinancing(order);
@@ -239,6 +243,16 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	@Override
 	@Transactional
 	public void startRepaying(Integer orderId) throws IllegalConvertException,IllegalOperationException, ExistWaitforPaySubmitException, CheckException {
+		
+		List<Product> pts = productService.findByGovermentOrder(orderId);
+		for(Product product:pts){
+			if(!contractService.isComplete(product.getId())){
+				throw new IllegalOperationException("合同尚未处理完毕，无法启动融资");
+			}
+		}
+		
+		
+		
 		GovermentOrder order=null;
 		try
 		{
@@ -322,6 +336,9 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 							throw new ExistWaitforPaySubmitException("还有"+count+"个待支付的提交,请等待上述提交全部结束，稍后开始流标");
 						//校验 Product实际融资额=所有Lender的支付资金流之和
 						CashStreamSum sum=cashStreamDao.sumProduct(product.getId(), CashStream.ACTION_FREEZE);
+						if(sum==null){
+							sum = new CashStreamSum();
+						}
 						if(sum.getChiefAmount().negate().compareTo(product.getRealAmount())!=0)
 							throw new CheckException("冻结提交总金额与产品实际融资金额不符");
 						

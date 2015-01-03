@@ -13,7 +13,9 @@ import gpps.service.IContractService;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -38,7 +40,48 @@ public class ContractServiceImpl implements IContractService {
 		Product product = productDao.find(pid);
 		String orderName = orderDao.find(product.getGovermentorderId()).getTitle();
 		String seriesName = seriesDao.find(product.getProductseriesId()).getTitle();
-		return orderName+"["+seriesName+"]";
+		boolean iscomplete = isComplete(pid);
+		return orderName+"["+seriesName+"],合同处理完毕["+iscomplete+"]";
+	}
+	
+	@Override
+	public boolean submitContract(Integer pid, Integer sid){
+		try{
+			File dir = new File(contractDir.getFile().getAbsolutePath()+File.separator+pid+File.separator+pid+sid+".pdf");
+			if(!dir.exists()){
+				return false;
+			}
+		}catch(Exception e){
+			return false;
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean isComplete(Integer pid){
+		List<Submit> submits = submitDao.findAllByProductAndState(pid, Submit.STATE_COMPLETEPAY);
+		try{
+		File dir = new File(contractDir.getFile().getAbsolutePath()+File.separator+pid);
+		if(!dir.exists()){
+			return false;
+		}
+		String[] filenames = dir.list();
+		Set<String> fnames = new HashSet<String>();
+		for(String filename : filenames){
+			fnames.add(filename);
+		}
+		boolean flag = true;
+		for(Submit submit:submits){
+			String fn = ""+pid+submit.getId()+".pdf";
+			if(!fnames.contains(fn)){
+				flag=false;
+				break;
+			}
+		}
+		return flag;
+		}catch(IOException e){
+			return false;
+		}
 	}
 	
 	@Override

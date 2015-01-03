@@ -52,6 +52,7 @@
 			<PermissionRule  entityLimitType="gpps.service.IMyAccountService" operations="getCurrentUser;getLAccountMessage"/>
 			<PermissionRule  entityLimitType="gpps.service.thirdpay.IThirdPaySupportService" operations="getRegistAccount;getRecharge;getTransferToBuy;getCardBinding;getCash"/>
         	<PermissionRule  entityLimitType="gpps.dao.ILenderAccountDao" operations="find"/>
+        	<PermissionRule  entityLimitType="gpps.service.IContractService" operations="submitContract"/>
         </permissionRules>
     </Role>
 <!--     <Role privilege = "1" limitedType="0"> -->

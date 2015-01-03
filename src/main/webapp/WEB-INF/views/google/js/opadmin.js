@@ -1352,13 +1352,14 @@ var orderfinancing = function(container){
 			tr.append('<td class="color-gray-text text-center">期限</td>');
 			tr.append('<td class="color-gray-text text-center">进度</td>');
 			tr.append('<td class="color-gray-text text-center">状态</td>');
-			table.append('<tr><td class="color-gray-text text-center" colspan=7>'+order.description+'</td></tr>');
+			tr.append('<td class="color-gray-text text-center">合同</td>');
+			table.append('<tr><td class="color-gray-text text-center" colspan=8>'+order.description+'</td></tr>');
 			table.append(tr);
 			
 	    	   for(var i=0; i<products.size(); i++){
 	    		   var product = products.get(i);
 	    		   product.govermentOrder = order;
-	    		   table.append(createSingleSubProduct(product));
+	    		   table.append(createSingleSubProductForFinancing(product));
 	    	   }
 			
 			

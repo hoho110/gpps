@@ -101,23 +101,7 @@ var readletter=function(id){
 		window.location.href="baccountdetail.html?fid=mycenter&sid=letter-unread-mycenter";
 		window.open('letter.html?lid='+id);
 	}
-var repay = function(id){
-		if(user.authorizeTypeOpen!=2){
-			alert('尚未授权平台自动还款，请先执行授权再还款！');
-			return;
-		}
-		
-		if(confirm('确认要执行本次还款？')){
-		try{
-			paybackService.repay(parseInt(id));
-			alert('还款成功！');
-			window.location.href="baccountdetail.html?fid=payback&sid=payback-toaudit";
-		}catch(e){
-			alert(e.message);
-			window.location.href="baccountdetail.html?fid=payback&sid=payback-canpay";
-		}
-		}
-}
+
 var apply = function(id){
 	if(confirm('提前还款一旦确认就无法更改，确认要提前本产品的还款？')){
 	try{
@@ -893,7 +877,7 @@ var paybackcanpay = function(container){
 	                    data.chiefAmount.value,
 	                    data.interest.value,
 	                    formatDateToDay(data.deadline),
-	                    "<a class='pay' onclick='repay("+data.id+")' id="+data.id+">还款</a>"
+	                    "<a class='pay' href='javascript:void(0);' id="+data.id+">还款</a>"
 	                    ]);
 	}
 	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');
@@ -922,6 +906,27 @@ var paybackcanpay = function(container){
 		oLanguage : _defaultDataTableOLanguage,
 		pagingType: "full"
 	} );
+	$('a.pay').click(function(e){
+		var id = $(this).attr('id');
+		if(user.authorizeTypeOpen!=2){
+			$('#authorize-div').modal({
+				  keyboard: false,
+				  backdrop: true
+			});	
+			return;
+		}
+		
+		if(confirm('确认要执行本次还款？')){
+		try{
+			paybackService.repay(parseInt(id));
+			alert('申请还款成功，请等待管理员审核！');
+			window.location.href="baccountdetail.html?fid=payback&sid=payback-toaudit";
+		}catch(e){
+			alert(e.message);
+			window.location.href="baccountdetail.html?fid=payback&sid=payback-canpay";
+		}
+		}
+	});
 }
 
 var paybackcanapply = function(container){

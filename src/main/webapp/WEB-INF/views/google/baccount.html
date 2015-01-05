@@ -185,13 +185,13 @@ a.accordion-toggle {
 								
 								<div class="col-xs-12 col-sm-12 hidden-md hidden-lg" style="margin-top:5px; padding-left:0px; padding-right:0px; vertical-align : center;">
 									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:5px; padding-right:0px;">
-									<span class="grey">净调状态：</span>
+									<span class="grey">尽调状态：</span>
 									</div>
 									<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="border:solid 1px white; padding-left:2px; padding-right:2px;">
 									<div class="grey" id="checkstate" style="margin-bottom:0px;">未实地考察</div>
 									</div>
 									<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3" style="padding-left:0px; padding-right:0px;">
-									<button id="reqcheck" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%; padding-left:0px; padding-right:0px;">申请净调</button>
+									<button id="reqcheck" class="btn btn-default" style="padding-top:3px; padding-bottom:3px; width:100%; padding-left:0px; padding-right:0px;">申请尽调</button>
 									</div>
 								</div>
 								
@@ -267,7 +267,7 @@ a.accordion-toggle {
 							</div>
 							
 							<div class="col-xs-4 col-md-4" style="padding-top: 10px;">
-								<a id="identity" title="点击申请净调" href="#"><img
+								<a id="identity" title="点击申请尽调" href="#"><img
 									id="identity" src="img/identity.jpg"
 									style="width: 40px; height: 40px;"></img></a>
 								<div id="identity"
@@ -392,6 +392,28 @@ a.accordion-toggle {
     </div>
   </div>
 </div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="authorize-div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">还款授权</h4>
+      </div>
+      <div class="modal-body">
+      			在执行还款之前，您需要到第三方平台【钱多多】进行还款转账授权，授权后，春蕾投资才可以在第三方平台审核并执行您的还款申请。
+      </div>
+      <div class="modal-footer">
+      	<button id="authorize" type="button" class="btn btn-primary" data-dismiss="modal">授权</button>
+        <button id="lclose" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 <div id="cardBindingformdiv" style="display:none;"></div>
 <div id="spswformdiv" style="display:none;"></div>
@@ -636,7 +658,7 @@ a.accordion-toggle {
 								});
 								}else{
 									$('#loginmmm').click(function(e){
-										alert('企业尚未净调成功，请申请净调。如已申请，请耐心等待！');
+										alert('企业尚未尽调成功，请申请尽调。如已申请，请耐心等待！');
 									});
 								}
 							}
@@ -648,7 +670,18 @@ a.accordion-toggle {
 								{
 							if(authorizeTypeOpen!=2){
 								$('#giveauth').html('未授权');
+								
+								
 								$('#togive').click(function(e){
+									$('#authorize-div').modal({
+										  keyboard: false,
+										  backdrop: true
+									});	
+								})
+								
+								$('#authorize').click(function(e){
+								
+								//$('#togive').click(function(e){
 									$('#authformdiv').empty();
 									var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
                                     var auth=service.getAuthorize();
@@ -708,7 +741,7 @@ a.accordion-toggle {
 											});
 							}else{
 								$('a#spsw').click(function(e){
-								alert('企业尚未净调成功，请申请净调。如已申请，请耐心等待！');
+								alert('企业尚未尽调成功，请申请尽调。如已申请，请耐心等待！');
 								});
 							}
 							

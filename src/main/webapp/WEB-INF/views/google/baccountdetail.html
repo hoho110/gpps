@@ -231,6 +231,26 @@ a.accordion-toggle {
   </div>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="authorize-div" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">还款授权</h4>
+      </div>
+      <div class="modal-body">
+      			<span style="color:red">您尚未授权还款，请先授权再还款！</span><br><br>&nbsp;&nbsp;&nbsp;&nbsp;在执行还款之前，您需要到第三方平台【钱多多】进行还款转账授权，授权后，春蕾投资才可以在第三方平台审核并执行您的还款申请。
+      </div>
+      <div class="modal-footer">
+      	<button id="authorize" type="button" class="btn btn-primary" data-dismiss="modal">授权</button>
+        <button id="lclose" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="authformdiv" style="display:none;"></div>
+
 	
         <script src="js/head.js"></script>
 		<script src="js/foot.js"></script>
@@ -303,6 +323,28 @@ a.accordion-toggle {
 							$('#payfail').click(function(e){
 									window.location.href = "baccount.html?fid=payback&sid=payback-canpay";
 							});
+							
+							
+								$('#authorize').click(function(e){
+								//$('#togive').click(function(e){
+									$('#authformdiv').empty();
+									var service = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.thirdpay.IThirdPaySupportService");
+                                    var auth=service.getAuthorize();
+                                    var content="<form id='authform' action='"+auth.baseUrl+"' method='post'>";
+                                    for(var o in auth)
+                                   	{
+                                        if(o=="baseUrl"||o=="_i_"||o=="_t_")
+                                       	{
+                                        	continue;
+                                       	}
+                                        var len = o.length;
+                                        var name=o.substring(0,1).toUpperCase() + o.substring(1,len); 
+                                        content+="<input id='"+name+"' name='"+name+"' value='"+auth[o]+"'/> ";
+                                   	}
+                                    content+="</form>";
+                                    $('#authformdiv').html(content);
+                                    $('#authform').submit();
+								});
 						});
 	</script>
 </body>

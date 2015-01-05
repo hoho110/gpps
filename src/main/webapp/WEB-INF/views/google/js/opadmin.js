@@ -72,9 +72,9 @@ var defaultSettings_noCallBack = {
 
 var borrowerstate = {
 		10 : '新注册',
-		11 : '申请净调',
-		12 : '净调通过',
-		14 : '净调拒绝'
+		11 : '申请尽调',
+		12 : '尽调通过',
+		14 : '尽调拒绝'
 }
 
 var cashstate = {
@@ -112,7 +112,7 @@ var createAdminNavLevel2 = function(nav){
 	if(nav=='tohandle'){
 		var res = toService.getStatistics();
 		var tbr = res.applyBorrowerCount;
-		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="tohandle-borrower-request">申请净调企业<font color=red>('+tbr+')</font></a></li>');
+		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="tohandle-borrower-request">申请尽调企业<font color=red>('+tbr+')</font></a></li>');
 		var frc = res.financingRequestCount;
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="tohandle-request">待处理融资申请<font color=red>('+frc+')</font></a></li>');
 		var pre = res.prepublishOrderCount;
@@ -133,7 +133,7 @@ var createAdminNavLevel2 = function(nav){
 	else if(nav=='borrower'){
 		var li1 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="borrower-all">全部企业</a></li>');
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="borrower-new">新注册企业</a></li>');
-		var li3 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="borrower-request">申请净调企业</a></li>');
+		var li3 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="borrower-request">申请尽调企业</a></li>');
 		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="borrower-pass">审核通过企业</a></li>');
 		var li5 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="borrower-refuse">审核拒绝企业</a></li>');
 		ul.append(li1);

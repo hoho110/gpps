@@ -144,13 +144,13 @@ $(document).ready(function() {
 		var thirdPartyAccount = user.thirdPartyAccount;
 		var cardbinding = user.cardBinding;
 		if(privilege==10){
-			if(confirm("您尚未申请实地净调，马上申请?")){
+			if(confirm("您尚未申请实地尽调，马上申请?")){
 				window.location.href="baccount.html";
 			}else{
 				window.close();
 	  		}
 		}else if(privilege==11){
-			alert("等待实地净调中，目前暂不能充值！");
+			alert("等待实地尽调中，目前暂不能充值！");
 			window.close();
 		}
 		else if(thirdPartyAccount==null || thirdPartyAccount==''){

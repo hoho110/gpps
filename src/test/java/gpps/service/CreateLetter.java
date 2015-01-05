@@ -18,8 +18,8 @@ public class CreateLetter {
 		Integer bid = 10002;
 		
 		Letter letter = new Letter();
-		letter.setContent("尊敬的企业用户【郑州博文源智能化工程有限公司】:<br>企业已经净调完毕并审核通过！！");
-		letter.setTitle("站内信-企业净调通过");
+		letter.setContent("尊敬的企业用户【郑州博文源智能化工程有限公司】:<br>企业已经尽调完毕并审核通过！！");
+		letter.setTitle("站内信-企业尽调通过");
 		letter.setCreatetime((new Date()).getTime());
 		letter.setMarkRead(0);
 		letter.setReceiverId(bid);

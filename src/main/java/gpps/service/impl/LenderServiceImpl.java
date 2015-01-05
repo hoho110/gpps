@@ -156,7 +156,7 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 			lenderDao.updateEmail(lender.getId(), value);
 			lender.setEmail(value);
 		}else if(name.equals("address")){
-			lenderDao.updateEmail(lender.getId(), value);
+			lenderDao.updateAddress(lender.getId(), value);
 			lender.setAddress(value);
 		}else{
 			throw new IllegalArgumentException("申请修改了无法修改的字段！");

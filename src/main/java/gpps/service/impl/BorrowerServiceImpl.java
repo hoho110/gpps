@@ -16,8 +16,10 @@ import gpps.model.GovermentOrder;
 import gpps.model.Lender;
 import gpps.model.Product;
 import gpps.model.ref.Accessory;
+import gpps.model.ref.Contactor;
 import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
+import gpps.model.ref.Contactor.Single;
 import gpps.service.IBorrowerService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
@@ -269,6 +271,69 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		if(col==null)
 			return new ArrayList<Accessory.MimeItem>(0);
 		return col.getItems();
+	}
+	
+	@Override
+	public void addContactor(Integer borrowerId, String name, String phone, String note) throws XMLParseException{
+		addContactor(borrowerId, new Single(name, phone, note));
+	}
+	
+	@Override
+	public void addContactor(Integer borrowerId, Single people) throws XMLParseException{
+		
+		if(people.getName()==null || "".equals(people.getName())){
+			throw new XMLParseException("联系人姓名不能为空");
+		}
+		
+		if(people.getPhone()==null || "".equals(people.getPhone())){
+			throw new XMLParseException("联系人电话不能为空");
+		}
+		
+		String text=borrowerDao.findContactor(borrowerId);
+		Contactor contactor=null;
+		if(StringUtil.isEmpty(text))
+			contactor=new Contactor();
+		else {
+			contactor=xmlTransformer.parse(text, Contactor.class);
+		}
+		
+		if(contactor.getContactors()==null){
+			contactor.setContactors(new ArrayList<Contactor.Single>());
+		}
+		
+		List<Single> cs = contactor.getContactors();
+		for(Single single:cs){
+			if(people.getPhone().equals(single.getPhone())){
+				throw new XMLParseException("本公司已经有联系人使用该电话号码！");
+			}
+		}
+		cs.add(people);
+		text = xmlTransformer.export(contactor);
+		borrowerDao.updateContactor(borrowerId, text);
+	}
+	@Override
+	public void delContactor(Integer borrowerId, String phone) throws XMLParseException{
+		String text=borrowerDao.findContactor(borrowerId);
+		if(StringUtil.isEmpty(text))
+			return;
+		Contactor contactor=xmlTransformer.parse(text, Contactor.class);
+		List<Single> cs = contactor.getContactors();
+		for(int i=0; i<cs.size(); i++){
+			if(phone.equals(cs.get(i).getPhone())){
+				cs.remove(i);
+				break;
+			}
+		}
+		text = xmlTransformer.export(contactor);
+		borrowerDao.updateContactor(borrowerId, text);
+	}
+	@Override
+	public List<Single> findContactor(Integer borrowerId) throws XMLParseException{
+		String text=borrowerDao.findContactor(borrowerId);
+		if(StringUtil.isEmpty(text))
+			return new ArrayList<Contactor.Single>(0);
+		Contactor contactor=xmlTransformer.parse(text, Contactor.class);
+		return contactor.getContactors();
 	}
 
 	@Override

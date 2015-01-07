@@ -4,6 +4,7 @@ import gpps.model.FinancingRequest;
 import gpps.model.GovermentOrder;
 import gpps.model.Product;
 import gpps.model.ref.Accessory.MimeItem;
+import gpps.model.ref.Contactor.Single;
 import gpps.service.exception.CheckException;
 import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
@@ -164,6 +165,10 @@ public interface IGovermentOrderService {
 	 * @throws XMLParseException
 	 */
 	public List<MimeItem> findMimeItems(Integer orderId,int category)throws XMLParseException;
+	
+	
+	
+	
 	/**
 	 * 返回当前借款人的订单
 	 * @param states 一个或几个状态并集，-1表示不限
@@ -190,5 +195,5 @@ public interface IGovermentOrderService {
 	 * @param incomeStarttime
 	 * @param description
 	 */
-	public void update(Integer id,String title,long financingStarttime,long financingEndtime,long incomeStarttime,String description);
+	public void update(Integer id,String title,long financingStarttime,long financingEndtime,long incomeStarttime,String description,String formalName, String formalLevel, String formalAmount, String tenderUnits, String formalLink);
 }

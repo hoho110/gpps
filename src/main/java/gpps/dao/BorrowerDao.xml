@@ -82,6 +82,16 @@
         where
         id=#{borrowerId}
     </update>
+    <select id="findContactor" parameterType="Integer" resultType="String">
+        select contactor
+        from Borrower where id=#{id}
+    </select>
+    <update id="updateContactor">
+        update Borrower set
+        contactor=#{contactor}
+        where
+        id=#{borrowerId}
+    </update>
     <update id="registerThirdPartyAccount">
         update Borrower set
         thirdPartyAccount=#{thirdPartyAccount},accountNumber=#{accountNumber}

@@ -254,7 +254,7 @@
 				<span style="font-size:16px; font-weight:bold;">+-menkan-+</span>
 			</div>
 			<div class="col-xs-4 col-sm-4 col-md-4">
-				投资门槛
+				投资期限
 			</div>
 			<div class="col-xs-8 col-sm-8 col-md-8">
 				<span style="font-size:16px; font-weight:bold;">+-qixian-+</span>
@@ -269,7 +269,7 @@
 				还款方式
 			</div>
 			<div class="col-xs-8 col-sm-8 col-md-8">
-				<span style="font-size:16px; font-weight:bold;">+-qixian-+</span>
+				<span style="font-size:16px; font-weight:bold;">+-style-+</span>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-12" style="margin-top:15px;">
 				<button class="btn btn-warning  btn-block seriesdetail" id='+-series.type-+'>产品详情</button>
@@ -421,19 +421,19 @@ $(document).ready(function () {
 		
 		ctx.series = series.get(0);
 		ctx.menkan = '100元';
-		ctx.qixian = '3-6个月';
+		ctx.qixian = '短';
 		ctx.rate = '6％-10%';
 		ctx.style = '每月均摊本息';
 		ejs.renderComplexNode("#projectList_template", "#projectList1", ctx);
 		ctx.series = series.get(1);
 		ctx.menkan = '1000元';
-		ctx.qixian = '3-9个月';
+		ctx.qixian = '中';
 		ctx.rate = '8％-12%';
 		ctx.style = '每月还息到期还本';
 		ejs.renderComplexNode("#projectList_template", "#projectList2", ctx);
 		ctx.series = series.get(2);
 		ctx.menkan = '10000元';
-		ctx.qixian = '6-12个月';
+		ctx.qixian = '较长';
 		ctx.rate = '12％-18%';
 		ctx.style = '每月还息到期还本';
 		ejs.renderComplexNode("#projectList_template", "#projectList3", ctx);

@@ -4,8 +4,8 @@
 	<insert id="create" parameterType="gpps.model.GovermentOrder"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into
-		GovermentOrder(title,borrowerId,material,state,financingStarttime,financingEndtime,createtime,incomeStarttime,lastModifytime,description,financingRequestId)
-		values(#{title},#{borrowerId},#{material},#{state},#{financingStarttime},#{financingEndtime},#{createtime},#{incomeStarttime},#{lastModifytime},#{description},#{financingRequestId})
+		GovermentOrder(title,borrowerId,material,state,financingStarttime,financingEndtime,createtime,incomeStarttime,lastModifytime,description,financingRequestId, formalName, formalLevel, formalAmount, tenderUnits, formalLink)
+		values(#{title},#{borrowerId},#{material},#{state},#{financingStarttime},#{financingEndtime},#{createtime},#{incomeStarttime},#{lastModifytime},#{description},#{financingRequestId}, #{formalName}, #{formalLevel}, #{formalAmount}, #{tenderUnits}, #{formalLink})
 	</insert>
 	<update id="changeState">
 		update GovermentOrder set
@@ -105,7 +105,7 @@
     </select>
     <update id="update">
     	update GovermentOrder set 
-    	title=#{title},financingStarttime=#{financingStarttime},financingEndtime=#{financingEndtime},incomeStarttime=#{incomeStarttime},description=#{description} 
+    	title=#{title},financingStarttime=#{financingStarttime},financingEndtime=#{financingEndtime},incomeStarttime=#{incomeStarttime},description=#{description},formalName=#{formalName}, formalLevel=#{formalLevel}, formalAmount=#{formalAmount}, tenderUnits=#{tenderUnits}, formalLink=#{formalLink}
     	where id=#{id}
     </update>
     <select id="countAllUnCheckedOrder" resultType="int">

@@ -27,6 +27,8 @@ import gpps.model.Task;
 import gpps.model.ref.Accessory;
 import gpps.model.ref.Accessory.MimeCol;
 import gpps.model.ref.Accessory.MimeItem;
+import gpps.model.ref.Contactor;
+import gpps.model.ref.Contactor.Single;
 import gpps.service.CashStreamSum;
 import gpps.service.IBorrowerService;
 import gpps.service.IContractService;
@@ -552,7 +554,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		govermentOrderDao.updateAccessory(orderId, text);
 	}
 	@Override
-	public void delAccessory(Integer orderId, int category, String path)
+	public void delAccessory(Integer orderId, int category, String itemId)
 			throws XMLParseException {
 		checkChangeGovermentOrder(orderId);
 		String text=govermentOrderDao.findAccessory(orderId);
@@ -569,7 +571,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			return;
 		for(int i=0;i<items.size();i++)
 		{
-			if(items.get(i).getPath().equals(path))
+			if(items.get(i).getId().equals(itemId))
 			{
 				items.remove(i);
 				break;
@@ -590,6 +592,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 			return new ArrayList<Accessory.MimeItem>(0);
 		return col.getItems();
 	}
+	
 	@Override
 	public List<GovermentOrder> findBorrowerOrderByStates(int states) {
 		Borrower borrower=borrowerService.getCurrentUser();
@@ -634,7 +637,7 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		return govermentOrderDao.findAllUnpublishOrders();
 	}
 	@Override
-	public void update(Integer id,String title, long financingStarttime, long financingEndtime, long incomeStarttime, String description) {
-		govermentOrderDao.update(id,title, financingStarttime, financingEndtime, incomeStarttime, description);
+	public void update(Integer id,String title,long financingStarttime,long financingEndtime,long incomeStarttime,String description,String formalName, String formalLevel, String formalAmount, String tenderUnits, String formalLink){
+		govermentOrderDao.update(id,title, financingStarttime, financingEndtime, incomeStarttime, description, formalName, formalLevel, formalAmount, tenderUnits, formalLink);
 	}
 }

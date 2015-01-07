@@ -521,12 +521,15 @@
         		 	});
         		}else if($(this).attr('data-sk')=='basic'){
         			var table = $('<table class="product-description"></table>');
-        			table.append('<tr><td>收益方式：</td><td><span class="tips-title">每月还息，到期还本</span></td></tr>');
-        			table.append('<tr><td>担 保：</td><td><span class="tips-title">X担保</span></td></tr>');
+        			table.append('<tr><td>融资方：</td><td>'+borrower.companyName+'</td></tr>');
+        			table.append('<tr><td>中标政采订单：</td><td><span>'+order.formalName+'【'+order.formalLevel+'】</span></td></tr>');
+        			table.append('<tr><td>中标金额：</td><td><span class="tips-title">'+order.formalAmount+'</span></td></tr>');
+        			table.append('<tr><td>招标单位：</td><td><span>'+order.tenderUnits+'</span></td></tr>');
+        			table.append('<tr><td>中标公示链接：</td><td><span class="tips-title"><a href="'+order.formalLink+'" target="_blank">点此处查看</a></span></td></tr>');
         			table.append('<tr><td>收益起始日期：</td><td>'+formatDateToDay(order.incomeStarttime)+'</td></tr>');
         			table.append('<tr><td>最晚还款日期：</td><td>'+formatDateToDay(product.incomeEndtime)+'</td></tr>');
         			table.append('<tr><td>项目简介：</td><td>'+order.description+'</td></tr>');
-        			table.append('<tr><td>融资方：</td><td>'+borrower.companyName+'</td></tr>');
+        			
         			$('.detail-content-body').html('');
         			$('.detail-content-body').append(table);
         		}else if($(this).attr('data-sk')=='action'){

@@ -4,6 +4,7 @@ import gpps.model.Borrower;
 import gpps.model.CardBinding;
 import gpps.model.FinancingRequest;
 import gpps.model.ref.Accessory.MimeItem;
+import gpps.model.ref.Contactor.Single;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.LoginException;
@@ -117,6 +118,15 @@ public interface IBorrowerService extends ILoginService {
 	 * @throws XMLParseException
 	 */
 	public List<MimeItem> findMimeItems(Integer borrowerId,int category)throws XMLParseException;
+	
+	
+	
+	public void addContactor(Integer borrowerId, Single people) throws XMLParseException;
+	public void addContactor(Integer borrowerId, String name, String phone, String note) throws XMLParseException;
+	public void delContactor(Integer borrowerId, String phone) throws XMLParseException;
+	public List<Single> findContactor(Integer borrowerId) throws XMLParseException;
+	
+	
 	/**
 	 * 当前借款人申请融资
 	 * @param financingRequest

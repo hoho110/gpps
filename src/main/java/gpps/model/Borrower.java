@@ -13,6 +13,7 @@ public class Borrower implements Permit{
 	private String identityCard;//法人身份证
 	private Integer accountId;//账户ID
 	private String material;//附件
+	private String contactor; //记录若干个联系人
 	private String request;
 	private long createtime=System.currentTimeMillis();
 	public static final int PRIVILEGE_VIEW=10;//有查看权限的企业用户
@@ -87,6 +88,12 @@ public class Borrower implements Permit{
 	}
 	public void setMaterial(String material) {
 		this.material = material;
+	}
+	public String getContactor() {
+		return contactor;
+	}
+	public void setContactor(String contactor) {
+		this.contactor = contactor;
 	}
 	public String getRequest() {
 		return request;

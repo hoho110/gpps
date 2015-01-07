@@ -134,14 +134,31 @@
 			</div>
 		</div>
 		</div>
-		
+		<div class="row" style="margin-top:20px; margin-bottom:20px;">
+		<div class="row" style="margin-bottom:20px;">
+		<div class="col-md-6" style="text-align:center;">
+			<span style="font-size:24px; font-weight:bold;">企业联系人信息
+		</div>
+		<div class="col-md-6">
+			<div class="col-md-12">姓名：<input type=text id="contact_name"></input></div>
+			<div class="col-md-12">手机：<input type=text id="contact_phone"></input></div>
+			<div class="col-md-12">备注：<input type=text id="contact_note"></input></div>
+			<div class="col-md-12" style="text-align:center;"><button id="contact_add">添加</button></div>
+		</div>
+		</div>
+			<div class="col-md-12">
+			<table class="table" id="contactlist">
+				<tr><td>姓名</td><td>手机号码</td><td>备注</td><td>操作</td></tr>
+			</table>
+			</div>
+		</div>
 		<div class="row" style="border: #eee solid 1px;">
 			<div class="col-md-12">
 				请选择上传附件类型：<select id="category">
-					<option value=0>营业执照</option>
-					<option value=1>政采资质</option>
-					<option value=2>法人证件</option>
-					<option value=3>办公环境</option>
+					<option value=0>证照类</option>
+					<option value=1>法人/实际控制人资料</option>
+					<option value=2>办公环境</option>
+					<option value=3>尽调材料</option>
 				</select>
 				</div>
 			
@@ -176,7 +193,8 @@
 	src="/easyservice/gpps.service.IBorrowerService?json"></script>
 <script>
 var id = parseInt(getQueryString('id'));
-var categoryname = {0:'营业执照',1:'政采资质',2:'法人证件',3:'办公环境'};
+var categoryname = {0:'证照类',1:'法人/实际控制人资料',2:'办公环境',3:'尽调材料'};
+
 var borrowerService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
 var borrower = null;
 
@@ -200,6 +218,23 @@ function refreshInfo(){
 	}
 }
 
+function refreshContactor(){
+	$('#contactlist').html('<tr><td>姓名</td><td>手机号码</td><td>备注</td><td>操作</td></tr>');
+	var cs = borrowerService.findContactor(id);
+	for(var i=0; i<cs.size(); i++){
+		var item = cs.get(i);
+		var operate = "<button class='delContactor' id='"+item.phone+"'>删除</button>";
+		$('#contactlist').append('<tr><td>'+item.name+'</td><td>'+item.phone+'</td><td>'+item.note+'</td><td>'+operate+'</td></tr>');
+	}
+	$('button.delContactor').click(function(e){
+		var phone = $(this).attr('id');
+		deleteContactor(id,phone);
+	});
+}
+function deleteContactor(borrowerId,phone){
+	borrowerService.delContactor(borrowerId,phone);
+	refreshContactor();
+}
 
 function refreshBorrowerAccessory(){
     var borrowerId=id;
@@ -243,6 +278,30 @@ function deleteBorrowerAccessory(borrowerId,category,itemId){
 $(document).ready(function () {
 	
 	refreshInfo();
+	refreshContactor();
+	$('button#contact_add').click(function(e){
+		var name = $('#contact_name').val();
+		var phone = $('#contact_phone').val();
+		var note = $('#contact_note').val();
+		if(name==null || name==''){
+			alert('姓名不能为空！');
+			return;
+		}
+		var reg=/^1[3-8]+\d{9}$/;
+		if(!reg.test(phone)){
+			alert('手机格式不正确！');
+			return;
+		}
+		try{
+		borrowerService.addContactor(id, name, phone, note);
+		$('#contact_name').val('');
+		$('#contact_phone').val('');
+		$('#contact_note').val('');
+		refreshContactor();
+		}catch(e){
+			alert(e.message);
+		}
+	});
 	
 $('#upload').click(function(e){
 	$('#uploadify').uploadify('settings','uploader','/upload/borrower/'+id+'/'+$('select#category').val());

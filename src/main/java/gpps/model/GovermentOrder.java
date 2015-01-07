@@ -9,6 +9,9 @@ public class GovermentOrder {
 	private String title;
 	private Integer borrowerId;
 	private String material;// 记录相关资料附件的路径
+	
+	
+
 	/**
 	 * 订单 1：融资中 2：预发布 4：还款中 8：还款完成 32：关闭 16：流标
 	 */
@@ -34,6 +37,18 @@ public class GovermentOrder {
 //	private long incomeEndtime;
 	private long lastModifytime=System.currentTimeMillis();
 	private String description;
+	
+	//中标正式订单名称
+	private String formalName;
+	//中标订单级别：国家级/省部级/地市级/县级
+	private String formalLevel;
+	//中标订单金额
+	private String formalAmount;
+	//招标单位
+	private String tenderUnits;
+	//中标订单公示链接
+	private String formalLink;
+	
 	private Integer financingRequestId;
 	public Integer getId() {
 		return id;
@@ -59,6 +74,7 @@ public class GovermentOrder {
 	public void setMaterial(String material) {
 		this.material = material;
 	}
+	
 	public int getState() {
 		return state;
 	}
@@ -107,6 +123,36 @@ public class GovermentOrder {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public String getFormalName() {
+		return formalName;
+	}
+	public void setFormalName(String formalName) {
+		this.formalName = formalName;
+	}
+	public String getFormalLevel() {
+		return formalLevel;
+	}
+	public void setFormalLevel(String formalLevel) {
+		this.formalLevel = formalLevel;
+	}
+	public String getFormalAmount() {
+		return formalAmount;
+	}
+	public void setFormalAmount(String formalAmount) {
+		this.formalAmount = formalAmount;
+	}
+	public String getTenderUnits() {
+		return tenderUnits;
+	}
+	public void setTenderUnits(String tenderUnits) {
+		this.tenderUnits = tenderUnits;
+	}
+	public String getFormalLink() {
+		return formalLink;
+	}
+	public void setFormalLink(String formalLink) {
+		this.formalLink = formalLink;
 	}
 	public Integer getFinancingRequestId() {
 		return financingRequestId;

@@ -30,6 +30,9 @@ public interface IBorrowerDao {
 	public String findAccessory(Integer borrowerId);
 	public void updateAccessory(@Param("borrowerId")Integer borrowerId,@Param("material")String material);
 	
+	public String findContactor(Integer borrowerId);
+	public void updateContactor(@Param("borrowerId")Integer borrowerId,@Param("contactor")String contactor);
+	
 	public void registerThirdPartyAccount(@Param("id")Integer id,@Param("thirdPartyAccount")String thirdPartyAccount,@Param("accountNumber")String accountNumber);
 	/**
 	 * @param state -1 不限

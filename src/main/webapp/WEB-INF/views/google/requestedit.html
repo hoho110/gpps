@@ -35,7 +35,7 @@
 		<div class="col-md-2"><button id="save">保存</button></div>
 		</div>
 		<div class="form-group has-success has-feedback">
-			<label class="control-label col-sm-3" for="inputSuccess3">订单名称</label>
+			<label class="control-label col-sm-3" for="inputSuccess3">融资产品名称</label>
 			<div class="col-sm-9">
 				<input type="text" class="form-control" id="title"></input>
 			</div>
@@ -58,6 +58,38 @@
 				<input type="text" class="form-control" id="incomeStarttime">
 			</div>
 		</div>
+		
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">中标订单名称</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="formalName"></input>
+			</div>
+		</div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">中标订单级别</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="formalLevel"></input>
+			</div>
+		</div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">中标订单金额</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="formalAmount"></input>
+			</div>
+		</div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">招标单位</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="tenderUnits"></input>
+			</div>
+		</div>
+		<div class="form-group has-success has-feedback">
+			<label class="control-label col-sm-3" for="inputSuccess3">订单公示链接</label>
+			<div class="col-sm-9">
+				<input type="text" class="form-control" id="formalLink"></input>
+			</div>
+		</div>
+		
 		<div class="form-group has-success has-feedback">
 			<label class="control-label col-sm-3" for="inputSuccess3">描述</label>
 			<div class="col-sm-9">
@@ -217,7 +249,8 @@
 		<div class="row" style="border: #eee solid 1px;">
 			<div class="col-md-12">
 				请选择上传附件类型：<select id="category">
-					<option value=0>订单资料</option>
+					<option value=0>中标通知书</option>
+					<option value=1>政府采购合同</option>
 				</select>
 				</div>
 			
@@ -227,6 +260,8 @@
 			</div>
 		</div>
 		<div class="row" id="category_0" data-desk="0" style="border: #eee solid 1px; min-height:50px;">
+		</div>
+		<div class="row" id="category_1" data-desk="1" style="border: #eee solid 1px; min-height:50px;">
 		</div>
 	</div>
 </body>
@@ -257,7 +292,7 @@
 
 var id = parseInt(getQueryString('id'));
 var oid = null;
-var categoryname = {0:'订单资料'};
+var categoryname = {0:'中标通知书', 1:'政府采购合同'};
 var orderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IGovermentOrderService");
 var borrowerService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
 var seriesService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IProductSeriesService");
@@ -301,6 +336,11 @@ function refreshInfo(){
 			$('#financingStarttime').val(formatDateToDay(order.financingStarttime));
 			$('#financingEndtime').val(formatDateToDay(order.financingEndtime));
 			$('#incomeStarttime').val(formatDateToDay(order.incomeStarttime));
+			$('#formalName').val(order.formalName);
+			$('#formalLevel').val(order.formalLevel);
+			$('#formalAmount').val(order.formalAmount);
+			$('#tenderUnits').val(order.tenderUnits);
+			$('#formalLink').val(order.formalLink);
 			$('#description').val(order.description);
 			
 			var products = productService.findByGovermentOrder(oid);
@@ -323,11 +363,10 @@ function refreshOrderAccessory(){
 	if(oid==null)
 		return;
 	
-    for(var t=0; t<=0; t++){
+    for(var t=0; t<=1; t++){
     
     
     var items=orderService.findMimeItems(oid,t);
-    
     if(items)
     {
     	$("#category_"+t).empty();
@@ -481,8 +520,13 @@ $('#save').click(function(e){
 	var financingEndtime = new Date(Date.parse($('#financingEndtime').val())).getTime();
 	var incomeStarttime = new Date(Date.parse($('#incomeStarttime').val())).getTime();
 	var description = $('#description').val();
+	var formalName = $('#formalName').val();
+	var formalLevel = $('#formalLevel').val();
+	var formalAmount = $('#formalAmount').val();
+	var tenderUnits = $('#tenderUnits').val();
+	var formalLink = $('#formalLink').val();
 	if(oid!=null){
-		orderService.update(oid, title,financingStarttime,financingEndtime,incomeStarttime,description);
+		orderService.update(oid, title,financingStarttime,financingEndtime,incomeStarttime,description,formalName,formalLevel,formalAmount,tenderUnits,formalLink);
 		alert('保存完成！');
 	}else{
 		if(title==null || title==''){
@@ -501,6 +545,11 @@ $('#save').click(function(e){
 						'lastModifytime' : (new Date()).getTime(),
 						'state' : 0,
 						'description' : description,
+						'formalName' : formalName,
+						'formalLevel' : formalLevel,
+						'formalAmount' : formalAmount,
+						'tenderUnits' : tenderUnits,
+						'formalLink' : formalLink,
 						'financingRequestId' : id
 		}
 		

@@ -291,9 +291,9 @@
     	<ul id="sourcelist" class="nav navbar-nav sourcelist">
     			<li class=""><a href="javascript: void(0);" data-sk="basic"><span class="min-price">项目详情</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="payback"><span class="min-price">还款计划</span></a></li>
-    			<li class=""><a href="javascript: void(0);" data-sk="resource"><span class="min-price">相关资料</span></a></li>
+    			<li class=""><a href="javascript: void(0);" data-sk="resource"><span class="min-price">项目资料</span></a></li>
+    			<li class=""><a href="javascript: void(0);" data-sk="cresource"><span class="min-price">企业资料</span></a></li>
     			<li class=""><a href="javascript: void(0);" data-sk="action"><span class="min-price">项目进程</span></a></li>
-    			<li class=""><a href="javascript: void(0);" data-sk="video"><span class="min-price">签约视频</span></a></li>
 		</ul>
 		
 		</div>
@@ -571,12 +571,15 @@
         			$('.detail-content-body').append('<div class="comments"><p class="asterisk">说明：</p><p class="item">每期实际收款日期、金额以最终到账为准，本项目最终解释权归春蕾投资管理有限公司所有。</p></div>');
         		}else if($(this).attr('data-sk')=='basic'){
         			var table = $('<table class="product-description"></table>');
-        			table.append('<tr><td>收益方式：</td><td><span class="tips-title">每月还息，到期还本</span></td></tr>');
-        			table.append('<tr><td>担 保：</td><td><span class="tips-title">X担保</span></td></tr>');
+        			table.append('<tr><td>融资方：</td><td>'+borrower.companyName+'</td></tr>');
+        			table.append('<tr><td>中标政采订单：</td><td><span>'+order.formalName+'【'+order.formalLevel+'】</span></td></tr>');
+        			table.append('<tr><td>中标金额：</td><td><span class="tips-title">'+order.formalAmount+'</span></td></tr>');
+        			table.append('<tr><td>招标单位：</td><td><span>'+order.tenderUnits+'</span></td></tr>');
+        			table.append('<tr><td>中标公示链接：</td><td><span class="tips-title"><a href="'+order.formalLink+'" target="_blank">点此处查看</a></span></td></tr>');
         			table.append('<tr><td>收益起始日期：</td><td>'+formatDateToDay(order.incomeStarttime)+'</td></tr>');
         			table.append('<tr><td>最晚还款日期：</td><td>'+formatDateToDay(product.incomeEndtime)+'</td></tr>');
         			table.append('<tr><td>项目简介：</td><td>'+order.description+'</td></tr>');
-        			table.append('<tr><td>融资方：</td><td>'+borrower.companyName+'</td></tr>');
+        			
         			$('.detail-content-body').html('');
         			$('.detail-content-body').append(table);
         		}else if($(this).attr('data-sk')=='action'){
@@ -590,9 +593,37 @@
         			$('.detail-content-body').append(table);
         		}else if($(this).attr('data-sk')=='resource'){
         			$('.detail-content-body').html('');
+        			var items = orderService.findMimeItems(order.id, 0);
+        			$('.detail-content-body').append('<h5>中标通知书</h5>');
+        			var pp = $('<p></p>');
+        			for(var i=0; i<items.size(); i++){
+        				var url = "/download/order/"+order.id+"/0/"+items.get(i).id;
+        				var viewurl = "/imageview/order/"+order.id+"/0/"+items.get(i).id;
+        				var img = $('<img class="accessory" data-sk='+viewurl+' src='+url+'></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				pp.append(img);
+        			}
+        			$('.detail-content-body').append(pp);
+        			$('.detail-content-body').append('<br>');
         			
+        			var items1 = orderService.findMimeItems(order.id, 1);
+        			$('.detail-content-body').append('<h5>政府采购合同</h5>');
+        			var pp1 = $('<p></p>');
+        			for(var i=0; i<items1.size(); i++){
+        				var url = "/download/order/"+order.id+"/1/"+items1.get(i).id;
+        				var viewurl = "/imageview/order/"+order.id+"/1/"+items1.get(i).id;
+        				var img = $('<img class="accessory" data-sk='+viewurl+' src='+url+'></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
+        				pp1.append(img);
+        			}
+        			$('.detail-content-body').append(pp1);
+        			
+        			$('img.accessory').click(function(e){
+    					var source = $(this).attr('data-sk');
+    					window.open(source);
+    				});
+        		}else if($(this).attr('data-sk')=='cresource'){
+        			$('.detail-content-body').html('');
         			var bitems0 = bservice.findMimeItems(order.borrowerId,0);
-        			$('.detail-content-body').append('<h5>营业执照</h5>');
+        			$('.detail-content-body').append('<h5>证照类</h5>');
         			var pp0 = $('<p></p>');
         			for(var i=0; i<bitems0.size(); i++){
         				var url = "/download/borrower/"+order.borrowerId+"/0/"+bitems0.get(i).id;
@@ -605,7 +636,7 @@
         			
         			
         			var bitems1 = bservice.findMimeItems(order.borrowerId,1);
-        			$('.detail-content-body').append('<h5>政采资质</h5>');
+        			$('.detail-content-body').append('<h5>法人/实际控制人资料</h5>');
         			var pp1 = $('<p></p>');
         			for(var i=0; i<bitems1.size(); i++){
         				var url = "/download/borrower/"+order.borrowerId+"/1/"+bitems1.get(i).id;
@@ -618,7 +649,7 @@
         			
         			
         			var bitems2 = bservice.findMimeItems(order.borrowerId,2);
-        			$('.detail-content-body').append('<h5>法人证件</h5>');
+        			$('.detail-content-body').append('<h5>办公环境</h5>');
         			var pp2 = $('<p></p>');
         			for(var i=0; i<bitems2.size(); i++){
         				var url = "/download/borrower/"+order.borrowerId+"/2/"+bitems2.get(i).id;
@@ -631,7 +662,7 @@
         			
         			
         			var bitems3 = bservice.findMimeItems(order.borrowerId,3);
-        			$('.detail-content-body').append('<h5>办公环境</h5>');
+        			$('.detail-content-body').append('<h5>尽调材料</h5>');
         			var pp3 = $('<p></p>');
         			for(var i=0; i<bitems3.size(); i++){
         				var url = "/download/borrower/"+order.borrowerId+"/3/"+bitems3.get(i).id;
@@ -640,29 +671,10 @@
         				pp3.append(img);
         			}
         			$('.detail-content-body').append(pp3);
-        			$('.detail-content-body').append('<br>');
-        			
-        			
-        			
-        			var items = orderService.findMimeItems(order.id, 0);
-        			$('.detail-content-body').append('<h5>中标文件</h5>');
-        			var pp = $('<p></p>');
-        			for(var i=0; i<items.size(); i++){
-        				var url = "/download/order/"+order.id+"/0/"+items.get(i).id;
-        				var viewurl = "/imageview/order/"+order.id+"/0/"+items.get(i).id;
-        				var img = $('<img class="accessory" data-sk='+viewurl+' src='+url+'></img>').css('width', '200px').css('height', '150px').css('margin-left','10px').css('margin-top','5px');
-        				pp.append(img);
-        			}
-        			$('.detail-content-body').append(pp);
-        			
-        			
         			$('img.accessory').click(function(e){
     					var source = $(this).attr('data-sk');
     					window.open(source);
     				});
-        			
-        		}else if($(this).attr('data-sk')=='video'){
-        			$('.detail-content-body').html('视频展示');
         		}
         	 });
         	 

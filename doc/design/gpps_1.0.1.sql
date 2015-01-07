@@ -629,6 +629,22 @@ alter table payback add constraint FK_Ref_payback_product foreign key (productId
 
       
       
+      
+//20150107修改
+alter table Borrower add(contactor mediumtext);
+alter table GovermentOrder add(formalName varchar(255));
+alter table GovermentOrder add(formalLevel varchar(255));
+alter table GovermentOrder add(formalAmount varchar(255));
+alter table GovermentOrder add(tenderUnits varchar(255));
+alter table GovermentOrder add(formalLink varchar(255));
+      
+      
+      
+      
+      
+      
+      
+      
  /* 产品线初始化
   * 
   * */

@@ -111,7 +111,7 @@
 
 <script src="js/head.js"></script>
  <script>
- 
+ var borrowerService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
  var ok = '<span class="glyphicon glyphicon-ok form-control-feedback"></span>';
  var error = '<span class="glyphicon glyphicon-remove form-control-feedback"></span>';
  
@@ -135,11 +135,13 @@ $(document).ready(function() {
 	
 	
 	var loginId = null;
+	var phone = null;
 	
 		if(usertype=='borrower'){
 			$('#change').css("display", "none");
 			$('#loginIdContent').html('<label class="control-label">'+user.loginId+'</label>');
 			loginId = user.loginId;
+			phone = user.tel;
 		}
 	
        $('#confirm').click(function(e){
@@ -218,7 +220,27 @@ $(document).ready(function() {
        
        
        $('button#sendValCode').click(function(e){
-     		  service.sendMessageValidateCode();
+    	   if(phone==null)
+    		{
+    	   	loginId = loginId==null?$('#loginId').val():loginId;
+    	   	if(loginId==null || loginId==''){
+    	   		alert('用户名不能为空！');
+    	   		return;
+    	   	}
+    	   	var borrower = borrowerService.findByLoginId(loginId);
+    	   	if(borrower==null){
+    	   		alert('用户不存在！');
+    	   		return;
+    	   	}
+    	   	phone = borrower.tel;
+    		}
+    	   		
+    	   try{
+      		  service.sendMessageValidateCode(phone);
+     	   	}catch(e){
+     	   		alert(e.message);
+     	   		return;
+     	   	}
      		 	var t = 60;
   	    		$('button#sendValCode').attr('disabled', true);
   				setInterval(count,1000);  

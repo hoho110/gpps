@@ -510,7 +510,7 @@ $(document).ready(function() {
  	  }else{
  		  
  		  try{
- 		 	service.sendMessageValidateCode();
+ 		 	service.sendMessageValidateCode(phone);
  		 	$('input#phone').parent().find('span').remove();
 			$('input#phone').parent().append(ok);
 			$('input#phone').parent().parent().removeClass('has-error').addClass('has-success');

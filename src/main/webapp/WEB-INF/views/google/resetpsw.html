@@ -127,18 +127,20 @@ function removeMessage(){
 }
  
 $(document).ready(function() {
-	
+	var lenderService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILenderService");
 	header('resetpsw');
 	
 	$('#loginId').focus();
 	
 	
 	var loginId = null;
+	var phone = null;
 	
 		if(usertype=='lender'){
 			$('#change').css("display", "none");
 			$('#loginIdContent').html('<label class="control-label">'+user.loginId+'</label>');
 			loginId = user.loginId;
+			phone = user.tel;
 		}
 	
        $('#confirm').click(function(e){
@@ -217,7 +219,27 @@ $(document).ready(function() {
        
        
        $('button#sendValCode').click(function(e){
-     		  service.sendMessageValidateCode();
+    	   
+    	if(phone==null)
+   		{
+   	   	loginId = loginId==null?$('#loginId').val():loginId;
+   	   	if(loginId==null || loginId==''){
+   	   		alert('用户名不能为空！');
+   	   		return;
+   	   	}
+   	   	var lender = lenderService.findByLoginId(loginId);
+   	   	if(lender==null){
+   	   		alert('用户不存在！');
+   	   		return;
+   	   	}
+   	   	phone = lender.tel;
+   		}
+    	   	try{
+     		  service.sendMessageValidateCode(phone);
+    	   	}catch(e){
+    	   		alert(e.message);
+    	   		return;
+    	   	}
      		 	var t = 60;
   	    		$('button#sendValCode').attr('disabled', true);
   				setInterval(count,1000);  

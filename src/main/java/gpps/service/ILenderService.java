@@ -46,6 +46,9 @@ public interface ILenderService extends ILoginService{
 	 * @throws Exception
 	 */
 	public Lender find(int id);
+	
+	public Lender findByLoginId(String loginId);
+	
 	/**
 	 * 返回所有的用户角色
 	 * 供产品购买级别那里选择

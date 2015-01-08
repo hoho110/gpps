@@ -268,7 +268,7 @@ public class BuyProductProcessTest extends TestSupport{
 			ServletRequestAttributes attributes=new ServletRequestAttributes(request);
 			RequestContextHolder.setRequestAttributes(attributes);
 			HttpSession session=borrowerService.getCurrentSession();
-			borrowerService.sendMessageValidateCode();
+			borrowerService.sendMessageValidateCode("13288988999");
 			Borrower borrower=new Borrower();
 			borrower.setEmail("test@calis.edu.cn");
 			borrower.setIdentityCard("231550215402021533");
@@ -290,7 +290,7 @@ public class BuyProductProcessTest extends TestSupport{
 			ServletRequestAttributes attributes=new ServletRequestAttributes(request);
 			RequestContextHolder.setRequestAttributes(attributes);
 			HttpSession session=lenderService.getCurrentSession();
-			lenderService.sendMessageValidateCode();
+			lenderService.sendMessageValidateCode("13355678989");
 			Lender lender=new Lender();
 			lender.setEmail("test@calis.edu.cn");
 			lender.setIdentityCard("231550215402021533");

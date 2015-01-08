@@ -45,7 +45,7 @@ public interface ILoginService {
 	 * 获取后放入用户session中，并记录发送时间，待用户注册/修改密码时进行验证
 	 * @throws FrozenException 冻结(未到发送间隔时间)
 	 */
-	public void sendMessageValidateCode() throws FrozenException;
+	public void sendMessageValidateCode(String phone) throws FrozenException;
 	
 	public void writeGraphValidateCode(OutputStream os) throws IOException;
 	/**

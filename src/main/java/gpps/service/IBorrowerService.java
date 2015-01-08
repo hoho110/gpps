@@ -56,6 +56,8 @@ public interface IBorrowerService extends ILoginService {
 	 * @throws Exception
 	 */
 	public Borrower find(int id);
+	
+	public Borrower findByLoginId(String loginId);
 
 	/**
 	 * 查找可融资的借款方

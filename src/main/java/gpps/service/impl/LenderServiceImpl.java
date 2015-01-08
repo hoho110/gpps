@@ -121,6 +121,11 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	public Lender find(int id) {
 		return lenderDao.find(id);
 	}
+	
+	@Override
+	public Lender findByLoginId(String loginId){
+		return lenderDao.findByLoginId(loginId);
+	}
 
 	@Override
 	public int[] findAllLevel() {

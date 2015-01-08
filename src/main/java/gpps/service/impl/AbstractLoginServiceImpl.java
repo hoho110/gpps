@@ -4,21 +4,30 @@ import static gpps.tools.ObjectUtil.checkNullObject;
 import static gpps.tools.StringUtil.checkNullAndTrim;
 import gpps.service.ILoginService;
 import gpps.service.exception.FrozenException;
+import gpps.service.exception.SMSException;
 import gpps.service.exception.ValidateCodeException;
+import gpps.service.message.IMessageService;
 import gpps.tools.GraphValidateCode;
 
 import java.awt.Color;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 public abstract class AbstractLoginServiceImpl implements ILoginService {
+	@Autowired
+	IMessageService messageService;
+	private Logger logger=Logger.getLogger(AbstractLoginServiceImpl.class);
 	@Override
 	public void loginOut() {
 		HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
@@ -26,7 +35,7 @@ public abstract class AbstractLoginServiceImpl implements ILoginService {
 	}
 
 	@Override
-	public void sendMessageValidateCode() throws FrozenException{
+	public void sendMessageValidateCode(String phone) throws FrozenException{
 		//TODO 发送短信
 		HttpSession session=getCurrentSession();
 		if(session.getAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODESENDTIME)!=null)
@@ -39,6 +48,16 @@ public abstract class AbstractLoginServiceImpl implements ILoginService {
 		System.out.println("messageValidateCode="+validateCode);
 		session.setAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODE, validateCode);
 		session.setAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODESENDTIME, System.currentTimeMillis());
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put(IMessageService.PARAM_PHONE, phone);
+		param.put(IMessageService.PARAM_VALIDATE_CODE, validateCode);
+		
+		try{
+			messageService.sendMessage(IMessageService.MESSAGE_TYPE_SENDVALIDATECODE, IMessageService.USERTYPE_LENDER, 0, param);
+		}catch(SMSException e){
+			logger.error(e.getMessage());
+		}
 	}
 
 	@Override

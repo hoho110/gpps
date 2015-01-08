@@ -52,10 +52,14 @@ private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLT
 			}
 			phones.add(borrower.getTel());
 			try{
+			String contactor = borrower.getContactor();
+			if(contactor!=null && !"".equals(contactor)){
+			
 			Contactor con = xmlTransformer.parse(borrower.getContactor(), Contactor.class);
 			List<Single> cs = con.getContactors();
 			for(Single c:cs){
 				phones.add(c.getPhone());
+			}
 			}
 			}catch(XMLParseException e){
 				

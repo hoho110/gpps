@@ -31,6 +31,7 @@ import gpps.service.PayBackDetail;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
+import gpps.service.message.IMessageService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -72,6 +73,8 @@ public class AccountServiceImpl implements IAccountService {
 	IProductService productService;
 	@Autowired
 	IStateLogDao stateLogDao;
+	@Autowired
+	IMessageService messageService;
 	@Override
 	public Integer rechargeLenderAccount(Integer lenderAccountId, BigDecimal amount, String description) {
 		checkNullObject(LenderAccount.class, lenderAccountDao.find(lenderAccountId));
@@ -233,6 +236,7 @@ public class AccountServiceImpl implements IAccountService {
 		cashStream.setAction(CashStream.ACTION_CASH);
 		cashStreamDao.create(cashStream);
 		recordStateLogWithCreate(cashStream);
+		
 		return cashStream.getId();
 	}
 

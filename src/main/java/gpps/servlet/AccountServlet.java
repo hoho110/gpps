@@ -24,6 +24,8 @@ import gpps.service.ISubmitService;
 import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.InsufficientBalanceException;
+import gpps.service.exception.SMSException;
+import gpps.service.message.IMessageService;
 import gpps.service.thirdpay.IThirdPaySupportService;
 import gpps.service.thirdpay.ResultCodeException;
 import gpps.service.thirdpay.Transfer.LoanJson;
@@ -82,6 +84,8 @@ public class AccountServlet {
 	ILenderDao lenderDao;
 	@Autowired
 	IBorrowerDao borrowerDao;
+	@Autowired
+	IMessageService messageService;
 	Logger log = Logger.getLogger(AccountServlet.class);
 	public static final String AMOUNT = "amount";
 	public static final String CASHSTREAMID = "cashStreamId";
@@ -356,6 +360,30 @@ public class AccountServlet {
 //			}
 			cashStreamDao.updateLoanNo(cashStreamId, loanNo,new BigDecimal(params.get("FeeWithdraws")));
 			accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
+			
+			Map<String, String> param = new HashMap<String, String>();
+			param.put(IMessageService.PARAM_AMOUNT, cashStream.getChiefamount().negate().toString());
+			param.put(IMessageService.PARAM_FEE, params.get("FeeWithdraws"));
+			
+			
+			//发送短信提醒
+			if(cashStream.getLenderAccountId()!=null)
+			{
+				Lender lender = lenderDao.findByAccountID(cashStream.getLenderAccountId());
+				try{
+				messageService.sendMessage(IMessageService.MESSAGE_TYPE_CASHOUTSUCCESS, IMessageService.USERTYPE_LENDER, lender.getId(), param);
+				}catch(SMSException e){
+					log.error(e.getMessage());
+				}
+			}else if(cashStream.getBorrowerAccountId()!=null){
+				Borrower borrower = borrowerDao.findByAccountID(cashStream.getBorrowerAccountId());
+				try{
+					messageService.sendMessage(IMessageService.MESSAGE_TYPE_CASHOUTSUCCESS, IMessageService.USERTYPE_BORROWER, borrower.getId(), param);
+				}catch(SMSException e){
+					log.error(e.getMessage());
+				}
+			}
+			
 		} catch (IllegalConvertException e) {
 			log.error(e.getMessage(), e);
 		}

@@ -8,6 +8,7 @@ import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.Lender;
 import gpps.model.PayBack;
+import gpps.model.Product;
 import gpps.model.Submit;
 import gpps.service.IAccountService;
 import gpps.service.IBorrowerService;
@@ -20,6 +21,8 @@ import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.LoginException;
+import gpps.service.exception.SMSException;
+import gpps.service.message.IMessageService;
 import gpps.service.thirdpay.Authorize;
 import gpps.service.thirdpay.CardBinding;
 import gpps.service.thirdpay.Cash;
@@ -102,6 +105,8 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	ICashStreamDao cashStreamDao;
 	@Autowired
 	IPayBackDao payBackDao;
+	@Autowired
+	IMessageService messageService;
 	private Logger log=Logger.getLogger(ThirdPaySupportServiceImpl.class);
 	public String getPublicKey() {
 		return publicKey;
@@ -590,12 +595,38 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 					{
 						Submit submit=submitService.find(cashStream.getSubmitId());
 						GovermentOrder order=orderService.findGovermentOrderByProduct(submit.getProductId());
+						Product product = productService.find(submit.getProductId());
 						Borrower borrower=borrowerService.find(order.getBorrowerId());
 						cashStreamId=accountService.pay(cashStream.getLenderAccountId(), borrower.getAccountId(),cashStream.getChiefamount().negate(),cashStream.getSubmitId(), "支付");
+						
+						//每转一笔，都给对应的lender发送短信
+						Map<String, String> param = new HashMap<String, String>();
+						param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+						param.put(IMessageService.PARAM_PRODUCT_SERIES_NAME, product.getProductSeries().getTitle());
+						param.put(IMessageService.PARAM_AMOUNT, submit.getAmount().toString());
+						try{
+						messageService.sendMessage(IMessageService.MESSAGE_TYPE_FINANCINGSUCCESS, IMessageService.USERTYPE_LENDER, submit.getLenderId(), param);
+						}catch(SMSException e){
+							log.error(e.getMessage());
+						}
 					}
 					else
 					{
+						Submit submit=submitService.find(cashStream.getSubmitId());
+						GovermentOrder order=orderService.findGovermentOrderByProduct(submit.getProductId());
+						Product product = productService.find(submit.getProductId());
 						cashStreamId=accountService.unfreezeLenderAccount(cashStream.getLenderAccountId(), cashStream.getChiefamount().negate(), cashStream.getSubmitId(), "流标");
+						
+						//每转一笔，都给对应的lender发送短信
+						Map<String, String> param = new HashMap<String, String>();
+						param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+						param.put(IMessageService.PARAM_PRODUCT_SERIES_NAME, product.getProductSeries().getTitle());
+						param.put(IMessageService.PARAM_AMOUNT, submit.getAmount().toString());
+						try{
+						messageService.sendMessage(IMessageService.MESSAGE_TYPE_FINANCINGFAIL, IMessageService.USERTYPE_LENDER, submit.getLenderId(), param);
+						}catch(SMSException e){
+							log.error(e.getMessage());
+						}
 					}
 					cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
 				} catch (IllegalConvertException e) {

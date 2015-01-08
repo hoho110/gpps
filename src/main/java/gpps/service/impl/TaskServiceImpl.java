@@ -10,7 +10,6 @@ import gpps.dao.IProductDao;
 import gpps.dao.ISubmitDao;
 import gpps.dao.ITaskDao;
 import gpps.model.Borrower;
-import gpps.model.BorrowerAccount;
 import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
 import gpps.model.Lender;
@@ -20,14 +19,19 @@ import gpps.model.Submit;
 import gpps.model.Task;
 import gpps.service.IAccountService;
 import gpps.service.IPayBackService;
+import gpps.service.IProductService;
 import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
+import gpps.service.exception.SMSException;
+import gpps.service.message.IMessageService;
 import gpps.service.thirdpay.IThirdPaySupportService;
 import gpps.service.thirdpay.Transfer.LoanJson;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -45,6 +49,8 @@ public class TaskServiceImpl implements ITaskService {
 	BlockingQueue<Task> queue = new LinkedBlockingQueue<Task>();
 	@Autowired
 	IProductDao productDao;
+	@Autowired
+	IProductService productService;
 	@Autowired
 	ISubmitDao submitDao;
 	@Autowired

@@ -128,6 +128,10 @@ public class CheckProduct {
 	public static boolean checkQuitProduct(Product product) throws Exception{
 		List<Submit> submits_complete = submitDao.findAllByProductAndState(product.getId(), Submit.STATE_COMPLETEPAY);
 		
+		if(submits_complete==null){
+			submits_complete = new ArrayList<Submit>();
+		}
+		
 		BigDecimal realFinancingAmount = new BigDecimal(0);
 		for(Submit submit:submits_complete){
 			realFinancingAmount = realFinancingAmount.add(submit.getAmount());
@@ -136,9 +140,17 @@ public class CheckProduct {
 		boolean realamountflag = realFinancingAmount.compareTo(product.getRealAmount())==0;
 		
 		CashStreamSum sum = cashStreamDao.sumProduct(product.getId(), CashStream.ACTION_FREEZE);
+		if(sum==null){
+			sum=new CashStreamSum();
+		}
 		boolean realbuycashflag = sum.getChiefAmount().negate().compareTo(product.getRealAmount())==0;
 		
 		List<PayBack> paybacks = paybackDao.findAllByProduct(product.getId());
+		
+		if(paybacks==null){
+			paybacks = new ArrayList<PayBack>();
+		}
+		
 		BigDecimal paybackChiefAmount = new BigDecimal(0);
 		for(PayBack payback:paybacks){
 			paybackChiefAmount = paybackChiefAmount.add(payback.getChiefAmount());

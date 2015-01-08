@@ -40,6 +40,9 @@ import gpps.service.exception.CheckException;
 import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
+import gpps.service.exception.SMSException;
+import gpps.service.message.IMessageService;
+import gpps.servlet.AccountServlet;
 import gpps.tools.StringUtil;
 
 import java.util.ArrayList;
@@ -50,6 +53,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,6 +96,9 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	IProductSeriesDao productSeriesDao;
 	@Autowired
 	IContractService contractService;
+	@Autowired
+	IMessageService messageService;
+	Logger log = Logger.getLogger(GovermentOrderServiceImpl.class);
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	static int[] orderStates={
 		GovermentOrder.STATE_UNPUBLISH,
@@ -241,6 +248,14 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		changeState(orderId, GovermentOrder.STATE_FINANCING);
 		order.setState(GovermentOrder.STATE_FINANCING);
 		insertGovermentOrderToFinancing(order);
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+		try{
+			messageService.sendMessage(IMessageService.MESSAGE_TYPE_STARTFINANCE, IMessageService.USERTYPE_BORROWER, order.getBorrowerId(), param);
+		}catch(SMSException e){
+			log.error(e.getMessage());
+		}
 	}
 	@Override
 	@Transactional
@@ -312,6 +327,15 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 				changeState(orderId, GovermentOrder.STATE_REPAYING);
 				order=financingOrders.remove(orderId.toString());
 				order.setState(GovermentOrder.STATE_REPAYING);
+				
+				
+				Map<String, String> param = new HashMap<String, String>();
+				param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+				try{
+					messageService.sendMessage(IMessageService.MESSAGE_TYPE_FINANCINGSUCCESS, IMessageService.USERTYPE_BORROWER, order.getBorrowerId(), param);
+				}catch(SMSException e){
+					log.error(e.getMessage());
+				}
 			}
 		}finally
 		{
@@ -356,6 +380,14 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 				changeState(orderId, GovermentOrder.STATE_QUITFINANCING);
 				order=financingOrders.remove(orderId.toString());
 				order.setState(GovermentOrder.STATE_QUITFINANCING);
+				
+				Map<String, String> param = new HashMap<String, String>();
+				param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+				try{
+					messageService.sendMessage(IMessageService.MESSAGE_TYPE_FINANCINGFAIL, IMessageService.USERTYPE_BORROWER, order.getBorrowerId(), param);
+				}catch(SMSException e){
+					log.error(e.getMessage());
+				}
 			}
 		}finally
 		{

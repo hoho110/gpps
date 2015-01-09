@@ -1,5 +1,8 @@
 package gpps.service.thirdpay;
 
+import gpps.model.GovermentOrder;
+import gpps.model.PayBack;
+import gpps.model.Product;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
@@ -86,7 +89,7 @@ public interface IThirdPaySupportService {
 	 * 将还款流水组织成第三方模式LoanJson进行处理
 	 * @param loanJsons
 	 */
-	public void repay(List<LoanJson> loanJsons);
+	public void repay(List<LoanJson> loanJsons, PayBack payback);
 	
 	/**
 	 * 验证第三方回调的请求，验证结果码为“88”，并且签名正确
@@ -109,7 +112,7 @@ public interface IThirdPaySupportService {
 	 * @throws SignatureException
 	 * @throws ResultCodeException
 	 */
-	public void repayProcessor(Map<String,String> params) throws SignatureException, ResultCodeException;
+	public void repayProcessor(Map<String,String> params, GovermentOrder order, Product product, PayBack payback) throws SignatureException, ResultCodeException;
 	/**
 	 * 取款成功后，同步取款在第三方的状态
 	 * @param cashStreamId

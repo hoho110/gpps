@@ -24,9 +24,9 @@ import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 public class MessageSupportServiceImpl implements IMessageSupportService {
 	public static final String CHARSET="UTF-8";
-	private String serialNo="3SDK-EMY-0130-JJUUN";// 软件序列号,请通过亿美销售人员获取
-	private String key="341995";// 序列号首次激活时自己设定
-	private String password="341995";// 密码,,请通过亿美销售人员获取
+	private String serialNo="none";// 软件序列号,请通过亿美销售人员获取
+	private String key="123123";// 序列号首次激活时自己设定
+	private String password="123132";// 密码,,请通过亿美销售人员获取
 	private String baseUrl="http://sdkhttp.eucp.b2m.cn";
 	private static Logger logger=Logger.getLogger(MessageSupportServiceImpl.class.getName());
 	private static Map<String, String> urls=new HashMap<String, String>();
@@ -161,20 +161,35 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 		params.put("address", "北京中关村");
 		params.put("postcode", "100080");
 
+		try{
 		String resp=httpClientService.post(getUrl(ACTION_REGISTDETAILINFO), params);
 		String resultCode=getResultCode(resp);
 		if(!resultCode.equals("0")){
 			logger.error("短信服务注册企业信息出现问题"+errorMsgs.get(resultCode));
 		}
 		logger.info("短信服务激活");
+		}catch(Exception e){
+			logger.error("短信服务注册企业信息出现问题"+e.getMessage());
+		}
+		
+		
+		
+		
+		
+		
+		
 		params.clear();
 		params.put("cdkey", serialNo);
 		params.put("password", password);
 
-		resp=httpClientService.post(getUrl(ACTION_REGIST), params);
-		resultCode=getResultCode(resp);
+		try{
+		String resp=httpClientService.post(getUrl(ACTION_REGIST), params);
+		String resultCode=getResultCode(resp);
 		if(!resultCode.equals("0"))
 			logger.error("短信服务激活出现问题"+errorMsgs.get(resultCode));
+		}catch(Exception e){
+			logger.error("短信服务激活出现问题"+e.getMessage());
+		}
 	}
 	@Override
 	public void sendSMS(List<String> tels, String content) throws SMSException{
@@ -234,12 +249,13 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 		System.out.println(resp);
 	}
 	@Override
-	public void queryRest() throws SMSException {
+	public String queryRest() throws SMSException {
 		Map<String, String> params=new HashMap<String, String>();
 		params.put("cdkey", serialNo);
 		params.put("password", password);
 		String resp=httpClientService.post(getUrl(ACTION_QUERYREST), params);
 		
 		System.out.println(resp);
+		return resp;
 	}
 }

@@ -191,10 +191,12 @@ var createAdminNavLevel2 = function(nav){
 	else if(nav=='other'){
 		var li1 = $('<li role="presentation" class="active"><a href="javascript:void(0)" data-sk="lender-view">用户浏览</a></li>');
 		var li2 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="activity">活动管理</a></li>');
-		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="validate-tp">系统校验</a></li>')
+		var li3 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="validate-tp">系统校验</a></li>');
+		var li4 = $('<li role="presentation"><a href="javascript:void(0)" data-sk="message">短信管理</a></li>')
 		ul.append(li1);
 		ul.append(li2);
 		ul.append(li3);
+		ul.append(li4);
 	}
 	
 	return ul;
@@ -2319,6 +2321,17 @@ var noticewrite = function(container){
 	
 }
 
+var message = function(container){
+	var messageService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.message.IMessageSupportService");
+	var checkCountButton = $('<button>查询余额</button>');
+	$('<div class="row" style="padding-top:10px; padding-bottom:10px;"></div>').append(checkCountButton).appendTo(container);
+	$('<div class="row" id="result" style="min-height:200px;"></div>').appendTo(container);
+	checkCountButton.click(function(e){
+		var res = messageService.queryRest();
+		$('#result').html(res);
+	});
+}
+
 var validatetp = function(container){
 	
 	var columns = [ {
@@ -2401,5 +2414,6 @@ var nav2funtion = {
 		"help-question" : helpquestion,
 		"help-answered" : helpanswered,
 		"activity" : activity,
-		"validate-tp" : validatetp
+		"validate-tp" : validatetp,
+		"message" : message
 }

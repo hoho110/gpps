@@ -27,7 +27,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public abstract class AbstractLoginServiceImpl implements ILoginService {
 	@Autowired
 	IMessageService messageService;
-	private Logger logger=Logger.getLogger(AbstractLoginServiceImpl.class);
+	protected Logger logger=Logger.getLogger(AbstractLoginServiceImpl.class);
 	@Override
 	public void loginOut() {
 		HttpSession session = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();

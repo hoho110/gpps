@@ -25,9 +25,10 @@ public class IMessageSupportServiceTest extends TestSupport {
 //		tels.add("15901097711");
 //		tels.add("15176156009");
 //		tels.add("13811502837");
-		tels.add("323232323");
+		tels.add("13426329462");
+//		tels.add("13811179462");
 		try {
-			messageSupportService.sendSMS(tels, "【春雷投资】您的验证码为222222");
+			messageSupportService.sendSMS(tels, "【春蕾政采贷】您的验证码为12321，为保障账户安全，请勿将验证码泄露给他人。");
 //			long time=60L*15*1000+System.currentTimeMillis();
 //			messageSupportService.sendScheduledSMS(tels, "【春雷投资】您的定时验证码为123321,请求发送时间为"+getDateStr(time), time);//定时一s分钟后发送
 //			System.out.println("定时接收时间："+getDateStr(time));
@@ -36,6 +37,18 @@ public class IMessageSupportServiceTest extends TestSupport {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	@Test
+	public void testQueryRest()
+	{
+		try{
+			messageSupportService.queryRest();
+		}catch(SMSException e){
+			e.printStackTrace();
+		}
+	}
+	
 	private String getDateStr(long time){
 		SimpleDateFormat format=new SimpleDateFormat("yyyyMMddHHmmss");
 		return format.format(new Date(time));

@@ -308,7 +308,7 @@ public class TaskServiceImpl implements ITaskService {
 			logger.debug("还款任务["+task.getId()+"],Lender["+lender.getId()+"]因Submit["+submit.getId()+"]获取还款本金"+lenderChiefAmount+"元,利息"+lenderInterest+"元");
 		}
 		BigDecimal change=totalChiefAmount.add(totalInterest);
-		if(change.compareTo(BigDecimal.ZERO)>0)
+		if(change.compareTo(BigDecimal.ZERO)>0 && change.compareTo(new BigDecimal(0.01*submits.size()))<=0)
 		{
 			//有余额则放入自有账户中
 			Integer cashStreamId=accountService.storeChange(payBack.getBorrowerAccountId(),payBack.getId(),totalChiefAmount,totalInterest, "存零");
@@ -319,8 +319,11 @@ public class TaskServiceImpl implements ITaskService {
 			loadJson.setBatchNo(String.valueOf(product.getId()));
 			loadJson.setAmount(change.toString());
 			loanJsons.add(loadJson);
+		}else{
+			logger.error("还款"+payBack.getId()+"金额计算有问题，请检查！");
+			return;
 		}
-		thirdPaySupportService.repay(loanJsons);
+		thirdPaySupportService.repay(loanJsons, payBack);
 		payBackService.changeState(payBack.getId(), PayBack.STATE_FINISHREPAY);
 		logger.info("还款任务["+task.getId()+"]完毕，涉及Submit"+submits.size()+"个");
 	}

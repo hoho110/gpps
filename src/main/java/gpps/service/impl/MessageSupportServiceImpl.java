@@ -24,11 +24,10 @@ import org.dom4j.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 public class MessageSupportServiceImpl implements IMessageSupportService {
 	public static final String CHARSET="UTF-8";
-	private String serialNo="0SDK-EBB-0130-JIUMN";// 软件序列号,请通过亿美销售人员获取
-	private String key="503497";// 序列号首次激活时自己设定
-	private String password="503497";// 密码,,请通过亿美销售人员获取
+	private String serialNo="3SDK-EMY-0130-JJUUN";// 软件序列号,请通过亿美销售人员获取
+	private String key="341995";// 序列号首次激活时自己设定
+	private String password="341995";// 密码,,请通过亿美销售人员获取
 	private String baseUrl="http://sdkhttp.eucp.b2m.cn";
-	private Client client=null;
 	private static Logger logger=Logger.getLogger(MessageSupportServiceImpl.class.getName());
 	private static Map<String, String> urls=new HashMap<String, String>();
 	public static final String ACTION_REGISTDETAILINFO="0";
@@ -36,12 +35,14 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	public static final String ACTION_SENDSMS="2";
 	public static final String ACTION_SENDTIMESMS="4";
 	public static final String ACTION_GETMO="5";
+	public static final String ACTION_QUERYREST="6";
 	static {
 		urls.put(ACTION_REGISTDETAILINFO, "/sdkproxy/registdetailinfo.action");
 		urls.put(ACTION_REGIST, "/sdkproxy/regist.action");
 		urls.put(ACTION_SENDSMS, "/sdkproxy/sendsms.action");
 		urls.put(ACTION_SENDTIMESMS, "/sdkproxy/sendtimesms.action");
 		urls.put(ACTION_GETMO, "/sdkproxy/getmo.action");
+		urls.put(ACTION_QUERYREST, "/sdkproxy/querybalance.action");
 	}
 	private static Map<String, String> errorMsgs=new HashMap<String, String>();
 	/**
@@ -114,19 +115,6 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	public void setBaseUrl(String baseUrl) {
 		this.baseUrl = baseUrl;
 	}
-//	@PostConstruct
-//	public void init()
-//	{
-//		client=new Client(serialNo,key,password,baseUrl);
-//		try {
-//			int value=client.registDetailInfo("企业名称", "联系人", "01058750425","13000000000", "sjfkls@yahoo.cn", "01058750500", "企业地址", "056900");
-//			System.out.println("企业注册返回码："+value);
-//			value = client.registEx(password);
-//			System.out.println("序列号激活返回码:" + value);
-//		} catch (RemoteException e) {
-//			e.printStackTrace();
-//		}
-//	}
 	private String getUrl(String action)
 	{
 		return baseUrl+urls.get(action);
@@ -143,7 +131,7 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
          }  
          return null;
 	}
-//	@PostConstruct
+	@PostConstruct
 	public void init()
 	{
 		/**
@@ -164,20 +152,20 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 		Map<String, String> params=new HashMap<String, String>();
 		params.put("cdkey", serialNo);
 		params.put("password", password);
-		params.put("ename", "春雷投资");
-		params.put("linkman", "王东");
-		params.put("phonenum", "13601114578");
-		params.put("mobile", "13601114578");
-		params.put("email", "test@calis.edu.cn");
+		params.put("ename", "北京春雷投资管理有限责任公司");
+		params.put("linkman", "王冬");
+		params.put("phonenum", "13811179462");
+		params.put("mobile", "13811179462");
+		params.put("email", "mingyue200311@163.com");
 		params.put("fax", "01062758880");
 		params.put("address", "北京中关村");
 		params.put("postcode", "100080");
 
 		String resp=httpClientService.post(getUrl(ACTION_REGISTDETAILINFO), params);
 		String resultCode=getResultCode(resp);
-		if(!resultCode.equals("0"))
-			throw new RuntimeException(errorMsgs.get(resultCode));
-		
+		if(!resultCode.equals("0")){
+			logger.error("短信服务注册企业信息出现问题"+errorMsgs.get(resultCode));
+		}
 		logger.info("短信服务激活");
 		params.clear();
 		params.put("cdkey", serialNo);
@@ -186,7 +174,7 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 		resp=httpClientService.post(getUrl(ACTION_REGIST), params);
 		resultCode=getResultCode(resp);
 		if(!resultCode.equals("0"))
-			throw new RuntimeException(errorMsgs.get(resultCode));
+			logger.error("短信服务激活出现问题"+errorMsgs.get(resultCode));
 	}
 	@Override
 	public void sendSMS(List<String> tels, String content) throws SMSException{
@@ -212,20 +200,6 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	@Override
 	public void sendScheduledSMS(List<String> tels, String content,
 			long sendTime) throws SMSException {
-//		if(tels==null||tels.size()==0||StringUtil.isEmpty(content))
-//			return;
-//		int resultCode=0;
-//		try {
-//			if(sendTime==-1)
-//				resultCode=client.sendScheduledSMSEx((String[])(tels.toArray()), content,"", CHARSET);
-//			else	
-//				resultCode=client.sendScheduledSMSEx((String[])(tels.toArray()), content, DateUtils.formatDate(new Date(sendTime),"yyyyMMddHHmmss"), CHARSET);
-//			if(resultCode!=0)
-//				throw new SMSException(errorMsgs.get(resultCode));
-//		} catch (RemoteException e) {
-//			logger.error(e.getMessage(),e);
-//			throw new SMSException("短信平台服务异常");
-//		}
 		if(tels==null||tels.size()==0||StringUtil.isEmpty(content))
 			return;
 		StringBuilder sBuilder=new StringBuilder();
@@ -252,29 +226,19 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	}
 	@Override
 	public void getUpSMS() throws SMSException {
-//		try {
-//			List<Mo> mos = client.getMO();
-//			if(mos==null||mos.size()==0)
-//			{
-//				logger.debug("未获取到上行短信");
-//				return;
-//			}
-//			for(Mo mo:mos)
-//			{
-//				System.out.println("短信内容:" + mo.getSmsContent());
-//				System.out.println("通道号:" + mo.getChannelnumber());
-//				System.out.println("手机号:" + mo.getMobileNumber());
-//				System.out.println("附加码:" + mo.getAddSerialRev());
-//				System.out.println("附加码:" + mo.getAddSerial());
-//			}
-//		} catch (RemoteException e) {
-//			logger.error(e.getMessage(),e);
-//			throw new SMSException("短信平台服务异常");
-//		}
 		Map<String, String> params=new HashMap<String, String>();
 		params.put("cdkey", serialNo);
 		params.put("password", password);
 		String resp=httpClientService.post(getUrl(ACTION_GETMO), params);
+		
+		System.out.println(resp);
+	}
+	@Override
+	public void queryRest() throws SMSException {
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("cdkey", serialNo);
+		params.put("password", password);
+		String resp=httpClientService.post(getUrl(ACTION_QUERYREST), params);
 		
 		System.out.println(resp);
 	}

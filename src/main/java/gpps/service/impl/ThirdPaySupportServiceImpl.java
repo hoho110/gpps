@@ -2,6 +2,7 @@ package gpps.service.impl;
 
 import gpps.dao.ICardBindingDao;
 import gpps.dao.ICashStreamDao;
+import gpps.dao.ILenderDao;
 import gpps.dao.IPayBackDao;
 import gpps.model.Borrower;
 import gpps.model.CashStream;
@@ -89,6 +90,8 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	IAccountService accountService;
 	@Autowired
 	ILenderService lenderService;
+	@Autowired
+	ILenderDao lenderDao;
 	@Autowired
 	ISubmitService submitService;
 	@Autowired
@@ -474,7 +477,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	}
 
 	@Override
-	public void repay(List<LoanJson> loanJsons) {
+	public void repay(List<LoanJson> loanJsons, PayBack payback) {
 		if(loanJsons==null||loanJsons.size()==0)
 			return;
 		String baseUrl=getBaseUrl(ACTION_TRANSFER);
@@ -486,6 +489,10 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		params.put("NeedAudit", "1");
 		params.put("NotifyURL", "http://"+serverHost+":"+serverPort+"/account/repay/response/bg");
 		List<LoanJson> temp=new ArrayList<LoanJson>();
+		
+		Product product = productService.find(payback.getProductId());
+		GovermentOrder order = orderService.findGovermentOrderByProduct(payback.getProductId());
+		
 		for(int i=0;i<loanJsons.size();i++)
 		{
 			temp.add(loanJsons.get(i));
@@ -494,7 +501,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 				String LoanJsonList=Common.JSONEncode(temp);
 				params.put("LoanJsonList", LoanJsonList);
 				temp.clear();
-				sendRepay(params,baseUrl);
+				sendRepay(params,baseUrl, order, product, payback);
 				//测试
 //				sendRepayRollback(LoanJsonList,params.get("NotifyURL"));
 			}
@@ -503,12 +510,12 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		{
 			String LoanJsonList=Common.JSONEncode(temp);
 			params.put("LoanJsonList", LoanJsonList);
-			sendRepay(params,baseUrl);
+			sendRepay(params,baseUrl, order, product, payback);
 //			//测试
 //			sendRepayRollback(LoanJsonList,params.get("NotifyURL"));
 		}
 	}
-	private void sendRepay(Map<String,String> params,String baseUrl)
+	private void sendRepay(Map<String,String> params,String baseUrl, GovermentOrder order, Product product, PayBack payback)
 	{
 		StringBuilder sBuilder=new StringBuilder();
 		sBuilder.append(StringUtil.strFormat(params.get("LoanJsonList")));
@@ -530,7 +537,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		Gson gson = new Gson();
 		List returnParams=gson.fromJson(body, List.class);
 		try {
-			repayProcessor((Map<String,String>)returnParams.get(1));
+			repayProcessor((Map<String,String>)returnParams.get(1), order, product, payback);
 		} catch (SignatureException e) {
 			e.printStackTrace();
 		} catch (ResultCodeException e) {
@@ -635,7 +642,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			}
 		}
 	}
-	public void repayProcessor(Map<String,String> params) throws SignatureException, ResultCodeException
+	public void repayProcessor(Map<String,String> params, GovermentOrder order, Product product, PayBack payback) throws SignatureException, ResultCodeException
 	{
 		String[] signStrs={"LoanJsonList","PlatformMoneymoremore","Action","RandomTimeStamp","Remark1","Remark2","Remark3","ResultCode"};
 		String loanJsonList = null;
@@ -663,7 +670,25 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 			cashStreamDao.updateLoanNo(cashStreamId, loanNo,null);
 			try {
 				accountService.changeCashStreamState(cashStreamId, CashStream.STATE_SUCCESS);
-			} catch (IllegalConvertException e) {
+				
+				Map<String, String> param = new HashMap<String, String>();
+				param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+				param.put(IMessageService.PARAM_PRODUCT_SERIES_NAME, product.getProductSeries().getTitle());
+				param.put(IMessageService.PARAM_AMOUNT, cashStream.getChiefamount().add(cashStream.getInterest()).toString());
+				Lender lender = lenderDao.findByAccountID(cashStream.getLenderAccountId());
+				
+				if(lender!=null)
+				{
+					try {
+						messageService.sendMessage(
+								IMessageService.MESSAGE_TYPE_PAYBACKSUCCESS,
+								IMessageService.USERTYPE_LENDER,
+								lender.getId(), param);
+					} catch (SMSException e) {
+						log.error(e.getMessage());
+					}
+				}
+				} catch (IllegalConvertException e) {
 				e.printStackTrace();
 			}
 		}

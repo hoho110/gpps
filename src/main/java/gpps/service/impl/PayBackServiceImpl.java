@@ -11,10 +11,8 @@ import gpps.dao.IProductSeriesDao;
 import gpps.dao.IStateLogDao;
 import gpps.dao.ISubmitDao;
 import gpps.model.Borrower;
-import gpps.model.BorrowerAccount;
 import gpps.model.CashStream;
 import gpps.model.GovermentOrder;
-import gpps.model.Lender;
 import gpps.model.PayBack;
 import gpps.model.Product;
 import gpps.model.ProductSeries;
@@ -32,15 +30,15 @@ import gpps.service.exception.CheckException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
+import gpps.service.exception.SMSException;
 import gpps.service.exception.UnSupportRepayInAdvanceException;
-import gpps.service.thirdpay.Transfer.LoanJson;
+import gpps.service.message.IMessageService;
 import gpps.tools.PayBackCalculateUtils;
-import gpps.tools.StringUtil;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,6 +78,8 @@ public class PayBackServiceImpl implements IPayBackService {
 	ISubmitDao submitDao;
 	@Autowired
 	ILenderDao lenderDao;
+	@Autowired
+	IMessageService messageService;
 	Logger log=Logger.getLogger(PayBackServiceImpl.class);
 	@Override
 	public void create(PayBack payback) {
@@ -588,12 +588,27 @@ public class PayBackServiceImpl implements IPayBackService {
 		task.setProductId(payback.getProductId());
 		task.setState(Task.STATE_INIT);
 		task.setType(Task.TYPE_REPAY);
+		
+		Product product = productService.find(payback.getProductId());
+		GovermentOrder order = orderSerivce.findGovermentOrderByProduct(payback.getProductId());
+		Borrower borrower = borrowerDao.findByAccountID(payback.getBorrowerAccountId());
+		
 		taskService.submit(task);
 		accountService.unfreezeBorrowerAccount(payback.getBorrowerAccountId(),payback.getChiefAmount().add(payback.getInterest()), payback.getId(), "解冻");
 		if (payback.getType() == PayBack.TYPE_LASTPAY) {
 			// TODO 金额正确，设置产品状态为还款完毕
 			productService.finishRepay(payback.getProductId());
-			Product product = productService.find(payback.getProductId());
+			
+			Map<String, String> param = new HashMap<String, String>();
+			param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+			param.put(IMessageService.PARAM_PRODUCT_SERIES_NAME, product.getProductSeries().getTitle());
+			param.put(IMessageService.PARAM_AMOUNT, payback.getChiefAmount().add(payback.getInterest()).toString());
+			try{
+			messageService.sendMessage(IMessageService.MESSAGE_TYPE_LASTPAYBACKSUCCESS, IMessageService.USERTYPE_BORROWER, borrower.getId(), param);
+			}catch(SMSException e){
+				log.error(e.getMessage());
+			}
+			
 			List<Product> allProducts = productService.findByGovermentOrder(product.getGovermentorderId());
 			boolean isAllRepay = true;
 			for (Product pro : allProducts) {
@@ -603,7 +618,19 @@ public class PayBackServiceImpl implements IPayBackService {
 				}
 			}
 			if (isAllRepay)
+			{
 				orderService.closeFinancing(product.getGovermentorderId());
+			}
+		}else{
+			Map<String, String> param = new HashMap<String, String>();
+			param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+			param.put(IMessageService.PARAM_PRODUCT_SERIES_NAME, product.getProductSeries().getTitle());
+			param.put(IMessageService.PARAM_AMOUNT, payback.getChiefAmount().add(payback.getInterest()).toString());
+			try{
+			messageService.sendMessage(IMessageService.MESSAGE_TYPE_PAYBACKSUCCESS, IMessageService.USERTYPE_BORROWER, borrower.getId(), param);
+			}catch(SMSException e){
+				log.error(e.getMessage());
+			}
 		}
 	}
 

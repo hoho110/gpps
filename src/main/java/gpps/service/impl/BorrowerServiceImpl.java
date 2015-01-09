@@ -24,12 +24,15 @@ import gpps.service.IBorrowerService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.LoginException;
+import gpps.service.exception.SMSException;
 import gpps.service.exception.ValidateCodeException;
+import gpps.service.message.IMessageService;
 import gpps.tools.ObjectUtil;
 import gpps.tools.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -199,11 +202,25 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	@Override
 	public void passFundingApplying(Integer borrowerId) throws IllegalConvertException {
 		changePrivilege(borrowerId,Borrower.PRIVILEGE_FINANCING);
-	}
+		
+		Map<String, String> param = new HashMap<String, String>();
+		try{
+			messageService.sendMessage(IMessageService.MESSAGE_TYPE_COMPANYINVESTSUCCESS, IMessageService.USERTYPE_BORROWER, borrowerId, param);
+		}catch(SMSException e){
+			logger.error(e.getMessage());
+		}
+		}
 
 	@Override
 	public void refuseFundingApplying(Integer borrowerId) throws IllegalConvertException {
 		changePrivilege(borrowerId,Borrower.PRIVILEGE_REFUSE);
+		
+		Map<String, String> param = new HashMap<String, String>();
+		try{
+			messageService.sendMessage(IMessageService.MESSAGE_TYPE_COMPANYINVESTFAIL, IMessageService.USERTYPE_BORROWER, borrowerId, param);
+		}catch(SMSException e){
+			logger.error(e.getMessage());
+		}
 	}
 	@Override
 	public Borrower getCurrentUser() {
@@ -413,6 +430,14 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		}
 		ObjectUtil.checkNullObject(FinancingRequest.class, financingRequest);
 		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_PROCESSED, System.currentTimeMillis());
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+		try{
+			messageService.sendMessage(IMessageService.MESSAGE_TYPE_REQUESTINVESTSUCCESS, IMessageService.USERTYPE_BORROWER, order.getBorrowerId(), param);
+		}catch(SMSException e){
+			logger.error(e.getMessage());
+		}
 //		borrowerDao.changePrivilege(financingRequest.getBorrowerID(), Borrower.PRIVILEGE_FINANCING);
 	}
 
@@ -444,6 +469,14 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		FinancingRequest financingRequest=financingRequestDao.find(financingRequestId);
 		ObjectUtil.checkNullObject(FinancingRequest.class, financingRequest);
 		financingRequestDao.changeState(financingRequestId, FinancingRequest.STATE_REFUSE, (new Date()).getTime());
+		
+		Map<String, String> param = new HashMap<String, String>();
+		param.put(IMessageService.PARAM_ORDER_NAME, financingRequest.getGovermentOrderName());
+		try{
+			messageService.sendMessage(IMessageService.MESSAGE_TYPE_REQUESTINVESTFAIL, IMessageService.USERTYPE_BORROWER, financingRequest.getBorrowerID(), param);
+		}catch(SMSException e){
+			logger.error(e.getMessage());
+		}
 	}
 
 	@Override

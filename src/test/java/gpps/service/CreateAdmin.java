@@ -21,7 +21,11 @@ public class CreateAdmin {
 		admin.setPassword("111111");
 		admin.setPrivilege(Admin.PRIVILEGE_ALL);
 		admin.setTel("13477756745");
+		try{
 		adminservice.register(admin);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		System.exit(0);
 	}
 }

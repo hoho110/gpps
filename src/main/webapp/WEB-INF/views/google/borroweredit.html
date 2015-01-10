@@ -118,13 +118,17 @@
 		<div class="form-group has-success has-feedback">
 			<label class="control-label col-sm-3" for="inputSuccess3">所在省</label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control" id="province">
+				<select class="form-control" id="province">
+				
+				</select>
 			</div>
 		</div>
 		<div class="form-group has-success has-feedback">
 			<label class="control-label col-sm-3" for="inputSuccess3">所在市</label>
 			<div class="col-sm-9">
-				<input type="text" class="form-control" id="city">
+				<select class="form-control" id="city">
+				
+				</select>
 			</div>
 		</div>
 		<div class="form-group has-success has-feedback">
@@ -198,6 +202,32 @@ var categoryname = {0:'证照类',1:'法人/实际控制人资料',2:'办公环�
 var borrowerService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.IBorrowerService");
 var borrower = null;
 
+var procity = borrowerService.getProvinceCity();
+
+function refreshProCity(){
+	for(var i=0; i<procity.size(); i++){
+		$('#province').append('<option value='+procity.get(i).code+'>'+procity.get(i).name+'</option>');
+	}
+	var citys = procity.get(0).subAreas;
+	for(var t=0; t<citys.size(); t++){
+		$('#city').append('<option value='+citys.get(t).code+'>'+citys.get(t).name+'</option>');
+	}
+	
+	$('#province').change(function(e){
+		$('#city').html('');
+		var cts = null;
+		for(var m=0; m<procity.size(); m++){
+			var pro = procity.get(m);
+			if(pro.code==$(this).val()){
+				cts = pro.subAreas;
+				break;
+			}
+		}
+		for(var t=0; t<cts.size(); t++){
+			$('#city').append('<option value='+cts.get(t).code+'>'+cts.get(t).name+'</option>');
+		}
+	});
+}
 
 
 function refreshInfo(){
@@ -213,6 +243,11 @@ function refreshInfo(){
 	$('#bankcode').val(borrower.cardBinding.bankCode);
 	$('#branchbankname').val(borrower.cardBinding.branchBankName);
 	$('#province').val(borrower.cardBinding.province);
+	
+	$("#province").val(borrower.cardBinding.province);
+	
+	$('#province').trigger('change');
+	
 	$('#city').val(borrower.cardBinding.city);
 	$('#bankaccount').val(borrower.cardBinding.cardNo);
 	}
@@ -276,7 +311,7 @@ function deleteBorrowerAccessory(borrowerId,category,itemId){
 	refreshBorrowerAccessory();
 }
 $(document).ready(function () {
-	
+	refreshProCity();
 	refreshInfo();
 	refreshContactor();
 	$('button#contact_add').click(function(e){
@@ -303,6 +338,8 @@ $(document).ready(function () {
 		}
 	});
 	
+	
+	
 $('#upload').click(function(e){
 	$('#uploadify').uploadify('settings','uploader','/upload/borrower/'+id+'/'+$('select#category').val());
 	$('#uploadify').uploadify('upload','*')
@@ -325,6 +362,7 @@ $('#cardsave').click(function(e){
 	var province = $('#province').val();
 	var city = $('#city').val();
 	var bankaccount = $('#bankaccount').val();
+	
 	if(branchbankname==null || branchbankname==''){
 		alert('分行名称必须填写！');
 		return;

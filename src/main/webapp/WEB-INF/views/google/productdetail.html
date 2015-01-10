@@ -72,6 +72,7 @@
 	var paybacks = null;
 	var submits = null;
 	var seriesname = {};
+	var seriestype = {};
 	
 	
 	try{
@@ -381,7 +382,7 @@
 	  
 	  
  	
- 	$('li#productseries').html('<a href="productlist.html?sid='+product.productseriesId+'">'+seriesname[product.productseriesId].title+'</a> <span class="divider">&gt;</span>');
+ 	$('li#productseries').html('<a href="productlist.html?sid='+seriesname[product.productseriesId].type+'">'+seriesname[product.productseriesId].title+'</a> <span class="divider">&gt;</span>');
  	$('span#product-title').html(order.title+'['+seriesname[product.productseriesId].title+']');
  	
  	var str = "";

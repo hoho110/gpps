@@ -150,7 +150,7 @@ public class TaskServiceImpl implements ITaskService {
 		taskThread.start();
 	}
 
-	private void execute(Task task, boolean interrupted) {
+	private void execute(Task task, boolean interrupted) throws Exception{
 		switch (task.getType()) {
 		case Task.TYPE_PAY:
 			executePayTask(task,interrupted);
@@ -225,7 +225,7 @@ public class TaskServiceImpl implements ITaskService {
 		thirdPaySupportService.check(loanNos, 2);
 		logger.info("流标任务["+task.getId()+"]完毕，涉及Submit"+submits.size()+"个");
 	}
-	private void executeRepayTask(Task task,boolean interrupted)
+	private void executeRepayTask(Task task,boolean interrupted) throws Exception
 	{
 		//考虑打断情况
 		logger.info("开始执行产品id="+task.getProductId()+"的还款任务taskID="+task.getId());
@@ -319,9 +319,12 @@ public class TaskServiceImpl implements ITaskService {
 			loadJson.setBatchNo(String.valueOf(product.getId()));
 			loadJson.setAmount(change.toString());
 			loanJsons.add(loadJson);
-		}else{
+		}else if(change.compareTo(BigDecimal.ZERO)==0){
+			//等于0意味着刚刚好，什么都不用做
+		}
+		else{
 			logger.error("还款"+payBack.getId()+"金额计算有问题，请检查！");
-			return;
+			throw new Exception("还款"+payBack.getId()+"金额计算有问题，请检查！");
 		}
 		thirdPaySupportService.repay(loanJsons, payBack);
 		payBackService.changeState(payBack.getId(), PayBack.STATE_FINISHREPAY);

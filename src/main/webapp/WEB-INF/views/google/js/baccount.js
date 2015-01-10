@@ -97,11 +97,6 @@ var defaultSettings_noCallBack = {
 			32:"已关闭"
 	}
 	
-var readletter=function(id){
-		window.location.href="baccountdetail.html?fid=mycenter&sid=letter-unread-mycenter";
-		window.open('letter.html?lid='+id);
-	}
-
 var apply = function(id){
 	if(confirm('提前还款一旦确认就无法更改，确认要提前本产品的还款？')){
 	try{
@@ -1269,11 +1264,12 @@ var letterunread_center = function(container){
 		var letters = res.get('result');
 		if(letters)
 		for(var i=0; i<letters.size(); i++){
-			result.aaData.push(["站内信",
+			result.aaData.push([letters.get(i).title,
 			                    "管理员",
-			                    formatDate(letters.get(i).createtime), 
+			                    formatDateCN(letters.get(i).createtime), 
 			                    letters.get(i).markRead==0?'未读':'已读',
-			                    "<a class='readletter' onclick='readletter("+letters.get(i).id+");' id='"+letters.get(i).id+"'>阅读</a>"
+			                    		"<button class='readletter' id='"+letters.get(i).id+"' value='阅读'>阅读</button>"
+			                  //  "<a class='readletter' style='color:red;' href='javascript:void(0);' id='"+letters.get(i).id+"'>阅读</a>"
 			                   ]);
 		}
 		result.sEcho = sEcho;
@@ -1307,6 +1303,12 @@ var letterunread_center = function(container){
 		oLanguage : _defaultDataTableOLanguage,
 		pagingType: "full"
 	} );
+	
+	$('.readletter').click(function(e){
+		var id = $(this).attr('id');
+		window.location.href="baccountdetail.html?fid=mycenter&sid=letter-unread-mycenter";
+		window.open('letter.html?lid='+id);
+	});
 }
 
 

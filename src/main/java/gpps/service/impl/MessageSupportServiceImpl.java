@@ -137,7 +137,7 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
          }  
          return null;
 	}
-	@PostConstruct
+//	@PostConstruct
 	public void init()
 	{
 		/**

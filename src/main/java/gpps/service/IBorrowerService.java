@@ -9,11 +9,10 @@ import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.ValidateCodeException;
+import gpps.tools.Area;
 
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
 
 import com.easyservice.xml.XMLParseException;
 
@@ -195,4 +194,10 @@ public interface IBorrowerService extends ILoginService {
 	 * @param cardBinding
 	 */
 	public void bindCard(Integer id, CardBinding cardBinding);
+	
+	/**
+	 * 获得银行卡开户的省市对应信息
+	 * 
+	 * */
+	public List<Area> getProvinceCity();
 }

@@ -28,7 +28,9 @@ import gpps.service.exception.SMSException;
 import gpps.service.exception.ValidateCodeException;
 import gpps.service.message.ILetterSendService;
 import gpps.service.message.IMessageService;
+import gpps.tools.Area;
 import gpps.tools.ObjectUtil;
+import gpps.tools.ProvinceCityCodeUtils;
 import gpps.tools.StringUtil;
 
 import java.util.ArrayList;
@@ -423,6 +425,10 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	public void passFinancingRequest(Integer financingRequestId) throws IllegalOperationException{
 		FinancingRequest financingRequest=financingRequestDao.find(financingRequestId);
 		GovermentOrder order=govermentOrderDao.findByFinancingRequest(financingRequest.getId());
+		Borrower borrower = borrowerDao.find(financingRequest.getBorrowerID());
+		if(borrower.getPrivilege() != Borrower.PRIVILEGE_FINANCING){
+			throw new IllegalOperationException("企业尚未尽调通过，请先尽调企业，再审核融资申请！");
+		}
 		if(order==null)
 			throw new IllegalOperationException("尚未为该融资申请建立订单");
 		if(order.getState()!=GovermentOrder.STATE_UNPUBLISH)
@@ -520,6 +526,11 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	public boolean isEmailExist(String email) {
 		Borrower borrower=borrowerDao.findByEmail(email.trim());
 		return borrower==null?false:true;
+	}
+	
+	@Override
+	public List<Area> getProvinceCity(){
+		return ProvinceCityCodeUtils.getProvinceCity();
 	}
 	
 }

@@ -1230,17 +1230,17 @@ var letterunread_center = function(container){
 		var letters = res.get('result');
 		if(letters)
 		for(var i=0; i<letters.size(); i++){
-			result.aaData.push(["站内信",
+			result.aaData.push([letters.get(i).title,
 			                    "管理员",
-			                    formatDate(letters.get(i).createtime), 
+			                    formatDateCN(letters.get(i).createtime), 
 			                    letters.get(i).markRead==0?'未读':'已读',
-			                    "<a class='readletter'  id='"+letters.get(i).id+"'>阅读</a>"
+			                    "<button class='readletter'  id='"+letters.get(i).id+"' value='阅读'>阅读</button>"
 			                   ]);
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
 		
-		$('a.readletter').click(function(e){
+		$('.readletter').click(function(e){
 			var id = $(this).attr('id');
 			readletter(id);
 		})

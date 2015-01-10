@@ -26,6 +26,7 @@ import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.SMSException;
 import gpps.service.exception.ValidateCodeException;
+import gpps.service.message.ILetterSendService;
 import gpps.service.message.IMessageService;
 import gpps.tools.ObjectUtil;
 import gpps.tools.StringUtil;
@@ -60,6 +61,8 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 	IProductDao productDao;
 	@Autowired
 	ICardBindingDao cardBindingDao;
+	@Autowired
+	ILetterSendService letterSendService;
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	@Override
 	public void login(String loginId, String password, String graphValidateCode) throws LoginException, ValidateCodeException {
@@ -204,7 +207,9 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		changePrivilege(borrowerId,Borrower.PRIVILEGE_FINANCING);
 		
 		Map<String, String> param = new HashMap<String, String>();
+		param.put(ILetterSendService.PARAM_TITLE, "企业尽调审核通过");
 		try{
+			letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_COMPANYINVESTSUCCESS, ILetterSendService.USERTYPE_BORROWER, borrowerId, param);
 			messageService.sendMessage(IMessageService.MESSAGE_TYPE_COMPANYINVESTSUCCESS, IMessageService.USERTYPE_BORROWER, borrowerId, param);
 		}catch(SMSException e){
 			logger.error(e.getMessage());
@@ -216,7 +221,9 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		changePrivilege(borrowerId,Borrower.PRIVILEGE_REFUSE);
 		
 		Map<String, String> param = new HashMap<String, String>();
+		param.put(ILetterSendService.PARAM_TITLE, "企业尽调审核未通过");
 		try{
+			letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_COMPANYINVESTFAIL, ILetterSendService.USERTYPE_BORROWER, borrowerId, param);
 			messageService.sendMessage(IMessageService.MESSAGE_TYPE_COMPANYINVESTFAIL, IMessageService.USERTYPE_BORROWER, borrowerId, param);
 		}catch(SMSException e){
 			logger.error(e.getMessage());
@@ -433,7 +440,9 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		
 		Map<String, String> param = new HashMap<String, String>();
 		param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+		param.put(ILetterSendService.PARAM_TITLE, "融资申请审核通过");
 		try{
+			letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_REQUESTINVESTSUCCESS, ILetterSendService.USERTYPE_BORROWER, order.getBorrowerId(), param);
 			messageService.sendMessage(IMessageService.MESSAGE_TYPE_REQUESTINVESTSUCCESS, IMessageService.USERTYPE_BORROWER, order.getBorrowerId(), param);
 		}catch(SMSException e){
 			logger.error(e.getMessage());
@@ -472,7 +481,9 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		
 		Map<String, String> param = new HashMap<String, String>();
 		param.put(IMessageService.PARAM_ORDER_NAME, financingRequest.getGovermentOrderName());
+		param.put(ILetterSendService.PARAM_TITLE, "融资申请未审核通过");
 		try{
+			letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_REQUESTINVESTFAIL, ILetterSendService.USERTYPE_BORROWER, financingRequest.getBorrowerID(), param);
 			messageService.sendMessage(IMessageService.MESSAGE_TYPE_REQUESTINVESTFAIL, IMessageService.USERTYPE_BORROWER, financingRequest.getBorrowerID(), param);
 		}catch(SMSException e){
 			logger.error(e.getMessage());

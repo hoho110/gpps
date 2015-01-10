@@ -4,7 +4,7 @@ import gpps.service.exception.SMSException;
 
 import java.util.Map;
 
-public interface IMessageService {
+public interface ILetterSendService {
 	public static final String PARAM_SUBMIT_ID = "submitId";
 	public static final String PARAM_PAYBACK_ID = "paybackId";
 	public static final String PARAM_PRODUCT_ID = "productId";
@@ -17,12 +17,12 @@ public interface IMessageService {
 	public static final String PARAM_NAME = "name";
 	public static final String PARAM_PHONE = "phone";
 	public static final String PARAM_SELFDEFINE = "selfDefine";
+	public static final String PARAM_TITLE = "title";
 	
 	public static final int USERTYPE_BORROWER = 1;
 	public static final int USERTYPE_LENDER = 0;
 	public static final int USERTYPE_ADMIN = 2;
 	
-	public static final int MESSAGE_TYPE_SENDVALIDATECODE = 0; //"sendCode";
 //	public static final int MESSAGE_TYPE_REGISTERSUCCESS = 1; //"registerSuccess";
 //	public static final int MESSAGE_TYPE_RECHARGESUCCESS = 2; //"rechargeSuccess";
 	public static final int MESSAGE_TYPE_CASHOUTSUCCESS = 3; //"cashoutSuccess";
@@ -52,5 +52,5 @@ public interface IMessageService {
 	public static final String WEBADDR = "http://www.zhengcaidai.com";
 	
 	
-	public void sendMessage(int messageType, int userType, Integer userId, Map<String, String> param) throws SMSException;
+	public void sendMessage(int messageType, int userType, Integer userId, Map<String, String> param);
 }

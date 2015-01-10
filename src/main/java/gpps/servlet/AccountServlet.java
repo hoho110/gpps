@@ -22,6 +22,7 @@ import gpps.service.ISubmitService;
 import gpps.service.ITaskService;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.SMSException;
+import gpps.service.message.ILetterSendService;
 import gpps.service.message.IMessageService;
 import gpps.service.thirdpay.IThirdPaySupportService;
 import gpps.service.thirdpay.ResultCodeException;
@@ -81,6 +82,8 @@ public class AccountServlet {
 	IBorrowerDao borrowerDao;
 	@Autowired
 	IMessageService messageService;
+	@Autowired
+	ILetterSendService letterSendService;
 	Logger log = Logger.getLogger(AccountServlet.class);
 	public static final String AMOUNT = "amount";
 	public static final String CASHSTREAMID = "cashStreamId";
@@ -359,6 +362,7 @@ public class AccountServlet {
 			Map<String, String> param = new HashMap<String, String>();
 			param.put(IMessageService.PARAM_AMOUNT, cashStream.getChiefamount().negate().toString());
 			param.put(IMessageService.PARAM_FEE, params.get("FeeWithdraws"));
+			param.put(ILetterSendService.PARAM_TITLE, "资金提现");
 			
 			
 			//发送短信提醒
@@ -366,6 +370,7 @@ public class AccountServlet {
 			{
 				Lender lender = lenderDao.findByAccountID(cashStream.getLenderAccountId());
 				try{
+				letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_CASHOUTSUCCESS, ILetterSendService.USERTYPE_LENDER, lender.getId(), param);
 				messageService.sendMessage(IMessageService.MESSAGE_TYPE_CASHOUTSUCCESS, IMessageService.USERTYPE_LENDER, lender.getId(), param);
 				}catch(SMSException e){
 					log.error(e.getMessage());
@@ -373,6 +378,7 @@ public class AccountServlet {
 			}else if(cashStream.getBorrowerAccountId()!=null){
 				Borrower borrower = borrowerDao.findByAccountID(cashStream.getBorrowerAccountId());
 				try{
+					letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_CASHOUTSUCCESS, ILetterSendService.USERTYPE_BORROWER, borrower.getId(), param);
 					messageService.sendMessage(IMessageService.MESSAGE_TYPE_CASHOUTSUCCESS, IMessageService.USERTYPE_BORROWER, borrower.getId(), param);
 				}catch(SMSException e){
 					log.error(e.getMessage());

@@ -32,6 +32,7 @@ import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.SMSException;
 import gpps.service.exception.UnSupportRepayInAdvanceException;
+import gpps.service.message.ILetterSendService;
 import gpps.service.message.IMessageService;
 import gpps.tools.PayBackCalculateUtils;
 
@@ -80,6 +81,8 @@ public class PayBackServiceImpl implements IPayBackService {
 	ILenderDao lenderDao;
 	@Autowired
 	IMessageService messageService;
+	@Autowired
+	ILetterSendService letterSendService;
 	Logger log=Logger.getLogger(PayBackServiceImpl.class);
 	@Override
 	public void create(PayBack payback) {
@@ -603,7 +606,9 @@ public class PayBackServiceImpl implements IPayBackService {
 			param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
 			param.put(IMessageService.PARAM_PRODUCT_SERIES_NAME, product.getProductSeries().getTitle());
 			param.put(IMessageService.PARAM_AMOUNT, payback.getChiefAmount().add(payback.getInterest()).toString());
+			param.put(ILetterSendService.PARAM_TITLE, "产品最后一笔还款完成");
 			try{
+			letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_LASTPAYBACKSUCCESS, ILetterSendService.USERTYPE_BORROWER, borrower.getId(), param);
 			messageService.sendMessage(IMessageService.MESSAGE_TYPE_LASTPAYBACKSUCCESS, IMessageService.USERTYPE_BORROWER, borrower.getId(), param);
 			}catch(SMSException e){
 				log.error(e.getMessage());
@@ -626,7 +631,9 @@ public class PayBackServiceImpl implements IPayBackService {
 			param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
 			param.put(IMessageService.PARAM_PRODUCT_SERIES_NAME, product.getProductSeries().getTitle());
 			param.put(IMessageService.PARAM_AMOUNT, payback.getChiefAmount().add(payback.getInterest()).toString());
+			param.put(ILetterSendService.PARAM_TITLE, "还款完成");
 			try{
+			letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_PAYBACKSUCCESS, ILetterSendService.USERTYPE_BORROWER, borrower.getId(), param);
 			messageService.sendMessage(IMessageService.MESSAGE_TYPE_PAYBACKSUCCESS, IMessageService.USERTYPE_BORROWER, borrower.getId(), param);
 			}catch(SMSException e){
 				log.error(e.getMessage());

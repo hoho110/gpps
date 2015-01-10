@@ -23,6 +23,7 @@ import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.InsufficientBalanceException;
 import gpps.service.exception.LoginException;
 import gpps.service.exception.SMSException;
+import gpps.service.message.ILetterSendService;
 import gpps.service.message.IMessageService;
 import gpps.service.thirdpay.Authorize;
 import gpps.service.thirdpay.CardBinding;
@@ -110,6 +111,8 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 	IPayBackDao payBackDao;
 	@Autowired
 	IMessageService messageService;
+	@Autowired
+	ILetterSendService letterSendService;
 	private Logger log=Logger.getLogger(ThirdPaySupportServiceImpl.class);
 	public String getPublicKey() {
 		return publicKey;
@@ -611,7 +614,10 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 						param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
 						param.put(IMessageService.PARAM_PRODUCT_SERIES_NAME, product.getProductSeries().getTitle());
 						param.put(IMessageService.PARAM_AMOUNT, submit.getAmount().toString());
+						
+						param.put(ILetterSendService.PARAM_TITLE, "投资启动,开始计息");
 						try{
+						letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_FINANCINGSUCCESS, ILetterSendService.USERTYPE_LENDER, submit.getLenderId(), param);
 						messageService.sendMessage(IMessageService.MESSAGE_TYPE_FINANCINGSUCCESS, IMessageService.USERTYPE_LENDER, submit.getLenderId(), param);
 						}catch(SMSException e){
 							log.error(e.getMessage());
@@ -629,7 +635,10 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 						param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
 						param.put(IMessageService.PARAM_PRODUCT_SERIES_NAME, product.getProductSeries().getTitle());
 						param.put(IMessageService.PARAM_AMOUNT, submit.getAmount().toString());
+						
+						param.put(ILetterSendService.PARAM_TITLE, "投资流标,资金解冻");
 						try{
+						letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_FINANCINGFAIL, ILetterSendService.USERTYPE_LENDER, submit.getLenderId(), param);
 						messageService.sendMessage(IMessageService.MESSAGE_TYPE_FINANCINGFAIL, IMessageService.USERTYPE_LENDER, submit.getLenderId(), param);
 						}catch(SMSException e){
 							log.error(e.getMessage());
@@ -675,15 +684,14 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 				param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
 				param.put(IMessageService.PARAM_PRODUCT_SERIES_NAME, product.getProductSeries().getTitle());
 				param.put(IMessageService.PARAM_AMOUNT, cashStream.getChiefamount().add(cashStream.getInterest()).toString());
+				param.put(ILetterSendService.PARAM_TITLE, "收到一笔还款");
 				Lender lender = lenderDao.findByAccountID(cashStream.getLenderAccountId());
 				
 				if(lender!=null)
 				{
 					try {
-						messageService.sendMessage(
-								IMessageService.MESSAGE_TYPE_PAYBACKSUCCESS,
-								IMessageService.USERTYPE_LENDER,
-								lender.getId(), param);
+						letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_PAYBACKSUCCESS, ILetterSendService.USERTYPE_LENDER, lender.getId(), param);
+						messageService.sendMessage(IMessageService.MESSAGE_TYPE_PAYBACKSUCCESS,IMessageService.USERTYPE_LENDER,lender.getId(), param);
 					} catch (SMSException e) {
 						log.error(e.getMessage());
 					}

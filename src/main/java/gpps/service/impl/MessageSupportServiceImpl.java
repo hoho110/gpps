@@ -1,7 +1,6 @@
 package gpps.service.impl;
 
 import gpps.service.exception.SMSException;
-import gpps.service.message.Client;
 import gpps.service.message.IMessageSupportService;
 import gpps.service.thirdpay.IHttpClientService;
 import gpps.tools.StringUtil;
@@ -28,6 +27,7 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	private String key="123123";// 序列号首次激活时自己设定
 	private String password="123132";// 密码,,请通过亿美销售人员获取
 	private String baseUrl="http://sdkhttp.eucp.b2m.cn";
+	private String close = "1"; //短信发送服务是或否启动
 	private static Logger logger=Logger.getLogger(MessageSupportServiceImpl.class.getName());
 	private static Map<String, String> urls=new HashMap<String, String>();
 	public static final String ACTION_REGISTDETAILINFO="0";
@@ -115,6 +115,12 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	public void setBaseUrl(String baseUrl) {
 		this.baseUrl = baseUrl;
 	}
+	public String getClose() {
+		return close;
+	}
+	public void setClose(String close) {
+		this.close = close;
+	}
 	private String getUrl(String action)
 	{
 		return baseUrl+urls.get(action);
@@ -193,6 +199,13 @@ public class MessageSupportServiceImpl implements IMessageSupportService {
 	}
 	@Override
 	public void sendSMS(List<String> tels, String content) throws SMSException{
+		
+		//如果用户设置close=1则说明关掉短信发送功能
+		if("1".equals(close)){
+			return;
+		}
+		
+		
 		if(tels==null||tels.size()==0||StringUtil.isEmpty(content))
 			return;
 		StringBuilder sBuilder=new StringBuilder();

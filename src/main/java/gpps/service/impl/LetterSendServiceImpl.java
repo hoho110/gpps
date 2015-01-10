@@ -4,99 +4,59 @@ import gpps.dao.IBorrowerDao;
 import gpps.dao.ILenderDao;
 import gpps.model.Borrower;
 import gpps.model.Lender;
-import gpps.model.ref.Contactor;
-import gpps.model.ref.Contactor.Single;
+import gpps.model.Letter;
+import gpps.service.ILetterService;
 import gpps.service.exception.SMSException;
-import gpps.service.message.IMessageService;
-import gpps.service.message.IMessageSupportService;
+import gpps.service.message.ILetterSendService;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.easyservice.xml.EasyObjectXMLTransformerImpl;
-import com.easyservice.xml.IEasyObjectXMLTransformer;
-import com.easyservice.xml.XMLParseException;
-
 @Service
-public class MessageServiceImpl implements IMessageService {
+public class LetterSendServiceImpl implements ILetterSendService {
+@Autowired
+ILetterService letterService;
 @Autowired
 ILenderDao lenderDao;
 @Autowired
 IBorrowerDao borrowerDao;
-@Autowired
-IMessageSupportService supportService;
-private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	@Override
 	public void sendMessage(int messageType, int userType, Integer userId,
-			Map<String, String> param) throws SMSException {
-		List<String> phones = new ArrayList<String>();
-		String message = null;
-		
-		
-		if(messageType==this.MESSAGE_TYPE_SENDVALIDATECODE){
-			message = getMessage(messageType, userType, param);
-			phones.add(param.get(this.PARAM_PHONE));
-		}else{
-		
-		
+			Map<String, String> param){
+		Letter letter = new Letter();
 		if(userType==this.USERTYPE_BORROWER){
 			Borrower borrower = borrowerDao.find(userId);
-			if(borrower==null){
-				throw new SMSException("企业用户不存在："+userId);
-			}
-			phones.add(borrower.getTel());
-			try{
-			String contactor = borrower.getContactor();
-			if(contactor!=null && !"".equals(contactor)){
-			
-			Contactor con = xmlTransformer.parse(borrower.getContactor(), Contactor.class);
-			List<Single> cs = con.getContactors();
-			for(Single c:cs){
-				phones.add(c.getPhone());
-			}
-			}
-			}catch(XMLParseException e){
-				
-			}
-			String companyName = borrower.getCompanyName();
-			param.put(this.PARAM_NAME, companyName);
+			letter.setReceiverId(userId);
+			letter.setReceivertype(Letter.RECEIVERTYPE_BORROWER);
+			param.put(this.PARAM_NAME, borrower.getCompanyName());
 		}else if(userType==this.USERTYPE_LENDER){
 			Lender lender = lenderDao.find(userId);
-			if(lender==null){
-				throw new SMSException("用户不存在："+userId);
-			}
-			phones.add(lender.getTel());
-			String name = lender.getName()==null?lender.getLoginId():lender.getName();
-			param.put(this.PARAM_NAME, name);
+			letter.setReceiverId(userId);
+			letter.setReceivertype(Letter.RECEIVERTYPE_LENDER);
+			param.put(this.PARAM_NAME, lender.getName());
 		}
-		message = getMessage(messageType, userType, param);
-		}
-		
-		System.out.println(phones);
-		System.out.println(message);
-		supportService.sendSMS(phones, message);
-		
+		String message = getMessage(messageType, userType, param);
+		letter.setContent(message);
+		letter.setCreatetime((new Date()).getTime());
+		letter.setMarkRead(Letter.MARKREAD_NO);
+		letter.setTitle(param.get(PARAM_TITLE));
+		letterService.create(letter);
 	}
 	
-	private String getMessage(int messageType, int userType, Map<String, String> param) throws SMSException{
+	
+	private String getMessage(int messageType, int userType, Map<String, String> param){
 		String result = "";
 		Calendar cal = Calendar.getInstance();
 		String dateStr = cal.get(Calendar.YEAR)+"年"+(cal.get(Calendar.MONTH)+1)+"月"+cal.get(Calendar.DAY_OF_MONTH)+"日";
 		
 		String dateStrMS = dateStr+cal.get(Calendar.HOUR_OF_DAY)+"时"+cal.get(Calendar.MINUTE)+"分";
 		
-		String help = "\n详情请登录政采贷查看，网址"+WEBADDR+"。如仍有问题请咨询春蕾客服，电话："+this.PHONE;
+		String help = "\n如有问题请咨询春蕾客服，电话："+this.PHONE;
 		
 		switch (messageType) {
-		case MESSAGE_TYPE_SENDVALIDATECODE:
-			result = "【春蕾政采贷】您的验证码为"+param.get(this.PARAM_VALIDATE_CODE)+"，为保障账户安全，请勿将验证码泄露给他人。";
-			break;
 		case MESSAGE_TYPE_CASHOUTSUCCESS:
 			if(userType == this.USERTYPE_LENDER)
 			{

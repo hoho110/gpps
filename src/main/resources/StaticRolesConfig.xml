@@ -37,7 +37,7 @@
 			<PermissionRule  entityLimitType="gpps.service.thirdpay.IThirdPaySupportService" operations="never"/>
 			<PermissionRule  entityLimitType="gpps.service.IAccountService" operations="never"/>
 			<PermissionRule  entityLimitType="gpps.service.ILetterService" operations="never"/>
-			
+			<PermissionRule  entityLimitType="gpps.service.IContractService" operations="never"/>
 		</permissionRules>
 	</Role>
 	<!-- ******************************Lender********************************* -->

@@ -41,6 +41,7 @@ import gpps.service.exception.ExistWaitforPaySubmitException;
 import gpps.service.exception.IllegalConvertException;
 import gpps.service.exception.IllegalOperationException;
 import gpps.service.exception.SMSException;
+import gpps.service.message.ILetterSendService;
 import gpps.service.message.IMessageService;
 import gpps.servlet.AccountServlet;
 import gpps.tools.StringUtil;
@@ -98,6 +99,8 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 	IContractService contractService;
 	@Autowired
 	IMessageService messageService;
+	@Autowired
+	ILetterSendService letterSendService;
 	Logger log = Logger.getLogger(GovermentOrderServiceImpl.class);
 	private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLTransformerImpl(); 
 	static int[] orderStates={
@@ -251,7 +254,9 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 		
 		Map<String, String> param = new HashMap<String, String>();
 		param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+		param.put(ILetterSendService.PARAM_TITLE, "启动融资");
 		try{
+			letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_STARTFINANCE, ILetterSendService.USERTYPE_BORROWER, order.getBorrowerId(), param);
 			messageService.sendMessage(IMessageService.MESSAGE_TYPE_STARTFINANCE, IMessageService.USERTYPE_BORROWER, order.getBorrowerId(), param);
 		}catch(SMSException e){
 			log.error(e.getMessage());
@@ -331,7 +336,9 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 				
 				Map<String, String> param = new HashMap<String, String>();
 				param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+				param.put(ILetterSendService.PARAM_TITLE, "融资完成，启动还款");
 				try{
+					letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_FINANCINGSUCCESS, ILetterSendService.USERTYPE_BORROWER, order.getBorrowerId(), param);
 					messageService.sendMessage(IMessageService.MESSAGE_TYPE_FINANCINGSUCCESS, IMessageService.USERTYPE_BORROWER, order.getBorrowerId(), param);
 				}catch(SMSException e){
 					log.error(e.getMessage());
@@ -383,7 +390,9 @@ public class GovermentOrderServiceImpl implements IGovermentOrderService{
 				
 				Map<String, String> param = new HashMap<String, String>();
 				param.put(IMessageService.PARAM_ORDER_NAME, order.getTitle());
+				param.put(ILetterSendService.PARAM_TITLE, "产品流标");
 				try{
+					letterSendService.sendMessage(ILetterSendService.MESSAGE_TYPE_FINANCINGFAIL, ILetterSendService.USERTYPE_BORROWER, order.getBorrowerId(), param);
 					messageService.sendMessage(IMessageService.MESSAGE_TYPE_FINANCINGFAIL, IMessageService.USERTYPE_BORROWER, order.getBorrowerId(), param);
 				}catch(SMSException e){
 					log.error(e.getMessage());

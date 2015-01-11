@@ -186,6 +186,23 @@ a.accordion-toggle {
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="letterdetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">站内信</h4>
+      </div>
+      <div class="modal-body" id="ldetail">
+      			
+      </div>
+      <div class="modal-footer">
+        <button id="lclose" type="button" data-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
 	
         <script src="js/head.js"></script>
 		<script src="js/foot.js"></script>
@@ -238,6 +255,12 @@ a.accordion-toggle {
 									$('ul.nav-second li a[data-sk="'+sid+'"]').trigger('click');
 								else
 									$('ul.nav-second li a').first().trigger('click');
+								
+								
+								
+								$('#lclose').click(function(e){
+									window.location.href="myaccountdetail.html?fid=mycenter&sid=letter-unread-mycenter";
+								})
 						});
 	</script>
 </body>

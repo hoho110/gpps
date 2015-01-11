@@ -63,7 +63,7 @@
 	<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
 		政采贷>+-typename-+>+-stypename-+
 		</div>
-		<div class="col-md-12" style="border:solid 2px #f5f5f5; margin-top:15px; padding-bottom:15px;">
+		<div class="col-md-12" style="border:solid 2px #f5f5f5; margin-top:15px; padding-bottom:15px; background-color:#f5f5f5">
 			<div class="col-md-12" style="margin-top:15px;">
 			<div class="col-md-12" style="padding-left:0px; padding-right:0px;">
 			<!--# 
@@ -89,17 +89,15 @@
 				if(type=='notice' || type=='news')
 				{
 				 #-->
-				 <div class="col-md-12">
-				<span style="font-size:16px; font-weight:bold; color:#999;">[+-value.title-+]</span>
-				</div>
-				<div class="col-md-12" style="margin-top:5px;">
-				<span style="font-size:12px; color:#999;">+-formatDate(value.publishtime)-+ 发送</span>
-				</div>
-				<div class="col-md-12" style="margin-top:20px;">
+				<div class="row">
+				<div class="hidden-xs hidden-sm col-md-2"></div>
+				<div class="col-xs-12 col-sm-12 col-md-8" style="margin-top:5px; border:solid #eee 1px; background-color:white;">
 				<div style="min-height:300px;">+-value.content-+</div>
 				<div  style="text-align:right;">北京春蕾投资管理有限责任公司</div>
 				<div style="text-align:right;">+-formatDate(value.publishtime)-+</div>
 				<div style = "clear:both;"></div>
+				</div>
+				<div class="hidden-xs hidden-sm col-md-2"></div>
 				</div>
 				<!--# 
 				}else
@@ -129,11 +127,15 @@
 				<div class="col-md-12" style="margin-top:5px;">
 				<span style="font-size:12px; color:#999;">+-publishtime-+</span>
 				</div>
-				<div class="col-md-12" style="margin-top:20px;">
+				<div class="row">
+				<div class="hidden-xs hidden-sm col-md-2"></div>
+				<div class="col-xs-12 col-sm-12 col-md-8" style="margin-top:20px;">
 				<div style="min-height:200px;">+-content-+</div>
 				<div  style="text-align:right;">北京春蕾投资管理有限责任公司</div>
 				<div style="text-align:right;">+-answertime-+</div>
 				<div style = "clear:both;"></div>
+				</div>
+				<div class="hidden-xs hidden-sm col-md-2"></div>
 				</div>
 				 <!--# 
 				 }

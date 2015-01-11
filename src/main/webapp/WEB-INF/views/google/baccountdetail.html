@@ -225,7 +225,7 @@ a.accordion-toggle {
       			
       </div>
       <div class="modal-footer">
-        <button id="lclose" type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+        <button id="lclose" type="button" data-dismiss="modal">关闭</button>
       </div>
     </div>
   </div>
@@ -244,7 +244,7 @@ a.accordion-toggle {
       </div>
       <div class="modal-footer">
       	<button id="authorize" type="button" class="btn btn-primary" data-dismiss="modal">授权</button>
-        <button id="lclose" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <button id="cancel" type="button" class="btn btn-default" data-dismiss="modal">取消</button>
       </div>
     </div>
   </div>
@@ -345,6 +345,11 @@ a.accordion-toggle {
                                     $('#authformdiv').html(content);
                                     $('#authform').submit();
 								});
+								
+								
+								$('#lclose').click(function(e){
+									window.location.href="baccountdetail.html?fid=mycenter&sid=letter-unread-mycenter";
+								})
 						});
 	</script>
 </body>

@@ -1305,10 +1305,18 @@ var letterunread_center = function(container){
 	} );
 	
 	$('.readletter').click(function(e){
+		
+		var letterService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILetterService");
 		var id = $(this).attr('id');
-		window.location.href="baccountdetail.html?fid=mycenter&sid=letter-unread-mycenter";
-		window.open('letter.html?lid='+id);
-	});
+		var letter = letterService.find(parseInt(id));
+		$('#myModalLabel').html(letter.title);
+		$('#ldetail').html(letter.content);
+		$('#letterdetail').modal({
+			  keyboard: false,
+			  backdrop: true
+		});
+	})	
+	
 }
 
 

@@ -1239,11 +1239,20 @@ var letterunread_center = function(container){
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
-		
 		$('.readletter').click(function(e){
+			
+			var letterService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILetterService");
 			var id = $(this).attr('id');
-			readletter(id);
+			var letter = letterService.find(parseInt(id));
+			$('#myModalLabel').html(letter.title);
+			$('#ldetail').html(letter.content);
+			
+			$('#letterdetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
 		})
+		
 		
 
 		return res;
@@ -1305,13 +1314,27 @@ var letterunread = function(container){
 			                    "管理员",
 			                    formatDate(letters.get(i).createtime), 
 			                    letters.get(i).markRead==0?'未读':'已读',
-			                    "<a class='readletter' onclick='readletter("+letters.get(i).id+");' id='"+letters.get(i).id+"'>阅读</a>"
+			                    "<button class='readletter' id='"+letters.get(i).id+"' value='阅读'>阅读</a>"
 			                   ]);
 		}
 		}
 		result.sEcho = sEcho;
 		fnCallback(result);
 
+		$('.readletter').click(function(e){
+			
+			var letterService = EasyServiceClient.getRemoteProxy("/easyservice/gpps.service.ILetterService");
+			var id = $(this).attr('id');
+			var letter = letterService.find(parseInt(id));
+			$('#myModalLabel').html(letter.title);
+			$('#ldetail').html(letter.content);
+			$('#letterdetail').modal({
+				  keyboard: false,
+				  backdrop: true
+			});
+		})	
+		
+		
 		return res;
 	}
 	var table = $('<table role="grid" id="example" class="display nowrap dataTable dtr-inline" width="99%" cellspacing="0"></table>');

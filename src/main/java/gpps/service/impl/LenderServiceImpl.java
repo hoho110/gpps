@@ -80,6 +80,18 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	}
 
 	@Override
+	public boolean isCodeRight(String code){
+		boolean flag = false;
+		try{
+			flag = onlyCheckGraphValidateCode(code);
+		}catch(Exception e){
+			flag = false;
+		}
+		return flag;
+	}
+	
+	
+	@Override
 	public Lender register(Lender lender, String messageValidateCode, String graphValidateCode)
 			throws ValidateCodeException, IllegalArgumentException, LoginException {
 		checkGraphValidateCode(graphValidateCode);

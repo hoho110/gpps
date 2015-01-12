@@ -20,6 +20,8 @@ public interface ILenderService extends ILoginService{
 	 */
 	public Lender register(Lender lender,String messageValidateCode, String graphValidateCode) throws ValidateCodeException,IllegalArgumentException, LoginException;
 	
+	public boolean isCodeRight(String code);
+	
 	public Lender register(Lender lender,String messageValidateCode) throws ValidateCodeException,IllegalArgumentException, LoginException;
 	
 	public void changeAttri(String name, String value)throws IllegalArgumentException;

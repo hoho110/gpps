@@ -84,6 +84,18 @@ public abstract class AbstractLoginServiceImpl implements ILoginService {
 		if(messageValidateCodeSendTime+MESSAGEVALIDATECODEEXPIRETIME<System.currentTimeMillis())
 			throw new ValidateCodeException("验证码过期");
 	}
+	
+	
+	protected boolean onlyCheckGraphValidateCode(String graphValidateCode) throws ValidateCodeException{
+		HttpSession session =getCurrentSession();
+		graphValidateCode=checkNullAndTrim("graphValidateCode", graphValidateCode);
+		String originalGraphValidateCode=String.valueOf(checkNullObject("originalGraphValidateCode", session.getAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE)));
+		if(!originalGraphValidateCode.toLowerCase().equals(graphValidateCode.toLowerCase()))
+			throw new ValidateCodeException("图片验证码不正确");
+		
+		return true;
+	}
+	
 	protected void checkGraphValidateCode(String graphValidateCode) throws ValidateCodeException
 	{
 		HttpSession session =getCurrentSession();

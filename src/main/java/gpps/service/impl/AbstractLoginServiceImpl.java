@@ -80,9 +80,9 @@ public abstract class AbstractLoginServiceImpl implements ILoginService {
 		long messageValidateCodeSendTime=(Long)session.getAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODESENDTIME);
 		session.removeAttribute(SESSION_ATTRIBUTENAME_MESSAGEVALIDATECODESENDTIME);
 		if(!originalMessageValidateCode.equals(messageValidateCode))
-			throw new ValidateCodeException("GraphValidateCodes do not match");
+			throw new ValidateCodeException("短信验证码不正确");
 		if(messageValidateCodeSendTime+MESSAGEVALIDATECODEEXPIRETIME<System.currentTimeMillis())
-			throw new ValidateCodeException("Overdue");
+			throw new ValidateCodeException("验证码过期");
 	}
 	protected void checkGraphValidateCode(String graphValidateCode) throws ValidateCodeException
 	{
@@ -91,7 +91,7 @@ public abstract class AbstractLoginServiceImpl implements ILoginService {
 		String originalGraphValidateCode=String.valueOf(checkNullObject("originalGraphValidateCode", session.getAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE)));
 		session.removeAttribute(SESSION_ATTRIBUTENAME_GRAPHVALIDATECODE);//用过一次即删除
 		if(!originalGraphValidateCode.toLowerCase().equals(graphValidateCode.toLowerCase()))
-			throw new ValidateCodeException("GraphValidateCodes do not match");
+			throw new ValidateCodeException("图片验证码不正确");
 	}
 	protected String getProcessedPassword(String password)
 	{

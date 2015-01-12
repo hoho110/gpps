@@ -80,6 +80,34 @@ public class LenderServiceImpl extends AbstractLoginServiceImpl implements ILend
 	}
 
 	@Override
+	public Lender register(Lender lender, String messageValidateCode, String graphValidateCode)
+			throws ValidateCodeException, IllegalArgumentException, LoginException {
+		checkGraphValidateCode(graphValidateCode);
+		checkMessageValidateCode(messageValidateCode);
+		lender.setLoginId(checkNullAndTrim("loginId", lender.getLoginId()));
+		if(StringUtil.isDigit(lender.getLoginId()))
+			throw new IllegalArgumentException("登录名不能全部为数字");
+		lender.setPassword(getProcessedPassword(checkNullAndTrim("password", lender.getPassword())+PASSWORDSEED));
+		lender.setCreatetime(System.currentTimeMillis());
+		lender.setPrivilege(Lender.PRIVILEGE_UNOFFICIAL);
+		lender.setLevel(Lender.LEVEL_COMMON);
+		lender.setTel(checkNullAndTrim("tel", lender.getTel()));
+		lender.setGrade(0);
+		if(isLoginIdExist(lender.getLoginId()))
+			throw new LoginException("LoginId is existed");
+		if(isPhoneNumberExist(lender.getTel()))
+			throw new LoginException("Tel is existed");
+		LenderAccount account=new LenderAccount();
+		lenderAccountDao.create(account);
+		lender.setAccountId(account.getId());
+		lenderDao.create(lender);
+		lender.setPassword(null);
+		getCurrentSession().setAttribute(SESSION_ATTRIBUTENAME_USER, lender);
+		return lender;
+	}
+	
+	
+	@Override
 	public Lender register(Lender lender, String messageValidateCode)
 			throws ValidateCodeException, IllegalArgumentException, LoginException {
 		checkMessageValidateCode(messageValidateCode);

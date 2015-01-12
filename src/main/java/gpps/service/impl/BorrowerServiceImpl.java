@@ -139,6 +139,36 @@ public class BorrowerServiceImpl extends AbstractLoginServiceImpl implements IBo
 		getCurrentSession().setAttribute(SESSION_ATTRIBUTENAME_USER, borrower);
 		return borrower;
 	}
+	
+	
+	@Override
+	public Borrower register(Borrower borrower, String messageValidateCode, String graphValidateCode) throws ValidateCodeException, IllegalArgumentException, LoginException {
+		checkGraphValidateCode(graphValidateCode);
+		checkMessageValidateCode(messageValidateCode);
+		borrower.setLoginId(checkNullAndTrim("loginId", borrower.getLoginId()));
+		if(StringUtil.isDigit(borrower.getLoginId()))
+			throw new IllegalArgumentException("登录名不能全部为数字");
+//		borrower.setEmail(checkNullAndTrim("email", borrower.getEmail()));
+//		borrower.setIdentityCard(checkNullAndTrim("identityCard", borrower.getIdentityCard()));
+		borrower.setLicense(checkNullAndTrim("license", borrower.getLicense()));
+//		borrower.setName(checkNullAndTrim("name", borrower.getName()));
+		borrower.setPassword(getProcessedPassword(checkNullAndTrim("password", borrower.getPassword()) + PASSWORDSEED));
+		borrower.setCreatetime(System.currentTimeMillis());
+		borrower.setPrivilege(borrower.PRIVILEGE_VIEW);
+		borrower.setTel(checkNullAndTrim("tel", borrower.getTel()));
+		borrower.setCreditValue(0);
+		if(isLoginIdExist(borrower.getLoginId()))
+			throw new LoginException("LoginId is existed");
+		if(isPhoneNumberExist(borrower.getTel()))
+			throw new LoginException("Tel is existed");
+		BorrowerAccount account=new BorrowerAccount();
+		borrowerAccountDao.create(account);
+		borrower.setAccountId(account.getId());
+		borrowerDao.create(borrower);
+		borrower.setPassword(null);
+		getCurrentSession().setAttribute(SESSION_ATTRIBUTENAME_USER, borrower);
+		return borrower;
+	}
 
 	// @Override
 	// public Borrower update(Borrower borrower) {

@@ -146,11 +146,20 @@
 			<label class="control-label" for="inputSuccess3">验证码</label>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-				<input type="text" class="form-control" id="validate" style="padding-left:1px; padding-right:1px;" placeholder="请输入验证码" required></input>
+				<input type="text" class="form-control" id="validate" style="padding-left:1px; padding-right:1px;" placeholder="请输入短信验证码" required></input>
 			</div>
 			<div style="clear:both;"></div>
 			</div>
 			
+			
+			<div class="form-group has-success has-feedback col-md-12" style="padding-left:0px; padding-right:0px;">
+        <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5" style="padding-left:15px; padding-right:15px;">
+        <input class="form-control" id="J-input-checkcode" type="text" style="height:50px;" placeholder="请输入图片验证码" required></input>
+        </div>
+        <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7" style="padding-left:15px; padding-right:15px;">
+        <img class="form-control" style="height:50px;" id="J-checkcode-img" src="../../login/graphValidateCode?t=100" title="点击图片刷新验证码" alt="点击图片刷新验证码"></img>
+        </div>
+        </div>
 			
 			
 			
@@ -206,6 +215,13 @@ $(document).ready(function() {
 	header('login');
 	
 	
+	var src="../../login/graphValidateCode?t="+Math.random();
+	
+	$('img#J-checkcode-img').click(function(e){
+		var srcn="../../login/graphValidateCode?t="+Math.random();
+		$(this).attr('src', srcn);
+	});
+	
 	var usertype = '1';
 	
 	$('#username').focus();
@@ -219,6 +235,8 @@ $(document).ready(function() {
     	}
     	
     	
+    		var checkcode = $('input#J-input-checkcode').val();
+    	
 			var username = $('input#username').val();
 			var email = $('input#email').val();
 			var password = $('input#password').val();
@@ -227,7 +245,13 @@ $(document).ready(function() {
 			var validate = $('input#validate').val();
 			
 			
-			
+			if(checkcode==null || checkcode==''){
+				$('input#username').parent().find('span').remove();
+				$('input#username').parent().append(error);
+				$('input#username').parent().parent().removeClass('has-success').addClass('has-error');
+				addMessage('*请输入图片验证码');
+				return;
+			}
 			if(username==null||username==''){
 					$('input#username').parent().find('span').remove();
 					$('input#username').parent().append(error);
@@ -337,7 +361,7 @@ $(document).ready(function() {
 			{
 			try{
 				var lender = {"_t_":"gpps.model.Lender", "loginId":username, "password" : password, "tel" : phone, "email" : email};
-				service.register(lender, validate);
+				service.register(lender, validate, checkcode);
 				window.location.href="register2.html";
 			}catch(ee){
 				alert(ee.message);
@@ -379,7 +403,7 @@ $(document).ready(function() {
 				
 				try{
 					var borrower = {"_t_":"gpps.model.Borrower", "loginId":username, "password" : password, "tel" : phone, "companyName" : companyname, "license" : license, "email" : email};
-					bservice.register(borrower, validate);
+					bservice.register(borrower, validate, checkcode);
 					window.location.href="baccount.html";
 				}catch(ee){
 					alert(ee.message);
@@ -559,14 +583,14 @@ $(document).ready(function() {
 				removeMessage();
 				}
         });
+    
+    $('input#J-input-checkcode').on('keyup', function(e) {
 
-    $('input#validate').on('keyup', function(e) {
-
-			var key = e.keyCode;
-			if (key === 13) { // 表示按的是enter键
-				$('#login').click();
-			}
-    });
+		var key = e.keyCode;
+		if (key === 13) { // 表示按的是enter键
+			$('#login').click();
+		}
+});
     
     
     $("input[name=usertype]").click(function(){ 

@@ -28,6 +28,8 @@ public interface IBorrowerService extends ILoginService {
 	 * @throws LoginException
 	 * @throws Exception
 	 */
+	public Borrower register(Borrower borrower, String messageValidateCode, String graphValidateCode) throws ValidateCodeException, IllegalArgumentException, LoginException;
+	
 	public Borrower register(Borrower borrower, String messageValidateCode) throws ValidateCodeException, IllegalArgumentException, LoginException;
 
 	/**

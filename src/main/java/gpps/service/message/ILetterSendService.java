@@ -48,7 +48,7 @@ public interface ILetterSendService {
 	public static final int MESSAGE_TYPE_SELFDEFINE = 18;  //"selfDefine";
 	
 	
-	public static final String PHONE = "13811122222";
+	public static final String PHONE = "13581532923";
 	public static final String WEBADDR = "http://www.zhengcaidai.com";
 	
 	

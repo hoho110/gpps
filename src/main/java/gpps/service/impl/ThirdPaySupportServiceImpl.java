@@ -82,7 +82,7 @@ public class ThirdPaySupportServiceImpl implements IThirdPaySupportService{
 		urls.put(ACTION_BALANCEQUERY, "/loan/balancequery.action");
 	}
 	private String url="";
-	private String platformMoneymoremore="p401";
+	private String platformMoneymoremore;
 	private String privateKey;
 	private String publicKey;
 	private String serverHost;

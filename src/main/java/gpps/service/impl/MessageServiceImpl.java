@@ -91,11 +91,14 @@ private static final IEasyObjectXMLTransformer xmlTransformer=new EasyObjectXMLT
 		
 		String dateStrMS = dateStr+cal.get(Calendar.HOUR_OF_DAY)+"时"+cal.get(Calendar.MINUTE)+"分";
 		
-		String help = "\n详情请登录政采贷查看，网址"+WEBADDR+"。如仍有问题请咨询春蕾客服，电话："+this.PHONE;
+//		String help = "\n详情请登录政采贷查看，网址"+WEBADDR+"。如仍有问题请咨询春蕾客服，电话："+this.PHONE;
+		String help = " 客服电话："+this.PHONE;
 		
 		switch (messageType) {
 		case MESSAGE_TYPE_SENDVALIDATECODE:
-			result = "【春蕾政采贷】您的验证码为"+param.get(this.PARAM_VALIDATE_CODE)+"，为保障账户安全，请勿将验证码泄露给他人。";
+			result = "【春蕾政采贷】您的验证码为"+param.get(this.PARAM_VALIDATE_CODE)
+//			+"，为保障账户安全，请勿将验证码泄露给他人。"
+			;
 			break;
 		case MESSAGE_TYPE_CASHOUTSUCCESS:
 			if(userType == this.USERTYPE_LENDER)
